@@ -386,15 +386,7 @@ C JK   Idry   - If Idry = 0, use the moist adiabat. If Idry = 1, use a dry adiab
       Idry = 0
 
 c added by Giada to read some more inputs from photo
-      IF (ICOUPLE.eq.1) THEN 
-      OPEN(unit=999,FILE= 'IO/time_frak_photo.out')
- 107  FORMAT(1X, F4.2, 5X, F5.3, 5X, F18.16)
-      READ(999,*)
-      READ(999,107) timega, P0ground, frak
-      print *, timega
-      print *, P0ground
-      print *, frak
-      ENDIF
+
 
       READ(1,51)
       READ(1,*) AA,NSTEPS       !step number
@@ -423,6 +415,18 @@ c*******Changed for now*********
       READ(1,*) AA, IMET        ! IMET (flag 0 or 1)
       READ(1,*) AA, nga
   
+      print *, 'icouple is'
+      print *, ICOUPLE
+
+      IF (ICOUPLE.eq.1) THEN 
+      OPEN(unit=999,FILE= 'COUPLE/time_frak_photo.out')
+ 107  FORMAT(1X, F4.2, 5X, F5.3, 5X, F18.16)
+      READ(999,*)
+      READ(999,107) timega, P0ground, frak
+      print *, timega
+      print *, P0ground
+      print *, frak
+      ENDIF
 
 C added by Giada
       IF (ICOUPLE.eq.1) THEN 
