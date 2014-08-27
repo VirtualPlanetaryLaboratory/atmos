@@ -1,0 +1,10 @@
+#!/bin/tcsh
+#make
+./TOTCdev
+cp out.dist in.dist
+./TOTCdev
+cp out.dist in.dist
+./TOTCdev
+cp out.dist in.dist
+./TOTCdev
+cp out.dist in.dist

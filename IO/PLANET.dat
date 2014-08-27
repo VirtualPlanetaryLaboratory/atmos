@@ -1,0 +1,18 @@
+980.7    = G, Gravity - Earth=980.7, Mars=373.0
+1.00     = FSCALE, Solar Flux Scaling - Earth=1.0, Mars=0.43
+0.250    = ALB, Surface Albedo - Earth=0.25, Mars=0.215
+1.1E6    = ZTROP, Height of the tropopause - typically Earth=11km, Mars=15km, 0.1 bar otherwise?
+1.E-2    = FCO2   CO2 partial pressure
+0.01     = FAR       Ar partial pressure on modern Earth  = ? for Mars
+6.371E8  = R0    Radius of Earth  - this times 0.53 for Mars (verify)
+1.013    = P0  = surface pressure of modern Earth in atm ( 0.0063 for Mars)
+EARTH    = PLANET  string naming the planet for extra changes (MARS is the only other option for the moment)
+1.0E5    = DELZ, photo layer dz. Earth=1.0E5, Mars=2.0E5
+50       = ZY, Solar zenith angle
+5.E-5    = P0, press at TOA (in atm). Earth=5.E-5
+0.0      = TIMEGA - time in Ga, for modifying the solar flux
+
+-below here are not read in.  They are from Shawn's Planet.earth file but are handled differently here.
+
+11    = JTROP, Grid layer marking the tropopause height, depends on ZTROP and DELZ
+1.0E5 = DELZ, Height of each atm layer - Earth=1.0E5, Mars=2.0E5 (cm)

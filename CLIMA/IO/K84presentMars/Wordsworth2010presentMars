@@ -1,0 +1,40 @@
+101 layers, IMW=0,dt0=5.e3,dtmax=1.e4 TGO=200, TSTRAT=150, 
+SOLCON=.43, SALB=.220, nga=1 (60 degree zenith angle)
+.99CO2 and 1e-60 everything else.
+
+NEC not very good for thin atmospheres but converges better 
+at thicker atmospheres. For thicker atmospheres, at the very least, 
+try to start with some NEC steps and move into EC steps.
+
+Use cp IO/TempOut.dat IO/TempIn.dat (for recursive runs)
+Start EC with present Mars.. more stable! And then when atmosphere gets denser go into NEC runs
+
+Wordsworth et al. (2010) with new Cps
+Pressure(bars)	Surface Temp(K)    ALBEDO	 NOTES
+6.e-3		219.7		   .1971	
+1.e-2		220.6		   .1976
+2.e-2		222.4		   .1986	
+5.e-2		224.7		   .2045
+1.e-1		227.5		   .2147		
+2.e-1		231.8		   .2312	
+5.e-1		240.4	           .2688
+1.	        247.2		   .3127				   
+2.		257.1		   .3660		   
+3.		264.8		   .4003		
+4.		267.4		   .4274
+5. 		266.1		   .4509
+
+Kasting et al. (1984) with new Cps
+Pressure(bars)	Surface Temp(K)    ALBEDO	 NOTES
+6.e-3		219.8		   .1971
+1.e-2		220.6		   .1973
+2.e-2		222.2		   .1980
+5.e-2		224.9		   .2038
+1.e-1		227.0		   .2143
+2.e-1		232.1		   .2311
+5.e-1		245.7		   .2668
+1.		262.6		   .3051		   .
+2.		285.3		   .3470
+3.		299.2		   .3746
+4.              309.0		   .3947
+5.		316.0		   .4116

@@ -1,0 +1,23 @@
+reset
+set key right top
+set ylabel 'Stellar effective temperature T_{eff} (K)'
+set xlabel 'Effective flux incident on the planet (S/S_{0})'
+set yrange [2600:7200]
+set xrange[0.2:1.22] reverse
+set xtics 0.1
+set key noautotitles
+set grid
+#-------------------------------------------------------------------------------------
+# If you want to include stellar luminosities in the comparison, use the following:
+plo 'SelsisHZ0cloud_seff.dat' u 1:3 w l lt 1 lw 3,'SelsisHZ0cloud_seff.dat' u 2:3 w l lt 3 lw 3,'files/HZ_fluxes.dat' u 4:1 w l lt 1 lw 3 ,'files/HZ_fluxes.dat' u 5:1 w l lt 3 lw 3
+#-------------------------------------------------------------------------------------
+# If you want to include SEFF in the comparison, use the following:
+#set label 'Outer HZ' at first 0.15,5000
+#set label 'Inner HZ' at first 1.4,5000
+#set arrow from 0.25,5000 to 0.29,5000
+#set arrow from 1.35,5000 to 1.18,5000
+#set arrow from 0.35,5500 to 0.45,5500 heads 
+#set arrow from 0.40,5500 to 0.40,5400 nohead
+#set arrow from 0.40,5400 to 0.28,5400
+#set label 'Difference' at first 0.12,5400
+#set label 'between the models' at first 0.12,5300

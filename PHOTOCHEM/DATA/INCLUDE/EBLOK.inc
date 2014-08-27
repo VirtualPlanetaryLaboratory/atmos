@@ -1,0 +1,1 @@
+      COMMON/EBLOK/AI(6),BI(4),CI(4)

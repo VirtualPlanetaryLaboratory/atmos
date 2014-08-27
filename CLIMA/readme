@@ -1,0 +1,75 @@
+===   Instructions to use the 1D climate model 
+===   Developed by Dr. James Kasting, collegues and students.
+
+The code is in fortran 77 with some fortran 90 features.
+
+It is set to run in a cray system, because of that we didn't set double 
+precision on it, in other systems the program may need to be configured to 
+use double precision. For that you need to add the next line at the 
+start of the  main program and all the subroutines:
+        IMPLICIT DOUBLE PRECISION (A-H,O-Z)
+
+The climate model can be used alone or loosley coupled with a photochemical
+model. Instructions for this capability are in the readme file under the 
+main directory.
+
+The model is tunned to work coupled to the photochemical code, this means that
+an Earth-like planet (atmosphere like present Earth) in the habitable 
+zone of a star is going to have a surface temperature of 288K. If the program
+is used by itself it needs to be tunned accordingly. 
+
+The climate code is in the directory CLIMA which contains:
+
++ Clima.f
+The main program of the climate model. A long comment at the start of the
+program explains its capabilities and related publications.
+
++ make_clima 
+Executable file to compile and generate the fortran executable file that runs 
+the climate model. It automatically detects when the programs have been 
+compiled. 
+
++ map.help
+This file is a guide that has a list of the subroutines and common blocks
+on each subroutine. 
+ 
++ IO/
+Subdirectory with the input and output files
+
++ DATA/
+Subdirectory with the data files that the program needs to run.
+
++ Subroutine subdirectories:
+(Descriptions of the subroutines in the readme files within each 
+subdirectory)
+SETUP
+CONVEC
+RADTRANS
+RRTM
+COUPLE
+PRTCL
+
++ CLIMA.o and RRTM.o
+These subdirectories storage the *.o files that result from the compilation
+of the code. 
+
+***** To COMPILE and RUN the climate model
+
+1. Choose the composition of the atmosphere in IO/mixing_ratios.dat
+2. Choose the parameters to run the program in IO/input_clima.dat
+3. Compile the climate typing:
+	make -f make_clima
+4. Run the model typing:
+	./clima
+
+To start from the last solution copy IO/TempOut.dat to IO/TempIn.dat
+
+** To use COUPLED with the PHOTOCHEMICAL model
+Follow steps 1 to 3 explained before then follow the instructions in the 
+readme file located at the main directory PhotClim
+
+
+Antigona Segura
+antigona@essc.psu.edu
+March, 2005
+

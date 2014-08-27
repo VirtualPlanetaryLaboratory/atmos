@@ -1,0 +1,1 @@
+      COMMON/FLXLOW/XFLOW(NQ)

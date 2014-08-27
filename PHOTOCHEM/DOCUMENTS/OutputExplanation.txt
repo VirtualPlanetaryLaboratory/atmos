@@ -1,0 +1,49 @@
+For now, let me send you one particular atmosphere model run, so that you can get your code working with this.  Once you have it working, I can send you as many outputs as you need in the exact same format.  You should also be aware that I am only sending a small fraction of the output from a photochemical model run.  If there is something else you need, be sure to ask as I may have it.
+
+For each photochemical model run, you get 4 files:  name.dist, name.params, name.species.dat and name.gridz.  I'll describe these now, then the models themselves below:
+
+name.params contains:
+line 1: 7 integers.  NZ,NQ,NQ1,NSP2,NR,KJ,NP
+       NZ is the number of atmospheric layers in the model
+       NQ is the number of long-lived species in the model
+       NQ1 is the number of long-lived species + the number of particles species computed separately (all of my current runs have particles as long-lived so NQ=NQ1)
+       NSP2 is the total number of species in the model (including long lived, short-lived and inert)
+       NR the number of photochemical reactions in the model run
+       KJ the number of photolysis reactions
+       NP the number of particle species
+line 2: a string array with KJ elements.
+       these are labels for each photolysis reaction.  (you probably don't need these)
+line 3: a string array with NSP2 elements
+       these are labels for each species that are in the model.  concentrations for the first NQ species in the list are provided in the out.dist file
+
+name.gridz: NZ lines,  This is the altitude grid in cm.
+
+(note: the above two files are the same across all model runs…)
+
+name.species is pretty well self-documented, containing in various columns:
+species names (again), species type + molecular counts (not overly important), upper and lower boundary conditions and values (these drive the various models)
+
+name.dist is a complicated file that contains the computed steady state concentrations for the given atmosphere.  The structure is as follows:
+
+       in groups of 10, the altitude-dependent mixing ratio profiles for the first NQ species, in the order given in the params or species file. (so in the examples given the first NZ=200 lines correspond to mixing ratios of species 1-10 from the ground to the top of the atmosphere.  They are immediately followed by the same for species 11-20,21-30,31-40,41-50,51-60, then for species NQ=61)
+
+        After the mixing ratios, there are 5 columns of output, each with NZ lines:  T, EDD, DEN,O3,CO2
+               T is the temperature in Kelvin  (note, this temperature is an assumed model input, not calculated from a climate model)
+               EDD is the assumed eddy diffusion coefficient in cm^2/s
+               DEN is the total number density (molecules cm^-3) at each height, from which species number densities can be calculated by multiplying by the mixing ratios
+               O3 is the ozone mixing ratio.  This is identical to a corresponding column in the first set of data, and is only in this file in the case that O3 is in the short-lived loop (which it is not in any of my calculations - i.e. you can ignore this column)
+               CO2 is the CO2 number density.
+
+       After this are data corresponding the particle species. There are 3 sets of information, which are repeated for each of the NP particle species.  In these model runs there are NP=4 particles, so each line here has 12 entries.
+               columns 1-NP are AERSOL:  the number of particles/cm3  (Note the conversion to particles, rather than molecules)
+               columns NP+1-NP*2 are WFALL, the particle fall velocities in cm/s
+               columnsNP*2+1,NP*3 are RPAR, the particle radii in cm
+
+
+
+
+The total density in these models is fixed at 1 bar.  The N2 partial pressure is calculated as 1-everything else, so these model runs have pN2 ~ 0.98.  This is not ideal, but it is what we do.  You should also be aware that the above files represent a small fraction of the output from a photochemical model run.  If there is something else you need, be sure to ask as I may have it.
+
+
+
+The total density in these models is fixed at 1 bar.  The N2 partial pressure is calculated as 1-everything else, so these model runs have pN2 ~ 0.98.  This is not ideal, but it is what we do.   This particular model run is for a late Archean atmosphere after the evolution of oxygenic photosynthesis.  There is ~30 PAL CO2, 100 ppm CH4, and substantial volcanic fluxes of H2, CO, SO2, and H2S.  The biogenic fluxes of O2 is approximately modern, and the CH4 is higher, which we presume given that CH4 sinks from sulfate reduction and the anaerobic oxidation of methane.

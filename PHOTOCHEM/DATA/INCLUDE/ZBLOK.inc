@@ -1,0 +1,1 @@
+      COMMON/ZBLOK/YP(NQ1,NZ),YL(NQ1,NZ)

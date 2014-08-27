@@ -1,0 +1,161 @@
+[general thoughts on adding a species]
+
+decide whether species is in main loop(add to NQ and NSP) or equilibrium loop(just NSP).  see below if adding a new particle
+
+main bookkeeping
+-change INPUTFILES/parameters.inc (NQ and NSP)
+-change INPUTFILES/species.dat
+-change in.dist to include new fake profile for main loop species (remember to change NQ and recompile often if using convdist)
+-change SUBROUTINES/Lnum.f and DATA/INCLUDE/NBLOK
+
+-remake and test read in  (it won't converge due to new species and lack of chemistry, but make sure the code gets by the diagnostics and starts to run)
+-update Henry's Law data in SUBROUTINES/Rainout.f
+
+Now, add in chemistry 
+
+-add in reactions/rates on INPUTFILES/reactions.rx file (and on SUBROUTINES/Rates.f if weird)
+-change NR in DATA/parameters.inc
+
+*aditional edits for Photolysis species..  (sec 4-1 of JPL-06 starts on p.203)
+-change ks,kj in DATA/parameters.inc
+-add PHOTO reaction to reactions.rx and update NSP on parameters.inc
+-add in cross section on SUBROUTINES/Xsections.f, along with IF(species) line at top, and files in DATA/XSECTIONS/
+(should add some notes either here or on top of Xsection.f about interpolation of cross sections)
+
+make clean, and go...  it will likely take a while to converge as we have made up initial guesses. once it does, check out.out for reasonable mixing ratios and photolysis rates.
+
+
+--working thoughts on adding a particle species. building this up during HCAER port.
+main code - hardcoded particle numbers below call to SEDMNT
+          formatted read statements should work
+          advection terms are ok, provided WFALL is computed correctly
+	  some hardcoing of vdep and veff	  
+
+what is indexed by NP?
+     DPU,DPL  (in main code)
+     WFALL, AERSOL, RPAR,CONVER,TAUSED,TAUC   (in AERBLK) - loaded into ,Sedmnt.f, output.f
+     PARTICLES (in DBLOK) - but this is only needed for tri-diagonal, I believe  (Dochecm,output,rainout,sedmnt,Xsections)
+
+
+-actual list (including all the stuff above):
+-change INPUTFILES/parameters.inc (NQ and NSP) and NP (use NQ1 =NQ+NP for tridiag without changing NQ)
+-change INPUTFILES/species.dat
+-change in.dist to include new fake profile for particles.  This is trickier as three columns will need to be added in: AERSOL,WFAL, RPAR
+-change SUBROUTINES/Lnum.f and DATA/INCLUDE/NBLOK
+-update Henry's Law data in SUBROUTINES/Rainout.f  (assume infinte rainout)
+
+
+Initmie.f is where optical properties files are read in. Change this if there are new optical properties needed...
+
+Photo.f has some hardcoding in the 'calculate, Qext,W0,G' place.  It's abstracted but only works for hydrocarbon particles
+-if new particles introduced, rstand would need to be abstracted and loop over L expanded.
+
+Twostr.f complete's the interpolation into QEXT,W0P,GFC, but only for HC particles HCAER and HCAER2, accomplished by a hardcoding for NP.GE.3.  It's more or less abstracted and the particle combination seems to be done well.  However, the way sulfate and elemental sulfur are done is crap.
+
+Rainout.f is OK unless the species dissacociates in rainwater or has isotopes
+
+In main code, update VDEP and VEFF in TIME-DEPENDENT BOUNDARY CONDTIONS loop
+also:  EMAX - add to ignores - our upper boudary conditions is really bad for particles, so if we all upper atmosphere particle behavior to control the timestep we never get anywhere. this is not ideal, but is probably necessary until we remove the effective flux at the upper boundary.
+
+
+Sedmnt.f - hardcoding in the fractal radii code - .GE.3 to get HCAER and HCAER2
+ 	 - particle to gas conversion factors need updating. (should ask jim what these are) 
+           
+main code: C-PK Write to file used for TPF spectra section below timestepping loop - investigate
+
+Now, add in chemistry 
+-add in reactions/rates on INPUTFILES/reactions.rx file (and on SUBROUTINES/Rates.f if weird)
+-change NR in DATA/parameters.inc
+
+
+
+
+(some ISOHACK stuff at top of code - return to this later)
+
+
+-----working thoughts on Isotope adds.  building this up with biogenic sulfur port.
+
+species.dat
+-species that will have corresponding isotopes in ISOspecies.dat need to be at the end of the species.dat file.  This is because of the way we did the write out of ISOin.dist in TOTCtester.f Could be changed, but it doesn't seem to burdensome at the moment.
+(remember to change NQ on convdist.f if using it)
+
+-TOTCtester.f
+parameter statements up at the top of the file:
+NISO is number of isotopic species (number of S species at present) 15->22 with addition of Sorg
+NPISO is number of isotopic particle species in TD loop (never used so would need testing)
+NISOSL is number of isotopic species in short-lived loop
+-ISOinert and ISOin.dist seem to be made correctly provided that all species that will have isotopes (sulfur for now) are at the end of the species.dat file
+
+****ACKACKACK - going to need to change this so that HCAER doesn't wind up in ISOin.dist *ACKACKACK
+-as of right now, ISOin.dist runs from NQ-NISO which worked before when both particles had S in them but now it doesnt.
+-it indexes 46-67 which is SO2 - > HCAER rather than 45-66 which is SO - > S8AER
+
+-OK this is hacked in for now - I could instiutionalize the hack given that we aren't likely to add any more particles anytime soon, or make it better somehow.
+-the hack has the 22 sulfur species (including the two particles) but does include 3 particles in the aersol/wfall/conver  area
+
+
+
+INPUTFILES/parameters.inc + ISOparameters.inc
+-parameters.inc should be set up correctly for the main run
+-cp parameters.inc parametersREGULAR.inc
+-ISOparameters.inc changes are as follows:
+		   NQ is the number of LL isotopic species on ISOspecies.dat
+		   NR is the number of reactions on ISOreactions.rx (which includes all photolysis + isotopic reactions)
+		   NSP is the number of isotopic species + all(incl. CO2/N2) major species NISO+NISSL+NSP from species.dat
+		   kj/ks must reflect the ISOreactions.rx table. ks should be the same, kj could be higher in the case of additional branches in isotopic photolysis (see XS_S3 for an example)
+
+
+working thoughts on ISOparameters (old/bioS/HC)
+LL 15/22/22
+SL 4/5/5
+NSP 65/81/105 (=19+46)/(27+54)/(27+78)  (#Isospecies (NISO+ NISOSL) + NSP from main model)
+NR  124/202/246   (predicted 14 total additions + 30 new PHOTO - check against wc on reactions.rx - OK
+KS  22/26/37 (same as in parametersREGULAR)
+KJ  32/39/69 (parametersREGULAR+ any new isotopic branches in photorates- 30 new HC reacs)
+
+
+INPUTFILES/ISOspecies.dat
+	all isospecies in the appropriate LL/SL group (with identical boundary conditions for LL's)
+	all species (incl. CO2,N2) from INPUTFILES/species.dat
+	make sure species are in exact same orderings or all hell will break loose
+
+
+INPUTFILES/ISOreactions.rx
+	first up is all non-substitued PHOTO reactions (major species without S)
+	then all isotopically subsituted reactions, with proper* rules
+	update NR on ISOparameters.inc if you didn't before
+
+
+SUBROUTINES/Xsections.f
+	for XS_simple reactions with isotopes, make a new isotopic cross section directory with a hard link to the "real" cross section
+
+-change SUBROUTINES/Lnum.f and DATA/INCLUDE/NBLOK
+
+changes that need to be made every time a new isotopic species is added
+Lnum/NBLOK
+Rainout (needs .OR. statements for isotopic species)
+
+{above are done, below still need work}
+Iso.f (only change for now is isooffset - which should eventually be fixed)
+  *isooffset is harcoded - this is bad and should be fixed.  at the moment, it can't be inferred from the info that ISO.f has.  this needs to be somehow passed from the main code or read in from species.dat or something.
+  	     isooffset is the number of non-isotopic major species, so would need to be changed if we add in say the Cl species or whatever.
+	     I could also try to think of a more clever way to index UINERT     
+	     thoughts on how to fix it are inline, but leaving for now...
+  *isotopic multiples are now handled generically
+
+* - also need to do a double check to make sure any new additions to TOTCtester are reflected in ISO.f
+
+
+Rates
+Xsections
+
+
+
+all changes:
+Aercon (changes to H2O pressure calc, and S8 saturation vapor pressure)
+Dochem (changes for proper looping, H2SO4, S8 condensation, sulfur columns for output)
+Ltning (usol/uinert changes)
+Mscat (some particle stuff)
+Photo (changes related to existing output file metrics. doesn't need general updating)
+Sedmnt(just for sulfur particles)
+OUtput (could always use more work - lots of skips, but should work OK with new species. redox in particular works now)

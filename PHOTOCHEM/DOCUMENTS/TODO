@@ -1,0 +1,121 @@
+a list of things that need to be done to the developement version of totc in no particular order 
+
+COMPLETED PROJECTS (just as reminder for when we write a paper about the new model)
+*abstraction of all chemical reactions and species and boundary conditions,timega
+*added in M as species
+*new format for in.dist/out.dist and photorates printouts that allow us to remove the multiple hardcodings that occur whenever a species is changed
+-NOTE works for NQ changes but not NQ1 (i.e. any tri-diag species) - which are all particles for now and have hardcoding
+-chlorine chemistry
+-sulfur isotopes
+
+*projects related to changing to mars  (completed, but not commited to trunk)
+  planet.earth and pressure abstraction (looking at Kevin's mars and Hot Juipter codes)
+-also includes getting PN2 and pCO2 set as variables with perhaps a flag for how to handle pressure (1 bar versus free for all)
+
+*a tool to help make/remake in.dist files when species come and go (convdist.f)
+
+*2 stream RT  (will require tweaking for my photo strategy) - also consider running PHOTO each time step)
+*XS_SIMPLE - for reading in simple cross sections. although some existing stuff not replaced
+	   (this could be enhanced with a flag for points versus bins interpolation?)
+
+S isotopes - works for biogenic Sulfur and organic haze sulfur chemistry
+
+*Mie scattering (THOLINDATA) +fractal haze
+
+Active projects 
+(MC):
+
+*add in the "standard" vpl fluxes  (ADLeo in chlorine branch - need to add others and abstract the hardcoding in readflux.f) - also finish implementation of youngsun code.
+*automatic redox computation to replace hacked in method of Kevin and Pushker.  (see yuk's code for nice ex) - basically done, but needs some tire kicking
+
+abstract TLOSS and Rainout routines (needed to randomly move everything between SL and LL)
+
+abstract OUTPUT a bit more - check all printouts for things thatmight have disappeared when we went to tri-diag.  NQ used to hold these, so many vectors can probably got to NQ1...
+
+figure out how to abstract/simply all the isotope stuff
+
+EVERYTHING BELOW HERE IS AN UNCLAIMED PROEJCT:  
+(if you decide to work on one, move it above so that we all know. this should occur in addition to talking)
+
+A script to manage the template files.  There needs to be a way to copy everything in, run to completion, then copy back and run some diagnostics.  This should be done every once in a while to keep everything working smoothly as the code physics advances.
+-also make sure parametersREGULAR and ISOparameters are part of the templates
+
+
+
+There needs to be a printout of the relevant boundary conditions at the top of the out.out file (or something seperate) - right now, its not easy to identify post-mortem what the experiment was.  this should include stuff like flux, and relevant things from the PLANET file.
+-Seconded - I've rediscovered the need for this  
+(have included a copy of INPUTFILES/species.dat in my ISO runs, but need something more permanent
+
+
+!in my implementation of Twostr.f I have neglected to deal with these output files.  Should do this at some point.
+!need to check these versus whats in BIOSIGS
+22 - tautot.dat , 20 twostr.tauc.dat, 13 ERROR.OUT, 21 twostr.solar.dat
+
+
+to abstract:
+
+Atacama
+particles
+-max heights for tri-diag
+-NP/vector declaraions
+-IF statements
+
+Makefile
+*get it to compile on cerridwyn with ifort (only guaranteed to work on a mac with gfortran now)
+*add some sort of archetecture dependent check for compiler flags
+*also add in some sort of user interaction (i.e. make optomized vs. make debug)
+
+
+make a DOCUMENTS/best practices file:
+i.e. if adding common block, change Makefile...
+
+change dumb subroutine names (low priority, but a good lazy sunday watching the game type of project... (remember to use svn move))
+
+go through all code comments keeping only what is relevant, and expand where needed
+
+Noe added in the temperature factors in the .rx file with the negative sign included. change this, then change Rates.f
+
+
+At some point, Shawn and Mark should go through codes line by line to fill out the lists of projects below:
+
+Photo -> shortlived species as photolysis reactions?  also absorbers for RT?
+
+
+Things to port from shawn's code:
+
+H2SO4.dat  (what is the diff between this and the existing aersol.table?)
+
+change solvers to double precision  (linpack codes already in place - although this might not be necessary as we have modified the 'single precision' versions to real*8, which is probably fine)
+
+things to look at from shawn's code (these may be useless, but putting them here so we don't forget about them)
+COaq/H2aq/VdepCO
+Aqueous2
+Rainout2
+Output/Output2 - (already ported enhanced RAT printout)
+	       - in the balance section, shawns has sr,phideps multiplied by redox factors
+Ldcmp
+Ldksb
+
+
+Code development:
+
+sulfate mie scattering (requires TWOstream)
+
+S8 gas phase (keep?) source of some bugs I'm sure...
+
+change all numbers (including reaction rates) to Double precision, unless they are converted on read in.
+
+update all cross sections
+-there is some work that would need to be done with the wavelength grids here, with regards to Ly a. The code has a 1216-1300 bin, but the practice is that this is just 1216.  This is implemented by the convention that the flux in the bin is set to the Ly a flux, and the (historical) cross sections 'data' for these points was set to the value at 1216.  While the high-resolution flux has been hacked to work this way, we currently would have a problem with any species that has high-resolution cross-section data between 1216 and 1300.  These are getting averaged into the 1216 bin, which probably isn't the best idea.  The real solution here is to modify the wavelength grids and fluxes such that 1216 gets all the ly-a, and update the wavelength grid to be very fine about this one point. i.e. so there are grids: 1200-1216, 1216-1216.1,1216.1-1300.  The 'if's in xsection.dat would still pick up on this.  This might underestimate the high resolution data, but is probably good for starters.  This problem would go away (and we could reset the grid a bit more symmetrically) if we exorcised the photo.dat data completely (although there are still the quantum yield "if" statements
+
+
+
+
+update the JPL-02 rates to JPL-06. Mark has a list of necessary changes on the pile of crap that is his desk.
+Also, go through the notes in ~/photochem/dev/code/chlorine/RatePortThoughts on ozone to address some problems/differences in reaction rates between the two main trunks of the code.
+
+use new reaction rates file to update printout in .out file to include reaction rates (see yuk's code for nice ex)
+
+ 
+
+

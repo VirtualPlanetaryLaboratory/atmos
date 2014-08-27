@@ -1,0 +1,101 @@
+45 57
+Reference: JPL Publication 94-26
+           Chemical Kinetics and Photochemical Data for Use in Stratospheric
+           Modeling
+           Evaluation Number 11
+           December 15, 1994
+           page 119 ff.
+
+NO2 + hv -> NO + O
+
+"Earlier recommendations for the absorption cross sections of nitrogen dioxide
+were taken from the work of Bass et al. [117].  More recent measurements have
+been reported by Schneider et al. [1391], at 298K, for the wavelength range from
+200 to 700 nm; and by Davidson et al. [411], from 270 to 420 nm, in the 232-397
+K temperature range.  At room temperature the agreement vetween these three
+sets of measurements is good;  within 5% between 305 and 345 nm, and within 10%
+at the longer wavelengths.  The agreements is poor below room temperate, as
+well as at the shorter wavelengths.  A possible cause for the discrepancies is
+the presence of N2O4.  The corrections needed to account for the presence of
+this species are largest around 200 nm, where it absorbs strongly.  The
+corrections are also large at the lowest temperatures, because a significant
+fraction of the NO2 froms N2O4.  On the other hand, there is no error apparent
+in the corrections carried out by Bass et al., so that the reason for the
+discrepancy is not clear.  Measuremets of the absoprtion cross sections in the
+visible (440 to 460 nm), between 273 and 404 K, have been reported by Amoruso
+et al. [32];  and Corcoran et al. [361] carried out high resolution
+measurements at a ferw selected wavelength ranges between 470 and 616 nm, at
+295, 573 and 673 K.
+
+Table 13 lists the recommended absoprtion cross sections, averaged over the
+wavelength intervals used for atmospheric photodissociation calculations.  For
+the wavelength range from 200 to 274 nm the values are taken from Schneider et
+al. [1391];  in this range the temperature effect is negligible.  For the 274
+to 420 nm region the temperature-dependent values are taken from DAvidson et
+al. [411]."
+
+sigma(T) = sigma(T0) + a* x T  with T:  temperature in degrees C
+-----------------------------------------------------------------------------
+Table 13.  Absorption Cross Sections of NO2
+(a* in units of 1E22 cm2 mol-1 deg-1)
+-----------------------------------------------------------------------------
+lambda1 	lambda2		sigma @ T0 		T0	a*
+(nm)		(nm)		(1E-20 cm2 mol-1)	(C)	(see above)
+-----------------------------------------------------------------------------
+202.02		204.08		41.45			25	 0.
+204.08		206.19		44.78			25	 0.
+206.19		208.33		44.54			25	 0.
+208.33		210.53		46.41			25	 0.
+210.53		212.77		48.66			25	 0.
+212.77		215.09		48.18			25	 0.
+215.09		217.39		50.22			25	 0.
+217.39		219.78		44.41			25	 0.
+219.78		222.22		47.13			25	 0.
+222.22		224.72		37.72			25	 0.
+224.72		227.27		39.29			25	 0.
+227.27		229.89		27.40			25	 0.
+229.89		232.56		27.78			25	 0.
+232.56		235.29		16.89			25	 0.
+235.29		238.09		16.18			25	 0.
+238.09		240.96		 8.812			25	 0.
+240.96		243.90		 7.472			25	 0.
+243.90		246.91		 3.909			25	 0.
+246.91		250.00		 2.753			25	 0.
+250.00		253.17		 2.007			25	 0.
+253.17		256.41		 1.973			25	 0.
+256.41		259.74		 2.111			25	 0.
+259.74		263.16		 2.357			25	 0.
+263.16		266.67		 2.698			25	 0.
+266.67		270.27		 3.247			25	 0.
+270.27		273.97		 3.785			25	 0.
+273.97		277.78		 5.03			 0	 0.075
+277.78		281.69		 5.88			 0	 0.082
+281.69		285.71		 7.00			 0	-0.053
+285.71		289.85		 8.15			 0	-0.043
+289.85		294.12		 9.72			 0	-0.031
+294.12		298.51		11.54			 0	-0.162
+298.51		303.03		13.44			 0	-0.284
+303.03		307.69		15.89			 0	-0.357
+307.69		312.50		18.67			 0	-0.536
+312.50		317.50		21.53			 0	-0.686
+317.5		322.5		24.77			 0	-0.786
+322.5		327.5		28.07			 0	-1.105
+327.5		332.5		31.33			 0	-1.355
+332.5		337.5		34.25			 0	-1.277
+337.5		342.5		37.98			 0	-1.612
+342.5		347.5		40.65			 0	-1.890
+347.5		352.5		43.13			 0	-1.219
+352.5		357.5		47.17			 0	-1.921
+357.5		362.5		48.33			 0	-1.095
+362.5		367.5		51.66			 0	-1.322
+367.5		372.5		53.15			 0	-1.102
+372.5		377.5		55.08			 0	-0.806
+377.5		382.5		56.44			 0	-0.867
+382.5		387.5		57.57			 0	-0.945
+387.5		392.5		59.27			 0	-0.923
+392.5		397.5		58.45			 0	-0.738
+397.5		402.5		60.21			 0	-0.599
+402.5		407.5		57.81			 0	-0.545
+407.5		412.5		59.99			 0	-1.129
+412.5		417.5		56.51			 0	 0.001
+417.5		422.5		58.12			 0	-1.208
