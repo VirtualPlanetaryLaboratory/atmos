@@ -1357,8 +1357,27 @@ c        print *, 'TSTRAT=', TSTRAT
 c        ENDDO
 
 c       STOP
-        
 
+      close(3)
+      close(4)
+      close(8)
+      close(9)
+      close(21)
+      close(10)
+      close(17)
+      close(18)
+      close(25)
+      close(26)
+      close(27)
+      close(30)
+      close(38)
+      close(39)
+      close(66)
+      close(90)
+      close(91)
+      close(22)
+      close(116)
+      close(96) 
       END                 !end of the subroutine
       
 *********************************************************************
@@ -1433,7 +1452,7 @@ C        print 500,n
           enddo
 C        print*,'n=',n(i),' sum =', sum
         enddo
-        close(39)
+        close(38)
         close(66)
         close(90)
         close(91)
