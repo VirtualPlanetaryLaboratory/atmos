@@ -447,7 +447,7 @@ C **** Read the Gauss points and weights for the solar zenith angle int
 
 c*********Calculate PGO*************
 c sk      PG0 = .8 + PCO2
-      print 999, PG0
+c      print 999, PG0
 999   FORMAT(1x,'PG0 =',1PE12.5)
 c      print 999, PCO2
 c===================================================================
@@ -466,7 +466,7 @@ c Reading the atmospheric composition from mixing_ratios.dat
 
 c***********Calculate new FCO2**************
 c sk        FCO2 = PCO2/((.8/28.+PCO2/44.)*44.)
-        print 997, FCO2
+c        print 997, FCO2
 997   FORMAT(1x,'FCO2 =',1PE12.5) 
 c WJL- changed mixing ratios below to include NO2
 
@@ -489,7 +489,7 @@ c-rr Noncondensible molecular weight of the atmosphere when CO2 is condensing (f
 c jfk DM is the noncondensible molecular weight when CO2 is not condensing
       DM = 44.*FCO2 + (1.-FCO2)*DM2
 
-        print*,FCH4, FCO2, FO2, JCOLD        
+c        print*,FCH4, FCO2, FO2, JCOLD        
        
 c      IF(FCO2.gt.CO2MAX) print 550
 
@@ -608,7 +608,7 @@ c Constructing temperature and water profiles in case they are not provided
           CALL PROFILE(TSTRAT,P,T,DZ,FSAVE,FCO2V,BETA,JCOLD,
      &    IDRY,FLAGCONVEC)           
        ENDIF
-      print *,' JCOLD =',JCOLD
+c      print *,' JCOLD =',JCOLD
 c Building the water profile
       if(ICOUPLE.eq.0)then
         DO J = 1,ND
@@ -681,13 +681,13 @@ c  Altitude calculation
 c Reading the ozone and water from the photochemical model
      
       IF(ICOUPLE.EQ.1) THEN 
-        print *, 'temp_alt, press, o3, water, ch4, co2'
+c        print *, 'temp_alt, press, o3, water, ch4, co2'
         DO JREAD=1,NZ  !number of layers in photochem code
          READ(113,*) temp_alt(JREAD),PRESS(JREAD),O3(JREAD),
      &                 wateR(JREAD),CH4(JREAD), CO2(JREAD)
          temp_alt(JREAD)=temp_alt(JREAD)/1.0e5
-         print 353, temp_alt(JREAD),PRESS(JREAD),O3(JREAD),water(JREAD),
-     &         CH4(JREAD), CO2(JREAD)
+c         print 353, temp_alt(JREAD),PRESS(JREAD),O3(JREAD),water(JREAD),
+c     &         CH4(JREAD), CO2(JREAD)
         END DO
         FH2O=water(1)
 c        FI(1,ND)=FH2O
@@ -699,14 +699,14 @@ c        FI(4,ND)=FO3
 c        FI(2,ND)=FCO2
   352   FORMAT("Alt = ",1PE12.3," H20=",1PE12.3)
   353   FORMAT(6(1PE9.2,1x))
-         print *, 'NREAD, NZ, ND'
-         print *, NREAD, NZ, ND
+c         print *, 'NREAD, NZ, ND'
+c         print *, NREAD, NZ, ND
 c  Interpolate the grid from the photochemical model to the grid of the
 c  climate model 
         CALL INPUT_INTERP(temp_alt, water, O3, CH4, CO2, Jcold, T, FI)
-        print *, 'temp_alt,water,co2,ch4,o3(after input_interp)'
+c        print *, 'temp_alt,water,co2,ch4,o3(after input_interp)'
         DO J=1,ND
-         print 353, alt(J), (FI(I,J),I=1,4) 
+c         print 353, alt(J), (FI(I,J),I=1,4) 
         ENDDO
        close (113)
        ENDIF
@@ -938,7 +938,7 @@ C the TOP of the atmosphere
       CALL SATRAT(TN(ND-1),PSAT)
       FI(1,ND-1) = RELHUM(P(ND-1))*PSAT/P(ND-1)
       end select
-      print *, TN(ND), FTOTAL(ND)
+c      print *, TN(ND), FTOTAL(ND)
 
 * Total heating rate
       do j=1,ND

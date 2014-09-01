@@ -17,10 +17,10 @@
 !      read(10,*)  Removed labels so no need to skip line 
         do I =1,NSOL
           read(10,*)a,WL1,WL2,(s(k), k=1,296)
-          print *, read n,WL1,WL2,(s(k), k=1,296)
+c          print *, read n,WL1,WL2,(s(k), k=1,296)
           IF (STARR== "Sun") THEN
              SOLINT(I)=s(1)
-             print *, SOLINT(I)
+c             print *, SOLINT(I)
           ELSE IF (STARR=="GJ581")THEN
              SOLINT(I)=s(2)
 !            print *, SOLINT(I)
@@ -1107,6 +1107,6 @@
         DO I=1,NSOL
            TOTAL=SOLINT(I)+TOTAL
         ENDDO
-        PRINT *,'TOTALFLUX=',TOTAL
+c        PRINT *,'TOTALFLUX=',TOTAL
 
         END
