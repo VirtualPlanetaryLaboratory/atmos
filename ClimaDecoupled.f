@@ -306,13 +306,9 @@ c  Ozone and water profiles from the photochemical model
 c    File formerly called Pass2SurfMP.dat      
       OPEN (unit=13,file= 'COUPLE/fromPhoto2Clima.dat') 
 c  Surface mixing rations to set the chemical composition of the atmosphere.
-c  Used by the photochemical and the climate model
-      IF (ICOUPLE.eq.0) THEN
-         OPEN (unit=14,file= DIRINOUT//'/mixing_ratios.dat')  
-      ELSE 
-         OPEN (unit=14,file= 'COUPLE/mixing_ratios.dat')
-      END IF
-!      open (unit=19, file = DIRDATA//'/ebtextnew.dat',status='old') 
+
+c gna - eek!  was choosing which mixing_ratios.dat file to read BEFORE 
+c reading in whether ICOUPLE = 1 or 0!  Moving this block of code down below...
 
 C These INPUT files are open along the program 
 c  Subroutine IR
@@ -414,7 +410,15 @@ c*******Changed for now*********
       READ(1,*) AA,CO2MAX
       READ(1,*) AA, IMET        ! IMET (flag 0 or 1)
       READ(1,*) AA, nga
-  
+!gna - moved this part here so now we know what ICOUPLE is supposed to be  
+!(before this piece of code was before ICOUPLE was read in)    
+  c  Used by the photochemical and the climate model
+      IF (ICOUPLE.eq.0) THEN
+         OPEN (unit=14,file= DIRINOUT//'/mixing_ratios.dat')  
+      ELSE 
+         OPEN (unit=14,file= 'COUPLE/mixing_ratios.dat')
+      END IF
+
 c      print *, 'icouple is'
 c      print *, ICOUPLE
 
