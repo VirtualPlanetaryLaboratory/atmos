@@ -17,7 +17,7 @@
 * 
 *   LONG-LIVED O H C S N CL LBOUND  VDEP0   FIXEDMR SGFLUX    DISTH MBOUND SMFLUX  VEFF0  
 O          LL  1 0 0 0 0 0    0     1.0E+00 0.      0.        0.      2      0.      0.       !if MBOUND=2- set CO/O in code based on CO2 above the top
-O2         LL  2 0 0 0 0 0    1     0.      1.0E-06 2.000E+11 0.      0      0.      0.       !1e-4 diffusion of O2 
+O2         LL  2 0 0 0 0 0    1     0.      1.0E-08 2.000E+11 0.      0      0.      0.       !1e-4 diffusion of O2 
 H2O        LL  1 2 0 0 0 0    0     0.      0.      0.        0.      0      0.      0.        
 H          LL  0 1 0 0 0 0    0     1.0E+00 0.      0.        0.      0      0.      0.       ! Mbound=0 -> diff limited flux UBC in code 
 OH         LL  1 1 0 0 0 0    0     1.0E+00 0.      0.        0.      0      0.      0.        
@@ -27,7 +27,7 @@ H2         LL  0 2 0 0 0 0    3     2.4E-04 5.0E-04 1.000E+10 10.     0      0. 
 CO         LL  1 0 1 0 0 0    3     1.2E-04 0.      1.000E+09 10.     2      0.      0.        !1.2e-4 Kharecha 05 - bugs eating CO !MBOUND=2 set in code based on CO2
 HCO        LL  1 1 1 0 0 0    0     1.0E+00 0.      0.        0.      0      0.      0.        
 H2CO       LL  1 2 1 0 0 0    0     2.0E-01 0.      0.        0.      0      0.      0.        
-CH4        LL  0 4 1 0 0 0    1     0.      1.7E-06 3.410E+11 0.      0      0.      0.        
+CH4        LL  0 4 1 0 0 0    1     0.      1.0E-05 3.410E+11 0.      0      0.      0.        
 CH3        LL  0 3 1 0 0 0    0     1.0E+00 0.      0.        0.      0      0.      0.        
 C2H6       LL  0 6 2 0 0 0    0     0.      0.      0.        0.      0      0.      0.        
 NO         LL  1 0 0 0 1 0    0     3.0E-04 0.      0.        0.      0      0.      0.        
@@ -94,7 +94,7 @@ CS2X       SL  0 0 1 2 0 0
 S3         SL  0 0 0 3 0 0    0     0.      0.      0.        0.      0      0.      0.        
 S4         SL  0 0 0 4 0 0    0     0.      0.      0.        0.      0      0.      0.        
 *   INERT SPECIES             Fixed MR
-CO2        IN  2 0 1 0 0 0    3.3E-4       !must be second to last IN 
+CO2        IN  2 0 1 0 0 0    1.0E-2       !must be second to last IN 
 N2         IN  0 0 0 0 2 0    0.80          !must be last IN  (FIXED MR NOT YET USED...)	      
 * NSP should be the number directly above                              
 HV         HV  0 0 0 0 0 0		    !must be second to last    

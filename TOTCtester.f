@@ -921,6 +921,18 @@ c read in formatted input data file
 !SL(NSP-1) will be the density of the final short-lived species if CO2 is removed from the list.  I dont THINK it will matter now that I call DOCHEM with the -1 before starting....
 ! Changed NSP-1 to LCO2 to avoid hard coding
 
+!gna - we need to make it so that T = T_new
+      IF(ICOUPLE.EQ.1) THEN
+         DO I=1, NZ
+            IF(T_new(I).gt.170) THEN !gna - avoid some crazy unconverged clima solutions that make photo not converge -- better ideas to check for this?
+               T(I) = T_new(I)
+            ENDIF
+         END DO
+
+      ENDIF
+
+
+
         fmtstr='(  E17.8)'
         write(fmtstr(2:3),'(I2)')NP*3
 
@@ -1098,8 +1110,13 @@ c           bXN2(i) = 0.0   ! don't use molecular diffusion
      $     *(1./Hscale(nz) - 1./scale_H(LH2,nz))
       endif
       
+!gna - added coupling stuff for water here (just below tropopause)
       do J=1,JTROP
+       IF(ICOUPLE.eq.0) THEN
        USOL(LH2O,J) = H2O(J)   !sets H2O to relative humidity in troposphere
+       ELSE
+       USOL(LH2O,J) = water(J)  !set to h2o from clima if coupling on
+       ENDIF
       enddo
 
       IF (PLANET .eq. 'EARTH') CALL LTNING(FO2)

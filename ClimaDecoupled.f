@@ -1,4 +1,4 @@
-C 1    C     PROGRAM SURFT(INPUT,OUTPUT,TAPE1,TAPE2,TAPE3)
+cC 1    C     PROGRAM SURFT(INPUT,OUTPUT,TAPE1,TAPE2,TAPE3)
 
 C  This program is a modified version of the climate model SURFTEM made 
 c  by James Kasting. The program has been modified by Michael Mischna (mm),
