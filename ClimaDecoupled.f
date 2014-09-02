@@ -697,8 +697,8 @@ c Reading the ozone and water from the photochemical model
       IF(ICOUPLE.EQ.1) THEN 
 c        print *, 'temp_alt, press, o3, water, ch4, co2'
         DO JREAD=1,NZ  !number of layers in photochem code
-         READ(113,*) temp_alt(JREAD),PRESS(JREAD),O3(JREAD),water(JREAD),
-     &                 CH4(JREAD), CO2(JREAD)
+         READ(113,*) temp_alt(JREAD),PRESS(JREAD),O3(JREAD),
+     &                 water(JREAD),CH4(JREAD), CO2(JREAD)
          temp_alt(JREAD)=temp_alt(JREAD)/1.0e5
 c         print 353, temp_alt(JREAD),PRESS(JREAD),O3(JREAD),water(JREAD),
 c     &         CH4(JREAD), CO2(JREAD)
@@ -751,13 +751,13 @@ c      if(FCO2.gt.CO2MAX) then
 c-as Old subroutine to calculate IR flux
 C PLANCK FUNCTION WAS CHANGED
        
-c-rr   Created IRM.F (IR clone with methane loop turned on). When there is methane call IRM instead of IR. 5/2/2011 
+c-rr gna  Created IRME.F (IR clone with methane and ethane loops turned on). When there is methane call IRM instead of IR. 5/2/2011 
        IF (IMET.eq.0) THEN
        CALL IR(T,PF,P,FNC,CGAS)  ! Passes FNC to IR c-rr 6/7/2012
        ELSE IF(IMET.eq.1) THEN
-       print *, 'about to call IRM'
-       CALL IRM(T,PF,P,FNC,CGAS) ! Passes FNC to IRM c-rr 6/7/2012
-       print *, 'calling IRM'
+       print *, 'about to call IRME' !irme is methane + ethane version
+       CALL IRME(T,PF,P,FNC,CGAS) ! Passes FNC to IRM c-rr 6/7/2012
+       print *, 'calling IRME'
       ENDIF       
        
 c      else
