@@ -18,9 +18,7 @@ PHOTOCHEM/OBJECT_PHOT/*
 # Hitran linelists should never be added (they are big!) #
 ############
 *.par
-*/.par
-*/*/.par
-*/*/*/.par
+*/*.par
 
 # Packages #
 ############
