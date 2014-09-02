@@ -240,7 +240,7 @@ c Names of the subdirectories for the data, inputs and outputs
       
 c   =============    FILE SECTION ==================
         
-      print *, 'running'
+c      print *, 'running'
 
 C  INPUT FILES
       OPEN (unit=1,file= DIRINOUT//'/input_clima.dat')
@@ -304,13 +304,13 @@ c  coupled to the photochemical model
       OPEN (unit=22,file= DIRINOUT//'/Ozone_standard.dat')
 c  Ozone and water profiles from the photochemical model
 c    File formerly called Pass2SurfMP.dat      
-      OPEN (unit=13,file= '../COUPLE/fromPhoto2Clima.dat') 
+      OPEN (unit=113,file= '../COUPLE/fromPhoto2Clima.dat') 
 c  Surface mixing rations to set the chemical composition of the atmosphere.
 c  Used by the photochemical and the climate model
       IF (ICOUPLE.eq.0) THEN
-         OPEN (unit=14,file= DIRINOUT//'/mixing_ratios.dat')  
+         OPEN (unit=114,file= DIRINOUT//'/mixing_ratios.dat')  
       ELSE 
-         OPEN (unit=14,file= '../COUPLE/mixing_ratios.dat')
+         OPEN (unit=114,file= '../COUPLE/mixing_ratios.dat')
       END IF
 !      open (unit=19, file = DIRDATA//'/ebtextnew.dat',status='old') 
 
@@ -438,25 +438,25 @@ C **** Read the Gauss points and weights for the solar zenith angle int
 
 c*********Calculate PGO*************
 c sk      PG0 = .8 + PCO2
-      print 999, PG0
+c      print 999, PG0
 999   FORMAT(1x,'PG0 =',1PE12.5)
 c      print 999, PCO2
 c===================================================================
 
 c Reading the atmospheric composition from mixing_ratios.dat
-         READ(14,*) FAR                  !Argon
-         READ(14,*) FCH4                        !Methane
-         READ(14,*) FC2H6                !Ethane        
-         READ(14,*) FCO2                        !Carbon dioxide
-         READ(14,*) FN2                        !Nitrogen - added Nitrogen mixing ratio c-rr 6/5/2012        
-         READ(14,*) FO2                        !Oxygen        
-         READ(14,*) FH22                        ! c-rr 5/29/2012 added H2 mixing ratio
-         READ(14,*) FNO2                        !Nitrogen dioxide
-         READ(14,*) Jcold                !Tropopause layer
-
+         READ(114,*) FAR                  !Argon
+         READ(114,*) FCH4                        !Methane
+         READ(114,*) FC2H6                !Ethane        
+         READ(114,*) FCO2                        !Carbon dioxide
+         READ(114,*) FN2                        !Nitrogen - added Nitrogen mixing ratio c-rr 6/5/2012        
+         READ(114,*) FO2                        !Oxygen        
+         READ(114,*) FH22                        ! c-rr 5/29/2012 added H2 mixing ratio
+         READ(114,*) FNO2                        !Nitrogen dioxide
+         READ(114,*) Jcold                !Tropopause layer
+         close(114)
 c***********Calculate new FCO2**************
 c sk        FCO2 = PCO2/((.8/28.+PCO2/44.)*44.)
-        print 997, FCO2
+c        print 997, FCO2
 997   FORMAT(1x,'FCO2 =',1PE12.5) 
 c WJL- changed mixing ratios below to include NO2
 
@@ -479,7 +479,7 @@ c-rr Noncondensible molecular weight of the atmosphere when CO2 is condensing (f
 c jfk DM is the noncondensible molecular weight when CO2 is not condensing
       DM = 44.*FCO2 + (1.-FCO2)*DM2
 
-        print*,FCH4, FCO2, FO2, JCOLD        
+c        print*,FCH4, FCO2, FO2, JCOLD        
        
 c      IF(FCO2.gt.CO2MAX) print 550
 
@@ -596,7 +596,7 @@ c Constructing temperature and water profiles in case they are not provided
           CALL PROFILE(TSTRAT,P,T,DZ,FSAVE,FCO2V,BETA,JCOLD,
      &    IDRY,FLAGCONVEC)           
        ENDIF
-      print *,' JCOLD =',JCOLD
+c      print *,' JCOLD =',JCOLD
 c Building the water profile
       if(ICOUPLE.eq.0)then
         DO J = 1,ND
@@ -669,12 +669,12 @@ c  Altitude calculation
 c Reading the ozone and water from the photochemical model
      
       IF(ICOUPLE.EQ.1) THEN 
-        print *, 'temp_alt, press, o3, water, ch4, co2'
+c        print *, 'temp_alt, press, o3, water, ch4, co2'
         DO JREAD=1,NZ  !number of layers in photochem code
-         READ(13,*) temp_alt(JREAD),PRESS(JREAD),O3(JREAD),water(JREAD),
+         READ(113,*) temp_alt(JREAD),PRESS(JREAD),O3(JREAD),water(JREAD),
      &                 CH4(JREAD), CO2(JREAD)
          temp_alt(JREAD)=temp_alt(JREAD)/1.0e5
-         print 353, temp_alt(JREAD),PRESS(JREAD),O3(JREAD),water(JREAD),
+c         print 353, temp_alt(JREAD),PRESS(JREAD),O3(JREAD),water(JREAD),
      &         CH4(JREAD), CO2(JREAD)
         END DO
         FH2O=water(1)
@@ -690,13 +690,13 @@ c        FI(2,ND)=FCO2
 c  Interpolate the grid from the photochemical model to the grid of the
 c  climate model 
         CALL INPUT_INTERP(temp_alt, water, O3, CH4, CO2, Jcold, T, FI)
-        print *, 'temp_alt,water,co2,ch4,o3(after input_interp)'
+c        print *, 'temp_alt,water,co2,ch4,o3(after input_interp)'
         DO J=1,ND
-         print 353, alt(J), (FI(I,J),I=1,4) 
+c         print 353, alt(J), (FI(I,J),I=1,4) 
         ENDDO
        ENDIF
 
-
+       close(113)
 
   
 c Aerosol calculation (commented when not used)
@@ -710,7 +710,7 @@ C ****************** START ITERATIVE LOOP *******************
 C************************************************************
       print *, 'in NST loop'
       ITROP = 1
-      PRINT 161,NST
+C      PRINT 161,NST
  160  FORMAT(/1X,"---------------------------------------------",
      2  //1X,"NST =",I6)
  161  format(1x,"NST =", I6)
@@ -923,7 +923,7 @@ C the TOP of the atmosphere
       CALL SATRAT(TN(ND-1),PSAT)
       FI(1,ND-1) = RELHUM(P(ND-1))*PSAT/P(ND-1)
       end select
-      print *, TN(ND), FTOTAL(ND)
+c      print *, TN(ND), FTOTAL(ND)
 
 * Total heating rate
       do j=1,ND

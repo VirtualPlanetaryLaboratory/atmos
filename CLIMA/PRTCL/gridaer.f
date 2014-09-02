@@ -14,7 +14,7 @@
       READ(101,*)
       READ(101,105) (Z(I),NPART(I),RPART(I),WFALL(I),TAUSED(I),
      2 TAUEDD(I),TAUC(I),CONVER(I),I=1,NZ)
-      print *, 'read it in'
+c      print *, 'read it in'
       WRITE(102,103)
       WRITE(102,104)
       WRITE(102,105) (Z(I),NPART(I),RPART(I),WFALL(I),
@@ -63,10 +63,10 @@ c     &  2.357E-05, 3.479E-06, 2.417E-06, 1.695E-06/
 C****************************************************************
 
       
-      print *,'rpart:'
-      print *, rpart
-      print *,'npart:'
-      print *, npart
+c      print *,'rpart:'
+c      print *, rpart
+c      print *,'npart:'
+c      print *, npart
 
 C--------------------------------------------------------------
 
@@ -892,9 +892,9 @@ C     3  9.E-6, 6.7E-6, 4.9E-6, 3.5E-6, 2.6E-6, 1.8E-6, 1.1E-6/
 c        DO IL = 1,ND
 c        PARTICLES(IL) = PARTICLES(IL)/100
 c        ENDDO
-        PRINT *, 'NPARTICLES'
-        PRINT *, PARTICLES
-        PRINT *, 'Radius'
-        PRINT *, RAER
+c        PRINT *, 'NPARTICLES'
+c        PRINT *, PARTICLES
+c        PRINT *, 'Radius'
+c        PRINT *, RAER
         RETURN
         END

@@ -65,11 +65,11 @@ c Choose programs
          write(*,*)'What model do you want to use?'
          write(*,*)'0-climate, 1-photochemical'
          read(*,*) IMODEL
-      else
-         write(*,*)'How many iterations between both models?'
-         read(*,*) niter
       endif
-      
+      write(*,*)'How many model iterations?'
+      read(*,*) niter
+     
+ 
       if(IMODEL.ne.1) then
 c Parameters to run the climate model
          write(*,*)'For the climate model:'
@@ -105,10 +105,9 @@ c Running the climate code
           dtmax = 1.e4      !maximum time step (s)
           PRINT *,"Calling CLIMA:"
           CALL CLIMA(ICOUPLE,DTC,NSTEPSC,dtmax,ncouple)
-       endif
        print*,'end climate'
+       endif
        print *,'icouple is',icouple
-       if (ICOUPLE.ne.1) go to 3
 c Running the photochemical code
        if(IMODEL.eq.1.or.ICOUPLE.eq.1) then
           DTP = 1.e-6      !initial time step
@@ -116,7 +115,7 @@ c Running the photochemical code
           CALL PHOTOCHEM(ICOUPLE,TSTOP,DTP,NSTEPSP,TIME,ncouple)
        endif
 c Calculating diagnostic parameters for stady-state convergence
-       if (ICOUPLE.eq.0) go to 3
+       if (ICOUPLE.eq.1) then
        call diagnostic(nconvdif)
        if(nconvdif.ne.0) then
           close(198)
@@ -131,7 +130,8 @@ c Calculating diagnostic parameters for stady-state convergence
           print*,'*** WARNING: STEADY STATE SOLUTION NOT REACHED ***'
           STOP
        endif
-       if(nconvdif.eq.0) go to 2     
+       if(nconvdif.eq.0) go to 2
+       endif     
   1    enddo                  !END steady-state loop 
   
 c Printing diagnostic parameters for the steady solution
