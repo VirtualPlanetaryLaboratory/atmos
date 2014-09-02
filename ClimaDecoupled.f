@@ -306,13 +306,9 @@ c  Ozone and water profiles from the photochemical model
 c    File formerly called Pass2SurfMP.dat      
       OPEN (unit=13,file= 'COUPLE/fromPhoto2Clima.dat') 
 c  Surface mixing rations to set the chemical composition of the atmosphere.
-c  Used by the photochemical and the climate model
 
-!gna - bug was here: was selecting which mixing ratio file to open
-!     BEFORE reading in input_clima to see if ICOUPLE = 1 (so was always reading
-!      in the uncoupled mixing_ratio.dat at this point)
-
-!      open (unit=19, file = DIRDATA//'/ebtextnew.dat',status='old') 
+c gna - eek!  was choosing which mixing_ratios.dat file to read BEFORE 
+c reading in whether ICOUPLE = 1 or 0!  Moving this block of code down below...
 
 C These INPUT files are open along the program 
 c  Subroutine IR
@@ -413,7 +409,7 @@ c*******Changed for now*********
       READ(1,*) AA,CO2MAX
       READ(1,*) AA, IMET        ! IMET (flag 0 or 1)
       READ(1,*) AA, nga
-<<<<<<< HEAD
+
 
 !gna - moved this part here so now we know what ICOUPLE is supposed to be  
 !(before this piece of code was before ICOUPLE was read in)
@@ -422,15 +418,9 @@ c*******Changed for now*********
       ELSE 
          OPEN (unit=14,file= 'COUPLE/mixing_ratios.dat')
       END IF
-!      open (unit=19, file = DIRDATA//'/ebtextnew.dat',status='old') 
 
       print *, 'icouple is'
       print *, ICOUPLE
-=======
-  
-c      print *, 'icouple is'
-c      print *, ICOUPLE
->>>>>>> 83b29b52972b55b06703ca7276f3b936832341c9
 
 !gna - read more inputs from photo for coupling
       IF (ICOUPLE.eq.1) THEN 
@@ -438,25 +428,15 @@ c      print *, ICOUPLE
  107  FORMAT(1X, F4.2, 5X, F5.3, 5X, F18.16)
       READ(999,*)
       READ(999,107) timega, P0ground, frak
-<<<<<<< HEAD
       print *, timega
       print *, P0ground
       print *, frak
-=======
+        age = 4.7
+         time = age-timega
+         SOLCON = (1+0.4*(1-time/4.7))**(-1)
 c      print *, timega
 c      print *, P0ground
 c      print *, frak
-      ENDIF
-
-C added by Giada
-      IF (ICOUPLE.eq.1) THEN 
-c         PG0 = P0ground
->>>>>>> 83b29b52972b55b06703ca7276f3b936832341c9
-         age = 4.7
-         time = age-timega
-         SOLCON = (1+0.4*(1-time/4.7))**(-1)
-c         print *, PG0
-c         print *, SOLCON
       ENDIF
 
    
