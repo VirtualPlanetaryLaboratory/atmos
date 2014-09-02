@@ -2603,7 +2603,7 @@ c       endif
          FN2=SL(LN2,1)/DEN(1)
          FO2=USOL(LO2,1)
          FH2=USOL(LH2,1)
-         FNO2=USOL(LNO2,1)
+         FNO2=USOL(LNO2,1)/1.0E60 !gna - clima can't currently cope with NO2 and having it is screwing it up
          JCOLD=JTROP
 
          WRITE(117,102) FAR, FCH4, FC2H6, FCO2,
