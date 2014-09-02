@@ -8,6 +8,10 @@
 *.so
 TOTCdev
 runclima
+CLIMA/runclima
+PHOTOCHEM/TOTCdev
+PHOTOCHEM/OBJECTFILES/*
+CLIMA/OBJECT_CLIMA/*
 
 # Packages #
 ############
