@@ -307,11 +307,11 @@ c    File formerly called Pass2SurfMP.dat
       OPEN (unit=13,file= 'COUPLE/fromPhoto2Clima.dat') 
 c  Surface mixing rations to set the chemical composition of the atmosphere.
 c  Used by the photochemical and the climate model
-      IF (ICOUPLE.eq.0) THEN
-         OPEN (unit=14,file= DIRINOUT//'/mixing_ratios.dat')  
-      ELSE 
-         OPEN (unit=14,file= 'COUPLE/mixing_ratios.dat')
-      END IF
+
+!gna - bug was here: was selecting which mixing ratio file to open
+!     BEFORE reading in input_clima to see if ICOUPLE = 1 (so was always reading
+!      in the uncoupled mixing_ratio.dat at this point)
+
 !      open (unit=19, file = DIRDATA//'/ebtextnew.dat',status='old') 
 
 C These INPUT files are open along the program 
@@ -385,7 +385,6 @@ c                ***This version always uses the old IR
 C JK   Idry   - If Idry = 0, use the moist adiabat. If Idry = 1, use a dry adiabat
       Idry = 0
 
-c added by Giada to read some more inputs from photo
 
 
       READ(1,51)
@@ -414,10 +413,20 @@ c*******Changed for now*********
       READ(1,*) AA,CO2MAX
       READ(1,*) AA, IMET        ! IMET (flag 0 or 1)
       READ(1,*) AA, nga
-  
+
+!gna - moved this part here so now we know what ICOUPLE is supposed to be  
+!(before this piece of code was before ICOUPLE was read in)
+      IF (ICOUPLE.eq.0) THEN
+         OPEN (unit=14,file= DIRINOUT//'/mixing_ratios.dat')  
+      ELSE 
+         OPEN (unit=14,file= 'COUPLE/mixing_ratios.dat')
+      END IF
+!      open (unit=19, file = DIRDATA//'/ebtextnew.dat',status='old') 
+
       print *, 'icouple is'
       print *, ICOUPLE
 
+!gna - read more inputs from photo for coupling
       IF (ICOUPLE.eq.1) THEN 
       OPEN(unit=999,FILE= 'COUPLE/time_frak_photo.out')
  107  FORMAT(1X, F4.2, 5X, F5.3, 5X, F18.16)
@@ -426,11 +435,6 @@ c*******Changed for now*********
       print *, timega
       print *, P0ground
       print *, frak
-      ENDIF
-
-C added by Giada
-      IF (ICOUPLE.eq.1) THEN 
-c         PG0 = P0ground
          age = 4.7
          time = age-timega
          SOLCON = (1+0.4*(1-time/4.7))**(-1)
