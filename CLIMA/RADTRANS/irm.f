@@ -12,8 +12,8 @@ c  This subroutine contains CH4
    
  
       INCLUDE 'CLIMA/INCLUDE/header.inc'
-      PARAMETER (NF=55,NGS=7, IK=8)
-      PARAMETER(NS=3, NS1=NS+1, NS4=NS+5)
+      PARAMETER (NF=55,NGS=8, IK=8)
+      PARAMETER(NS=3, NS1=NS+2, NS4=NS+5)
 C new common block, von Paris, 21/04/2006
       COMMON/IRDATA/WEIGHTCH4(6),xkappa(3,12,NF,8), ! weightch4 is for methane 3/20/2012
      & CIA(7,NF), CPRW(ND,NF)

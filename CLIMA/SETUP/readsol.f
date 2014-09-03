@@ -4,9 +4,9 @@ c-as parameters for the subroutine SOLAR and CONVEC
 
       INCLUDE 'CLIMA/INCLUDE/header.inc'
       PARAMETER(NF=55)
-      PARAMETER(NS=3, NS1=NS+1, NS4=NS+5)
+      PARAMETER(NS=3, NS1=NS+2, NS4=NS+5)
       PARAMETER(NT=76, MT=36)
-      PARAMETER(NSOL=38, NGS=7)
+      PARAMETER(NSOL=38, NGS=8) !gna changed to 8 from 7
       PARAMETER(IK=8) ! Changed to 8 sums 3/15/2012
       REAL kappa_solh2o, kappa_solco2,press(8), temp(3),alch4 ! Declaring H2O and CO2 arrays as real 8/27/2012 
       

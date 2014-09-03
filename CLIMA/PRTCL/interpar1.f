@@ -1,7 +1,7 @@
      
         SUBROUTINE INTERPAR1(RAER) 
         INCLUDE 'CLIMA/INCLUDE/header.inc'
-        PARAMETER (NF=55, NSOL=38, NGS=5)
+        PARAMETER (NF=55, NSOL=38, NGS=8)
         DIMENSION RAER(ND)
         COMMON/HYDROCARB/Qextirst(46,55),w0irst(46,55),
      &  girst(46,55),Qextsolst(46,38),w0solst(46,38),gsolst(46,38),

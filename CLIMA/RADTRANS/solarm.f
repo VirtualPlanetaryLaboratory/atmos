@@ -13,8 +13,8 @@ C PF1
 c  This subroutine contains CH4
 
       INCLUDE 'CLIMA/INCLUDE/header.inc'
-      PARAMETER (NSOL=38,NGS=7,NF=55, IK=8)  !c-rr Adding IK=8, number of sums for CO2 and H2O absorption coefficients 8/27/2012
-      PARAMETER(NS=3, NS1=NS+1, NS4=NS+5) ! Adding parameter statement needed for FI(NS1,ND) 5/23/2011
+      PARAMETER (NSOL=38,NGS=8,NF=55, IK=8)  !c-rr Adding IK=8, number of sums for CO2 and H2O absorption coefficients 8/27/2012
+      PARAMETER(NS=3, NS1=NS+2, NS4=NS+5) ! Adding parameter statement needed for FI(NS1,ND) 5/23/2011
       REAL kmatrix_solh2o, kmatrix_solco2, weights, KAPPALAYERSOL_CO2,
      &   KAPPALAYERSOL_H2O, BETA
 C

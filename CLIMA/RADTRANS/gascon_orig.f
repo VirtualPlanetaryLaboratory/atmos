@@ -1,7 +1,6 @@
       SUBROUTINE GASCON(T,PF,FO2,FH2,FI,FNC,CGAS,NST)
       INCLUDE 'CLIMA/INCLUDE/header.inc'
-      PARAMETER(NS=3, NS1=NS+2,NGS2=8) ! NGS2 to differentiate from NGS 5/30/2012
-      !gna - changed ngas2 to 8 (ethane added) and NS1 to NS+2
+      PARAMETER(NS=3, NS1=NS+1,NGS2=7) ! NGS2 to differentiate from NGS 5/30/2012
 C
 C  NGS is the number of gases in the solar code. The order of gases in
 C  this subroutine is: AIR, CH4,O2, O3, CO2, H2O, and H2. 
@@ -14,7 +13,7 @@ C  this subroutine is: AIR, CH4,O2, O3, CO2, H2O, and H2.
 
 C
 
-      ND1 = ND - 1 !gna - number of layers = ND I think
+      ND1 = ND - 1
       CON = 2.687E19 ! to convert CGAS into molecules/cm^2.
       ! CON is taken by multiplying Loshcmidt's numnber 
 C
@@ -44,10 +43,10 @@ C
        F(4,J) = FI(4,J)*FNC(J)  ! ozone
        F(5,J) = FI(2,J) ! CO2
        F(6,J) = FI(1,J) ! H2O 
+
 !       print *, 'FH2O=', F(6,J),J
 !       pause
        F(7,J) = FH2*FNC(J) ! hydrogen	
-       F(8,J) = FI(5,J)*FNC(J) ! ethane
   5    CONTINUE
   
     
@@ -61,7 +60,7 @@ C
   3   CONTINUE
 C
 
-      DO 4 I=1,NGS2   ! 8 species
+      DO 4 I=1,NGS2   ! 7 species
       
       DO 4 J=1,ND1   ! 100 layers
         BKMG = BK*273.15/(SM*GNEW(J)) ! scale height. BK, boltzman's constant. SM is the mass of a hydrogen atom (1.67e-24 g)

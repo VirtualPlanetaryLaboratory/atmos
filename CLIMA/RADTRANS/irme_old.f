@@ -8,11 +8,11 @@ c     into P during the call.
 c
 c  This subroutine calculates the infrared flux
 
-c  This subroutine contains CH4 and C2H6 (gna merging in changes from Fung's version that has ethane)
+c  This subroutine contains CH4
    
  
       INCLUDE 'CLIMA/INCLUDE/header.inc'
-      PARAMETER (NF=55,NGS=8, IK=8)
+      PARAMETER (NF=55,NGS=7, IK=8)
       PARAMETER(NS=3, NS1=NS+1, NS4=NS+5)
 C new common block, von Paris, 21/04/2006
       COMMON/IRDATA/WEIGHTCH4(6),xkappa(3,12,NF,8), ! weightch4 is for methane 3/20/2012
@@ -35,9 +35,6 @@ c     COMMON/CBLOK/FO2,FN2,FCO2,FAR,FCH4,
       COMMON/WAVE/AV(NF),LAM(NF),W(NF)
 	  COMMON/BPS_IR/s_abir(NF), f_abir(NF), TDir(NF), Bsir(NF), 
      &    Bfir(NF)  ! Added COMMON BLOCK FOR BPS CONTINUUM FOR IR  8/30/2012
-
-!      REAL KAPPALAYERC2H6(NF,6) !gna
-!      COMMON/TFBLOK12/KAPPALAYERC2H6 !gna - what is TFBLOK12? in Fung's version but in our version I think it gets defined below
       
 c  
 c jfk 6/25/08 Temporary (PF should have been passed in the call
@@ -64,10 +61,10 @@ c     & xkappa(8,12,55,8,3)
      2 WEIGHTOZC(8),KAPPAOZC(8),TAUGOZ(ND),TAUCONTINT(NF),CNUT,
      3 TAUTOTAL(NF),TRANSLAYER(ND),TWGHTT(8),OMG0IR(ND-1),ASYIR(ND-1),
      4 TAULAMIR(ND-1),TAUAEXTIR(ND-1),TAUASIR(ND-1),TAUSIR(ND-1)
-      REAL KAPPALAYERC2H6(NF,6) !c2h6
+      REAL KAPPALAYERC2H6(NF,6)
       REAL DPLYR(ND), PLAYR(ND), CRAY(ND), TAUR(ND)
       DATA HP,SIGMA/6.63E-27, 5.67E-5/
-      DIMENSION WEIGHTC2H6(6),CGASC2H6(ND) !c2h6
+      DIMENSION WEIGHTC2H6(6),CGASC2H6(ND)
       DIMENSION TAUGC2H6(ND)
       REAL KAPPAC2H6(NF), kmatrix_irh2o, kmatrix_irco2, kappa_ir
       REAL np
@@ -103,6 +100,7 @@ c     5  4030., 4540., 4950., 5370., 5925., 6390., 6990., 7650., 8315.,
 c     6  8850., 9350., 9650., 10400., 11220., 11870., 12790., 13300.,
 c     7  14470., 15000./
 C
+c giada - commented this out but check if needed
 c-jdh Ethane data (for polynomial fit approximation)
       DATA KAPPAC2H6/0,0,0,0,0,0,0,0,0,0,
      &  0,0,0,8.627161E-21,1.036469E-20,1.098662E-21,0,0,0,0,
@@ -111,7 +109,7 @@ c-jdh Ethane data (for polynomial fit approximation)
      &  0,0,0,0,0,0,0,0,0,0/
 
 c-jdh Ethane k-coefficient weights
-      DATA WEIGHTC2H6/0.08566,0.18038,0.23396,0.23396,0.18038,0.08566/ !c2h6
+      DATA WEIGHTC2H6/0.08566,0.18038,0.23396,0.23396,0.18038,0.08566/
 
        INTEGER COUNTERIR
 
@@ -175,15 +173,13 @@ c-jdh Set C2H6 absorption coefficients
       KAPPALAYERC2H6(25,5) = 3.0558E-21
       KAPPALAYERC2H6(25,6) = 5.7388E-21      
       DO I=1,NLAYERS
-!gna: added ethane to cgas in gascon.f so these lines no longer needed
 c        CGASC2H6(I) = 1.3386e-3*BK*273.16/(SM*G)
 c     &                * (P(I+1) - P(I))*FC2H6/DM
 c        CGASC2H6(I) = 1.0e-5*BK*273.16/(SM*G)
 c     &                * (P(I+1) - P(I))*FC2H6/DM
 c jfk 6/27/08 P was changed to PF in the 2 lines below.
-!       CGASC2H6(I) = 1.0e-5*BK*273.16/(SM*G)
-!     &                * (PF(I+1) - PF(I))*FC2H6/DM !c2h6
-
+        CGASC2H6(I) = 1.0e-5*BK*273.16/(SM*G)
+     &                * (PF(I+1) - PF(I))*FC2H6/DM
       END DO
 
 
@@ -191,7 +187,7 @@ c jfk 6/27/08 P was changed to PF in the 2 lines below.
         DO IL = 1, NLAYERS
           DO J = 1,IK
             DO I = 1,NF
-              DO K = 1,3 ! Gases are H2O(gas 1), CO2(gas 2), and CH4(gas 3)
+              DO K = 1,3 !Gases are H2O(gas 1), CO2(gas 2),  CH4(gas 3), C2H6(gas 4) (giada)
         KAPPALAYER(I,J,K,IL) = 1.e-60
               ENDDO
             ENDDO
@@ -270,10 +266,10 @@ c      CALL IREXPSUMS(WEIGHT,xkappa)
 !            ENDDO
            
         
-        DO 8 I=1, 55  ! Methane loop
+        DO 8 I=1, 55  ! Methane loop (giada -- and ethane??)
         DO 9 J=1, 6   ! number of sums, coefficients
         KAPPALAYER(I,J,3,IL) = kappa(I,J) ! Gas 3 is CH4
-         
+!        KAPPALAYER(I,J,4,IL) = kappa(I,J) ! giada - no idea if this is correct for ethane...or if it should go here?
         
  9      CONTINUE
  8      CONTINUE
@@ -374,6 +370,50 @@ c       PRINT *, 'TAUAABSIRTOTAL'
 c       PRINT *, TAUAABSIRTOTAL
 c       PRINT *, '*******************************'
        ENDIF 
+!****  8 - 12 UM CONTINUUM
+!       IF ((I.GT.14).and.(I.LT.21)) THEN
+C       PRINT *, 'TAUCONTIN'
+
+!       DO IL = 1,NLAYERS
+c       DP = ABS(P(IL+1)-P(IL))*1.E6
+c jfk 6/27/08 P was changed to PF in the line below.
+!       DP = ABS(PF(IL+1)-PF(IL))*1.E6
+!       TV = 1.25E-22 + 1.67E-19 * EXP(-2.62E-13*VAC)
+
+!       if (IL.eq.1)then
+!       print *, VAC, I
+!       pause
+!       endif
+
+!       TF = EXP(1800. * (1./T(IL) - 1./296.))
+!       CNUT = TV*TF
+c jfk 6/26/08 P should be OK in the next line because this is in the
+c     middle of the layer
+!       TAUCONTIN(IL) = CNUT*FI(1,IL)*FI(1,IL)*P(IL)*DP/(DM*SM*G)
+!	   print *, CNUT*FI(1,IL)*P(IL), TAUCONTIN(IL), P(IL), T(IL), IL,I
+!	   pause
+c       TAUCONTIN(IL) = 0.
+C       PRINT 19, TAUCONTIN(IL) 
+!       ENDDO
+!       ELSE
+!       DO IL = 1,NLAYERS
+!       TAUCONTIN(IL) = 0.
+!       ENDDO
+!       ENDIF
+C******
+!        TAUCONTIN(IL) = 0.0d0 ! set old water continuum (Roberts et al. 1976) to zero.
+C
+c-jdh  If(I.lt.55) VAC1 = C*(AV(I+1)-AV(I))
+c-jdh  If(I.eq.55) VAC1 = C*(AV(I) - AV(I-1))
+c       IF(I.lt.NF) THEN
+c         VAC1 = (AV(I+1)-AV(I))
+c       ELSE
+c         VAC1 = (AV(I)-AV(I-1))
+c       ENDIF
+
+!      DO 2 K1=1, 8 ! Old Co2
+!      DO 3 K2=1, 8 ! Old H2O
+       
 
 !----------------BPS WATER CONTINUUM 8/30/2012 c-rr
         ! PF(IL) are pressures at the layer boundaries. P(IL) are pressures in the middle of the layers
@@ -444,7 +484,7 @@ c       PRINT *, '*******************************'
        DO 2 K1 = 1,IK ! H2O loop
        Do 3 K2 = 1,IK ! CO2 loop
        DO 4 K3 = 1,6 ! methane loop  ! Activated when methane is on (IMET = 1)
-       DO 5 K4 = 1,6 ! ethane loop
+       DO 5 K0 = 1,6 ! ethane - giada turned on 
   
 !        TWGHT = weightco2_h2oIR(K1)*weightco2_h2oIR(K2) ! no methane (CO2 and H2O weights are the same) 8/27/2012
  
@@ -455,9 +495,9 @@ c       PRINT *, '*******************************'
 !          pause
        	
 !       TWGHT = weightco2_h2oIR(K1)*weightco2_h2oIR(K2)*weightch4(K3) ! with methane 8/27/2012
-        TWGHT = weightco2_h2oIR(K1)*weightco2_h2oIR(K2)*weightch4(K3) 
-     &           *weightc2h6(K4)
-!        TWGHT = TWGHT * weightc2h6(K4) !with ethane
+        TWGHT = weightco2_h2oIR(K1)*weightco2_h2oIR(K2)*weightch4(K2)
+        TWGHT = TWGHT * weightc2h6(k0) ! with ethane 3/20/2012 (giada turned on)
+     
 
 
         DO 11 IL = 1,NLAYERS
@@ -467,17 +507,43 @@ c       PRINT *, '*******************************'
          TAUGH2O(IL) = KAPPALAYER(I,K1,1,IL)*CGAS(IL,6)
          TAUGCO2(IL) = KAPPALAYER(I,K2,2,IL)*CGAS(IL,5)
 
+!           IF ((I.gt.14).and.(I.lt.21))TAUGH2O(IL) = 1.e-60 ! zeroing out HITRAN coefficients
+         
+!           IF((I.ge.9).and.(I.le.48).and.(K1.eq.1))THEN
+!           print *, !KAPPALAYER(I,K1,1,IL), CGAS(IL,6), TAUGH2O(IL), 
+!     &     KAPPALAYER(I,K2,2,IL), CGAS(IL,5), TAUGCO2(IL), IL
+!           pause
+!           ENDIF
+
+!          TAUGH2O(IL) = AMAX1(TAUGH2O(IL),1.e-17)  ! The lowest TAUGH2O_CO2 can ever be is 1.e-17.
+!          TAUGCO2(IL) = AMAX1(TAUGCO2(IL),1.e-17) 
+!        print 2222,KAPPALAYER(I,K1,2,IL),CGAS(IL,5),IL,K1,K2,I
+ !           if((K1.eq.1).and.(IL.eq.1))then
+ !              print 4242, KAPPALAYER(I,K1,1,IL), CGAS(IL,1), 
+ !    &           TAUGH2O_CO2(IL), T(IL), P(IL), FI(2,IL),FI(1,IL), I
+               
+!	        endif
+
 
          TAUGCH4(IL) = KAPPALAYER(I,K3,3,IL)*CGAS(IL,2)!! Activated when methane is on (IMET = 1)
+!           if(IL .eq. 1)then
+!            if(NST==5)then
+!           print 4242,TAUGH2O_CO2(IL),KAPPALAYER(I,K1,1,IL),CGAS(IL,1)
+!     &               ,IL,K1,I
+!           endif
+
+              
+!          if ((IL.eq.1))then
+!              write(5552,4242), TAUGH2O_CO2(IL),CGAS(IL,1), T(IL),
+!     &        KAPPALAYER(I,K1,1,IL), FI(1,1), I, NST
+!          endif
 
              
 !4242     format(1p3e14.5,2x,i3,2x,i3,2x,i3)
  4242     format(1p7e14.5, 4x, i3)
 
-!         TAUGC2H6(IL) = 0. !gna - commented out
-!         TAUGC2H6(IL) = KAPPAC2H6(I)*CGAS(IL,5)*2.687E24*(FC2H6/FCH4)  !gna - is THIS correct?
-!         TAUGC2H6(IL) = KAPPALAYERC2H6(I,K4)*CGASC2H6(IL)*2.687E24 !gna - from Fung's version (is this right??)
-          TAUGC2H6(IL) = KAPPALAYERC2H6(I,K4)*CGAS(IL, 8) !gna - gas 8 is ethane
+c         TAUGC2H6(IL) = 0.
+          TAUGC2H6(IL) = KAPPAC2H6(I)*CGAS(IL,5)*2.687E24*(FC2H6/FCH4) !giada - uncommented
 
 
 !         print *, H2CIA(MS1(IL),I)
@@ -495,6 +561,18 @@ c-rr	This the H2-H2 CIA loop calculation 7/02/2012
         H2H2TOT = H2H2CIAMS1L + FXHH(IL)*(H2H2CIAMSL - H2H2CIAMS1L)
         H2H2FIN(IL,I) = exp(H2H2TOT)
 
+!          print *,'MS1=', MSHH1(IL),'MS=', MSHH(IL),
+!     &   'H2H2CIAMS=', H2H2CIA(MSHH(IL),I),
+!     &   'H2H2CIAMSO1=', H2H2CIA(MSHH1(IL),I), 
+!     &    'H2H2CIAMS1L=', H2H2CIAMS1L,
+!     &    'H2H2CIAMSL=', H2H2CIAMSL,
+!     &    'H2H2FIN=', H2H2FIN(IL,I),'FXH=',FXHH(IL),
+!     &   'H2H2TOT=', H2H2TOT,
+!     &   'Temp=', T(IL),IL,I
+!         pause        
+
+
+
 
           
 c-rr	This is the O2 CIA loop calculation 6/17/2012
@@ -502,6 +580,18 @@ c-rr	This is the O2 CIA loop calculation 6/17/2012
         O2O2CIAMSL  = log(O2O2CIA(MSO(IL),I))
         O2O2TOT = O2O2CIAMS1L + FXO(IL)*(O2O2CIAMSL - O2O2CIAMS1L)
         O2O2FIN(IL,I) = exp(O2O2TOT)
+
+!         IF ((I.ge.21).and.(I.le.28))then
+!        print *,'MSO1=', MSO1(IL),'MSO=', MSO(IL),
+!     &   'O2O2CIAMSO=', O2O2CIA(MSO(IL),I),
+!     &   'O2O2CIAMSO1=', O2O2CIA(MSO1(IL),I), 
+!     &    'O2O2CIAMS1L=', O2O2CIAMS1L,
+!     &    'O2O2CIAMSL=', O2O2CIAMSL,
+!     &    'O2O2FIN=', O2O2FIN(IL,I),'FXO=',FXO(IL),
+!     &   'O2O2TOT=', O2O2TOT,
+!     &   'Temp=', T(IL),IL,I
+!         pause
+!         ENDIF
 
 
 c-rr	This is the CO2 CIA loop that takes the saved values for FX, MS, and MS1 at a given height and calculates
@@ -648,19 +738,15 @@ c        TPRIND(IL) = 0
 !        read(*,*)
                         
 ******* Ozone absorption
-C-TF  THIS SPECIAL TREATMENT FOR OZONE IS DONE TO SAVE COMPUTER
-C-TF  TIME BECAUSE ONLY ONE WAVELENGTH IS AFFECTED BY OZONE.
-C-TF  HERE A NEW WEIGHT FUNCTION TWGHTT(K00) IS CALCULATED
-C-TF  AND IS USED TO COMPUTE FUPA AND FDNA.
         IF (I.EQ.18) THEN
 !		 sumoz = 0.  
-      DO K5=1,8
-        TWGHTT(K5) = TWGHT*WEIGHTOZC(K5)
+      DO K4=1,8
+        TWGHTT(K4) = TWGHT*WEIGHTOZC(K4)
       DO IL=1,NLAYERS
 !        CGAS(IL,4) = CGAS(IL,4)*.97d0
          
 !		  sumoz = TWGHTT(K4) + sumoz
-        TAUGOZ(IL) =KAPPALAYEROZ(K5,IL)*CGAS(IL,4) ! Rederived correct units for TAUGOZ rr and rv
+        TAUGOZ(IL) =KAPPALAYEROZ(K4,IL)*CGAS(IL,4) ! Rederived correct units for TAUGOZ rr and rv
 !		TAUGOZ(IL) = 0.0d0
 
 !        TAUGOZ(IL) = 0.
@@ -673,7 +759,6 @@ c      TAUGIR(IL) =TAUGIR(IL) + TAUGOZ(IL)
       TAUGIR(IL) = TAUGCH4(IL)+TAUGH2O(IL)+ TAUGCO2(IL) + TPRIND(IL)  
      & +TAUCONTIN(IL) + TAUGOZ(IL) + TAUGC2H6(IL)+ TAUH2N2(IL)
      & + TAUO2O2(IL)+TAUH2H2(IL)
-!gna - taugir is computed twice??  I guess it just overwrites taugir that's computed above...
 
 	! print *, TAUGOZ(IL)
 	! pause
@@ -719,8 +804,8 @@ c      This requires the use of PF, not P.
 C
 
                   DO J = 1,ND
-                  FUPA(J)=FUPA(J)+TWGHTT(K5)*FUP(J)
-                  FDNA(J)=FDNA(J)+TWGHTT(K5)*FDN(J)
+                  FUPA(J)=FUPA(J)+TWGHTT(K4)*FUP(J)
+                  FDNA(J)=FDNA(J)+TWGHTT(K4)*FDN(J)
                   ENDDO
         
 

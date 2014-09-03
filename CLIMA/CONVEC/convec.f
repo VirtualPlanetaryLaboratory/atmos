@@ -6,7 +6,7 @@ C   POINTS J1 AND J. IT CONSIDERS THE CASE FOR HIGH CO2.
       INCLUDE 'CLIMA/INCLUDE/header.inc'
   
       PARAMETER(NT=76, MT=36)
-      PARAMETER(NS=3, NS1=NS+1, NS4=NS+5) ! Adding parameter statement needed for FI(NS1,ND) 5/23/2011
+      PARAMETER(NS=3, NS1=NS+2, NS4=NS+5) ! Adding parameter statement needed for FI(NS1,ND) 5/23/2011
 c     COMMON/CBLOK/FO2,FN2,FCO2,FAR,FCH4
       COMMON/CBLOK/FO2,FN2,FCO2,FAR,FCH4,FC2H6,FNO2,FI(NS1,ND),
      &  FH22

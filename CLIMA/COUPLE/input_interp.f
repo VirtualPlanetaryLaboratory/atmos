@@ -1,5 +1,6 @@
      
-      SUBROUTINE INPUT_INTERP(temp_alt,water,O3,CH4,CO2,Jcold,T,FI)
+      SUBROUTINE INPUT_INTERP(temp_alt,water,O3,CH4,CO2,ethane,Jcold,T,
+     &           FI)
 C-KK This subroutine interpolates the (alt),water, ozone file that is READ in 
 C-KK from atm_chem.
 !FI is matrix of mixing ratios
@@ -12,13 +13,14 @@ C-KK from atm_chem.
       INCLUDE 'CLIMA/INCLUDE/header.inc'
       PARAMETER (NZ=200)
       DIMENSION O3(NZ),water(NZ),CH4(NZ),CO2(NZ),temp_alt(NZ),T(ND)
-      DIMENSION FI(4,ND)
-      CHARACTER :: DIRINOUT*2,DIRDATA*4
+      DIMENSION ethane(NZ)
+      DIMENSION FI(5,ND)
+      CHARACTER :: DIRINOUT*8,DIRDATA*10
       COMMON/DIR/DIRINOUT,DIRDATA
       COMMON/ALTBLOK/DALT(ND-1),RADIUS(ND-1),PARTICLES(ND),RAER(ND),
      &               ALT(ND)
       COMMON/PRESSURE/P(ND),PLOG(ND)
-
+      print *,'read in defs'
 C-KK   both indices starting at ground level
         istart = 1
         j = ND
@@ -26,6 +28,7 @@ C-KK   both indices starting at ground level
         FI(2,j) = CO2(istart)
         FI(3,j) = CH4(istart)
         FI(4,j) = O3(istart)        ! Not defined in mixing_ratios.dat
+        FI(5,j) = ethane(istart)
         
         istart = istart+1
         top = temp_alt(NZ)
@@ -46,24 +49,28 @@ C-KK   both indices starting at ground level
         
 
         IF (ALT(j) .LT. top) THEN !is this a bug that this layer logic is not built into the water? (top = top of photochem grid)
-          F4log1 = ALOG(O3(IS1))
-          F4log2 = ALOG(O3(IS))
+          F4log1 = LOG(O3(IS1))
+          F4log2 = LOG(O3(IS))
           F4log = (FR*F4log2) + ((1-FR)*F4log1)        
          ELSE F4log = FI(4,j+1)
         END IF 
         FI(4,j) = EXP(F4log)
-        F1log1 = ALOG(water(IS1))                     ! This is water layer F1
-        F1log2 = ALOG(water(IS))
+        F1log1 = LOG(water(IS1))                     ! This is water layer F1
+        F1log2 = LOG(water(IS))
         F1log = (FR*F1log2) + ((1-FR)*F1log1)
         FI(1,j) = EXP(F1log)
-        F2log1 = ALOG(CO2(IS1))                       ! This is CO2 layer F2
-        F2log2 = ALOG(CO2(IS))
+        F2log1 = LOG(CO2(IS1))                       ! This is CO2 layer F2
+        F2log2 = LOG(CO2(IS))
         F2log = (FR*F2log2) + ((1-FR)*F2log1)
         FI(2,j) = EXP(F2log)
-        F3log1 = ALOG(CH4(IS1))                       ! This is CH4 layer F3
-        F3log2 = ALOG(CH4(IS))
+        F3log1 = LOG(CH4(IS1))                       ! This is CH4 layer F3
+        F3log2 = LOG(CH4(IS))
         F3log = (FR*F3log2) + ((1-FR)*F3log1)
         FI(3,j) = EXP(F3log)
+        F5log1 = LOG(ethane(IS1))                    ! This is the ethane layer F5 (gna)
+        F5log2 = LOG(ethane(IS))
+        F5log = (FR*F5log2) + ((1-FR)*F5log1)
+        FI(5,j) = EXP(F5log)
         END DO
 
   471  CONTINUE
