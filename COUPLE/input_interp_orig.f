@@ -1,6 +1,5 @@
      
-      SUBROUTINE INPUT_INTERP(temp_alt,water,O3,CH4,CO2,ethane,Jcold,T,
-     &           FI)
+      SUBROUTINE INPUT_INTERP(temp_alt,water,O3,CH4,CO2,Jcold,T,FI)
 C-KK This subroutine interpolates the (alt),water, ozone file that is READ in 
 C-KK from atm_chem.
 !FI is matrix of mixing ratios
@@ -13,14 +12,13 @@ C-KK from atm_chem.
       INCLUDE '../CLIMA/INCLUDE/header.inc'
       PARAMETER (NZ=200)
       DIMENSION O3(NZ),water(NZ),CH4(NZ),CO2(NZ),temp_alt(NZ),T(ND)
-      DIMENSION ethane(NZ)
-      DIMENSION FI(5,ND)
+      DIMENSION FI(4,ND)
       CHARACTER :: DIRINOUT*8,DIRDATA*10
       COMMON/DIR/DIRINOUT,DIRDATA
       COMMON/ALTBLOK/DALT(ND-1),RADIUS(ND-1),PARTICLES(ND),RAER(ND),
      &               ALT(ND)
       COMMON/PRESSURE/P(ND),PLOG(ND)
-      print *,'read in defs'
+
 C-KK   both indices starting at ground level
         istart = 1
         j = ND
@@ -28,7 +26,6 @@ C-KK   both indices starting at ground level
         FI(2,j) = CO2(istart)
         FI(3,j) = CH4(istart)
         FI(4,j) = O3(istart)        ! Not defined in mixing_ratios.dat
-        FI(5,j) = ethane(istart)
         
         istart = istart+1
         top = temp_alt(NZ)
@@ -67,10 +64,6 @@ C-KK   both indices starting at ground level
         F3log2 = LOG(CH4(IS))
         F3log = (FR*F3log2) + ((1-FR)*F3log1)
         FI(3,j) = EXP(F3log)
-        F5log1 = LOG(ethane(IS1))                    ! This is the ethane layer F5 (gna)
-        F5log2 = LOG(ethane(IS))
-        F5log = (FR*F5log2) + ((1-FR)*F5log1)
-        FI(5,j) = EXP(F5log)
         END DO
 
   471  CONTINUE

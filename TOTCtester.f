@@ -2607,8 +2607,9 @@ C Transfer results to the climate model (COUPLING)
         DO 255 I=1,NZ
 C Transfer O3 and H2O
          WRITE(84,254) Z(I),PRESS(I),USOL(LO3,I),USOL(LH2O,I),
-     &                 USOL(LCH4,I),SL(LCO2,I)/DEN(I)
-  254    FORMAT(1PE9.3,5(E10.2))
+     &                 USOL(LCH4,I),SL(LCO2,I)/DEN(I),
+     &                 USOL(LC2H6,I)
+  254    FORMAT(1PE9.3,6(E10.2))
   255   CONTINUE
         close(84)
 c       endif

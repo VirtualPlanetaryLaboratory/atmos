@@ -79,7 +79,7 @@ C   AV = FREQUENCIES (1/S)
 C   TAU = SLANT OPTICAL DEPTH TO OTHER PRESSURE LEVELS
 C   F = INTEGRATED NET FLUX
 C   FS = INTEGRATED SOLAR FLUX
-C   FI = SPECIES MIXING RATIOS   1 = water, 2 = co2, 3 = ch4, 4 = o3
+C   FI = SPECIES MIXING RATIOS   1 = water, 2 = co2, 3 = ch4, 4 = o3, 5 = ethane
 C   FH2O - H2O MIXING RATIO
 C   T,TN - TEMPERATURES
 C   FLAGCONVEC - Tags for the type of convection
@@ -97,9 +97,10 @@ C-KK        NZ is the number of layers being carried in atm_chem.
 c     PARAMETER(ND=52)
       PARAMETER(NF=55, NA=1, NLAYERS=ND-1, NZ=200)
 c     PARAMETER(NF=55, NA=1, NLAYERS=51, NZ=64)
-      PARAMETER(NS=3, NS1=NS+1, NS4=NS+5)
+      PARAMETER(NS=3, NS1=NS+2, NS4=NS+5) !gna: changed NS1 from NS+1 to NS+2 to add ethane
       PARAMETER(NT=76, MT=36)
-      PARAMETER(NSOL=38, NGS=7, IK=8)  ! Added IK=8 parameter and NGS is 7 now, 3/26/2012
+      PARAMETER(NSOL=38, NGS=8, IK=8)  ! Added IK=8 parameter and NGS is 7 now, 3/26/2012
+      !gna - changed ngs to 8 (ethane)
       parameter(nrow=11)                        
 
 C      CHARACTER*5 :: ICH4A   !Changed to make STARR hold up to 5 characters
@@ -110,7 +111,7 @@ C      CHARACTER*5 :: ICO2A   !Changed to make STARR hold up to 5 characters
 
       DIMENSION TRAD(ND),DZ(ND),Z(ND),ZF(ND)     
       DIMENSION temp_alt(NZ), temp_T(NZ), water(NZ), O3(NZ), PRESS(NZ),
-     &  CH4(NZ), CO2(NZ)
+     &  CH4(NZ), CO2(NZ), ethane(NZ)
       DIMENSION T(ND),TOLD(ND),FTOTAL(ND),FTIR(ND),
      &  FTSO(ND),PF1(ND),DELT(ND),DELTRAD(ND),TN(ND),
      &  dt(ND),DIVF(ND),TCOOL(ND),THEAT(ND),FLAGCONVEC(ND)
@@ -251,6 +252,7 @@ C  INPUT FILES
 !====================================================================
 ! These are HITEMP 2010 coefficients
 !  HITEMP coefficients are derived only for H2O.
+!gna: we should update CH4?  There was a big CH4 update in HITRAN 2012
       OPEN (unit=15, file=DIRDATA//'/Ramses_HITEMP_solar_38_H2O.dat',
      &              status='old')  ! H2O solar coefficients
 
@@ -408,6 +410,7 @@ c*******Changed for now*********
       READ(1,*) AA,dtmax        !maximum time step allowed (seconds)
       READ(1,*) AA,CO2MAX
       READ(1,*) AA, IMET        ! IMET (flag 0 or 1)
+      READ(1,*) AA, IMETETH
       READ(1,*) AA, nga
 
 
@@ -489,7 +492,15 @@ c        print 997, FCO2
 c WJL- changed mixing ratios below to include NO2
 
 c-rr Added methane flag. Ensures FCH4 is 0 when methane flag is turned off 5/2/11
-        IF (IMET.eq.0)FCH4=1.e-60
+        IF ((IMET.eq.0).and.(IMETETH.eq.0)) THEN 
+           FCH4=1.e-60
+           FC2H6=1.e-60
+        ENDIF
+
+        IF ((IMET.eq.1).and.(IMETETH.eq.0)) THEN 
+           FC2H6=1.e-60
+        ENDIF
+        
 
 
         IO2 = 0
@@ -658,6 +669,7 @@ c       if (imw.eq.2) FI(1,J) = 4.e-6
       TOLD(J) = T(J)
       FI(2,J) = FCO2
       IF(IUP.EQ.1) FI(2,J)=FCO2V(J)
+      FI(5,J) = FC2H6 !ethane
    2  FI(3,J) = FCH4
 c
 c jfk 6/27/08
@@ -698,7 +710,8 @@ c Reading the ozone and water from the photochemical model
 c        print *, 'temp_alt, press, o3, water, ch4, co2'
         DO JREAD=1,NZ  !number of layers in photochem code
          READ(113,*) temp_alt(JREAD),PRESS(JREAD),O3(JREAD),
-     &                 water(JREAD),CH4(JREAD), CO2(JREAD)
+     &                 water(JREAD),CH4(JREAD), CO2(JREAD), 
+     &                 ethane(JREAD)
          temp_alt(JREAD)=temp_alt(JREAD)/1.0e5
 c         print 353, temp_alt(JREAD),PRESS(JREAD),O3(JREAD),water(JREAD),
 c     &         CH4(JREAD), CO2(JREAD)
@@ -711,15 +724,20 @@ c        FI(3,ND)=FCH4
 c        FI(4,ND)=FO3
         FCO2=CO2(1)
 c        FI(2,ND)=FCO2
+        FC2H6 = ethane(1)
+        print *, 'FC2H6 is ', FC2H6
   352   FORMAT("Alt = ",1PE12.3," H20=",1PE12.3)
   353   FORMAT(6(1PE9.2,1x))
 c  Interpolate the grid from the photochemical model to the grid of the
 c  climate model 
-        CALL INPUT_INTERP(temp_alt, water, O3, CH4, CO2, Jcold, T, FI)
+        print *,'about to call input_interp'
+        CALL INPUT_INTERP(temp_alt, water, O3, CH4, CO2, ethane, Jcold,
+     &   T, FI)
+        print *,'called input_interp'
 c        print *, 'temp_alt,water,co2,ch4,o3(after input_interp)'
-        DO J=1,ND
+c        DO J=1,ND
 c         print 353, alt(J), (FI(I,J),I=1,4) 
-        ENDDO
+c        ENDDO
        ENDIF
 
        close(113)
@@ -752,13 +770,23 @@ c-as Old subroutine to calculate IR flux
 C PLANCK FUNCTION WAS CHANGED
        
 c-rr gna  Created IRME.F (IR clone with methane and ethane loops turned on). When there is methane call IRM instead of IR. 5/2/2011 
-       IF (IMET.eq.0) THEN
+
+      IF (IMET.eq.0) THEN
+       print *, 'calling irm'
        CALL IR(T,PF,P,FNC,CGAS)  ! Passes FNC to IR c-rr 6/7/2012
-       ELSE IF(IMET.eq.1) THEN
-       print *, 'about to call IRME' !irme is methane + ethane version
-       CALL IRME(T,PF,P,FNC,CGAS) ! Passes FNC to IRM c-rr 6/7/2012
+      ENDIF
+
+       IF ((IMET.eq.1).and.(IMETETH.eq.0)) THEN
+       print *, 'calling IRM'
+       CALL IRM(T,PF,P,FNC,CGAS) ! Passes FNC to IRM c-rr 6/7/2012
+       print *, 'called IRM'
+       ENDIF
+
+      IF (IMETETH.eq.1) THEN
        print *, 'calling IRME'
-      ENDIF       
+       CALL IRME(T,PF,P,FNC,CGAS) ! Passes FNC to IRM c-rr 6/7/2012
+       print *, 'called IRME' 
+      ENDIF  
        
 c      else
 C    Code modified 6/15/01 to integrate Mlawer's RRTM
@@ -880,7 +908,8 @@ c          if (j.eq.1)print *, 'fdnsoltot', fdnsoltot(j)
           fupsoltot(j) = fupsoltot(j) + fupsol(j)*weightt
           
           enddo
-          print *, 'FCH4=', FI(3,5)
+c          print *, 'FCH4=', FI(3,1)
+c          print *, 'FC2H6=', FI(5,1)
 c        print *, 'fdnsol',f
 c      print 1301,fdnsol
 1301  format(1x,1p8e9.2)
@@ -1370,7 +1399,7 @@ c        ENDDO
 *********************************************************************
       SUBROUTINE ALTITUDE(NST,T,FI,DZ)
       INCLUDE 'CLIMA/INCLUDE/header.inc'
-      PARAMETER(NS1=4)      
+      PARAMETER(NS1=5)       !gna: changed ns1 from 4 to 5
       COMMON/CONSS/C,BK,G,GNEW(ND),PI,SM,DM,DM2
       COMMON/ALTBLOK/DALT(ND-1),RADIUS(ND-1),PARTICLES(ND),RAER(ND),
      & ALT(ND)

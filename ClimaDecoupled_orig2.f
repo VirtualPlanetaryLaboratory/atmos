@@ -1,4 +1,4 @@
-      SUBROUTINE CLIMA(ICOUPLE,DTC,NSTEPSC,dtmax,ncouple)
+cC 1    C     PROGRAM SURFT(INPUT,OUTPUT,TAPE1,TAPE2,TAPE3)
 
 C  This program is a modified version of the climate model SURFTEM made 
 c  by James Kasting. The program has been modified by Michael Mischna (mm),
@@ -94,11 +94,10 @@ C_KK    SurfTem indexes from 1 at the top to ND at the ground, while
 C_KK    RRTM indexes from 0 at the ground to NLAYERS at the top.
 C-KK        NZ is the number of layers being carried in atm_chem. 
       INCLUDE 'CLIMA/INCLUDE/header.inc'
-      INCLUDE 'INCLUDE/comCLIM.inc'
 c     PARAMETER(ND=52)
       PARAMETER(NF=55, NA=1, NLAYERS=ND-1, NZ=200)
 c     PARAMETER(NF=55, NA=1, NLAYERS=51, NZ=64)
-      PARAMETER(NS=3, NS1=NS+2, NS4=NS+5)
+      PARAMETER(NS=3, NS1=NS+1, NS4=NS+5)
       PARAMETER(NT=76, MT=36)
       PARAMETER(NSOL=38, NGS=7, IK=8)  ! Added IK=8 parameter and NGS is 7 now, 3/26/2012
       parameter(nrow=11)                        
@@ -112,9 +111,9 @@ C      CHARACTER*5 :: ICO2A   !Changed to make STARR hold up to 5 characters
       DIMENSION TRAD(ND),DZ(ND),Z(ND),ZF(ND)     
       DIMENSION temp_alt(NZ), temp_T(NZ), water(NZ), O3(NZ), PRESS(NZ),
      &  CH4(NZ), CO2(NZ)
-      DIMENSION TOLD(ND),FTOTAL(ND),FTIR(ND),
+      DIMENSION T(ND),TOLD(ND),FTOTAL(ND),FTIR(ND),
      &  FTSO(ND),PF1(ND),DELT(ND),DELTRAD(ND),TN(ND),
-     &  dt(ND),TCOOL(ND),THEAT(ND),FLAGCONVEC(ND)
+     &  dt(ND),DIVF(ND),TCOOL(ND),THEAT(ND),FLAGCONVEC(ND)
       DIMENSION FSATURATION(ND),FSATUR(ND),FSAVE(ND)
 C      DIMENSION newalt(ND),HEATNET(ND),BETA(ND),FCO2V(ND),FH2O(ND)
       DIMENSION HEATNET(ND),BETA(ND),FCO2V(ND),FH2O(ND)
@@ -241,7 +240,7 @@ c Names of the subdirectories for the data, inputs and outputs
       
 c   =============    FILE SECTION ==================
         
-      print *, 'running'
+c      print *, 'running'
 
 C  INPUT FILES
       OPEN (unit=1,file= DIRINOUT//'/input_clima.dat')
@@ -307,13 +306,9 @@ c  Ozone and water profiles from the photochemical model
 c    File formerly called Pass2SurfMP.dat      
       OPEN (unit=113,file= 'COUPLE/fromPhoto2Clima.dat') 
 c  Surface mixing rations to set the chemical composition of the atmosphere.
-c  Used by the photochemical and the climate model
-      IF (ICOUPLE.eq.0) THEN
-         OPEN (unit=114,file= DIRINOUT//'/mixing_ratios.dat')  
-      ELSE 
-         OPEN (unit=114,file= 'COUPLE/mixing_ratios.dat')
-      END IF
-!      open (unit=19, file = DIRDATA//'/ebtextnew.dat',status='old') 
+
+c gna - eek!  was choosing which mixing_ratios.dat file to read BEFORE 
+c reading in whether ICOUPLE = 1 or 0!  Moving this block of code down below...
 
 C These INPUT files are open along the program 
 c  Subroutine IR
@@ -386,8 +381,10 @@ c                ***This version always uses the old IR
 C JK   Idry   - If Idry = 0, use the moist adiabat. If Idry = 1, use a dry adiabat
       Idry = 0
 
+
+
       READ(1,51)
-      READ(1,*) AA,NSTEPSREAD       !step number
+      READ(1,*) AA,NSTEPS       !step number
       READ(1,*) AA,IMW
       READ(1,*) AA,RSURF               
       READ(1,*) AA,zy
@@ -405,22 +402,45 @@ c*******Changed for now*********
       READ(1,*) AA,TSTRAT       !Stratospheric temperature for  IUP=1
       READ(1,*) AA,STARR        !What star?
       READ(1,*) AA,ICONSERV     !Type of energy conservation
-      READ(1,*) AA,ICOUPLEREAD  !Coupled(1) or not(0)
+      READ(1,*) AA,ICOUPLE      !Coupled(1) or not(0)
       READ(1,*) AA,SRFALB       !fixed planetary albedo (0.2)
       READ(1,*) AA,SOLCON       !SOLCON=S/So
       READ(1,*) AA,dtmax        !maximum time step allowed (seconds)
       READ(1,*) AA,CO2MAX
       READ(1,*) AA, IMET        ! IMET (flag 0 or 1)
       READ(1,*) AA, nga
-      close (1)
-     
-  51  FORMAT(4/)
 
-c      IF (ICOUPLE.eq.0) THEN
-c         NSTEPS=NTEPSREAD
-c      ELSE
-         NSTEPS=NSTEPSC
-c      END IF
+
+!gna - moved this part here so now we know what ICOUPLE is supposed to be  
+!(before this piece of code was before ICOUPLE was read in)
+      IF (ICOUPLE.eq.0) THEN
+         OPEN (unit=114,file= DIRINOUT//'/mixing_ratios.dat')  
+      ELSE 
+         OPEN (unit=114,file= 'COUPLE/mixing_ratios.dat')
+      END IF
+
+      print *, 'icouple is'
+      print *, ICOUPLE
+
+!gna - read more inputs from photo for coupling
+      IF (ICOUPLE.eq.1) THEN 
+      OPEN(unit=999,FILE= 'COUPLE/time_frak_photo.out')
+ 107  FORMAT(1X, F4.2, 5X, F5.3, 5X, F18.16)
+      READ(999,*)
+      READ(999,107) timega, P0ground, frak
+      print *, timega
+      print *, P0ground
+      print *, frak
+        age = 4.7
+         time = age-timega
+         SOLCON = (1+0.4*(1-time/4.7))**(-1)
+c      print *, timega
+c      print *, P0ground
+c      print *, frak
+      ENDIF
+
+   
+  51  FORMAT(4/)
 
       DO I = 1, ND
         GNEW(I) = 0.0D0 ! initialize GNEW
@@ -440,7 +460,6 @@ c      print *, 'Hello1'
       DO I=2,NF
       write(80,3002) i,av(i-1),av(i)
       enddo
-      close(80)
 C
 C **** Read the Gauss points and weights for the solar zenith angle int
       call data_grabber(xi,wi,ngauss)
@@ -462,7 +481,6 @@ c Reading the atmospheric composition from mixing_ratios.dat
          READ(114,*) FH22                        ! c-rr 5/29/2012 added H2 mixing ratio
          READ(114,*) FNO2                        !Nitrogen dioxide
          READ(114,*) Jcold                !Tropopause layer
-         close(114)
 
 c***********Calculate new FCO2**************
 c sk        FCO2 = PCO2/((.8/28.+PCO2/44.)*44.)
@@ -518,19 +536,16 @@ c  TRIPLE POINT PARAMETERS FOR CO2
       CCS = 0.3
 
 
-
      
 C Read Solar Data
       CALL READSOL
-      close(15)  
-      close(16)
+  
 c Choosing a star
 c-rr      CALL CHOOSE_STAR(STARR,SOLINT)  3/29/11
        CALL pickstar(STARR,SOLINT)
 C try to accelerate ir.f, von Paris, 21/04/2006
 c     CALL IREXPSUMS(WEIGHT,XKAPPA)
       CALL IREXPSUMS
-      close(36)
 c Reading an initial temperature and water profile
   998 FORMAT(3x,F16.12,7x,E22.15)
 c-jdh format statement to read in TempIn_Standard.tab
@@ -542,7 +557,7 @@ c 998 FORMAT(3x,F7.3,7x,E9.3)
         TG=T(ND)
       ENDIF
 c      print *, 'Hello11'
-      close(11)
+
 
 
 c Reading the ozone and water from the photochemical model
@@ -566,7 +581,7 @@ c       ENDIF
        
 C  Initialize pressure grid
       IF(IUP.EQ.1) TG = TG0
-      PRINT *, "Calling Grid()..."
+c      PRINT *, "Calling Grid()..."
       CALL GRID(P0,FAC,ZCON,Z,ZF,DZ)
 
 c  Reading the US Standard Atmosphere ozone profile       
@@ -598,7 +613,6 @@ C   CENTER FREQUENCIES IN MIDDLE OF INTERVALS AND COMPUTE WAVELENGTHS
 
 c -rr        Tstratospheric iteration loop 4/22/2011
 c        DO KK = 1,4
-
 
 
 c      print *, 'Hello3'
@@ -684,7 +698,7 @@ c Reading the ozone and water from the photochemical model
 c        print *, 'temp_alt, press, o3, water, ch4, co2'
         DO JREAD=1,NZ  !number of layers in photochem code
          READ(113,*) temp_alt(JREAD),PRESS(JREAD),O3(JREAD),
-     &                 wateR(JREAD),CH4(JREAD), CO2(JREAD)
+     &                 water(JREAD),CH4(JREAD), CO2(JREAD)
          temp_alt(JREAD)=temp_alt(JREAD)/1.0e5
 c         print 353, temp_alt(JREAD),PRESS(JREAD),O3(JREAD),water(JREAD),
 c     &         CH4(JREAD), CO2(JREAD)
@@ -699,8 +713,6 @@ c        FI(4,ND)=FO3
 c        FI(2,ND)=FCO2
   352   FORMAT("Alt = ",1PE12.3," H20=",1PE12.3)
   353   FORMAT(6(1PE9.2,1x))
-c         print *, 'NREAD, NZ, ND'
-c         print *, NREAD, NZ, ND
 c  Interpolate the grid from the photochemical model to the grid of the
 c  climate model 
         CALL INPUT_INTERP(temp_alt, water, O3, CH4, CO2, Jcold, T, FI)
@@ -708,24 +720,21 @@ c        print *, 'temp_alt,water,co2,ch4,o3(after input_interp)'
         DO J=1,ND
 c         print 353, alt(J), (FI(I,J),I=1,4) 
         ENDDO
-       close (113)
        ENDIF
 
-
-
+       close(113)
   
 c Aerosol calculation (commented when not used)
-      CALL AERABSDATA
+      CALL AERABSDATA(FRAK)
       CALL GRIDAER
       CALL INTERPAR1(RAER)
-
 C***********************************************************
 C ****************** START ITERATIVE LOOP *******************
       DO 40 NST=1,NSTEPS
 C************************************************************
       print *, 'in NST loop'
       ITROP = 1
-      PRINT 161,NST
+c      PRINT 161,NST
  160  FORMAT(/1X,"---------------------------------------------",
      2  //1X,"NST =",I6)
  161  format(1x,"NST =", I6)
@@ -742,13 +751,13 @@ c      if(FCO2.gt.CO2MAX) then
 c-as Old subroutine to calculate IR flux
 C PLANCK FUNCTION WAS CHANGED
        
-c-rr   Created IRM.F (IR clone with methane loop turned on). When there is methane call IRM instead of IR. 5/2/2011 
+c-rr gna  Created IRME.F (IR clone with methane and ethane loops turned on). When there is methane call IRM instead of IR. 5/2/2011 
        IF (IMET.eq.0) THEN
        CALL IR(T,PF,P,FNC,CGAS)  ! Passes FNC to IR c-rr 6/7/2012
        ELSE IF(IMET.eq.1) THEN
-       print *, 'about to call IRM'
-       CALL IRM(T,PF,P,FNC,CGAS) ! Passes FNC to IRM c-rr 6/7/2012
-       print *, 'calling IRM'
+       print *, 'about to call IRME' !irme is methane + ethane version
+       CALL IRME(T,PF,P,FNC,CGAS) ! Passes FNC to IRM c-rr 6/7/2012
+       print *, 'calling IRME'
       ENDIF       
        
 c      else
@@ -1293,8 +1302,7 @@ c     & DELT(J),TOLD(J),FI(1,J),HEATNET(J),TCOOL(J),THEAT(J)
      & FUPIR(J),FTSO(J),FDNSOL(J),FUPSOL(J),DIVF(J)
          ENDDO
       WRITE(98,*)   
-      END IF       
-      close(98) 
+      END IF        
   683  FORMAT(/2x,"J",5X,"P",9X,"ALT",9X,"T",8X,"CONVEC",
      & 7X,"DT",10X,"TOLD",8x,"FH20",
      &  7x,'FSAVE',8x,'FO3',8x,'TCOOL',7x,'THEAT') ! top of file
@@ -1343,8 +1351,6 @@ c     &  TCOOL(J)
  467  FORMAT(1PE10.4,2X,1PE10.4,1X,1PE10.4,3X,1PE11.4,3X,1PE11.4,
      & 3X,1PE11.4,3X,1PE11.4,3x,1pe11.4,3x,1pe11.4) 
       END DO
-      close(97)
-      close(12)
 c       close(89)
 
 c        Iterative Tstrat procedure   c-rr 4/22/2011
@@ -1356,33 +1362,14 @@ c        TSTRAT = 174*((SEFF*(1.0-ALBP))/TCONST)**0.25
 c        print *, 'TSTRAT=', TSTRAT
 c        ENDDO
 
-c       STOP
+       STOP
+        
 
-      close(3)
-      close(4)
-      close(8)
-      close(9)
-      close(21)
-      close(10)
-      close(17)
-      close(18)
-      close(25)
-      close(26)
-      close(27)
-      close(30)
-      close(38)
-      close(39)
-      close(66)
-      close(90)
-      close(91)
-      close(22)
-      close(116)
-      close(96) 
-      END                 !end of the subroutine
+      END                 !end of the main program
       
 *********************************************************************
       SUBROUTINE ALTITUDE(NST,T,FI,DZ)
-      INCLUDE 'INCLUDE/header.inc'
+      INCLUDE 'CLIMA/INCLUDE/header.inc'
       PARAMETER(NS1=4)      
       COMMON/CONSS/C,BK,G,GNEW(ND),PI,SM,DM,DM2
       COMMON/ALTBLOK/DALT(ND-1),RADIUS(ND-1),PARTICLES(ND),RAER(ND),
@@ -1432,7 +1419,6 @@ C=============================================================================
           read(66,200) xi(i,j), wi(i,j)
           enddo
         enddo        
-        close (66)
 C        print*, 'n='
 C        print 500,n
         !print 400        
@@ -1452,12 +1438,6 @@ C        print 500,n
           enddo
 C        print*,'n=',n(i),' sum =', sum
         enddo
-        close(38)
-        close(66)
-        close(90)
-        close(91)
-        close(22)
-        close(116)
-        close(96)
+
         end
         
