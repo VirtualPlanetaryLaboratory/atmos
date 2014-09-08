@@ -704,8 +704,8 @@ c        SAV = SAV2
 c       ENDDO
        WRITE(96,150)
  150   FORMAT(/1X,"WAVELENGTHS (U)"/)
-c       WRITE(96,151) ALAM
-       WRITE(96,151) LAM
+       WRITE(96,151) ALAM
+!       WRITE(96,151) LAM
  151   FORMAT(1X,10F6.1)
        ENDIF
 

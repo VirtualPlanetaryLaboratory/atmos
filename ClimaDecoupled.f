@@ -410,8 +410,9 @@ c*******Changed for now*********
       READ(1,*) AA,dtmax        !maximum time step allowed (seconds)
       READ(1,*) AA,CO2MAX
       READ(1,*) AA, IMET        ! IMET (flag 0 or 1)
-      READ(1,*) AA, IMETETH
+      READ(1,*) AA, IMETETH     ! IMETETH (flag 0 or 1)
       READ(1,*) AA, nga
+      READ(1,*) AA, IHAZE       ! IHAZE (flag 0 or 1)
 
 
 !gna - moved this part here so now we know what ICOUPLE is supposed to be  
@@ -744,7 +745,7 @@ c        ENDDO
   
 c Aerosol calculation (commented when not used)
       CALL AERABSDATA(FRAK)
-      CALL GRIDAER
+      CALL GRIDAER(ICOUPLE, IHAZE)
       CALL INTERPAR1(RAER)
 C***********************************************************
 C ****************** START ITERATIVE LOOP *******************
@@ -1372,7 +1373,7 @@ C   End of iterative loop
      2  'THEAT',8X,'TCOOL',8X,'PSATCO2',8x,'FCO2')
       DO J=1,ND
 c jkl 6/27/08 Print out H2O from the initial profile
-        WRITE(12,*) T(J),FI(1,J)
+        WRITE(12,998) T(J),FI(1,J)
 c        WRITE(97,467) ALT(J),P(J),T(J),FI(1,J),FI(4,J),THEAT(J),
 c     &  TCOOL(J)
         WRITE(97,467) ALT(J),P(J),T(J),FSAVE(J),FI(4,J),THEAT(J),

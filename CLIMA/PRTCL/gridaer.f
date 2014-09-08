@@ -1,5 +1,5 @@
 
-        SUBROUTINE GRIDAER
+        SUBROUTINE GRIDAER(ICOUPLE, IHAZE)
         INCLUDE 'CLIMA/INCLUDE/header.inc'
        PARAMETER (NZ=100)
         DIMENSION WFALL(NZ),TAUSED(NZ),CONVER(NZ),TAUEDD(NZ),TAUC(NZ)
@@ -7,20 +7,35 @@
         COMMON/ALTBLOK/DALT(ND-1),RADIUS(ND-1),PARTICLES(ND),RAER(ND),
      2    ALT(ND)
 
+      IF (IHAZE.eq.0) THEN
+      OPEN(unit=101,file="CLIMA/IO/hcaer_nohaze.out")
+      ENDIF
+
+      IF (ICOUPLE.eq.0.and.IHAZE.eq.1) THEN
+      OPEN(unit=101,file="CLIMA/IO/hcaer.out")
+      ENDIF
+
+      IF (ICOUPLE.eq.1.and.IHAZE.eq.1) THEN
       OPEN(unit=101,file="COUPLE/hcaer.photoout.out")
       OPEN(unit=102,file="COUPLE/hcaer.climaout.out")
+      ENDIF
+
       READ(101,*)
       READ(101,*)
       READ(101,*)
       READ(101,105) (Z(I),NPART(I),RPART(I),WFALL(I),TAUSED(I),
      2 TAUEDD(I),TAUC(I),CONVER(I),I=1,NZ)
 c      print *, 'read it in'
+      CLOSE(101)
+
+      IF (ICOUPLE.eq.1) THEN
       WRITE(102,103)
       WRITE(102,104)
       WRITE(102,105) (Z(I),NPART(I),RPART(I),WFALL(I),
      2 TAUSED(I),TAUEDD(I),TAUC(I),CONVER(I),I=1,NZ)
-      CLOSE(101)
       CLOSE(102)
+      ENDIF
+
  103  FORMAT(1X,"HC AEROSOL PARAMETERS")
  104  FORMAT(/4X,"Z",8X,"AERSOL",5X,"RPART",6X,"WFALL",5X,"TAUSED",4X,
      2 "TAUEDD",4X,"TAUC",6X,"CONVER")
