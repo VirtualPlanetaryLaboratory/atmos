@@ -13,7 +13,7 @@ c  This subroutine contains CH4 and C2H6 (gna merging in changes from Fung's ver
  
       INCLUDE 'CLIMA/INCLUDE/header.inc'
       PARAMETER (NF=55,NGS=8, IK=8)
-      PARAMETER(NS=3, NS1=NS+1, NS4=NS+5)
+      PARAMETER(NS=3, NS1=NS+2, NS4=NS+5)
 C new common block, von Paris, 21/04/2006
       COMMON/IRDATA/WEIGHTCH4(6),xkappa(3,12,NF,8), ! weightch4 is for methane 3/20/2012
      & CIA(7,NF), CPRW(ND,NF)
@@ -132,6 +132,14 @@ c-jdh Set C2H6 absorption coefficients
           KAPPALAYERC2H6(NI,NK) = 0.0       
          END DO
       END DO
+!so these are like 10-20 orders of magnitude higher than the kappas I get for co2 and ch4...
+!what are these values and what are their units 
+!gna - the 2.68E+19 is something I'm testing out.  I don't know how kappalayerc2h6 was calculated,
+!but it's resulting in tau values that are obviously much too large (and larger than those of all the other species
+!even when the amount of c2h6 in the atmosphere is miniscule).  In gascon.f, cgas in the "new" version (from 2012?)
+!is divided by 2.68E+19 to convert to molecules/cm**2, which is not something gasconold.f did.  Possibly this kappalayerc2h6
+!is assuming units we used pre-2012?
+!how were the methane k coeffs calculated?
       KAPPALAYERC2H6(14,1) = 1.0140E-23
       KAPPALAYERC2H6(14,2) = 6.6404E-23
       KAPPALAYERC2H6(14,3) = 4.4811E-22
@@ -173,7 +181,7 @@ c-jdh Set C2H6 absorption coefficients
       KAPPALAYERC2H6(25,3) = 2.2452E-22
       KAPPALAYERC2H6(25,4) = 9.2931E-22
       KAPPALAYERC2H6(25,5) = 3.0558E-21
-      KAPPALAYERC2H6(25,6) = 5.7388E-21      
+      KAPPALAYERC2H6(25,6) = 5.7388E-21
       DO I=1,NLAYERS
 !gna: added ethane to cgas in gascon.f so these lines no longer needed
 c        CGASC2H6(I) = 1.3386e-3*BK*273.16/(SM*G)
@@ -181,7 +189,7 @@ c     &                * (P(I+1) - P(I))*FC2H6/DM
 c        CGASC2H6(I) = 1.0e-5*BK*273.16/(SM*G)
 c     &                * (P(I+1) - P(I))*FC2H6/DM
 c jfk 6/27/08 P was changed to PF in the 2 lines below.
-!       CGASC2H6(I) = 1.0e-5*BK*273.16/(SM*G)
+!       CGASC2H6(I) = 1.0e-5*BK*273.16/(SM*G) !see no factor of 2.68e19
 !     &                * (PF(I+1) - PF(I))*FC2H6/DM !c2h6
 
       END DO
@@ -190,7 +198,7 @@ c jfk 6/27/08 P was changed to PF in the 2 lines below.
 ! Intializing Kappalayer, temperature, and FX indices    4/25/2012 c-rr
         DO IL = 1, NLAYERS
           DO J = 1,IK
-            DO I = 1,NF
+            DO I = 1,NF   !frequencies?
               DO K = 1,3 ! Gases are H2O(gas 1), CO2(gas 2), and CH4(gas 3)
         KAPPALAYER(I,J,K,IL) = 1.e-60
               ENDDO
@@ -441,10 +449,11 @@ c       PRINT *, '*******************************'
 
 !        print *, VAC, AV(I), I
 
+       DO 5 K0 = 1,6 ! ethane loop gna - moved ethane loop to top
        DO 2 K1 = 1,IK ! H2O loop
        Do 3 K2 = 1,IK ! CO2 loop
        DO 4 K3 = 1,6 ! methane loop  ! Activated when methane is on (IMET = 1)
-       DO 5 K4 = 1,6 ! ethane loop
+
   
 !        TWGHT = weightco2_h2oIR(K1)*weightco2_h2oIR(K2) ! no methane (CO2 and H2O weights are the same) 8/27/2012
  
@@ -453,10 +462,10 @@ c       PRINT *, '*******************************'
 !          print *, weightch4(k2)
 !          print *, weightch4(k3)
 !          pause
-       	
+!       	weightc2h6(K0) = 1.
 !       TWGHT = weightco2_h2oIR(K1)*weightco2_h2oIR(K2)*weightch4(K3) ! with methane 8/27/2012
         TWGHT = weightco2_h2oIR(K1)*weightco2_h2oIR(K2)*weightch4(K3) 
-     &           *weightc2h6(K4)
+     &           *weightc2h6(K0) 
 !        TWGHT = TWGHT * weightc2h6(K4) !with ethane
 
 
@@ -465,10 +474,26 @@ c       PRINT *, '*******************************'
          TPE = (300./T(IL))**TPR(I)
          
          TAUGH2O(IL) = KAPPALAYER(I,K1,1,IL)*CGAS(IL,6)
-         TAUGCO2(IL) = KAPPALAYER(I,K2,2,IL)*CGAS(IL,5)
+!         print *, cgas(IL, 6)
+!         call sleep(1)
+!   1145011266883586.5     
+!   1842019049386489.0     
+!   0.0000000000000000     
+!   90771608043177040.     
+!   15.106465570752329     
+!   3951422779566604.5     
+!   0.0000000000000000  
 
+         TAUGCO2(IL) = KAPPALAYER(I,K2,2,IL)*CGAS(IL,5)
+        ! if(taugco2(il) .gt. 0) print *, taugco2(il)
+        ! print *, 'CGAS(IL, 5) CO2', CGAS(IL, 5)
 
          TAUGCH4(IL) = KAPPALAYER(I,K3,3,IL)*CGAS(IL,2)!! Activated when methane is on (IMET = 1)
+          !if(taugch4(il) .gt. 0) print *, taugch4(il)
+      !   if (kappalayer(i,k3,3,il) .gt. 0) then 
+      !      print *, kappalayer(I,k3,3,il)  !kappalayer for ch4 much smaller than t
+      !      endif
+        ! print *, 'CGAS(IL, 2) CH4 ', CGAS(IL, 2)
 
              
 !4242     format(1p3e14.5,2x,i3,2x,i3,2x,i3)
@@ -477,9 +502,24 @@ c       PRINT *, '*******************************'
 !         TAUGC2H6(IL) = 0. !gna - commented out
 !         TAUGC2H6(IL) = KAPPAC2H6(I)*CGAS(IL,5)*2.687E24*(FC2H6/FCH4)  !gna - is THIS correct?
 !         TAUGC2H6(IL) = KAPPALAYERC2H6(I,K4)*CGASC2H6(IL)*2.687E24 !gna - from Fung's version (is this right??)
-          TAUGC2H6(IL) = KAPPALAYERC2H6(I,K4)*CGAS(IL, 8) !gna - gas 8 is ethane
+          TAUGC2H6(IL) = KAPPALAYERC2H6(I,K0)*CGAS(IL, 8) !gna - gas 8 is ethane
+!          TAUGC2H6(IL) = 0.
+         !  if(taugc2h6(il) .gt. 0) print *, taugc2h6(il)
+         ! if(taugc2h6(il) .gt. 0)print *, 'taugc2h6', TAUGC2H6(IL)
+!          if(KAPPALAYERC2H6(I,K3) .gt. 0) print *, 
+!     &       'KAPPALAYERC2H6(I,K3)', KAPPALAYERC2H6(I,K3)
+         ! print *, 'CGAS(IL, 8) C2H6', CGAS(IL, 8)
+        !  call sleep(1)
+          
+         ! if (kappalayerc2h6(i,k4) .gt. 0) print *, kappalayerc2h6(I,k4)
+          
 
-
+   !       print *, cgas(IL, 8)
+   !       print *, 'hi'
+    !      call sleep(1)
+          !try this:
+!          TAUGC2H6(IL) = KAPPAC2H6(I)*CGAS(IL,8)*2.687E24  !need to multiply by 2.68E24?
+!          print *, cgas(IL, 8)
 !         print *, H2CIA(MS1(IL),I)
 !         pause
 c-rr	This the H2-N2 CIA loop calculation 5/29/2012
@@ -650,17 +690,17 @@ c        TPRIND(IL) = 0
 ******* Ozone absorption
 C-TF  THIS SPECIAL TREATMENT FOR OZONE IS DONE TO SAVE COMPUTER
 C-TF  TIME BECAUSE ONLY ONE WAVELENGTH IS AFFECTED BY OZONE.
-C-TF  HERE A NEW WEIGHT FUNCTION TWGHTT(K00) IS CALCULATED
+C-TF  HERE A NEW WEIGHT FUNCTION TWGHTT(K30) IS CALCULATED
 C-TF  AND IS USED TO COMPUTE FUPA AND FDNA.
         IF (I.EQ.18) THEN
 !		 sumoz = 0.  
-      DO K5=1,8
-        TWGHTT(K5) = TWGHT*WEIGHTOZC(K5)
+      DO K4=1,8
+        TWGHTT(K4) = TWGHT*WEIGHTOZC(K4)
       DO IL=1,NLAYERS
 !        CGAS(IL,4) = CGAS(IL,4)*.97d0
          
 !		  sumoz = TWGHTT(K4) + sumoz
-        TAUGOZ(IL) =KAPPALAYEROZ(K5,IL)*CGAS(IL,4) ! Rederived correct units for TAUGOZ rr and rv
+        TAUGOZ(IL) =KAPPALAYEROZ(K4,IL)*CGAS(IL,4) ! Rederived correct units for TAUGOZ rr and rv
 !		TAUGOZ(IL) = 0.0d0
 
 !        TAUGOZ(IL) = 0.
@@ -673,6 +713,9 @@ c      TAUGIR(IL) =TAUGIR(IL) + TAUGOZ(IL)
       TAUGIR(IL) = TAUGCH4(IL)+TAUGH2O(IL)+ TAUGCO2(IL) + TPRIND(IL)  
      & +TAUCONTIN(IL) + TAUGOZ(IL) + TAUGC2H6(IL)+ TAUH2N2(IL)
      & + TAUO2O2(IL)+TAUH2H2(IL)
+
+!      print *, taugir(il)
+!      call sleep(1)
 !gna - taugir is computed twice??  I guess it just overwrites taugir that's computed above...
 
 	! print *, TAUGOZ(IL)
@@ -719,10 +762,9 @@ c      This requires the use of PF, not P.
 C
 
                   DO J = 1,ND
-                  FUPA(J)=FUPA(J)+TWGHTT(K5)*FUP(J)
-                  FDNA(J)=FDNA(J)+TWGHTT(K5)*FDN(J)
+                  FUPA(J)=FUPA(J)+TWGHTT(K4)*FUP(J)
+                  FDNA(J)=FDNA(J)+TWGHTT(K4)*FDN(J)
                   ENDDO
-        
 
         ENDDO
 		 !  IF (I.eq.18) print *, sumoz
@@ -830,10 +872,11 @@ C
                sumtwght = sumtwght + TWGHT
 
                
-  5     CONTINUE  ! ETHANE               
+
   4     CONTINUE ! METHANE           
   3     CONTINUE ! Co2
-  2     CONTINUE ! H2O       
+  2     CONTINUE ! H2O    
+  5     CONTINUE  ! ETHANE                  
           write(5552,*) ! puts an extra space between each set of 16 coefficients
 
 !         print *,'sum of TWGHT is.....',sumtwght, I
@@ -886,5 +929,9 @@ C        ENDDO
  !     PRINT*,'TAUTOTAL'
  !     PRINT 100, TAUTOTAL
  !     pause
+      print *, FDNIR(1)
+      print *, FUPIR(1)  
+      print *, 'fupj', FUP(1)
       RETURN
       END
+

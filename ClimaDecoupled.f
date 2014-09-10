@@ -1,4 +1,4 @@
-cC 1    C     PROGRAM SURFT(INPUT,OUTPUT,TAPE1,TAPE2,TAPE3)
+C 1    C     PROGRAM SURFT(INPUT,OUTPUT,TAPE1,TAPE2,TAPE3)
 
 C  This program is a modified version of the climate model SURFTEM made 
 c  by James Kasting. The program has been modified by Michael Mischna (mm),
@@ -773,7 +773,7 @@ C PLANCK FUNCTION WAS CHANGED
 c-rr gna  Created IRME.F (IR clone with methane and ethane loops turned on). When there is methane call IRM instead of IR. 5/2/2011 
 
       IF (IMET.eq.0) THEN
-       print *, 'calling irm'
+       print *, 'calling ir.f'
        CALL IR(T,PF,P,FNC,CGAS)  ! Passes FNC to IR c-rr 6/7/2012
       ENDIF
 
@@ -905,9 +905,8 @@ c        print 1300,nga,ng2,k,amu0,zy,weightt
 c          if (j.eq.1)print *, 'fdnsoltot', fdnsoltot(j)
           
           fdnsoltot(j) = fdnsoltot(j) + fdnsol(j)*weightt
-          
+         
           fupsoltot(j) = fupsoltot(j) + fupsol(j)*weightt
-          
           enddo
 c          print *, 'FCH4=', FI(3,1)
 c          print *, 'FC2H6=', FI(5,1)
@@ -939,9 +938,22 @@ c      if (j.eq.1) print *, 'FDNSOL=', FDNSOL(1)
       FTOTAL(J) = FDNSOL(J)-FUPSOL(J)+FDNIR(J)-FUPIR(J)
       FTIR(J) = FDNIR(J)-FUPIR(J)
       FTSO(J) = FDNSOL(J)-FUPSOL(J)
+
+ !     print *, 'FDNSOL(J)', FDNSOL(J)
+ !     print *, 'FUPSOL(J)', FUPSOL(J)
+ !     print *, 'FTOTAL(J)', FTOTAL(J)
+ !     print *,  'FTIR(J)',  FTIR(J)
+ !     print *, 'FTSO(J)', FTSO(J)
+ !     print *, 'FDNIR(J)', FDNIR(J)
+ !     print *, 'FUPIR(J)', FUPIR(J)
+
+ !     call sleep(1)
+
   31  CONTINUE
       ALBP = FUPSOL(1)/FDNSOL(1)
       SEFF = abs(FTIR(1)/FTSO(1))      !to print out Seff, c-rr 4/21/2011
+      print *, 'FTIR= ', FTIR(1)
+      print *, 'FTSO= ', FTSO(1)
       PRINT *, 'Seff=',SEFF
       PRINT 166,ALBP
  166  FORMAT(/1X,"PLANETARY ALBEDO:  ALBP = ",F6.4)

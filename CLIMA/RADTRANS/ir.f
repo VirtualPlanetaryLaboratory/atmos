@@ -485,7 +485,6 @@ c       ENDIF
 !       DO 5 K0 = 1,6 ! ethane
   
         TWGHT = weightco2_h2oIR(K1)*weightco2_h2oIR(K2) ! no methane (CO2 and H2O weights are the same) 8/27/2012
-        
        	
 !       TWGHT = weightco2_h2oIR(K1)*weightco2_h2oIR(K2)*weightch4(K2) ! with methane 8/27/2012
 !       TWGHT = weightco2_h2oIR(K1)*weightco2_h2oIR(K2)*weightch4(K2)*weightc2h6(k0) ! with ethane 3/20/2012
@@ -905,7 +904,7 @@ C
                    ENDDO
 !               pause
                sumtwght = sumtwght + TWGHT
-
+ 
                
   5     CONTINUE  ! ETHANE               
   4     CONTINUE ! METHANE           

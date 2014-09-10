@@ -1319,7 +1319,7 @@ C   End of iterative loop
      2  'THEAT',8X,'TCOOL',8X,'PSATCO2',8x,'FCO2')
       DO J=1,ND
 c jkl 6/27/08 Print out H2O from the initial profile
-        WRITE(12,*) T(J),FI(1,J)
+        WRITE(12,998) T(J),FI(1,J)
 c        WRITE(97,467) ALT(J),P(J),T(J),FI(1,J),FI(4,J),THEAT(J),
 c     &  TCOOL(J)
         WRITE(97,467) ALT(J),P(J),T(J),FSAVE(J),FI(4,J),THEAT(J),

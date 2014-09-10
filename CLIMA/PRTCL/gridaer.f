@@ -8,14 +8,17 @@
      2    ALT(ND)
 
       IF (IHAZE.eq.0) THEN
+      print *, 'reading in no haze'
       OPEN(unit=101,file="CLIMA/IO/hcaer_nohaze.out")
       ENDIF
 
       IF (ICOUPLE.eq.0.and.IHAZE.eq.1) THEN
+      print *, 'reading in uncoupled haze file'
       OPEN(unit=101,file="CLIMA/IO/hcaer.out")
       ENDIF
 
       IF (ICOUPLE.eq.1.and.IHAZE.eq.1) THEN
+      print *, 'reading in coupled haze file'
       OPEN(unit=101,file="COUPLE/hcaer.photoout.out")
       OPEN(unit=102,file="COUPLE/hcaer.climaout.out")
       ENDIF
