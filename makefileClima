@@ -78,6 +78,7 @@ CSOL3 = solarox
 CSOL4 = solarmox
 CINFR = ir
 CINFM = irm
+CINFME= irme
 CRAYL = rayley
 CDSTI = delta2strir
 CDSTS = delta2str
@@ -140,6 +141,7 @@ OBPATH = $(CDOTOC)/$(CSUR).o \
 	 $(CDOTOC)/$(CSOL4).o  \
 	 $(CDOTOC)/$(CINFR).o \
          $(CDOTOC)/$(CINFM).o \
+         $(CDOTOC)/$(CINFE).o \
 	 $(CDOTOC)/$(CRAYL).o \
 	 $(CDOTOC)/$(CDSTI).o \
 	 $(CDOTOC)/$(CDSTS).o \
@@ -268,6 +270,10 @@ $(CDOTOC)/$(CINFR).o : $(CPATH3)/$(CINFR).f
 $(CDOTOC)/$(CINFM).o : $(CPATH3)/$(CINFM).f
 	$(FC) $(FCFLAG) -c $(CPATH3)/$(CINFM).f
 	\mv $(CINFM).o $(CDOTOC)
+
+$(CDOTOC)/$(CINFME).o : $(CPATH3)/$(CINFME).f
+	$(FC) $(FCFLAG) -c $(CPATH3)/$(CINFME).f
+	\mv $(CINFME).o $(CDOTOC)
 
 $(CDOTOC)/$(CRAYL).o : $(CPATH3)/$(CRAYL).f
 	$(FC) $(FCFLAG) -c $(CPATH3)/$(CRAYL).f
