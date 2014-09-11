@@ -141,7 +141,7 @@ OBPATH = $(CDOTOC)/$(CSUR).o \
 	 $(CDOTOC)/$(CSOL4).o  \
 	 $(CDOTOC)/$(CINFR).o \
          $(CDOTOC)/$(CINFM).o \
-         $(CDOTOC)/$(CINFE).o \
+         $(CDOTOC)/$(CINFME).o \
 	 $(CDOTOC)/$(CRAYL).o \
 	 $(CDOTOC)/$(CDSTI).o \
 	 $(CDOTOC)/$(CDSTS).o \
