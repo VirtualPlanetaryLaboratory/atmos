@@ -1,5 +1,5 @@
       SUBROUTINE PHOTO(ZY,AGL,LTIMES,ISEASON,IZYO2,IO2,INO,N,timega,
-     $                 frak)
+     $                 frak,msun)
       INCLUDE 'PHOTOCHEM/INPUTFILES/parameters.inc'
       implicit real*8(A-H,O-Z)
       real*8 mass
@@ -133,7 +133,7 @@ c - note that columndepth is indexed by photoreac so contains duplicate informat
 c (i.e. columndepth(1,*) and (2,*)  are both the O2 column depth (assuming O2 is the first photoreaction)
 
       IF(LTIMES .EQ. 0) then
-        CALL INITPHOTO(sq,columndepth,ZY,nw,timega,IO2) 
+        CALL INITPHOTO(sq,columndepth,ZY,nw,timega,IO2,msun) 
  !this subroutine returns sq(nj,nz,nw) = cross section * quantum yield for each
  ! photolysis reaction at each height for each wavelength
 ! it also specifies the wavelength grid and the flux

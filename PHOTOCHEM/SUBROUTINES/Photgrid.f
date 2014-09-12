@@ -578,7 +578,7 @@ c-mc should probably print these out to output file rather than screen
       END
 
 
-      SUBROUTINE readflux(nw,wl,f,timega)
+      SUBROUTINE readflux(nw,wl,f,timega,msun)
 
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
@@ -638,7 +638,7 @@ c       M. Claire       091306 integrating into Kevin's code
       REAL*8 hc
       PARAMETER(hc = 6.62E-34 * 2.998E8)
 
-      INTEGER msun
+!      INTEGER msun
       REAL*8 refrac
       EXTERNAL refrac
 
@@ -657,10 +657,12 @@ c      msun = 17    !Gj 581 from Lucianne
 !ACK - implementing YOUNGSUN.f into msun=13 for now, but it could apply to 14 if I ever wanted to use it again...
 !but not for Mdwarfs...
 
-      msun=13
+
 
       IF (msun .EQ. 13) THEN
-
+         print *, "HI!"
+         print *, "MSUN IS 13"
+         call sleep(1)
          nhead = 0
          ierr = 0
 

@@ -1,4 +1,4 @@
-      SUBROUTINE INITPHOTO(sq,columndepth,zy,nw,timega,IO2)
+      SUBROUTINE INITPHOTO(sq,columndepth,zy,nw,timega,IO2,msun)
       INCLUDE 'PHOTOCHEM/INPUTFILES/parameters.inc'
       implicit real*8(A-H,O-Z)
       Integer nw,j,IO2
@@ -21,7 +21,7 @@ c wavu, a vector of upper grid points (i.w. wavl+delta)
 c wav, a vector of centered values (i.e. (wavl + wavu)/2 )
 
 
-      CALL readflux(nw,wavl,flux,timega)
+      CALL readflux(nw,wavl,flux,timega,msun)
 c this subroutine returns the flux data interpolated to the wavelength grid along with 
 c Claire et al. 2012 corrections for the specified time (timeGa set in PLANET.dat)
 
