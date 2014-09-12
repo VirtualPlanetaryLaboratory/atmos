@@ -873,10 +873,10 @@ c       print *, NR
 
 
 C ***** READ THE PLANET PARAMETER DATAFILE *****
-      READ(7,502) G,FSCALE,ALB,ZTROP,FAR,R0,P0,PLANET,TIMEGA,IRESET
- 502  FORMAT(F7.1/,F7.2/,F7.3/,E7.1/,F7.3/,E8.3/,F8.3/,A8/,F4.2/,I1)
+      READ(7,502) G,FSCALE,ALB,ZTROP,FAR,R0,P0,PLANET,TIMEGA,IRESET,msun
+ 502  FORMAT(F7.1/,F7.2/,F7.3/,E7.1/,F7.3/,E8.3/,F8.3/,A8/,F4.2/,I1/,I2)
 C     adding IRESET to create the atmospheric profile for modern earth
-
+C     gna - added msun keyword to change the star from planet.dat
 
 C
       IF (IRESET.eq.1) CALL RESET
@@ -969,12 +969,13 @@ c finish setting boundary conditions:
 
 C added by giada
       OPEN(unit=999, file='COUPLE/time_frak_photo.out')
- 909  FORMAT(1X, F4.2, 5X, F5.3, 5X, F18.16)
- 908  FORMAT(1X, 'timega', 3X, 'P0', 8X, 'frak')
+ 909  FORMAT(1X, F4.2, 5X, F5.3, 5X, F18.16, 5X, I2)
+ 908  FORMAT(1X, 'timega', 3X, 'P0', 8X, 'frak', 8X, 'msun')
       print *, frak
       print *, P0
+      print *, msun
       WRITE(999,908)
-      WRITE(999,909) timega, P0, frak
+      WRITE(999,909) timega, P0, frak, msun
 
 C
 C
@@ -1332,7 +1333,8 @@ corig       CO2(I) = FCO2
 
       IDO = 0
       IF (NN.EQ.NSTEPS) IDO = 1
-      CALL PHOTO(ZY,AGL,LTIMES,ISEASON,IZYO2,IO2,INO,IDO,timega,frak)
+      CALL PHOTO(ZY,AGL,LTIMES,ISEASON,IZYO2,IO2,INO,IDO,timega,frak, 
+     &      msun)
       CALL RAINOUT(JTROP,NRAIN,USETD)  !ok
       CALL AERCON
 

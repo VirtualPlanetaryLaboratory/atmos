@@ -3,7 +3,7 @@
 * Write the value AFTER the 11th space
 *2345678901HERE
 
-NSTEPS=    300           !step number (200 recommended for coupling)
+NSTEPS=    200           !step number (200 recommended for coupling)
 IMW=       2         
 RSURF=     0.8                
 ZY=	   60.     
@@ -18,8 +18,8 @@ IUP=       0                    !1 means that it starts a new run and doesn't re
 TG0=       280.			!Surface temperature for IUP=1   
 TSTRAT=    200.             	!Stratospheric temperature for IUP=1
 STARR=     "Sun"		!What star?
-ICONSERV=  1          	        !Type of energy conservation
-ICOUPLE=   0            	!Coupled(1) or not(0)
+ICONSERV=  0          	        !Type of energy conservation
+ICOUPLE=   1            	!Coupled(1) or not(0)
 SRFALB=    0.32	               !fixed planetary albedo (0.2)
 SOLCON=    1.0	  	       !SOLCON=S/So (0.3225 = 0.75*0.43)  use 0.43 for present day mars, .2844 for GJ581d,22.49 unscaled --> when coupled it reads this in from photo
 dtmax=     1.e4

@@ -429,15 +429,24 @@ c*******Changed for now*********
 !gna - read more inputs from photo for coupling
       IF (ICOUPLE.eq.1) THEN 
       OPEN(unit=999,FILE= 'COUPLE/time_frak_photo.out')
- 107  FORMAT(1X, F4.2, 5X, F5.3, 5X, F18.16)
+ 107  FORMAT(1X, F4.2, 5X, F5.3, 5X, F18.16, 5X, I2)
       READ(999,*)
-      READ(999,107) timega, P0ground, frak
+      READ(999,107) timega, P0ground, frak, msun
       print *, timega
       print *, P0ground
       print *, frak
-        age = 4.7
+      print *, msun
+      IF (msun.eq.13) STARR = "Sun"
+      IF (msun.eq.14) STARR = "Sun"
+      IF (msun.eq.15) STARR = "ADLEO"
+      IF (msun.eq.16) STARR = "ADLEO"
+      IF (msun.eq.17) STARR = "GJ581"
+         age = 4.7
          time = age-timega
          SOLCON = (1+0.4*(1-time/4.7))**(-1)
+         PG0 = P0ground
+         print *, STARR
+         call sleep(2)
 c      print *, timega
 c      print *, P0ground
 c      print *, frak
