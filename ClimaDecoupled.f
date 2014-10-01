@@ -439,7 +439,7 @@ c*******Changed for now*********
       IF (msun.eq.13) STARR = "Sun"
       IF (msun.eq.14) STARR = "Sun"
       IF (msun.eq.15) STARR = "ADLEO"
-      IF (msun.eq.16) STARR = "ADLEO"
+      IF (msun.eq.16) STARR = "ADLEO" !B2532
       IF (msun.eq.17) STARR = "GJ581"
          age = 4.7
          time = age-timega

@@ -10,9 +10,9 @@ IO2=       1
 INO=       1
 EPSJ=      1.E-9
 PRONO=     1.E9
-frak=      1
+frak=      0
 HCDENS=    0.63
-ICOUPLE=   1
+ICOUPLE=   0
 
 C ***** SET MODEL PARAMETERS *****
 C     AGL = DIURNAL AVERAGING FACTOR FOR PHOTORATES

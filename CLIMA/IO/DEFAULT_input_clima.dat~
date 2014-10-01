@@ -3,7 +3,7 @@
 * Write the value AFTER the 11th space
 *2345678901HERE
 
-NSTEPS=    400           !step number (200 recommended for coupling)
+NSTEPS=    4           !step number (200 recommended for coupling)
 IMW=       2         
 RSURF=     0.8                
 ZY=	   60.     
@@ -14,7 +14,7 @@ PGO=       1.
 G=	   980.         !Gravity (Mars=373., Earth=980., Gliese581d=1744.0, assuming 5.6 earth masses) 
 FAC=       4.0
 IO3=       1   			!Ozone?
-IUP=       0                    !1 means that it starts a new run and doesn't read TempIn.dat
+IUP=       1                    !1 means that it starts a new run and doesn't read TempIn.dat
 TG0=       270.			!Surface temperature for IUP=1   
 TSTRAT=    200.             	!Stratospheric temperature for IUP=1
 STARR=     "Sun"		!What star?
