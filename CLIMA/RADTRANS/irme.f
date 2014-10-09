@@ -378,8 +378,9 @@ c      PRINT *, TAUEXTIRTOTAL
 c       PRINT *, 'TAUSIRTOTAL'
 c       PRINT *, TAUASIRTOTAL
        TAUAABSIRTOTAL = TAUEXTIRTOTAL - TAUASIRTOTAL
-c       PRINT *, 'TAUAABSIRTOTAL'
-c       PRINT *, TAUAABSIRTOTAL
+       
+       PRINT *, 'TAUAABSIRTOTAL'
+       PRINT *, TAUAABSIRTOTAL
 c       PRINT *, '*******************************'
        ENDIF 
 

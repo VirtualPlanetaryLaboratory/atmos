@@ -241,7 +241,7 @@ c           TAUR(IL)= SIGR(I)*CRAY(IL)
         TAUR(IL)= SIGR*CRAY(IL)  ! SIGR is a scalar now 5/23/2011
         r = RAER(IL)
         np = PARTICLES(IL)
-        TAUEXT(IL)=QEXT(I,IL)*PI*r*r*DALT(IL)*np*1.E+5
+        TAUEXT(IL)=QEXT(I,IL)*PI*r*r*DALT(IL)*np*1.E+5 !gna - does this need correction for forward scatteirng?
         TAUEXTID(IL) = 2*PI*r*r*DALT(IL)*np*1.E+5
         TAUAS(IL)=OMG0A(I,IL)*TAUEXT(IL)
         TAUS(IL)=TAUAS(IL)+TAUR(IL)
@@ -255,19 +255,19 @@ C
        TAUEXTTOTAL = TAUEXTTOTAL + TAUEXT(IL)
        TAUASTOTAL = TAUASTOTAL + TAUAS(IL)
        ENDDO
-c       PRINT *, '***************************'
-c       PRINT *, 'TAUEXTTOTALVIS'
-c       PRINT *, TAUEXTTOTAL
-c       PRINT *, 'TAUASTOTALVIS'
-c       PRINT *, TAUASTOTAL
+       PRINT *, '***************************'
+       PRINT *, 'TAUEXTTOTALVIS'
+       PRINT *, TAUEXTTOTAL
+       PRINT *, 'TAUASTOTALVIS'
+       PRINT *, TAUASTOTAL
        TAUAABSTOTAL = TAUEXTTOTAL - TAUASTOTAL
-c       PRINT *, 'TAUAABSTOTALVIS'
-c       PRINT *, TAUAABSTOTAL
-C       PRINT *, 'QEXTVIS      OMG0A      ALT'
+       PRINT *, 'TAUAABSTOTALVIS'
+       PRINT *, TAUAABSTOTAL
+       PRINT *, 'QEXTVIS      OMG0A      ALT'
 C       DO IL=1,NLAYERS
 C       PRINT *, QEXT(I,IL), OMG0A(I,IL), ALT(IL) 
 C       ENDDO 
-C      PRINT *, '***************************'
+       PRINT *, '***************************'
        ENDIF
 C
 

@@ -71,6 +71,7 @@ C-KK   both indices starting at ground level
         F5log2 = ALOG(ethane(IS))
         F5log = (FR*F5log2) + ((1-FR)*F5log1)
         FI(5,j) = EXP(F5log)
+        
         END DO
 
   471  CONTINUE

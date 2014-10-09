@@ -100,7 +100,7 @@ C   Scale optical depth, W0, and G for the particles using the Delta-
 C   Eddington approximation of Joseph et al. (Ref: J. Atmos. Sci. 33,
 C   2452, 1976)
 
-
+!gna - this is the correction for forward scattering: delta eddington approximation
 C
 C   Particle 1 is sulfate, 2 is S8, 3 is HCAER
       W0P(1) = 1.

@@ -139,11 +139,11 @@ c (i.e. columndepth(1,*) and (2,*)  are both the O2 column depth (assuming O2 is
 ! it also specifies the wavelength grid and the flux
 
 c GNA
-       if (frak.eq.0) then 
+       !if (frak.eq.0) then 
          CALL INITMIE(nw,wavl,frak)
-         else
-        CALL INITMIEFRAC(nw,wavl,frak)
-      endif
+        ! else
+        !CALL INITMIEFRAC(nw,wavl,frak)
+      !endif
 
 
       endif  
@@ -235,9 +235,10 @@ C interpolate the optical properties from the Mie code onto the particle radii c
       !this was in the time-stepping loop of the original code, but that seems like a mistake
 C-AP Since all model is in cm we should convert RSTAND
 c-mc test test test
-c      DO k=1,34
-c       RSTAND(k) = RSTAND(k)/10000.
-c      ENDDO
+cgna - uncommented why isn't it doing this still??
+      !DO k=1,34
+       !RSTAND(k) = RSTAND(k)/10000.
+      !ENDDO
 
 
 C  Calculate Qext , W0, G, for the current hydrocarbon aerosol distribution
@@ -251,16 +252,16 @@ c       enddo
       DO I=1,nw   
       DO J=1,NZ                                       !ISOHACK - i will need to interpolate the MIE parameters to the wavelength grid
       DO k=1,33  !ACK - hardcoded num particles (probably OK - this is how the HC grid was computed)  
-       IF ((RPAR(J,L).GE.RSTAND(k)).and.(RPAR(J,L).LT.RSTAND(k+1)))   
+
+         IF ((RPAR(J,L).GE.RSTAND(k)).and.(RPAR(J,L).LT.RSTAND(k+1)))   
      2 THEN
-c      if(j.eq.1) print *,i,k, RPAR(J,1),RSTAND(k),RSTAND(k+1)
 
       drs = RSTAND(k+1) - RSTAND(k)
       dr  = RPAR(J,L) - RSTAND(k) 
 
       QEXTT(I,J,L) = QEXTHC(I,k) + ((QEXTHC(I,k+1) - 
      2 QEXTHC(I,k))/drs)*dr
-
+ 
       GFT(I,J,L) = GHC(I,k) + ((GHC(I,k+1) - 
      2 GHC(I,k))/drs)*dr
 

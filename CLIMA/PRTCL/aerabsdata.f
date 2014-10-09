@@ -20,11 +20,11 @@ C  radius of particles is given in cm
         IF (frak.eq.1) THEN
          OPEN(UNIT=40,FILE= DIRDATA//'/irtotalfract.DAT')
          OPEN(UNIT=41,FILE= DIRDATA//'/soltotalfract.DAT')
-c         print *, 'doing fractals'
+         print *, 'doing fractal particles'
         ELSE
          OPEN(UNIT=40,FILE= DIRDATA//'/irtotal.DAT')
          OPEN(UNIT=41,FILE= DIRDATA//'/soltotal.DAT')
-c         print *,'doing spheres'
+         print *,'doing spherical particles'
         ENDIF
 C READING IR particle absorption data
          DO J=1,46

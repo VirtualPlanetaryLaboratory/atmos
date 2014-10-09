@@ -121,7 +121,7 @@ C-EW  S8,SO4,HC if frak=0: USE SPHERICAL MICROPHYSICS
        CUNING(J,K) = 1 + ALPH*ALAM(J)/RPAR(J,K)
 C-AP Here we assume that the density of aerosol is 1 g/cm3
 C-AP Notation is similar Fusch 1964
-       adensity = 0.64
+       adensity = HCDENS
        amass(J,K) = (4./3.)*PI*RPAR(J,K)**3*adensity
        THERMSP(J,K) = SQRT((8*BK*T(J))/(pi*amass(J,K))) 
        TAURELAXC(J,K)=2*RPAR(J,K)*RPAR(J,K)/(9*ETA(J))

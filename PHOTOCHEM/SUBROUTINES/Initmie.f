@@ -11,6 +11,12 @@
 
       dimension W0STANDNEW(108,34)
 
+
+      DIMENSION WAVLSF(118), WAVUSF(118), QEXTSTANDF(118,34)
+      dimension W0STANDF(118,34), GSTANDF(118,34)
+
+      dimension W0STANDNEWF(118,34)
+
       CHARACTER*30 root,filenames
       dimension filenames(34)
 
@@ -44,6 +50,8 @@ C-AP ***********************************************************
 
       !this was in the time-stepping loop of the original code, but that seems like a mistake
 C-AP Since all model is in cm we should convert RSTAND
+
+      if (frak.eq.0) then  
       DO k=1,34
        RSTAND(k) = RSTAND(k)/10000.
       ENDDO
@@ -61,7 +69,7 @@ C-AP Since all model is in cm we should convert RSTAND
       else  !use fractal MIE data
          print *, 'using fractal MIE data'
 
-      root='PHOTOCHEM/DATA/MIE/fractal/fractopts'    
+      root='PHOTOCHEM/DATA/MIE/f/fractopts'    
       filenames=['0.001um.txt','0.002um.txt','0.003um.txt','0.004um.txt'
      $          ,'0.005um.txt','0.006um.txt','0.007um.txt','0.008um.txt'
      $          ,'0.009um.txt','0.010um.txt','0.030um.txt','0.050um.txt'
@@ -74,7 +82,7 @@ C-AP Since all model is in cm we should convert RSTAND
 
 
       endif
-
+      !hi
 
       do j=1,34  !there are 34 particle sizes for hydrocarbons
        open(unit=125,file=trim(root)//trim(filenames(j)))  !open up MIE FILES
@@ -170,12 +178,171 @@ c      print *, j, yg3
       W0HC(k,j)=yg1(k)
       QEXTHC(k,j)=yg2(k)
       GHC(k,j)=yg3(k)
+      print *, 'qexthc in initmie'
+      print *, QEXTHC(k,j)
+c       if (wl(k).eq. 2100) print *, wl(k),yg1(k),yg2(k),yg3(k)
+      enddo
+
+
+      enddo
+
+      endif
+
+      
+
+
+      if (frak.eq.1) then       !use fractal  MIE data
+
+
+         npts=118
+
+         
+
+      DO k=1,34
+       RSTAND(k) = RSTAND(k)/10000.
+      ENDDO
+
+      if (frak.eq.0) then  !use spherical MIE data
+      root='PHOTOCHEM/DATA/MIE/fitmythol'
+      filenames=['0001.DAT','0002.DAT','0003.DAT','0004.DAT','0005.DAT',
+     $       '0006.DAT','0007.DAT','0008.DAT','0009.DAT','001.DAT ',
+     $       '003.DAT ','005.DAT ','007.DAT ','01.DAT  ','013.DAT ',
+     $       '015.DAT ','017.DAT ','02.DAT  ','023.DAT ','027.DAT ',
+     $       '03.DAT  ','033.DAT ','037.DAT ','04.DAT  ','043.DAT ',
+     $       '047.DAT ','05.DAT  ','055.DAT ','06.DAT  ','07.DAT  ',
+     $       '08.DAT  ','09.DAT  ','1.DAT   ','2.DAT   ']
+      else  !use fractal MIE data
+         print *, 'using fractal MIE data'
+
+      root='PHOTOCHEM/DATA/MIE/f/fractopts'    
+      filenames=['0.001um.txt','0.002um.txt','0.003um.txt','0.004um.txt'
+     $          ,'0.005um.txt','0.006um.txt','0.007um.txt','0.008um.txt'
+     $          ,'0.009um.txt','0.010um.txt','0.030um.txt','0.050um.txt'
+     $          ,'0.070um.txt','0.100um.txt','0.130um.txt','0.150um.txt'
+     $          ,'0.170um.txt','0.200um.txt','0.230um.txt','0.270um.txt'
+     $          ,'0.300um.txt','0.330um.txt','0.370um.txt','0.400um.txt'
+     $          ,'0.430um.txt','0.470um.txt','0.500um.txt','0.550um.txt'
+     $          ,'0.600um.txt','0.700um.txt','0.800um.txt','0.900um.txt'
+     $          ,'1.000um.txt','2.000um.txt']
+
+
+      endif
+
+
+      do j=1,34  !there are 34 particle sizes for hydrocarbons
+       open(unit=125,file=trim(root)//trim(filenames(j)))  !open up MIE FILES
+
+       
+        do i=1,npts  !there are 118 wavlength bins in the FRACTAL data files 108->118
+         READ(125,*) WAVLSF(I),WAVUSF(I),W0STANDF(I,j),QEXTSTANDF(I,j),
+     2   GSTANDF(I,j)
+c         print *,J,I, GSTANDF(I,J)
+        enddo
+      
+      close (125)
+      enddo   
+
+c      stop
+
+ 999  FORMAT(1x,F6.1,1x,F6.1,2x,F6.4,2x,F6.4,2x,F6.4)
+
+      do j=1,34
+      n1=npts !108->118
+      n2=n1
+      n3=n1
+      do i=1,n1
+       x1(i)=wavlsf(i)
+       x2(i)=x1(i)
+       x3(i)=x1(i)
+       y1(i)=W0STANDF(i,j)
+       y2(i)=QEXTSTANDF(i,j)
+       y3(i)=GSTANDF(i,j)
+      enddo   
+
+!next, we interpolate these values to our wavelength grid, with an option to extend the optical properties to the UV
+
+!assuming optical properties of the shortest wl bin of the data (~1750A) extend through Ly alpha
+!per Jim Kasting
+      if (frak.eq.0) then 
+         extend=1               !change back to extend=1 if using MIE (not fractal) particles
+      else
+         extend=0
+      endif
+
+      if (extend.eq.1) then 
+       CALL addpnt(x1,y1,kw,n1,wl(1),W0STANDF(1,j))  
+       CALL addpnt(x1,y1,kw,n1,wl(1)*(1.-deltax),zero)  
+      else 
+       CALL addpnt(x1,y1,kw,n1,x1(1)*(1.-deltax),zero)  
+      endif
+      CALL addpnt(x1,y1,kw,n1,                  zero,zero)
+      CALL addpnt(x1,y1,kw,n1,x1(n1)*(1.+deltax),zero)
+      CALL addpnt(x1,y1,kw,n1,                   biggest,zero)
+
+      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)   !inter2 is discrete grid points to bins
+
+      IF (ierr .NE. 0) THEN
+         WRITE(*,*) ierr, ' ***Something wrong in Initmie***'
+         STOP
+      ENDIF
+
+      if (extend.eq.1) then      
+!extending hydrocarbon optical properties to the UV
+      CALL addpnt(x2,y2,kw,n2,wl(1),QEXTSTANDF(1,j))  
+      CALL addpnt(x2,y2,kw,n2,wl(1)*(1.-deltax),zero)  
+      else
+      CALL addpnt(x2,y2,kw,n2,x2(1)*(1.-deltax),zero)  
+      endif
+
+      CALL addpnt(x2,y2,kw,n2,                  zero,zero)
+      CALL addpnt(x2,y2,kw,n2,x2(n2)*(1.+deltax),zero)
+      CALL addpnt(x2,y2,kw,n2,                   biggest,zero)
+      CALL inter2(nw+1,wl,yg2,n2,x2,y2,0) !inter2 is discrete grid points to bins
+
+      IF (ierr .NE. 0) THEN
+         WRITE(*,*) ierr, ' ***Something wrong in Initmie***'
+         STOP
+      ENDIF
+
+      if (extend.eq.1) then 
+!extending hydrocarbon optical properties to the UV
+      CALL addpnt(x3,y3,kw,n3,wl(1),GSTANDF(1,j))  
+      CALL addpnt(x3,y3,kw,n3,wl(1)*(1.-deltax),zero)  
+      else
+      CALL addpnt(x3,y3,kw,n3,x3(1)*(1.-deltax),zero)  
+      endif
+
+      CALL addpnt(x3,y3,kw,n3,x3(1)*(1.-deltax),zero)  
+      CALL addpnt(x3,y3,kw,n3,                  zero,zero)
+      CALL addpnt(x3,y3,kw,n3,x3(n3)*(1.+deltax),zero)
+      CALL addpnt(x3,y3,kw,n3,                   biggest,zero)
+      CALL inter2(nw+1,wl,yg3,n3,x3,y3,0)   !inter2 is discrete grid points to bins
+      IF (ierr .NE. 0) THEN
+         WRITE(*,*) ierr, ' ***Something wrong in Initmie***'
+         STOP
+      ENDIF
+
+c      print *, j, yg3
+
+      do k=1,nw
+      W0HC(k,j)=yg1(k)
+      QEXTHC(k,j)=yg2(k)
+      GHC(k,j)=yg3(k)
+
+c      print *, 'qexthc in initmiefrac'
+c      print *, QEXTHC(k,j)
 
 c       if (wl(k).eq. 2100) print *, wl(k),yg1(k),yg2(k),yg3(k)
       enddo
 
 
       enddo
+
+
+
+      endif
+
+
 
       END
 

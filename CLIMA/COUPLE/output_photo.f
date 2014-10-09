@@ -6,7 +6,7 @@ C------------------------------------------------------------------------------
 
       INCLUDE 'CLIMA/INCLUDE/header.inc'
       PARAMETER(NZ=200)
-      DIMENSION T(ND), FI(4,ND), alt_new(NZ), T_new(NZ)
+      DIMENSION T(ND), FI(5,ND), alt_new(NZ), T_new(NZ)
       DIMENSION water(NZ), ALT(ND)
       CHARACTER :: DIRINOUT*2,DIRDATA*4
       COMMON/DIR/DIRINOUT,DIRDATA
@@ -16,7 +16,7 @@ c     COMMON/CBLOK/FO2,FN2,FCO2,FAR,FCH4
         alt_new(NZ) = 0.0
         do i = (NZ-1), 1, -1
 C          interpolate temperatures at correct altitudes
-          alt_new(i) = alt_new(i+1) + 1.0
+          alt_new(i) = alt_new(i+1) + 0.5 !gna - used to be +1 but that's not how we are setting up photo's grid!
         end do
 
         ISTART = ND
@@ -44,6 +44,9 @@ C-KK                        begin water interpolation
         FH2log = ALOG(FI(1,IS1))
         water_temp = FR*FH2log + (1-FR)*FH1log
         water(J) = EXP(water_temp)
+
+        !print *, "FI(1,IS)", FI(1,IS)
+        !print *, "water(J)", water(J)
         END DO
 
 

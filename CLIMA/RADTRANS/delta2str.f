@@ -34,6 +34,7 @@ C      U1 = 0.5  (Eddington value)
 C
 C   Delta Approximation
 C-AP  I used approximation form Joseph et al. 1976
+!GNA - is that the delta approx that Dave Crisp mentioned?
       DO 1 N=1,NZ
       FMT(N) = ASY(N)*ASY(N)
       TAU(N) = TAULAM(N)*(1-OMG0(N)*FMT(N))

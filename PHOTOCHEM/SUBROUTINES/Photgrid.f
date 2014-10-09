@@ -831,7 +831,7 @@ c         stop
          ierr = 0
 
          n = 4821
-         OPEN(UNIT=kin,file='PHOTOCHEM/DATA/FLUX/ADLeo_scaled.dat',
+         OPEN(UNIT=kin,file='PHOTOCHEM/DATA/FLUX/dMV.flx',
      &                 STATUS='old')
          print *, 'using ADLeo spectrum - NEEDS CHECKING'
 
@@ -875,7 +875,8 @@ c         stop
 
 
       IF (msun .EQ. 16) THEN
-
+         print *, 'star is vpl AD Leo'
+         call sleep (1)
          nhead = 175
          ierr = 0
 
@@ -1146,7 +1147,7 @@ C-----------------------------------------------------------------------
 * check n<ld to make sure x will hold another point
 
       IF (n .GE. ld) THEN
-         WRITE(0,*) '>>> ERROR (ADDPNT) <<<  Cannot expand array '
+         WRITE(0,*) '>>> ERROR (ADPNT) <<<  Cannot expand array '
          WRITE(0,*) '                        All elements used.'
          STOP
       ENDIF
