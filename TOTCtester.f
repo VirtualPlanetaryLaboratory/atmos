@@ -3,7 +3,7 @@
 c I am attempting to abtract this so we can have an Earth/Mars switch
 c I should also think about adding extra abstraction for the humidty stuff
 c
-c - this code is undergoing active development for chlorine species
+c - this code is undergoing active development for chlorine speciesS
 c - as such it is not really the best code to be used as a base for TOTC, but such it is.
 c - it is starting from one of the more up-to-date branches of Mark's code, but doesn't have any time-dependent gear stuff in it
 
@@ -620,7 +620,7 @@ C - READ IN SPECIES NAMES, ATOMIC NUMBERS, AND BOUNDARY CONDITIONS
  203  FORMAT(A8,3X,A2)  !for species name and type
  207  format(15X,6(I1,1X))      !for elemental counts
 ! 208  format(30X,I1,5X,4(E7.1,1X),I1,6X,2(E7.1,1X))  !for boundary conditions (original)
- 208  format(30X,I1,5X,2(E7.1,1X),E9.3,1X,E7.1,1X,I1,6X,2(E7.1,1X))  !for boundary conditions
+ 208  format(30X,I1,5X,2(E8.2,1X),E9.3,1X,E7.1,1X,I1,6X,2(E7.1,1X))  !for boundary conditions
 c 208  format(30X,I1,5X,2(E8.1),E9.3,1X,E7.1,1X,I1,6X,2(E7.1,1X))  !for boundary conditions
  209  format(30X,E7.1) !for INERT species boundary conditions
 
