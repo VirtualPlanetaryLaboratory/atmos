@@ -545,6 +545,8 @@ C - other model parameters read in from input_photochem.dat
       IF(IDEBUG.eq.1) print *, "HCDENS =",HCDENS
       READ(231,*)AA, ICOUPLE
       IF(IDEBUG.eq.1) print *, "ICOUPLE =",ICOUPLE      
+      READ(231,*)AA, NEWSPEC
+      IF(IDEBUG.eq.1) print *, "NEWSPEC =",NEWSPEC      
  555  format(3/)
       close(231)
 
@@ -560,6 +562,7 @@ C - READ IN SPECIES NAMES, ATOMIC NUMBERS, AND BOUNDARY CONDITIONS
       iTD=0   ! counter for tridiagonal species
       iIN=0   !counter for inert species
       iSP=0   !counter for number of lines in species.dat file
+      iprint = 0                !just so the species.dat statements just print once
 
       do while (I.LT.300)  !ACK this will crash if species.dat is longer than 300 lines.
          read (4,203, end=96) SPECIES,SPECTYPE
@@ -575,7 +578,26 @@ C - READ IN SPECIES NAMES, ATOMIC NUMBERS, AND BOUNDARY CONDITIONS
             if (SPECTYPE.EQ.'LL') then 
                iLL=iLL+1
                backspace 4  !return to previous line in species.dat file
-               read(4,208) LBC, XX,YY,ZZ,XXX,LG,YYY,ZZZ  !read in boundary conditions
+
+               
+
+               if (NEWSPEC.eq.1) then !new species.dat formatting                
+                  if (iprint.eq.0) then 
+                     print *, 'species.dat should have new formatting'
+                     print *, "for VDEP and FIXEDMR (E8.2)"
+                     iprint = 1
+                  endif
+                  read(4,208) LBC, XX,YY,ZZ,XXX,LG,YYY,ZZZ !read in boundary conditions
+               endif
+
+               if (NEWSPEC.eq.0) then !old species.dat formatting                   
+                   if (iprint.eq.0) then
+                     print *, 'species.dat should have old formatting'
+                     print *, "for VDEP and FIXEDMR (E7.2)"
+                     iprint = 1
+                  endif
+                  read(4,210) LBC, XX,YY,ZZ,XXX,LG,YYY,ZZZ !read in boundary conditions
+               endif
                LBOUND(iLL)=LBC
                VDEP0(iLL)=XX
                FIXEDMR(iLL)=YY
@@ -621,6 +643,7 @@ C - READ IN SPECIES NAMES, ATOMIC NUMBERS, AND BOUNDARY CONDITIONS
  207  format(15X,6(I1,1X))      !for elemental counts
 ! 208  format(30X,I1,5X,4(E7.1,1X),I1,6X,2(E7.1,1X))  !for boundary conditions (original)
  208  format(30X,I1,5X,2(E8.2,1X),E9.3,1X,E7.1,1X,I1,6X,2(E7.1,1X))  !for boundary conditions
+ 210  format(30X,I1,5X,2(E7.2,1X),E9.3,1X,E7.1,1X,I1,6X,2(E7.1,1X)) !for boundary conditions
 c 208  format(30X,I1,5X,2(E8.1),E9.3,1X,E7.1,1X,I1,6X,2(E7.1,1X))  !for boundary conditions
  209  format(30X,E7.1) !for INERT species boundary conditions
 
