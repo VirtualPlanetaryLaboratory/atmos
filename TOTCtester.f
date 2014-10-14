@@ -643,7 +643,7 @@ C - READ IN SPECIES NAMES, ATOMIC NUMBERS, AND BOUNDARY CONDITIONS
  207  format(15X,6(I1,1X))      !for elemental counts
 ! 208  format(30X,I1,5X,4(E7.1,1X),I1,6X,2(E7.1,1X))  !for boundary conditions (original)
  208  format(30X,I1,5X,2(E8.2,1X),E9.3,1X,E7.1,1X,I1,6X,2(E7.1,1X))  !for boundary conditions
- 210  format(30X,I1,5X,2(E7.2,1X),E9.3,1X,E7.1,1X,I1,6X,2(E7.1,1X)) !for boundary conditions
+ 210  format(30X,I1,5X,2(E7.1,1X),E9.3,1X,E7.1,1X,I1,6X,2(E7.1,1X)) !for boundary conditions
 c 208  format(30X,I1,5X,2(E8.1),E9.3,1X,E7.1,1X,I1,6X,2(E7.1,1X))  !for boundary conditions
  209  format(30X,E7.1) !for INERT species boundary conditions
 
