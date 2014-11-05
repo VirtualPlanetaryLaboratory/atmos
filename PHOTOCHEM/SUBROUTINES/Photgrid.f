@@ -6,11 +6,12 @@
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PHOTABLOK.inc'
 C ***** SET UP THE VERTICAL GRID ZS *****
 c-mc for now, since we are invoking constant dz, we can choose dzgrid based on NZ
-      if (NZ .eq. 80) dzgrid = 1.0e5
-      if (NZ .eq. 160 .or. NZ .eq. 200) dzgrid = 0.5e5
-      if (NZ .eq. 320) dzgrid = 0.25e5
-      if (NZ .eq. 640 .or. NZ .eq. 800) dzgrid = 0.125e5
-      if (NZ .eq. 1280) dzgrid = 0.0625e5
+      !!! Modified below so that all possible NZs have a corresponding dzgrid - Eddie !!!
+      if (NZ .le. 100) dzgrid = 1.0e5
+      if (NZ .gt. 100 .and. NZ .lt. 300) dzgrid = 0.5e5
+      if (NZ .ge. 300 .and. NZ .le. 640) dzgrid = 0.25e5
+      if (NZ .gt. 640 .and. NZ .le. 800) dzgrid = 0.125e5
+      if (NZ .gt. 800) dzgrid = 0.0625e5
       !dzgrid is constant stepsize for the troposphere and stratosphere
 
 
