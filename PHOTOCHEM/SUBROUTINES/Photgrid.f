@@ -10,8 +10,8 @@ c-mc for now, since we are invoking constant dz, we can choose dzgrid based on N
       if (NZ .le. 100) dzgrid = 1.0e5
       if (NZ .gt. 100 .and. NZ .lt. 300) dzgrid = 0.5e5
       if (NZ .ge. 300 .and. NZ .le. 640) dzgrid = 0.25e5
-      if (NZ .gt. 640 .and. NZ .le. 800) dzgrid = 0.125e5
-      if (NZ .gt. 800) dzgrid = 0.0625e5
+      if (NZ .gt. 640 .and. NZ .lt. 800) dzgrid = 0.125e5
+      if (NZ .ge. 800) dzgrid = 0.0625e5
       !dzgrid is constant stepsize for the troposphere and stratosphere
 
 
