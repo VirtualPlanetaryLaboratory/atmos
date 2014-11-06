@@ -6,9 +6,9 @@
 6.371E8  = R0    Radius of Earth  - this times 0.53 for Mars (verify)
 1.013    = P0  = surface pressure of modern Earth in atm ( 0.0063 for Mars)
 EARTH    = PLANET  string naming the planet for extra changes (MARS is the only other option for the moment)
-2.7      = TIMEGA - time in Ga, for modifying the solar flux
+0.0      = TIMEGA - time in Ga, for modifying the solar flux
 0        = IRESET
-13       = msun
+19       = msun
 
 -below here are not read in.  They are from Shawn's Planet.earth file but are handled differently here.
 
@@ -18,6 +18,10 @@ choices for msun (these numbers are from photgrid.f)
       msun = 15    !AD Leo from VPL climate DB
       msun = 16    !AD LEO from VPL website
       msun = 17    !Gj 581 from Lucianne
+      msun = 18    !T3200.dat
+      msun = 19    !K2V
+      msun = 20    !F2V
+
 
 11    = JTROP, Grid layer marking the tropopause height, depends on ZTROP and DELZ
 1.0E5 = DELZ, Height of each atm layer - Earth=1.0E5, Mars=2.0E5 (cm)
