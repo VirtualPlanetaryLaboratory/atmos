@@ -6,15 +6,13 @@
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PHOTABLOK.inc'
 C ***** SET UP THE VERTICAL GRID ZS *****
 c-mc for now, since we are invoking constant dz, we can choose dzgrid based on NZ
-      if (NZ .eq. 80) dzgrid = 1.0e5
-      if (NZ .eq. 160 .or. NZ .eq. 200) dzgrid = 0.5e5
-      if (NZ .eq. 320) dzgrid = 0.25e5
-      if (NZ .eq. 640 .or. NZ .eq. 800) dzgrid = 0.125e5
-      if (NZ .eq. 1280) dzgrid = 0.0625e5
+      !!! Modified below so that all possible NZs have a corresponding dzgrid - Eddie !!!
+      if (NZ .le. 100) dzgrid = 1.0e5
+      if (NZ .gt. 100 .and. NZ .lt. 300) dzgrid = 0.5e5
+      if (NZ .ge. 300 .and. NZ .le. 640) dzgrid = 0.25e5
+      if (NZ .gt. 640 .and. NZ .lt. 800) dzgrid = 0.125e5
+      if (NZ .ge. 800) dzgrid = 0.0625e5
       !dzgrid is constant stepsize for the troposphere and stratosphere
-
-
-
 
 
       do I=1,NZ
@@ -660,8 +658,7 @@ c      msun = 17    !Gj 581 from Lucianne
 
 
       IF (msun .EQ. 13) THEN
-         print *, "HI!"
-         print *, "MSUN IS 13"
+         print *, "MSUN IS 13 (our sun)"
          call sleep(1)
          nhead = 0
          ierr = 0
@@ -840,8 +837,8 @@ c         stop
          ENDDO
          DO i = 1, n
             READ(kin,*) x1(i), y1(i)   !wl in nm, flux in W/m2/nm
-            x1(i)=x1(i)*10  !convert to angstroms
-            y1(i)=y1(i)*1e-4/1.98468e-16*x1(i)/10.     !convert to photons/cm2/s
+            x1(i)=x1(i)*10  !convert to angstroms 
+            y1(i)=y1(i)*1e-4/1.98468e-16*x1(i)/10.     !convert to photons/cm2/s 
          ENDDO
 
 
@@ -876,7 +873,7 @@ c         stop
 
       IF (msun .EQ. 16) THEN
          print *, 'star is vpl AD Leo'
-         call sleep (1)
+   
          nhead = 175
          ierr = 0
 
@@ -890,15 +887,14 @@ c         stop
          ENDDO
          DO i = 1, n
             READ(kin,*) x1(i), y1(i)   !wl in um, flux in W/cm2/um
-            x1(i)=x1(i)*1e4  !convert to angstroms
-            y1(i)=y1(i)*1e-3     !convert to W/m2/nm
-
-            y1(i)=y1(i)*((1/(205.339*1e-3))*206265)**2 !convert to 1AU (parallax of 205.339 mas corresponds to ~4.87 parsecs - converted to AU, with implied flux at 1AU in the denominator)
-            y1(i)=y1(i)/1.98468e-16*x1(i)/10.     !convert to photons/cm2/s
+            x1(i)=x1(i)*1e4  !convert to angstroms (gna - converting wl in um to A)
+            y1(i)=y1(i)*1e-4     !convert to W/cm2/A  (gna - changed from 1e-3 which I think is wrong)
+            y1(i)=y1(i)*((1/(205.339*1e-3))*206265)**2  !convert to equivalent flux distance as 1 AU (parallax of 205.339 mas corresponds to ~4.87 parsecs - converted to AU, with implied flux at 1AU in the denominator)
+            y1(i)=y1(i)*(1./0.161)**2 !gna - convert to equivalent flux distance as modern earth (assuming T = 3390; L = 0.024, then D = 0.161 AU)
+            
+            !y1(i)=y1(i)/1.98468e-16*x1(i)/10. !convert to photons/cm2/s (gna - I think this conversion is wrong)
+            y1(i) = y1(i)/(6.626e-34*3e8)*x1(i)*(1e-10) !convert to photons/cm2/s (gna - expanded out: y/(h*c)*lambda in angstroms*(meters/Angstrom)
          ENDDO
-
-
-
 
          CLOSE (kin)
          
@@ -946,6 +942,8 @@ c         stop
      &      file='PHOTOCHEM/DATA/FLUX/gl581_scaled_revised.txt',
      $         STATUS='old')
          print *, 'using Gl581 spectrum'
+         !NOTE: this is converting to the flux distance of GJ 581g -- use for THAT planet, not earthlike ones
+         !unless you edit the stuff below...
 
          DO i = 1, nhead
             READ(kin,*)
@@ -989,6 +987,172 @@ c 1.33432e+14 in photons/cm2/s
          ENDDO
 
          close (kin)
+
+
+      ENDIF
+
+
+
+c - new stars (files from Shawn; code from Giada)
+
+      IF (msun .EQ. 18) THEN
+         print *, 'star is T3200'
+         nhead = 1
+         ierr = 0
+
+         n = 1221
+         OPEN(UNIT=kin,file='PHOTOCHEM/DATA/FLUX/T3200.dat',
+     &                 STATUS='old')
+         print *, 'using T3200 spectrum'
+
+         DO i = 1, nhead
+            READ(kin,*)
+         ENDDO
+        DO i = 1, n
+            READ(kin,*) x1(i), y1(i)   !wl in um, flux in W/m2/um; I'm assuming it's the flux at 1 AU??  (check on this)
+            x1(i)=x1(i)*1e4  !convert to angstroms (gna - converting wl in um to A)
+            y1(i)=y1(i)*1e-8     !convert to W/cm2/A  (gna)
+          
+            y1(i)=y1(i)*(1./0.109)**2 !gna - convert to equivalent flux distance as modern earth (assuming T = 3200; L = 0.011, then D = 0.109 AU)
+            
+            !y1(i)=y1(i)/1.98468e-16*x1(i)/10. !convert to photons/cm2/s (gna - I think this conversion is wrong)
+            y1(i) = y1(i)/(6.626e-34*3e8)*x1(i)*(1e-10) !convert to photons/cm2/s (gna - expanded out: y/(h*c)*lambda in angstroms*(meters/Angstrom)
+         ENDDO
+
+         CLOSE (kin)
+         
+      CALL addpnt(x1,y1,kdata,n,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n,               zero,zero)
+      CALL addpnt(x1,y1,kdata,n,x1(n)*(1.+deltax),zero)
+      CALL addpnt(x1,y1,kdata,n,            biggest,zero)
+      CALL inter3(nw+1,wl,yg1,n,x1,y1,0)   !inter3 doesn't have any error checking at the moment
+!ACK- I think this should be inter2
+
+         IF (ierr .NE. 0) THEN
+            WRITE(*,*) ierr,'  Something wrong in readflux.f'
+            STOP
+         ENDIF         
+
+         DO iw = 1, nw
+               f(iw) = yg1(iw)
+         ENDDO
+         do i=1,nw
+         print *, wl(i),f(i)
+         enddo
+c         stop
+
+
+      ENDIF
+
+
+
+
+      IF (msun .EQ. 19) THEN
+         print *, 'star is K2V'
+         nhead = 1
+         ierr = 0
+
+         n = 1268
+         OPEN(UNIT=kin,file='PHOTOCHEM/DATA/FLUX/K2Vnew.dat',
+     &                 STATUS='old')
+         print *, 'using K2V spectrum'
+
+         DO i = 1, nhead
+            READ(kin,*)
+         ENDDO
+        DO i = 1, n
+            READ(kin,*) x1(i), y1(i)   !wl in um, flux in W/m2/um; I'm assuming it's the flux at 1 AU??  (check on this)
+            print *, x1(i), y1(i)
+            x1(i)=x1(i)*1e4  !convert to angstroms (gna - converting wl in um to A)
+            y1(i)=y1(i)*1e-8     !convert to W/cm2/A  (gna)
+          
+            y1(i)=y1(i)*(1./0.535)**2 !gna - convert to equivalent flux distance as modern earth (assuming T = 4960; L = 0.29, then D = 0.535 AU)
+            
+            !y1(i)=y1(i)/1.98468e-16*x1(i)/10. !convert to photons/cm2/s (gna - I think this conversion is wrong)
+            y1(i) = y1(i)/(6.626e-34*3e8)*x1(i)*(1e-10) !convert to photons/cm2/s (gna - expanded out: y/(h*c)*lambda in angstroms*(meters/Angstrom)
+         ENDDO
+         print *, '----------'
+         CLOSE (kin)
+         
+      CALL addpnt(x1,y1,kdata,n,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n,               zero,zero)
+      CALL addpnt(x1,y1,kdata,n,x1(n)*(1.+deltax),zero)
+      CALL addpnt(x1,y1,kdata,n,            biggest,zero)
+      CALL inter3(nw+1,wl,yg1,n,x1,y1,0)   !inter3 doesn't have any error checking at the moment
+!ACK- I think this should be inter2
+
+         IF (ierr .NE. 0) THEN
+            WRITE(*,*) ierr,'  Something wrong in readflux.f'
+            STOP
+         ENDIF         
+
+         DO iw = 1, nw
+               f(iw) = yg1(iw)
+         ENDDO
+         !gna - I do not know why, but the K star is producing some NaNs in the interpolated spectrum.
+         !Can't see what's wrong with the input file; gonna attempt a fix here
+         do i=1, nw
+         if (isnan(f(i))) f(i) = f(i-1)+(f(i+1)-f(i-1)) 
+     &          *(wl(i)-wl(i-1))/(wl(i+1)-wl(i-1))
+         if (wl(i) .eq. 1961.) f(i) = f(i-1)+(f(i+2)-f(i-1)) 
+     &          *(wl(i)-wl(i-1))/(wl(i+2)-wl(i-1))
+         enddo
+
+         do i=1,nw
+         print *, wl(i),f(i)
+         enddo
+c         stop
+
+
+      ENDIF
+
+ 
+
+      IF (msun .EQ. 20) THEN
+         print *, 'star is F2V'
+         nhead = 1
+         ierr = 0
+
+         n = 1737
+         OPEN(UNIT=kin,file='PHOTOCHEM/DATA/FLUX/F2V.dat',
+     &                 STATUS='old')
+         print *, 'using F2V spectrum'
+
+         DO i = 1, nhead
+            READ(kin,*)
+         ENDDO
+        DO i = 1, n
+            READ(kin,*) x1(i), y1(i)   !wl in um, flux in W/m2/um; I'm assuming it's the flux at 1 AU??  (check on this)
+            x1(i)=x1(i)*1e4  !convert to angstroms (gna - converting wl in um to A)
+            y1(i)=y1(i)*1e-8     !convert to W/cm2/A  (gna)
+          
+            y1(i)=y1(i)*(1./3.8)**2 !gna - convert to equivalent flux distance as modern earth (assuming T = 7050; L = 3.3, then D = 3.8 AU)
+            
+            !y1(i)=y1(i)/1.98468e-16*x1(i)/10. !convert to photons/cm2/s (gna - I think this conversion is wrong)
+            y1(i) = y1(i)/(6.626e-34*3e8)*x1(i)*(1e-10) !convert to photons/cm2/s (gna - expanded out: y/(h*c)*lambda in angstroms*(meters/Angstrom)
+         ENDDO
+
+         CLOSE (kin)
+         
+      CALL addpnt(x1,y1,kdata,n,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n,               zero,zero)
+      CALL addpnt(x1,y1,kdata,n,x1(n)*(1.+deltax),zero)
+      CALL addpnt(x1,y1,kdata,n,            biggest,zero)
+      CALL inter3(nw+1,wl,yg1,n,x1,y1,0)   !inter3 doesn't have any error checking at the moment
+!ACK- I think this should be inter2
+
+         IF (ierr .NE. 0) THEN
+            WRITE(*,*) ierr,'  Something wrong in readflux.f'
+            STOP
+         ENDIF         
+
+         DO iw = 1, nw
+               f(iw) = yg1(iw)
+         ENDDO
+         do i=1,nw
+         print *, wl(i),f(i)
+         enddo
+c         stop
 
 
       ENDIF
@@ -1147,7 +1311,7 @@ C-----------------------------------------------------------------------
 * check n<ld to make sure x will hold another point
 
       IF (n .GE. ld) THEN
-         WRITE(0,*) '>>> ERROR (ADPNT) <<<  Cannot expand array '
+         WRITE(0,*) '>>> ERROR (ADDPNT) <<<  Cannot expand array '
          WRITE(0,*) '                        All elements used.'
          STOP
       ENDIF
