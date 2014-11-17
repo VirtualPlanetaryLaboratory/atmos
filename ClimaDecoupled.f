@@ -439,8 +439,14 @@ c*******Changed for now*********
       IF (msun.eq.13) STARR = "Sun"
       IF (msun.eq.14) STARR = "Sun"
       IF (msun.eq.15) STARR = "ADLEO"
-      IF (msun.eq.16) STARR = "ADLEO" !B2532
-      IF (msun.eq.17) STARR = "GJ581"
+      !using the stellar parameterization implemented by Ramses for these next few 
+      !see pickstar.f for details
+      IF (msun.eq.16) STARR = "B5034" !adleo
+      IF (msun.eq.17) STARR = "B5032" !T3200
+      IF (msun.eq.18) STARR = "B5050" !K2V
+      IF (msun.eq.19) STARR = "B4070" !F2V
+      IF (msun.eq.76) STARR = "B5034" !GJ876
+      
          age = 4.7
          time = age-timega
          SOLCON = (1+0.4*(1-time/4.7))**(-1)

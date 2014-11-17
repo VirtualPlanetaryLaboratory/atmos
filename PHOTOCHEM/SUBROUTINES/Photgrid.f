@@ -646,6 +646,7 @@ c       M. Claire       091306 integrating into Kevin's code
 *_______________________________________________________________________
 * select desired extra-terrestrial solar irradiance, using msun:
 
+c      msun = 12    !Gj 581 from Lucianne 
 c      msun = 13    !high resolution solar data from ATLAS1/3 (Thullier et al 2004)
 c      msun = 14    !kevin's data from photo.dat
 c      msun = 15    !AD Leo from VPL climate DB
@@ -763,7 +764,13 @@ c - the youngsun correction will be overwritten and should be done in energy spa
                f(iw) = yg3(iw)*(wl(iw+1)-wl(iw))*5.039e8*wl(iw)/10. !convert to photons/cm2/s
                relflux(iw)=yg2(iw)
             endif
+            print *, wl(iw), yg3(iw)
          ENDDO
+
+
+        ! do i=1,nw
+        ! print *, wl(i),yg3(i)
+        ! enddo
 
 c         do i=1,nw
 c         print *, wl(i),f(i),relflux(i)
@@ -871,58 +878,7 @@ c         stop
 
 
 
-      IF (msun .EQ. 16) THEN
-         print *, 'star is vpl AD Leo'
-   
-         nhead = 175
-         ierr = 0
-
-         n = 4837
-         OPEN(UNIT=kin,file='PHOTOCHEM/DATA/FLUX/adleo_dat.txt',
-     &                 STATUS='old')
-         print *, 'using ADLeo spectrum - NEEDS CHECKING'
-
-         DO i = 1, nhead
-            READ(kin,*)
-         ENDDO
-         DO i = 1, n
-            READ(kin,*) x1(i), y1(i)   !wl in um, flux in W/cm2/um
-            x1(i)=x1(i)*1e4  !convert to angstroms (gna - converting wl in um to A)
-            y1(i)=y1(i)*1e-4     !convert to W/cm2/A  (gna - changed from 1e-3 which I think is wrong)
-            y1(i)=y1(i)*((1/(205.339*1e-3))*206265)**2  !convert to equivalent flux distance as 1 AU (parallax of 205.339 mas corresponds to ~4.87 parsecs - converted to AU, with implied flux at 1AU in the denominator)
-            y1(i)=y1(i)*(1./0.161)**2 !gna - convert to equivalent flux distance as modern earth (assuming T = 3390; L = 0.024, then D = 0.161 AU)
-            
-            !y1(i)=y1(i)/1.98468e-16*x1(i)/10. !convert to photons/cm2/s (gna - I think this conversion is wrong)
-            y1(i) = y1(i)/(6.626e-34*3e8)*x1(i)*(1e-10) !convert to photons/cm2/s (gna - expanded out: y/(h*c)*lambda in angstroms*(meters/Angstrom)
-         ENDDO
-
-         CLOSE (kin)
-         
-      CALL addpnt(x1,y1,kdata,n,x1(1)*(1.-deltax),zero)  
-      CALL addpnt(x1,y1,kdata,n,               zero,zero)
-      CALL addpnt(x1,y1,kdata,n,x1(n)*(1.+deltax),zero)
-      CALL addpnt(x1,y1,kdata,n,            biggest,zero)
-      CALL inter3(nw+1,wl,yg1,n,x1,y1,0)   !inter3 doesn't have any error checking at the moment
-!ACK- I think this should be inter2
-
-         IF (ierr .NE. 0) THEN
-            WRITE(*,*) ierr,'  Something wrong in readflux.f'
-            STOP
-         ENDIF         
-
-         DO iw = 1, nw
-               f(iw) = yg1(iw)
-         ENDDO
-         do i=1,nw
-         print *, wl(i),f(i)
-         enddo
-c         stop
-
-
-      ENDIF
-
-
-      IF (msun .EQ. 17) THEN
+      IF (msun .EQ. 12) THEN
 
          nhead = 0
          ierr = 0
@@ -940,7 +896,7 @@ c         stop
 
          OPEN(UNIT=kin,
      &      file='PHOTOCHEM/DATA/FLUX/gl581_scaled_revised.txt',
-     $         STATUS='old')
+     &         STATUS='old')
          print *, 'using Gl581 spectrum'
          !NOTE: this is converting to the flux distance of GJ 581g -- use for THAT planet, not earthlike ones
          !unless you edit the stuff below...
@@ -992,172 +948,110 @@ c 1.33432e+14 in photons/cm2/s
       ENDIF
 
 
+!~~~~~~~~~~~ GJ 876 added by Eddie as Used in Domagal-Goldman et al. 2014 ~~~~~~~~~~~~!
+!~~~~~~~~~~~ Other stars incorporated by Giada into this same piece of code ~~~~~~~~~~!
+!-------------the stars in this section all have the same input units of:-------------!
+!-------wavelength = nm; flux = mW/m2/nm; they have the equivalent flux at 1 AU-------!
+!-------such that you can keep the planets at 1 AU and have the correct flux----------!
 
-c - new stars (files from Shawn; code from Giada)
+      IF (msun .GT. 15) THEN 
+         n = 26150              ! number of lines in file - all of these have the same grid as star 13
+      IF (msun .EQ. 76) THEN
+         print *, "MSUN IS 76!"
+         call sleep(1)
+         nhead = 0
+         ierr = 0
+         OPEN(UNIT=kin,
+     &    file='PHOTOCHEM/DATA/FLUX/GJ876_atlas_units_grid.dat',
+     &                STATUS='old')
+          print *, 'using GJ 876 Spectrum - Giddyup and Ride on Cowboy!'
+      ENDIF
+
+
+      IF (msun .EQ. 16) THEN
+         print *, "MSUN IS 16 (AD Leo)!"
+         call sleep(1)
+         nhead = 0
+         ierr = 0
+         OPEN(UNIT=kin,
+     &    file='PHOTOCHEM/DATA/FLUX/adleo_dat_units.txt',
+     &                STATUS='old')
+          print *, 'Suzanne Hawley would be proud of you!'
+      ENDIF
+
+      IF (msun .EQ. 17) THEN
+         print *, "MSUN IS 17 (T3200)!"
+         call sleep(1)
+         nhead = 0
+         ierr = 0
+         OPEN(UNIT=kin,
+     &    file='PHOTOCHEM/DATA/FLUX/T3200_units.txt',
+     &                STATUS='old')
+          print *, 'T3200 is a modeled inactive M dwarf.'
+      ENDIF
+
 
       IF (msun .EQ. 18) THEN
-         print *, 'star is T3200'
-         nhead = 1
+         print *, "MSUN IS 18 (K2V)!"
+         call sleep(1)
+         nhead = 0
          ierr = 0
-
-         n = 1221
-         OPEN(UNIT=kin,file='PHOTOCHEM/DATA/FLUX/T3200.dat',
-     &                 STATUS='old')
-         print *, 'using T3200 spectrum'
-
-         DO i = 1, nhead
-            READ(kin,*)
-         ENDDO
-        DO i = 1, n
-            READ(kin,*) x1(i), y1(i)   !wl in um, flux in W/m2/um; I'm assuming it's the flux at 1 AU??  (check on this)
-            x1(i)=x1(i)*1e4  !convert to angstroms (gna - converting wl in um to A)
-            y1(i)=y1(i)*1e-8     !convert to W/cm2/A  (gna)
-          
-            y1(i)=y1(i)*(1./0.109)**2 !gna - convert to equivalent flux distance as modern earth (assuming T = 3200; L = 0.011, then D = 0.109 AU)
-            
-            !y1(i)=y1(i)/1.98468e-16*x1(i)/10. !convert to photons/cm2/s (gna - I think this conversion is wrong)
-            y1(i) = y1(i)/(6.626e-34*3e8)*x1(i)*(1e-10) !convert to photons/cm2/s (gna - expanded out: y/(h*c)*lambda in angstroms*(meters/Angstrom)
-         ENDDO
-
-         CLOSE (kin)
-         
-      CALL addpnt(x1,y1,kdata,n,x1(1)*(1.-deltax),zero)  
-      CALL addpnt(x1,y1,kdata,n,               zero,zero)
-      CALL addpnt(x1,y1,kdata,n,x1(n)*(1.+deltax),zero)
-      CALL addpnt(x1,y1,kdata,n,            biggest,zero)
-      CALL inter3(nw+1,wl,yg1,n,x1,y1,0)   !inter3 doesn't have any error checking at the moment
-!ACK- I think this should be inter2
-
-         IF (ierr .NE. 0) THEN
-            WRITE(*,*) ierr,'  Something wrong in readflux.f'
-            STOP
-         ENDIF         
-
-         DO iw = 1, nw
-               f(iw) = yg1(iw)
-         ENDDO
-         do i=1,nw
-         print *, wl(i),f(i)
-         enddo
-c         stop
-
-
+         OPEN(UNIT=kin,
+     &    file='PHOTOCHEM/DATA/FLUX/K2V_units.txt',
+     &                STATUS='old')
+          print *, 'K, you have a K star.'
       ENDIF
-
-
-
 
       IF (msun .EQ. 19) THEN
-         print *, 'star is K2V'
-         nhead = 1
+         print *, "MSUN IS 19 (F2V)!"
+         call sleep(1)
+         nhead = 0
          ierr = 0
-
-         n = 1268
-         OPEN(UNIT=kin,file='PHOTOCHEM/DATA/FLUX/K2Vnew.dat',
-     &                 STATUS='old')
-         print *, 'using K2V spectrum'
-
-         DO i = 1, nhead
-            READ(kin,*)
-         ENDDO
-        DO i = 1, n
-            READ(kin,*) x1(i), y1(i)   !wl in um, flux in W/m2/um; I'm assuming it's the flux at 1 AU??  (check on this)
-            print *, x1(i), y1(i)
-            x1(i)=x1(i)*1e4  !convert to angstroms (gna - converting wl in um to A)
-            y1(i)=y1(i)*1e-8     !convert to W/cm2/A  (gna)
-          
-            y1(i)=y1(i)*(1./0.535)**2 !gna - convert to equivalent flux distance as modern earth (assuming T = 4960; L = 0.29, then D = 0.535 AU)
-            
-            !y1(i)=y1(i)/1.98468e-16*x1(i)/10. !convert to photons/cm2/s (gna - I think this conversion is wrong)
-            y1(i) = y1(i)/(6.626e-34*3e8)*x1(i)*(1e-10) !convert to photons/cm2/s (gna - expanded out: y/(h*c)*lambda in angstroms*(meters/Angstrom)
-         ENDDO
-         print *, '----------'
-         CLOSE (kin)
-         
-      CALL addpnt(x1,y1,kdata,n,x1(1)*(1.-deltax),zero)  
-      CALL addpnt(x1,y1,kdata,n,               zero,zero)
-      CALL addpnt(x1,y1,kdata,n,x1(n)*(1.+deltax),zero)
-      CALL addpnt(x1,y1,kdata,n,            biggest,zero)
-      CALL inter3(nw+1,wl,yg1,n,x1,y1,0)   !inter3 doesn't have any error checking at the moment
-!ACK- I think this should be inter2
-
-         IF (ierr .NE. 0) THEN
-            WRITE(*,*) ierr,'  Something wrong in readflux.f'
-            STOP
-         ENDIF         
-
-         DO iw = 1, nw
-               f(iw) = yg1(iw)
-         ENDDO
-         !gna - I do not know why, but the K star is producing some NaNs in the interpolated spectrum.
-         !Can't see what's wrong with the input file; gonna attempt a fix here
-         do i=1, nw
-         if (isnan(f(i))) f(i) = f(i-1)+(f(i+1)-f(i-1)) 
-     &          *(wl(i)-wl(i-1))/(wl(i+1)-wl(i-1))
-         if (wl(i) .eq. 1961.) f(i) = f(i-1)+(f(i+2)-f(i-1)) 
-     &          *(wl(i)-wl(i-1))/(wl(i+2)-wl(i-1))
-         enddo
-
-         do i=1,nw
-         print *, wl(i),f(i)
-         enddo
-c         stop
-
-
-      ENDIF
-
- 
-
-      IF (msun .EQ. 20) THEN
-         print *, 'star is F2V'
-         nhead = 1
-         ierr = 0
-
-         n = 1737
-         OPEN(UNIT=kin,file='PHOTOCHEM/DATA/FLUX/F2V.dat',
-     &                 STATUS='old')
-         print *, 'using F2V spectrum'
-
-         DO i = 1, nhead
-            READ(kin,*)
-         ENDDO
-        DO i = 1, n
-            READ(kin,*) x1(i), y1(i)   !wl in um, flux in W/m2/um; I'm assuming it's the flux at 1 AU??  (check on this)
-            x1(i)=x1(i)*1e4  !convert to angstroms (gna - converting wl in um to A)
-            y1(i)=y1(i)*1e-8     !convert to W/cm2/A  (gna)
-          
-            y1(i)=y1(i)*(1./3.8)**2 !gna - convert to equivalent flux distance as modern earth (assuming T = 7050; L = 3.3, then D = 3.8 AU)
-            
-            !y1(i)=y1(i)/1.98468e-16*x1(i)/10. !convert to photons/cm2/s (gna - I think this conversion is wrong)
-            y1(i) = y1(i)/(6.626e-34*3e8)*x1(i)*(1e-10) !convert to photons/cm2/s (gna - expanded out: y/(h*c)*lambda in angstroms*(meters/Angstrom)
-         ENDDO
-
-         CLOSE (kin)
-         
-      CALL addpnt(x1,y1,kdata,n,x1(1)*(1.-deltax),zero)  
-      CALL addpnt(x1,y1,kdata,n,               zero,zero)
-      CALL addpnt(x1,y1,kdata,n,x1(n)*(1.+deltax),zero)
-      CALL addpnt(x1,y1,kdata,n,            biggest,zero)
-      CALL inter3(nw+1,wl,yg1,n,x1,y1,0)   !inter3 doesn't have any error checking at the moment
-!ACK- I think this should be inter2
-
-         IF (ierr .NE. 0) THEN
-            WRITE(*,*) ierr,'  Something wrong in readflux.f'
-            STOP
-         ENDIF         
-
-         DO iw = 1, nw
-               f(iw) = yg1(iw)
-         ENDDO
-         do i=1,nw
-         print *, wl(i),f(i)
-         enddo
-c         stop
-
-
+         OPEN(UNIT=kin,
+     &    file='PHOTOCHEM/DATA/FLUX/F2V_units.txt',
+     &                STATUS='old')
+          print *, 'An F star a day keeps the doctor away'
       ENDIF
 
 
+        ! Do same unit conversions as found in msun=13 option - Eddie
+         DO i = 1, nhead
+            READ(kin,*)
+         ENDDO
+         DO i = 1, n
+            READ(kin,*) x1(i), y1(i)  !this flux in mw/m2/nm, but is sampled at subangstom resolution
+            x1(i)=x1(i)*10d0   !convert wavelength from nm to Angstoms
+            x2(i)=x1(i)      ! x2 also angstroms
+            x3(i)=x1(i)      ! x3 also angstroms
+            y3(i)=y1(i)/10d0   ! for y3, convert thuillier flux to mw/m2/A
+         ENDDO
+         CLOSE (kin)
+
+! We are not bothering with Youngsun stuff because it is a different star
+         n3=n
+         ierr=0
+
+      CALL addpnt(x3,y3,kdata,n3,x3(1)*(1.-deltax),zero)
+      CALL addpnt(x3,y3,kdata,n3,          zero,zero)
+      CALL addpnt(x3,y3,kdata,n3,x3(n3)*(1.+deltax),zero)
+      CALL addpnt(x3,y3,kdata,n3,        biggest,zero)
+      CALL inter2(nw+1,wl,yg3,n3,x3,y3,ierr)  !inter2 is points to bins
+!so yg3 is flux on the model wavelength grid
+
+         !error check for call to inter2
+         IF (ierr .NE. 0) THEN
+            WRITE(*,*) ierr,'  Something wrong in Grid.f/readflux'
+            STOP
+         ENDIF     
+
+! We are not bothering with an extra Lyman Alpha component because the spectrum is already finely sampled enough in the UV
+        DO iw = 1, nw
+               f(iw) = yg3(iw)*(wl(iw+1)-wl(iw))*5.039e8*wl(iw)/10. !convert to photons/cm2/s
+               print *, wl(iw), yg3(iw)
+        ENDDO
+
+
+      ENDIF  !msun != 13
 
 
       

@@ -13,14 +13,17 @@ EARTH    = PLANET  string naming the planet for extra changes (MARS is the only 
 -below here are not read in.  They are from Shawn's Planet.earth file but are handled differently here.
 
 choices for msun (these numbers are from photgrid.f)
+      msun = 12    !Gj 581 from Lucianne
       msun = 13    !high resolution solar data from ATLAS1/3 (Thullier et al 2004)
       msun = 14    !kevin's data from photo.dat
       msun = 15    !AD Leo from VPL climate DB
       msun = 16    !AD LEO from VPL website
-      msun = 17    !Gj 581 from Lucianne
-      msun = 18    !T3200.dat
-      msun = 19    !K2V
-      msun = 20    !F2V
+      msun = 17    !T3200.dat
+      msun = 18    !K2V
+      msun = 19    !F2V
+      msun = 76    !GJ876
+
+
 
 11    = JTROP, Grid layer marking the tropopause height, depends on ZTROP and DELZ
 1.0E5 = DELZ, Height of each atm layer - Earth=1.0E5, Mars=2.0E5 (cm)
