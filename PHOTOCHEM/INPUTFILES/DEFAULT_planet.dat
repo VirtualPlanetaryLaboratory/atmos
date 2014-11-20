@@ -9,8 +9,12 @@ EARTH    = PLANET  string naming the planet for extra changes (MARS is the only 
 0.0      = TIMEGA - time in Ga, for modifying the solar flux
 0        = IRESET
 13       = msun
+1        = IHZSCALE
 
 -below here are not read in.  They are from Shawn's Planet.earth file but are handled differently here.
+
+IHZSCALE = set to 1 to automatically scale FSCALE to the earth-equivalent flux based on the spectral type (msun)
+(to use keep FSCALE as 1, set IHZSCALE to 1, then change your msun type; will use Kopparapu et al 2012 scalings)
 
 choices for msun (these numbers are from photgrid.f)
       msun = 12    !Gj 581 from Lucianne

@@ -441,7 +441,7 @@ c*******Changed for now*********
       IF (msun.eq.15) STARR = "ADLEO"
       !using the stellar parameterization implemented by Ramses for these next few 
       !see pickstar.f for details
-      IF (msun.eq.16) STARR = "B5034" !adleo
+      IF (msun.eq.16) STARR = "ADLEO" !adleo
       IF (msun.eq.17) STARR = "B5032" !T3200
       IF (msun.eq.18) STARR = "B5050" !K2V
       IF (msun.eq.19) STARR = "B4070" !F2V
@@ -452,11 +452,19 @@ c*******Changed for now*********
          SOLCON = (1+0.4*(1-time/4.7))**(-1)
          PG0 = P0ground
          print *, STARR
+         
+      !correction to SOLCON based on kopparapu HZ (earth distance ~> moist IHZ)
+      IF (msun.eq.16) SOLCON = SOLCON * 0.865
+      IF (msun.eq.17) SOLCON = SOLCON * 0.859
+      IF (msun.eq.18) SOLCON = SOLCON * 0.950
+      IF (msun.eq.19) SOLCON = SOLCON * 1.110
+      IF (msun.eq.76) SOLCON = SOLCON * 0.869
+
          call sleep(2)
 c      print *, timega
 c      print *, P0ground
 c      print *, frak
-      ENDIF
+      ENDIF !icouple = 1
 
    
   51  FORMAT(4/)
