@@ -413,6 +413,7 @@ c*******Changed for now*********
       READ(1,*) AA, IMETETH     ! IMETETH (flag 0 or 1)
       READ(1,*) AA, nga
       READ(1,*) AA, IHAZE       ! IHAZE (flag 0 or 1)
+      READ(1,*) AA, monsize
 
 
 !gna - moved this part here so now we know what ICOUPLE is supposed to be  
@@ -429,19 +430,20 @@ c*******Changed for now*********
 !gna - read more inputs from photo for coupling
       IF (ICOUPLE.eq.1) THEN 
       OPEN(unit=999,FILE= 'COUPLE/time_frak_photo.out')
- 107  FORMAT(1X, F4.2, 5X, F5.3, 5X, F18.16, 5X, I2)
+ 107  FORMAT(1X, F4.2, 5X, F5.3, 5X, F18.16, 5X, I2, 2X, I2)
       READ(999,*)
-      READ(999,107) timega, P0ground, frak, msun
+      READ(999,107) timega, P0ground, frak, msun, monsize
       print *, timega
       print *, P0ground
       print *, frak
       print *, msun
+      print *, monsize
       IF (msun.eq.13) STARR = "Sun"
       IF (msun.eq.14) STARR = "Sun"
       IF (msun.eq.15) STARR = "ADLEO"
       !using the stellar parameterization implemented by Ramses for these next few 
       !see pickstar.f for details
-      IF (msun.eq.16) STARR = "ADLEO" !adleo
+      IF (msun.eq.16) STARR = "B5034" !adleo ("adleo" isn't working well) B5035
       IF (msun.eq.17) STARR = "B5032" !T3200
       IF (msun.eq.18) STARR = "B5050" !K2V
       IF (msun.eq.19) STARR = "B4070" !F2V
@@ -454,11 +456,11 @@ c*******Changed for now*********
          print *, STARR
          
       !correction to SOLCON based on kopparapu HZ (earth distance ~> moist IHZ)
-      IF (msun.eq.16) SOLCON = SOLCON * 0.865
-      IF (msun.eq.17) SOLCON = SOLCON * 0.859
-      IF (msun.eq.18) SOLCON = SOLCON * 0.950
-      IF (msun.eq.19) SOLCON = SOLCON * 1.110
-      IF (msun.eq.76) SOLCON = SOLCON * 0.869
+      !IF (msun.eq.16) SOLCON = SOLCON * 0.870
+      !IF (msun.eq.17) SOLCON = SOLCON * 0.859
+      !IF (msun.eq.18) SOLCON = SOLCON * 0.950
+      !IF (msun.eq.19) SOLCON = SOLCON * 1.110
+      !IF (msun.eq.76) SOLCON = SOLCON * 0.866
 
          call sleep(2)
 c      print *, timega
@@ -767,7 +769,7 @@ c        ENDDO
        close(113)
   
 c Aerosol calculation (commented when not used)
-      CALL AERABSDATA(FRAK)
+      CALL AERABSDATA(FRAK, monsize)
       CALL GRIDAER(ICOUPLE, IHAZE)
       CALL INTERPAR1(RAER)
 C***********************************************************

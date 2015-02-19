@@ -1,5 +1,5 @@
       SUBROUTINE PHOTO(ZY,AGL,LTIMES,ISEASON,IZYO2,IO2,INO,N,timega,
-     $                 frak,msun)
+     $                 frak,msun,monsize)
       INCLUDE 'PHOTOCHEM/INPUTFILES/parameters.inc'
       implicit real*8(A-H,O-Z)
       real*8 mass
@@ -140,7 +140,7 @@ c (i.e. columndepth(1,*) and (2,*)  are both the O2 column depth (assuming O2 is
 
 c GNA
        !if (frak.eq.0) then 
-         CALL INITMIE(nw,wavl,frak)
+         CALL INITMIE(nw,wavl,frak,monsize)
         ! else
         !CALL INITMIEFRAC(nw,wavl,frak)
       !endif

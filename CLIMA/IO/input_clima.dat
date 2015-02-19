@@ -3,7 +3,7 @@
 * Write the value AFTER the 11th space
 *2345678901HERE
 
-NSTEPS=    400           !step number (200 recommended for coupling)
+NSTEPS=    200           !step number (200 recommended for coupling)
 IMW=       2         
 RSURF=     0.8                
 ZY=	   60.     

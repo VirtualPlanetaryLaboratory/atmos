@@ -547,6 +547,8 @@ C - other model parameters read in from input_photochem.dat
       IF(IDEBUG.eq.1) print *, "ICOUPLE =",ICOUPLE      
       READ(231,*)AA, NEWSPEC
       IF(IDEBUG.eq.1) print *, "NEWSPEC =",NEWSPEC      
+      READ(231,*)AA, monsize
+      IF(IDEBUG.eq.1) print *, "MONSIZE =",monsize      
  555  format(3/)
       close(231)
 
@@ -907,11 +909,11 @@ C     gna - added msun keyword to change the star from planet.dat
 C gna-scale stellar flux based on spectral type:
 C uses Kopparapu et al 2012 scalings for earth-equivalent distance
       IF (ihzscale.eq.1) then
-         IF (msun.eq.16) FSCALE = FSCALE * 0.865
+         IF (msun.eq.16) FSCALE = FSCALE * 0.870
          IF (msun.eq.17) FSCALE = FSCALE * 0.859
          IF (msun.eq.18) FSCALE = FSCALE * 0.950
          IF (msun.eq.19) FSCALE = FSCALE * 1.110
-         IF (msun.eq.76) FSCALE = FSCALE * 0.869
+         IF (msun.eq.76) FSCALE = FSCALE * 0.866
          print *, 'fscale is ', fscale
       ENDIF
 
@@ -1009,13 +1011,15 @@ c finish setting boundary conditions:
 
 C added by giada
       OPEN(unit=999, file='COUPLE/time_frak_photo.out')
- 909  FORMAT(1X, F4.2, 5X, F5.3, 5X, F18.16, 5X, I2)
- 908  FORMAT(1X, 'timega', 3X, 'P0', 8X, 'frak', 8X, 'msun')
+ 909  FORMAT(1X, F4.2, 5X, F5.3, 5X, F18.16, 5X, I2, 5X, I2)
+ 908  FORMAT(1X, 'timega', 3X, 'P0', 8X, 'frak', 8X, 'msun', 8X, 
+     &   'monsize')
       print *, frak
       print *, P0
       print *, msun
+      print *, monsize
       WRITE(999,908)
-      WRITE(999,909) timega, P0, frak, msun
+      WRITE(999,909) timega, P0, frak, msun, monsize
 
 C
 C
@@ -1374,7 +1378,7 @@ corig       CO2(I) = FCO2
       IDO = 0
       IF (NN.EQ.NSTEPS) IDO = 1
       CALL PHOTO(ZY,AGL,LTIMES,ISEASON,IZYO2,IO2,INO,IDO,timega,frak, 
-     &      msun)
+     &      msun,monsize)
       CALL RAINOUT(JTROP,NRAIN,USETD)  !ok
       CALL AERCON
 

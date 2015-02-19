@@ -13,6 +13,8 @@ PRONO=     1.E9
 frak=      1
 HCDENS=    0.63
 ICOUPLE=   0
+NEWSPEC=   0
+monsize=   0
 
 C ***** SET MODEL PARAMETERS *****
 C     AGL = DIURNAL AVERAGING FACTOR FOR PHOTORATES
@@ -37,3 +39,6 @@ C          = 1  use Fractal scattering for hydrocarbon particles
 C     HCDENS = 0.63 g/cm^3 (Archean hydrocarbon density - Trainer et al 2006)
 C            = 0.8 g/cm^3 (titan tholins - Trainer et al 2006)
 C 	     = 1.0 g/cm^3 (old suspicious default value)
+C     ICOUPLE = 0 to turn off coupling / 1 to turn on coupling
+C     NEWSPEC = 1 to use species.dat that has E8.2 format for VDEP and FIXEDMR
+C             = 0 to use old formatting (E7.2 for VDEP and FIXEDMR)

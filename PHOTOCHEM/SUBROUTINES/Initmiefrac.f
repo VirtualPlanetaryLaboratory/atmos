@@ -1,4 +1,4 @@
-      SUBROUTINE INITMIEFRAC(nw,wl,frak)
+      SUBROUTINE INITMIEFRAC(nw,wl,frak,monsize)
       INCLUDE 'PHOTOCHEM/INPUTFILES/parameters.inc'
       implicit real*8(A-H,O-Z)
 
@@ -18,7 +18,7 @@
       
 
 
-      CHARACTER*30 root,filenames
+      CHARACTER*31 root,filenames
       dimension filenames(34)
 
 
@@ -37,6 +37,7 @@
       REAL*8 yg(nw),yg1(nw),yg2(kw),yg3(kw)
       INTEGER i, iw, n
       INTEGER ierr
+      REAL*8 monsize
       ierr = 0      
 
 C-AP RADIUS of particles for which Mie calculations were run
@@ -75,7 +76,22 @@ C-AP Since all model is in cm we should convert RSTAND
       else  !use fractal MIE data
          print *, 'using fractal MIE data'
 
-      root='PHOTOCHEM/DATA/MIE/f/fractopts'    
+       if (sizemon.eq.0) then 
+          root = 'PHOTOCHEM/DATA/MIE/f0/fractopts'
+       endif
+       if (sizemon.eq.1) then 
+          root = 'PHOTOCHEM/DATA/MIE/f1/fractopts'
+       endif
+       if (sizemon.eq.2) then 
+          root = 'PHOTOCHEM/DATA/MIE/f2/fractopts'
+       endif
+       if (sizemon.eq.3) then 
+          root = 'PHOTOCHEM/DATA/MIE/f3/fractopts'
+       endif
+       if (sizemon.eq.4) then 
+          root = 'PHOTOCHEM/DATA/MIE/f4/fractopts'
+       endif
+
       filenames=['0.001um.txt','0.002um.txt','0.003um.txt','0.004um.txt'
      $          ,'0.005um.txt','0.006um.txt','0.007um.txt','0.008um.txt'
      $          ,'0.009um.txt','0.010um.txt','0.030um.txt','0.050um.txt'
