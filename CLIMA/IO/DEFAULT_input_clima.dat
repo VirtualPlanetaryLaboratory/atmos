@@ -28,6 +28,7 @@ IMET=      1                    ! Methane flag. If "1" then methane is turned on
 IMETETH=   1                    ! ethane flag.  If 1 then both methane and ethane turned on
 nga=       6
 IHAZE=     1
+monsize=   0
 
 *******************************************************
 **   VARIABLE INPUT PARAMETERS
