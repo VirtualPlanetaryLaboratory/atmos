@@ -12,8 +12,9 @@ EPSJ=      1.E-9
 PRONO=     1.E9
 frak=      1
 HCDENS=    0.63
-ICOUPLE=   1
+ICOUPLE=   0
 NEWSPEC=   0
+monsize=   0
 
 C ***** SET MODEL PARAMETERS *****
 C     AGL = DIURNAL AVERAGING FACTOR FOR PHOTORATES
@@ -41,3 +42,8 @@ C 	     = 1.0 g/cm^3 (old suspicious default value)
 C     ICOUPLE = 0 to turn off coupling / 1 to turn on coupling
 C     NEWSPEC = 1 to use species.dat that has E8.2 format for VDEP and FIXEDMR
 C             = 0 to use old formatting (E7.2 for VDEP and FIXEDMR)
+C     MONSIZE = 0 for 0.05 um monomers for fractal particles
+C      	      = 1 for 0.01 um monomers for fractal particles
+C	      = 2 for 0.02 um monomers for fractal particles
+C	      = 3 for 0.07 um monomers for fractal particles
+C	      = 4 for 0.10 um monomers for fractal particles

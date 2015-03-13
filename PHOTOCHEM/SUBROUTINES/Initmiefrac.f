@@ -76,19 +76,19 @@ C-AP Since all model is in cm we should convert RSTAND
       else  !use fractal MIE data
          print *, 'using fractal MIE data'
 
-       if (sizemon.eq.0) then 
+       if (monsize.eq.0) then 
           root = 'PHOTOCHEM/DATA/MIE/f0/fractopts'
        endif
-       if (sizemon.eq.1) then 
+       if (monsize.eq.1) then 
           root = 'PHOTOCHEM/DATA/MIE/f1/fractopts'
        endif
-       if (sizemon.eq.2) then 
+       if (monsize.eq.2) then 
           root = 'PHOTOCHEM/DATA/MIE/f2/fractopts'
        endif
-       if (sizemon.eq.3) then 
+       if (monsize.eq.3) then 
           root = 'PHOTOCHEM/DATA/MIE/f3/fractopts'
        endif
-       if (sizemon.eq.4) then 
+       if (monsize.eq.4) then 
           root = 'PHOTOCHEM/DATA/MIE/f4/fractopts'
        endif
 

@@ -36,7 +36,6 @@
       REAL*8 yg(nw),yg1(nw),yg2(kw),yg3(kw)
       INTEGER i, iw, n
       INTEGER ierr
-      REAL*8 monsize
       ierr = 0      
 
 C-AP RADIUS of particles for which Mie calculations were run
@@ -48,7 +47,7 @@ C-AP **********************************************************
 C-AP ***********************************************************
 !so 34 mie calcualtions were run.  I wonder how we will do this for sulfate which are 19 calculations from 0.01 to 1 micron
 
-
+      print *, 'monsize is: ', monsize
       !this was in the time-stepping loop of the original code, but that seems like a mistake
 C-AP Since all model is in cm we should convert RSTAND
 
@@ -70,19 +69,19 @@ C-AP Since all model is in cm we should convert RSTAND
       else  !use fractal MIE data
          print *, 'using fractal MIE data'
 
-       if (sizemon.eq.0) then 
+       if (monsize.eq.0) then 
           root = 'PHOTOCHEM/DATA/MIE/f0/fractopts'
        endif
-       if (sizemon.eq.1) then 
+       if (monsize.eq.1) then 
           root = 'PHOTOCHEM/DATA/MIE/f1/fractopts'
        endif
-       if (sizemon.eq.2) then 
+       if (monsize.eq.2) then 
           root = 'PHOTOCHEM/DATA/MIE/f2/fractopts'
        endif
-       if (sizemon.eq.3) then 
+       if (monsize.eq.3) then 
           root = 'PHOTOCHEM/DATA/MIE/f3/fractopts'
        endif
-       if (sizemon.eq.4) then 
+       if (monsize.eq.4) then 
           root = 'PHOTOCHEM/DATA/MIE/f4/fractopts'
        endif
 
@@ -230,21 +229,26 @@ c       if (wl(k).eq. 2100) print *, wl(k),yg1(k),yg2(k),yg3(k)
       else  !use fractal MIE data
          print *, 'using fractal MIE data'
 
-       if (sizemon.eq.0) then 
+       if (monsize.eq.0.) then 
           root = 'PHOTOCHEM/DATA/MIE/f0/fractopts'
-       endif
-       if (sizemon.eq.1) then 
+          print *,'using monsize 0: 0.05 um particles'
+       
+       else if (monsize.eq.1.) then 
           root = 'PHOTOCHEM/DATA/MIE/f1/fractopts'
-       endif
-       if (sizemon.eq.2) then 
+          print *,'using monsize 1: 0.01 um particles'
+       
+       else if (monsize.eq.2.) then 
           root = 'PHOTOCHEM/DATA/MIE/f2/fractopts'
-       endif
-       if (sizemon.eq.3) then 
+           print *,'using monsize 2: 0.02 um particles'
+       
+       else if (monsize.eq.3.) then 
           root = 'PHOTOCHEM/DATA/MIE/f3/fractopts'
-       endif
-       if (sizemon.eq.4) then 
+          print *,'using monsize 3: 0.07 um particles'
+       
+       else if (monsize.eq.4.) then 
           root = 'PHOTOCHEM/DATA/MIE/f4/fractopts'
-       endif
+           print *,'using monsize 4: 0.10 um particles'
+       end if
 
         
       filenames=['0.001um.txt','0.002um.txt','0.003um.txt','0.004um.txt'

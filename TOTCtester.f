@@ -1560,12 +1560,28 @@ C   COMPUTE CHEMISTRY TERMS AT ALL GRID POINTS
    9  USAVE(I,J) = USOL(I,J)       !original code  - used as part of the reverse euler solver
 
 C
-      DO 3 I=1,NQ
-      DO 11 J=1,NZ
+c new code from eddie
+      DO 3 I=1,NQ                             ! Loop through all chemical species
+      DO 11 J=1,NZ                           ! Loop through all vertical atmospheric layers
+c     R(J) = EPSJ * ABS(USOL(I,J))           ! as it was - USOL should be positive here anyway, can probably remove this (Eddie)
+      R(J) = EPSJ * USOL(I,J)                ! R(J) is value to perturb USOL(I,J) by in Jacobian calculation, EPSJ much less than 1
+      !!! This is my debug in other version of code - Eddie !!!
+      !!! IF(R(J).LT.1.e-100) R(J) = 1.e-100 ! PERTURB DEBUG !!!
+      !!! Above ensures no USOL(I,J) falls below double precision limit !!!     
+  11  USOL(I,J) = USAVE(I,J) + R(J)          ! Add perturbing quantity to mixing ratio
+      CALL DOCHEM(FV,0,JTROP,iIN,iSL,USETD)  ! Call the photochemistry routine
+c                                           ! FV has dimension (NQ,NZ) and holds gas densities
+c end new code from eddie
+
+c old code 
+c      DO 3 I=1,NQ
+c      DO 11 J=1,NZ
 c     R(J) = EPSJ * ABS(USOL(I,J))   !as it was
-      R(J) = EPSJ * USOL(I,J)
-  11  USOL(I,J) = USAVE(I,J) + R(J)
-      CALL DOCHEM(FV,0,JTROP,iIN,iSL,USETD)
+c      R(J) = EPSJ * USOL(I,J)
+c  11  USOL(I,J) = USAVE(I,J) + R(J)
+c      CALL DOCHEM(FV,0,JTROP,iIN,iSL,USETD)
+
+
 
 C
       DO 12 M=1,NQ

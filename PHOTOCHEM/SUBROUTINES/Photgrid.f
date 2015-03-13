@@ -955,8 +955,9 @@ c 1.33432e+14 in photons/cm2/s
 !-------such that you can keep the planets at 1 AU and have the correct flux----------!
 
       IF (msun .GT. 15) THEN 
-         n = 26150              ! number of lines in file - all of these have the same grid as star 13
+                       
       IF (msun .EQ. 76) THEN
+         n = 26035
          print *, "MSUN IS 76!"
          call sleep(1)
          nhead = 0
@@ -969,6 +970,7 @@ c 1.33432e+14 in photons/cm2/s
 
 
       IF (msun .EQ. 16) THEN
+         n = 26035
          print *, "MSUN IS 16 (AD Leo)!"
          call sleep(1)
          nhead = 0
@@ -980,6 +982,7 @@ c 1.33432e+14 in photons/cm2/s
       ENDIF
 
       IF (msun .EQ. 17) THEN
+         n = 26141
          print *, "MSUN IS 17 (T3200)!"
          call sleep(1)
          nhead = 0
@@ -992,6 +995,7 @@ c 1.33432e+14 in photons/cm2/s
 
 
       IF (msun .EQ. 18) THEN
+         n = 26035
          print *, "MSUN IS 18 (K2V)!"
          call sleep(1)
          nhead = 0
@@ -1003,6 +1007,7 @@ c 1.33432e+14 in photons/cm2/s
       ENDIF
 
       IF (msun .EQ. 19) THEN
+         n = 26035
          print *, "MSUN IS 19 (F2V)!"
          call sleep(1)
          nhead = 0
