@@ -430,7 +430,7 @@ c*******Changed for now*********
 !gna - read more inputs from photo for coupling
       IF (ICOUPLE.eq.1) THEN 
       OPEN(unit=999,FILE= 'COUPLE/time_frak_photo.out')
- 107  FORMAT(1X, F4.2, 5X, F5.3, 5X, F18.16, 5X, I2, 2X, I2)
+ 107  FORMAT(1X, F4.2, 5X, F5.3, 5X, F18.16, 5X, I2, 5X, I2)
       READ(999,*)
       READ(999,107) timega, P0ground, frak, msun, monsize
       print *, timega
