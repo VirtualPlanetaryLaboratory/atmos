@@ -430,14 +430,16 @@ c*******Changed for now*********
 !gna - read more inputs from photo for coupling
       IF (ICOUPLE.eq.1) THEN 
       OPEN(unit=999,FILE= 'COUPLE/time_frak_photo.out')
- 107  FORMAT(1X, F4.2, 5X, F5.3, 5X, F18.16, 5X, I2, 5X, I2)
+ 107  FORMAT(1X, F4.2, 7X, F8.3, 5X, F18.16, 5X, I2, 5X, I2, 
+     &     9X, I4)
       READ(999,*)
-      READ(999,107) timega, P0ground, frak, msun, monsize
+      READ(999,107) timega, P0ground, frak, msun, monsize, nzp
       print *, timega
       print *, P0ground
       print *, frak
       print *, msun
       print *, monsize
+      print *, nzp
       IF (msun.eq.13) STARR = "Sun"
       IF (msun.eq.14) STARR = "Sun"
       IF (msun.eq.15) STARR = "ADLEO"
@@ -1402,7 +1404,7 @@ C   End of iterative loop
 ***************************************************************
       
       if(ICOUPLE.eq.1) then
-       CALL OUTPUT_PHOTO(T, FI, water, ALT)
+       CALL OUTPUT_PHOTO(T, FI, water, ALT, nzp)
       endif
 
         WRITE(97,466)

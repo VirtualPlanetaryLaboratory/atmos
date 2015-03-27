@@ -1009,17 +1009,22 @@ c finish setting boundary conditions:
         enddo
       endif
 
+
+
 C added by giada
       OPEN(unit=999, file='COUPLE/time_frak_photo.out')
- 909  FORMAT(1X, F4.2, 5X, F5.3, 5X, F18.16, 5X, I2, 5X, I2)
- 908  FORMAT(1X, 'timega', 3X, 'P0', 8X, 'frak', 8X, 'msun', 8X, 
-     &   'monsize')
+ 909  FORMAT(1X, F4.2, 7X, F8.3, 5X, F18.16, 5X, I2, 5X, I2, 
+     &     9X, I4)
+ 908  FORMAT(1X, 'timega', 5X, 'P0', 10X, 'frak', 18X, 'msun', 4X, 
+     &   'monsize', 6X, 'NZ')
       print *, frak
       print *, P0
       print *, msun
       print *, monsize
+      print *, NZ     
       WRITE(999,908)
-      WRITE(999,909) timega, P0, frak, msun, monsize
+      WRITE(999,909) timega, P0, frak, msun, monsize, NZ
+
 
 C
 C
@@ -1474,17 +1479,32 @@ C
       if (USETD.EQ.0) then   !particles in main loop
 
       do J=1,NZ
-      AERSOL(J,1) = USOL(LSO4AER,J)*DEN(J)/CONVER(J,1)
-      AERSOL(J,2) = USOL(LS8AER,J)*DEN(J)/CONVER(J,2)     !ACK hardcoded particle numbers
-      AERSOL(J,3) = USOL(LHCAER,J)*DEN(J)/CONVER(J,3)     !ACK hardcoded particle numbers
-      AERSOL(J,4) = USOL(LHCAER2,J)*DEN(J)/CONVER(J,4)     !ACK hardcoded particle numbers
+      do JJ=1, NP
+         
+            if (JJ.eq.1)  parti = LSO4AER
+            if (JJ.eq.2)  parti = LS8AER
+            if (JJ.eq.3)  parti = LHCAER
+            if (JJ.eq.4)  parti = LHCAER2
+            
+
+            AERSOL(J,JJ) = USOL(parti,J)*DEN(J)/CONVER(J,JJ)
+
+
+c O2 CODE CHANGES      
+c gna: the way it's done below, you have to COMMENT OUT these lines to remove
+c particles from the code.  Aaak!  The lines above are maybe not perfect
+c but better than commenting out stuff when the input files change...
+
+c      AERSOL(J,2) = USOL(LS8AER,J)*DEN(J)/CONVER(J,2)     !ACK hardcoded particle numbers
+c      AERSOL(J,3) = USOL(LHCAER,J)*DEN(J)/CONVER(J,3)     !ACK hardcoded particle numbers
+c      AERSOL(J,4) = USOL(LHCAER2,J)*DEN(J)/CONVER(J,4)     !ACK hardcoded particle numbers
 c      print *, AERSOL(J,1),AERSOL(J,2),USOL(LSO4AER,J),CONVER(J,1),
 c     &         USOL(LS8AER,J),CONVER(J,2)
 
 !conver is the number of molecules/particle, so that main calcuations are done in molecule space
       !molecules/cm3 *#particles/molecule - > AERSOL [# particles/cm3]
       enddo
-
+      enddo
 
 C
 C   COMPUTE ADVECTION TERMS FOR PARTICLES  ! jim is using centered differences.
@@ -1561,12 +1581,12 @@ C   COMPUTE CHEMISTRY TERMS AT ALL GRID POINTS
 
 C
 c new code from eddie
-      DO 3 I=1,NQ                             ! Loop through all chemical species
+      DO 3 I=1,NQ                            ! Loop through all chemical species
       DO 11 J=1,NZ                           ! Loop through all vertical atmospheric layers
 c     R(J) = EPSJ * ABS(USOL(I,J))           ! as it was - USOL should be positive here anyway, can probably remove this (Eddie)
       R(J) = EPSJ * USOL(I,J)                ! R(J) is value to perturb USOL(I,J) by in Jacobian calculation, EPSJ much less than 1
       !!! This is my debug in other version of code - Eddie !!!
-      !!! IF(R(J).LT.1.e-100) R(J) = 1.e-100 ! PERTURB DEBUG !!!
+      IF(R(J).LT.1.e-100) R(J) = 1.e-100 ! PERTURB DEBUG !!!
       !!! Above ensures no USOL(I,J) falls below double precision limit !!!     
   11  USOL(I,J) = USAVE(I,J) + R(J)          ! Add perturbing quantity to mixing ratio
       CALL DOCHEM(FV,0,JTROP,iIN,iSL,USETD)  ! Call the photochemistry routine
