@@ -1284,6 +1284,12 @@ C         ENDIF
       
       print*,'Surface temperature=',T(ND)
 
+c adjust albedo based on ice-albedo feedback
+c parameterization added by Giada based on Charnay et al 2014
+      SRFALB=0.65+(0.3-0.65)*( (T(ND)-240)/(290-240) )**0.37
+      print *, 'Surface albedo=', SRFALB
+
+
 c Adjusting the time stepper
        DTS = dt0
        CHG = 0.
@@ -1404,6 +1410,7 @@ C   End of iterative loop
 ***************************************************************
       
       if(ICOUPLE.eq.1) then
+       print *, 'output photo'
        CALL OUTPUT_PHOTO(T, FI, water, ALT, nzp)
       endif
 
