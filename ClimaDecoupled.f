@@ -414,6 +414,7 @@ c*******Changed for now*********
       READ(1,*) AA, nga
       READ(1,*) AA, IHAZE       ! IHAZE (flag 0 or 1)
       READ(1,*) AA, monsize
+      READ(1,*) AA, icealbedo
 
 
 !gna - moved this part here so now we know what ICOUPLE is supposed to be  
@@ -1286,9 +1287,10 @@ C         ENDIF
 
 c adjust albedo based on ice-albedo feedback
 c parameterization added by Giada based on Charnay et al 2014
+      if (icealbedo.eq.1) then 
       SRFALB=0.65+(0.3-0.65)*( (T(ND)-240)/(290-240) )**0.37
       print *, 'Surface albedo=', SRFALB
-
+      end if
 
 c Adjusting the time stepper
        DTS = dt0

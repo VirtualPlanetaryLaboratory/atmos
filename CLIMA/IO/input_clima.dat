@@ -10,11 +10,11 @@ ZY=	   60.
 DTAU0=     0.5
 ZCON=      20
 P0=        1.e-4
-PGO=       1.
+PGO=       0.5
 G=	   980.         !Gravity (Mars=373., Earth=980., Gliese581d=1744.0, assuming 5.6 earth masses) 
 FAC=       4.0
 IO3=       1   			!Ozone?
-IUP=       1                    !1 means that it starts a new run and doesn't read TempIn.dat
+IUP=       0                    !1 means that it starts a new run and doesn't read TempIn.dat
 TG0=       270.			!Surface temperature for IUP=1   
 TSTRAT=    200.             	!Stratospheric temperature for IUP=1
 STARR=     "Sun"		!What star?
@@ -29,6 +29,7 @@ IMETETH=   1                    ! ethane flag.  If 1 then both methane and ethan
 nga=       6
 IHAZE=     1
 monsize=   0
+icealbedo= 1
 
 *******************************************************
 **   VARIABLE INPUT PARAMETERS
@@ -74,7 +75,7 @@ c      CO2MAX - Maximum CO2 mixing ratio that RRTM can manage with accuracy,
 c               for greater values of CO2 the former IR subroutine is used.
 c     ICH4AMT - for particle subroutine: which CH4 amount was used (ppm)?
 c     ICO2AMT - for particle subroutine: which CO2 amount was used (ppm)?
-
+c     icealbedo - 0 = no ice albedo feedback; 1 = ice albedo feedback
 
 
 
