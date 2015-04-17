@@ -1,5 +1,5 @@
             PROGRAM TOTCtester
-
+c test
 c I am attempting to abtract this so we can have an Earth/Mars switch
 c I should also think about adding extra abstraction for the humidty stuff
 c
@@ -372,6 +372,7 @@ C
       dimension USAVEOLD(NQ,NZ), USOLSAVE(NQ,NZ), USOLPREV(NQ,NZ)
       dimension USOLORIG(NQ,NZ)
       dimension alt_new(NZ), T_new(NZ), water(NZ)
+      dimension alt_dontuse(NZ), T_dontuse(NZ), water_fix(NZ)
 !c-mc  USOLSAVE added for convergence testing 4/29/06, removed from code on 2/28/07
 !c-mc  going to keep declaration here and reserve it in case I ever bring back the
 !c-mc  the convergence-testing code, which is r37:36 in the /td branch
@@ -466,6 +467,7 @@ c The next four files are used only when this model is coupled with the climate 
      &         status='OLD')          ! To be used as input for the climate model (coupling)
       open(116, file='COUPLE/fromClima2Photo.dat')
       open(117, file='COUPLE/mixing_ratios.dat')
+      open(118, file='COUPLE/fromClima2Photo_works.dat')
 
 c-mc
       open(25, file='PHOTOCHEM/out.redox',status='UNKNOWN')    ! redox output - eventually combine into out.trs
@@ -694,11 +696,6 @@ C Reading the altitude, temperature, and water profiles from the climate code
       close(116)
       endif
  351  FORMAT (1PE10.3, 1PE12.3, 1PE12.3)
-
-
-
-
-
 
 
 
@@ -964,13 +961,14 @@ c read in formatted input data file
 !gna - we need to make it so that T = T_new
       IF(ICOUPLE.EQ.1) THEN
          DO I=1, NZ
-            IF(T_new(I).gt.170) THEN !gna - avoid some crazy unconverged clima solutions that make photo not converge -- better ideas to check for this?
+            IF(T_new(I).gt.100) THEN !gna - avoid some crazy unconverged clima solutions that make photo not converge -- better ideas to check for this?
                IF(T_new(I).lt.350) THEN
                T(I) = T_new(I)
                ENDIF
             ENDIF
          END DO
-
+         print *, 'T0 is'
+         print *, T(1)
       ENDIF
 
 
@@ -1010,7 +1008,6 @@ c finish setting boundary conditions:
       endif
 
 
-
 C added by giada
       OPEN(unit=999, file='COUPLE/time_frak_photo.out')
  909  FORMAT(1X, F4.2, 7X, F8.3, 5X, F18.16, 5X, I2, 5X, I2, 
@@ -1024,7 +1021,6 @@ C added by giada
       print *, NZ     
       WRITE(999,908)
       WRITE(999,909) timega, P0, frak, msun, monsize, NZ
-
 
 C
 C
@@ -1168,6 +1164,23 @@ c           bXN2(i) = 0.0   ! don't use molecular diffusion
        USOL(LH2O,J) = water(J)  !set to h2o from clima if coupling on
        ENDIF
       enddo
+
+       !it's having mega problems for low h2o profiles for cold surface environments
+       !here is a fix for now
+       IF(T(1).lt.260) THEN
+          print *, 'scaling water'
+  
+        DO J=1, NZ
+        READ(118,*) alt_dontuse(J), T_dontuse(J), water_fix(J)
+        END DO
+        close(118)
+        do J=1,JTROP
+        USOL(LH2O,J) = water_fix(J)
+        enddo
+        endif
+
+       
+      
 
       IF (PLANET .eq. 'EARTH') CALL LTNING(FO2)
       CALL AERTAB   !makes table of vapor pressures for H2O and H2SO4
@@ -1506,6 +1519,7 @@ c     &         USOL(LS8AER,J),CONVER(J,2)
       enddo
       enddo
 
+
 C
 C   COMPUTE ADVECTION TERMS FOR PARTICLES  ! jim is using centered differences.
 c   this makes sense for the inner points from the differential equation,
@@ -1580,13 +1594,15 @@ C   COMPUTE CHEMISTRY TERMS AT ALL GRID POINTS
    9  USAVE(I,J) = USOL(I,J)       !original code  - used as part of the reverse euler solver
 
 C
+
+
 c new code from eddie
       DO 3 I=1,NQ                            ! Loop through all chemical species
       DO 11 J=1,NZ                           ! Loop through all vertical atmospheric layers
 c     R(J) = EPSJ * ABS(USOL(I,J))           ! as it was - USOL should be positive here anyway, can probably remove this (Eddie)
       R(J) = EPSJ * USOL(I,J)                ! R(J) is value to perturb USOL(I,J) by in Jacobian calculation, EPSJ much less than 1
       !!! This is my debug in other version of code - Eddie !!!
-      IF(R(J).LT.1.e-100) R(J) = 1.e-100 ! PERTURB DEBUG !!!
+      !!! IF(R(J).LT.1.e-100) R(J) = 1.e-100 ! PERTURB DEBUG !!!
       !!! Above ensures no USOL(I,J) falls below double precision limit !!!     
   11  USOL(I,J) = USAVE(I,J) + R(J)          ! Add perturbing quantity to mixing ratio
       CALL DOCHEM(FV,0,JTROP,iIN,iSL,USETD)  ! Call the photochemistry routine
@@ -1600,8 +1616,6 @@ c     R(J) = EPSJ * ABS(USOL(I,J))   !as it was
 c      R(J) = EPSJ * USOL(I,J)
 c  11  USOL(I,J) = USAVE(I,J) + R(J)
 c      CALL DOCHEM(FV,0,JTROP,iIN,iSL,USETD)
-
-
 
 C
       DO 12 M=1,NQ
