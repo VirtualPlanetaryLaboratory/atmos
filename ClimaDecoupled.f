@@ -1288,9 +1288,21 @@ C         ENDIF
 c adjust albedo based on ice-albedo feedback
 c parameterization added by Giada based on Charnay et al 2014
       if (icealbedo.eq.1) then 
-      SRFALB=0.65+(0.3-0.65)*( (T(ND)-240)/(290-240) )**0.37
-      print *, 'Surface albedo=', SRFALB
-      end if
+          IF (T(ND).LT.240.) SRFALB = 0.65
+
+          IF (T(ND).GT.290.) SRFALB = 0.30
+
+          IF (T(ND).GE.240. .AND. T(ND).LE.290.) then
+
+              SRFALB=0.65+(0.3-0.65)*( (T(ND)-240)/(290-240) )**0.37
+
++         end if
+
+       print *, 'Surface albedo=', SRFALB
+
+       end if
+
+
 
 c Adjusting the time stepper
        DTS = dt0
