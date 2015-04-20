@@ -1602,7 +1602,7 @@ c new code from eddie
 c     R(J) = EPSJ * ABS(USOL(I,J))           ! as it was - USOL should be positive here anyway, can probably remove this (Eddie)
       R(J) = EPSJ * USOL(I,J)                ! R(J) is value to perturb USOL(I,J) by in Jacobian calculation, EPSJ much less than 1
       !!! This is my debug in other version of code - Eddie !!!
-      !!! IF(R(J).LT.1.e-100) R(J) = 1.e-100 ! PERTURB DEBUG !!!
+      IF(R(J).LT.1.e-100) R(J) = 1.e-100 ! PERTURB DEBUG !!!
       !!! Above ensures no USOL(I,J) falls below double precision limit !!!     
   11  USOL(I,J) = USAVE(I,J) + R(J)          ! Add perturbing quantity to mixing ratio
       CALL DOCHEM(FV,0,JTROP,iIN,iSL,USETD)  ! Call the photochemistry routine
