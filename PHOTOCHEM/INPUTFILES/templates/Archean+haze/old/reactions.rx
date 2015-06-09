@@ -109,7 +109,7 @@ N         HO2       NO        OH                2BODY     2.2E-11     0.0       
 HO2       NO2       HNO2      O2                2BODY     5.00E-16    0.0                    !JPL-06 (upper limit, slow)                                                            !temp 
 SO        HV        S         O                 PHOTO     1.00
 H2S       HV        HS        H                 PHOTO     1.00
-SO2       HV        SO        O                 PHOTO     0.00 !SO2 quantum yields calculated in XS_SO2                    
+SO2       HV        SO        O                 PHOTO     0.00 !SO2 quantum yields calculated in XS_SO2                                                                                         
 SO2       HV        SO21                        PHOTO     0.00 !this line must follow SO2+hv->SO+O
 SO2       HV        SO23                        PHOTO     0.00 !this line must follow SO2+hv->SO21                   
 SO        O2        O         SO2               2BODY     2.6E-13     -2400.                 ! JPL-02
