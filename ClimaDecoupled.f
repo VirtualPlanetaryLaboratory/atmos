@@ -1296,7 +1296,7 @@ c parameterization added by Giada based on Charnay et al 2014
 
               SRFALB=0.65+(0.3-0.65)*( (T(ND)-240)/(290-240) )**0.37
 
-+         end if
+         end if
 
        print *, 'Surface albedo=', SRFALB
 
