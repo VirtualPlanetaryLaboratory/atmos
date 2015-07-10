@@ -13,7 +13,7 @@ PRONO=     1.E9
 frak=      1
 HCDENS=    0.63
 ICOUPLE=   0
-NEWSPEC=   1
+NEWSPEC=   0
 monsize=   0
 
 C ***** SET MODEL PARAMETERS *****

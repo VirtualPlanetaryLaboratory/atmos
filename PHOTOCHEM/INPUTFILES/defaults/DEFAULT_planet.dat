@@ -6,7 +6,7 @@
 6.371E8  = R0    Radius of Earth  - this times 0.53 for Mars (verify)
 1.013    = P0  = surface pressure of modern Earth in atm ( 0.0063 for Mars)
 EARTH    = PLANET  string naming the planet for extra changes (MARS is the only other option for the moment)
-2.7      = TIMEGA - time in Ga, for modifying the solar flux
+0.0      = TIMEGA - time in Ga, for modifying the solar flux
 0        = IRESET
 13       = msun
 0        = IHZSCALE
