@@ -193,8 +193,8 @@ c      print *, j, yg3
       W0HC(k,j)=yg1(k)
       QEXTHC(k,j)=yg2(k)
       GHC(k,j)=yg3(k)
-      print *, 'qexthc in initmie'
-      print *, QEXTHC(k,j)
+c      print *, 'qexthc in initmie'
+c      print *, QEXTHC(k,j)
 c       if (wl(k).eq. 2100) print *, wl(k),yg1(k),yg2(k),yg3(k)
       enddo
 

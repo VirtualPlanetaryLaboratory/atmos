@@ -36,6 +36,8 @@ C   SPECIES CAN BE DONE IN ANY ORDER.
         if (I.LE.NQ) then 
 c         if(j.eq.1)print *, i, ISPEC(I),' long-lived densities'
           D(I,J) = USOL(I,J) * DEN(J)
+c          print  *, usol(1,j)
+
         else 
 c         if(j.eq.1)print *, i, ISPEC(I),' particle densities'
           D(I,J) = PARTICLES(J,I-NQ)* DEN(J)   !gets particles if using tri-diag
@@ -135,6 +137,8 @@ c         print *, I,ISPEC(I),' long-lived'
       DO  J=1,NZ
       XLJ = XL(J) + RAINGC(I,J)
       FVAL(I,J) = XP(J)/DEN(J) - XLJ*USOL(I,J)
+
+c      print *, usol(i,j)
       YP(I,J) = XP(J)
       YL(I,J) = XLJ
 c      IF (ISPEC(I).EQ.'H2SO4') print *, J,XL(J),RAINGC(I,J),XP(j),XLJ

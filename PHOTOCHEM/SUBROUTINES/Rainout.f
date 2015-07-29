@@ -180,6 +180,7 @@ C   8)  CH2(OH)2  +  HSO3-  =  H2O  +  CH2OHSO3-
 C   9)   H2O     =  H+  +  OH-
       R9(I) = 1.E-14 * EXP(-6716.*(1./TAQ(I) - 1./298.))
    3  CONTINUE
+
 C
       DO 21 J=1,NQ
       DO 21 I=1,NZ
@@ -225,6 +226,7 @@ C
         X(LH2COg) = H2COg*FAC    !2
         X(LH2COaq) = CH2OH2*FAC  !4
         X(LH2COSO3) = FHSO3_*FAC !9
+
 
    4  CONTINUE     !end skip on first call section
 

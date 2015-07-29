@@ -1,5 +1,5 @@
             PROGRAM TOTCtester
-c test
+c test test
 c I am attempting to abtract this so we can have an Earth/Mars switch
 c I should also think about adding extra abstraction for the humidty stuff
 c
@@ -8,8 +8,8 @@ c - as such it is not really the best code to be used as a base for TOTC, but su
 c - it is starting from one of the more up-to-date branches of Mark's code, but doesn't have any time-dependent gear stuff in it
 
 c- at some point go through and clean up all comments
-
-
+c
+c
 c - this code contains the variable grid size changes used to compute the suite of models for the whiff paper.
 c - this code could/should be modified to use a variable grid size at some point to make it faster
 c - all common blocks abstracted to DATA/INCLUDE
@@ -20,7 +20,7 @@ c - and attempting to take it away...
 c - g77 will no longer work as there are some F90 built-ins being used
 c see makefile for compilation syntax
 
-
+cc
 
 c-mc
 c this code has iterated jacobian and batch multipliers
@@ -682,7 +682,6 @@ c      stop
 
 
 
-
 C Reading in the temperature and water profiles from the climate code
 
       IF (ICOUPLE.eq.1) then 
@@ -996,7 +995,7 @@ c read in formatted input data file
        VEFF(K) = VEFF0(K)
         do  I=1,NZ
          USOL(K,I) = ABS(USOL(K,I))
-         USOLORIG(K,I)=USOL(K,I)
+          USOLORIG(K,I)=USOL(K,I)
         enddo
       enddo
 c
@@ -1038,7 +1037,7 @@ c       do i=1,nq
 c          print *, i, ISPEC(i)
 c       enddo
 c       stop
-        
+
 c make any changes
        poop3 = 1./1.!*10.**1.94 ! use this to diddle pressure  (from KZ mars code)
 
@@ -1155,7 +1154,7 @@ c           bXN2(i) = 0.0   ! don't use molecular diffusion
         Veff(LH2) = 1.0*bH2N2(nz)/DEN(NZ)
      $     *(1./Hscale(nz) - 1./scale_H(LH2,nz))
       endif
-      
+
 !gna - added coupling stuff for water here (just below tropopause)
       do J=1,JTROP
        IF(ICOUPLE.eq.0) THEN
@@ -1180,7 +1179,7 @@ c           bXN2(i) = 0.0   ! don't use molecular diffusion
         endif
 
        
-      
+
 
       IF (PLANET .eq. 'EARTH') CALL LTNING(FO2)
       CALL AERTAB   !makes table of vapor pressures for H2O and H2SO4
@@ -1392,12 +1391,13 @@ c      stop
 corig       CO2(I) = FCO2
        CO2(I) = absorbers(JCO2,I)
       enddo
-
+      
       IDO = 0
       IF (NN.EQ.NSTEPS) IDO = 1
       CALL PHOTO(ZY,AGL,LTIMES,ISEASON,IZYO2,IO2,INO,IDO,timega,frak, 
      &      msun,monsize)
       CALL RAINOUT(JTROP,NRAIN,USETD)  !ok
+
       CALL AERCON
 
 c      print *, photoreac
@@ -1501,7 +1501,7 @@ C
             
 
             AERSOL(J,JJ) = USOL(parti,J)*DEN(J)/CONVER(J,JJ)
-
+           
 
 c O2 CODE CHANGES      
 c gna: the way it's done below, you have to COMMENT OUT these lines to remove
@@ -1765,6 +1765,7 @@ C distributed (volcanic) sources
         disth=distheight(i)*1.e5  !convert to cm  
         jdisth=minloc(Z,1, Z .ge. disth)-1 !height index (-1 given the staggered grid)
                           !the 1 in the second postion tells minloc to return a scalar
+   
         ZTOP=Z(jdisth)-Z(1)  
         ZTOP1=Z(jdisth)+0.5*DZ(jdistH)
 c        print *, ISPEC(i),distH,jdistH,ZTOP,ZTOP1
@@ -2100,6 +2101,7 @@ C
       TB(J) = TB(J) + DD(I,J)
   45  TC(J) = - DU(I,J) - DPU(J,L)
 C
+
 
 ! why are there no dl*PARTICLES() in here?  all the other dl's are multiplied by USOL.
 !just on RHS...

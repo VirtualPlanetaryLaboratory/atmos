@@ -6,7 +6,7 @@
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/ISOBLOK.inc'
 
 * input
-      dimension columndepth(KJ,NZ)  !testing this as an optional parameter 
+      REAL*8 columndepth(KJ,NZ)  !testing this as an optional parameter
       INTEGER nw,j,IO2
       REAL*8 wl(nw+1), wc(nw)
       REAL*8 tlev(nz)  !should go back to kz if I ever want to have a variable altitude grid
@@ -21,15 +21,15 @@
       Jd=3
 
       IF(species.eq.'HNO3    ') CALL XS_HNO3(nw,wavl,wav,T,DEN,j,sq) !T dependent - also unexplained factor of 1000. (but not using T-dependent data right now)
-      IF(species.eq.'HO2     ') CALL XS_HO2(nw,wavl,wav,T,DEN,j,sq,0,Ja) ! the 0 is also an ISOHACK      
-      IF(species.eq.'NO2     ') CALL XS_NO2(nw,wavl,wav,T,DEN,j,sq)  !T-dependent (not in use) 
-      IF(species.eq.'H2O2    ') CALL XS_H2O2(nw,wavl,wav,T,DEN,j,sq)  !T-dependent (not in use) 
+      IF(species.eq.'HO2     ') CALL XS_HO2(nw,wavl,wav,T,DEN,j,sq,0,Ja) ! the 0 is also an ISOHACK
+      IF(species.eq.'NO2     ') CALL XS_NO2(nw,wavl,wav,T,DEN,j,sq)  !T-dependent (not in use)
+      IF(species.eq.'H2O2    ') CALL XS_H2O2(nw,wavl,wav,T,DEN,j,sq)  !T-dependent (not in use)
       IF(species.eq.'H2O     ') CALL XS_H2O(nw,wavl,wav,T,DEN,j,sq) !HAVEN"T INTEGRATED GRACES CODE
       IF(species.eq.'CO2     ') CALL XS_CO2(nw,wavl,wav,T,DEN,j,sq)  !returns CO+O to j and CO+O1D j+3 !ACK hardcoded needs fixing..
-      IF(species.eq.'H2CO    ') CALL XS_H2CO(nw,wavl,wav,T,DEN,j,sq) !returns H2, then HCO 
+      IF(species.eq.'H2CO    ') CALL XS_H2CO(nw,wavl,wav,T,DEN,j,sq) !returns H2, then HCO
       IF(species.eq.'O3      ') CALL XS_O3(nw,wavl,wav,T,DEN,j,sq)      !returns O2 + O(1D), then O2 + O(3P)
       IF(species.eq.'CH4     ') CALL XS_CH4(nw,wavl,wav,T,DEN,j,sq)
-      IF(species.eq.'C2H6    ') CALL XS_C2H6(nw,wavl,wav,T,DEN,j,sq) !returns  2 (3)CH2 +H2 then CH4 + (1)CH2  
+      IF(species.eq.'C2H6    ') CALL XS_C2H6(nw,wavl,wav,T,DEN,j,sq) !returns  2 (3)CH2 +H2 then CH4 + (1)CH2
       IF(species.eq.'NO3     ') CALL XS_NO3(nw,wavl,wav,T,DEN,j,sq) !2 channels: NO + O2, NO2 + O
 !note NO3 is temperature dependent so would need to change if t does...       
       IF(species.eq.'N2O     ') CALL XS_N2O(nw,wavl,wav,T,DEN,j,sq)   !returns N2 + O1D
@@ -3594,9 +3594,9 @@ c Quantum yield's depend on if there are higher order hydrocarbon and wavelength
       if (HCtest.eq.0) then
        qy  = 0.8
        qy2 = 0.2
-c       print *, 'note to future self - XS_C2H6 not formally tested in'
-c       print *, 'non hc case. should be fine, but check to be sure'
-c       print *, 'upon seeing this note for the first time...'
+       print *, 'note to future self - XS_C2H6 not formally tested in'
+       print *, 'non hc case. should be fine, but check to be sure'
+       print *, 'upon seeing this note for the first time...'
       endif 
 
 
@@ -4036,30 +4036,30 @@ c     1)JPL-06 data
 
 !just use formula below..
 
-      OPEN(UNIT=kin,
-     &  file='PHOTOCHEM/DATA/XSECTIONS/N2O/N2O_JPL06.abs',
-     &  STATUS='old')
+c      OPEN(UNIT=kin,
+c     &  file='PHOTOCHEM/DATA/XSECTIONS/N2O/N2O_JPL06.abs',
+c     &  STATUS='old')
 
-      DO i = 1, 2
-         READ(kin,*)
-      ENDDO
-      n1 =  69
-      DO i = 1, n1
-         READ(kin,*) x1(i), y1(i)
-         x1(i)=x1(i)*10.  !convert nm to A
-      ENDDO
-      CLOSE (kin)
+c      DO i = 1, 2
+c         READ(kin,*)
+c      ENDDO
+c      n1 =  71
+c      DO i = 1, n1
+c         READ(kin,*) x1(i), y1(i)
+c         x1(i)=x1(i)*10.  !convert nm to A
+c      ENDDO
+c      CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
-      CALL addpnt(x1,y1,kdata,n1,               zero,zero)
-      CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
-      CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   ! inter2 is grid - bins
+c      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+c      CALL addpnt(x1,y1,kdata,n1,               zero,zero)
+c      CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
+c      CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
+c      CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   ! inter2 is grid - bins
 
-      IF (ierr .NE. 0) THEN
-         WRITE(*,*) ierr, ' ***Something wrong in XS_N2O***'
-         STOP
-      ENDIF
+c      IF (ierr .NE. 0) THEN
+c         WRITE(*,*) ierr, ' ***Something wrong in XS_N2O***'
+c         STOP
+c      ENDIF
 
 
 c cross section is temperature dependent - see JPL-06
@@ -4090,8 +4090,6 @@ c cross section is temperature dependent - see JPL-06
              B = (((B3*lambda+B2)*lambda+B1)*lambda+B0)
              B = (t-300.)*EXP(B)
              sq(jn,iz,iw) = qy * EXP(A+B)
-c             print *, A
-c             print *, B
            ENDDO
          ELSE
            DO iz = 1, nz
@@ -6161,10 +6159,6 @@ c - also check 420 nm.
          ELSE
            DO iz = 1, nz
              sq(jn,iz,iw) = yg1(iw)*qy
-c             print *, jn
-c             print *, iz
-c             print *, iw
-c             print *, qy
              sq(jn+1,iz,iw) = yg1(iw)*(1-qy)
            ENDDO
          ENDIF
@@ -7606,7 +7600,7 @@ c Quantum yield (fix this)
       INTEGER n1, n2
       REAL*8 x1(kdata), x2(kdata), x3(kdata)
       REAL*8 y1(kdata), y2(kdata)
-c
+
 * local
       REAL*8 yg(nw),yg1(nw)
       REAL*8 qy,qy2,scale

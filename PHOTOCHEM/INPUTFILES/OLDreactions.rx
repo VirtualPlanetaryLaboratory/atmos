@@ -48,8 +48,7 @@ OH        OH        H2O2                        3BODY     6.9D-31     2.6D-11   
 H2CO      O         HCO       OH                2BODY     3.4E-11     -1600.                 ! JPL-02                                                           
 H2O2      O         OH        HO2               2BODY     1.4E-12     -2000.                 ! JPL-02                                                           
 HO2       HV        OH        O                 PHOTO                                                                                               
-CH4       HV        CH21      H2                PHOTO 
-CH4       HV        CH3       H                 PHOTO     !must follow CH4 + HV -> CH21 + H2 (this reac only goes at Ly a)                                                                                              
+CH4       HV        CH21      H2                PHOTO                                                                                               
 C2H6      HV        CH23      CH23      H2      PHOTO                                        ! (IN PLACE OF C2H2 AND C2H4)
 C2H6      HV        CH4       CH21              PHOTO                                        ! this line must follow C2H6+hv->CH23+CH23+H2
 HNO2      HV        NO        OH                2BODY     1.7E-3     0.                      !this is a photolysis reaction, but w/o cross section.
