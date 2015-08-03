@@ -514,6 +514,7 @@ c Reading the atmospheric composition from mixing_ratios.dat
          READ(114,*) FNO2                        !Nitrogen dioxide
          READ(114,*) Jcold                !Tropopause layer
 
+
 c***********Calculate new FCO2**************
 c sk        FCO2 = PCO2/((.8/28.+PCO2/44.)*44.)
 c        print 997, FCO2
@@ -754,6 +755,8 @@ c        FI(4,ND)=FO3
         FCO2=CO2(1)
 c        FI(2,ND)=FCO2
         FC2H6 = ethane(1)
+        IF(FC2H6.LT.1.e-60) FC2H6 = 1.e-60 !!! Debug to prevent memory underflow issues - Eddie (8/3/2015)
+        IF(FCH4.LT.1.e-60) FCH4 = 1.e-60   !!! Note that these are read whether or not IMETH or IEMETH flags are set
         print *, 'FC2H6 is ', FC2H6
   352   FORMAT("Alt = ",1PE12.3," H20=",1PE12.3)
   353   FORMAT(6(1PE9.2,1x))
