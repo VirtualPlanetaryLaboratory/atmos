@@ -1,4 +1,4 @@
-980.7    = G, Gravity - Earth=980.7, Mars=373.0
+1.352    = G, Gravity - Earth=980.7, Mars=373.0
 1.00     = FSCALE, Solar Flux Scaling - Earth=1.0, Mars=0.43
 0.250    = ALB, Surface Albedo - Earth=0.25, Mars=0.215
 1.1E6    = ZTROP, Height of the tropopause - typically Earth=11km, Mars=15km
