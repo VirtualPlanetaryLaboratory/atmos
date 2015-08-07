@@ -68,11 +68,9 @@ AERC= Aercon
 DOCHEM = Dochem
 CHEMPL = Chempl
 LTNG = Ltning
-MSCAT = Mscat
 XSEC = Xsections
 YSN = Youngsun
 MIE = Initmie
-FRACMIE = Initmiefrac
 LNUM = Lnum
 RESET = ireset
 TWOSTR= Twostr
@@ -117,12 +115,10 @@ OBPATH = $(OBJ)/$(MAIN).o \
 	$(OBJ)/$(DOCHEM).o \
 	$(OBJ)/$(CHEMPL).o \
 	$(OBJ)/$(LTNG).o \
-	$(OBJ)/$(MSCAT).o \
 	$(OBJ)/$(INIT).o \
 	$(OBJ)/$(XSEC).o \
 	$(OBJ)/$(YSN).o \
 	$(OBJ)/$(MIE).o \
-	$(OBJ)/$(FRACMIE).o \
 	$(OBJ)/$(LNUM).o \
         $(OBJ)/$(RESET).o \
 	$(OBJ)/$(TWOSTR).o \
@@ -289,13 +285,6 @@ $(OBJ)/$(LTNG).o : 	$(SUBPATH)/$(LTNG).f $(INC)/parameters.inc \
 	$(FC) $(FCFLAG) -c $(SUBPATH)/$(LTNG).f
 	mv $(LTNG).o $(OBJ)
 
-$(OBJ)/$(MSCAT).o : 	$(SUBPATH)/$(MSCAT).f $(INC)/parameters.inc \
-			$(BLOK)/EBLOK.inc $(BLOK)/JBLOK.inc  \
-			$(BLOK)/PHOTABLOK.inc $(BLOK)/AERBLK.inc \
-			$(BLOK)/CBLOK.inc  $(BLOK)/NBLOK.inc  
-	$(FC) $(FCFLAG) -c $(SUBPATH)/$(MSCAT).f
-	mv $(MSCAT).o $(OBJ)
-
 $(OBJ)/$(INIT).o : 	$(SUBPATH)/$(INIT).f $(INC)/parameters.inc \
                         $(BLOK)/PHOTABLOK.inc $(BLOK)/QBLOK.inc \
 			$(BLOK)/JBLOK.inc $(BLOK)/DBLOK.inc \
@@ -316,11 +305,6 @@ $(OBJ)/$(MIE).o : 	$(SUBPATH)/$(MIE).f $(INC)/parameters.inc \
 			$(BLOK)/MBLOK.inc
 	$(FC) $(FCFLAG) -c $(SUBPATH)/$(MIE).f
 	mv $(MIE).o $(OBJ)
-
-$(OBJ)/$(FRACMIE).o : 	$(SUBPATH)/$(FRACMIE).f $(INC)/parameters.inc \
-			$(BLOK)/MFBLOK.inc
-	$(FC) $(FCFLAG) -c $(SUBPATH)/$(FRACMIE).f
-	mv $(FRACMIE).o $(OBJ)
 
 $(OBJ)/$(LNUM).o : 	$(SUBPATH)/$(LNUM).f $(INC)/parameters.inc \
 			$(BLOK)/NBLOK.inc
