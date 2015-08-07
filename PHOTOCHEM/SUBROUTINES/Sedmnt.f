@@ -47,29 +47,29 @@ C
 C-EW  THIS IS THE MONOMER RADIUS [cm] 
 C-GA aak! didn't realize this was hardcoded here! Changing now
 C-   that we have the monsize keyword in input_photochem.dat
-       IF (monsize .eq. 0) THEN RMON = 50.E-7 
-       IF (monsize .eq. 1) THEN RMON = 10.E-7 
-       IF (monsize .eq. 2) THEN RMON = 20.E-7 
-       IF (monsize .eq. 3) THEN RMON = 70.E-7 
-       IF (monsize .eq. 4) THEN RMON = 10.E-6 
+         IF (monsize .eq. 0)  RMON = 50.E-7 
+         IF (monsize .eq. 1)  RMON = 10.E-7 
+         IF (monsize .eq. 2)  RMON = 20.E-7 
+         IF (monsize .eq. 3)  RMON = 70.E-7 
+         IF (monsize .eq. 4)  RMON = 10.E-6 
 
-       ENDDO K=3,4 !hcaer1 and hcaer2
-         DO J=1,NZ
-           NMON = (RPAR(J,K)/RMON)**3.
-           IF (NMON .LE. 1.) THEN
+         DO K=3,4               !hcaer1 and hcaer2
+           DO J=1,NZ
+             NMON = (RPAR(J,K)/RMON)**3.
+             IF (NMON .LE. 1.) THEN
              !i.e. of number of monomers is <= 1, it's a 
              !spherical particle. By definition, DF for
              !spheres is 3.
-             DF = 3.
-           ELSE
+               DF = 3.
+            ELSE
              !calculate DF (fractal param) for nonspheres 
-             DF = 2.4 - 0.9*EXP(-NMON/500.)
-           ENDIF
+               DF = 2.4 - 0.9*EXP(-NMON/500.)
+            ENDIF
            !calculates fractal radius based on 
            !equivalent mass spherial particles
            RFRAC(J,K) = RPAR(J,K)**(3./DF)*RMON**(1.-3./DF)
-         ENDDO
-       ENDDO
+          ENDDO
+        ENDDO
 
 
 C-EW *******************************************   
