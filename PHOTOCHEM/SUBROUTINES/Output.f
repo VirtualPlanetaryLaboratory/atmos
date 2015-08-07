@@ -4,7 +4,6 @@
       real*8 mass
       CHARACTER*8 ISPEC,REACTYPE,PLANET,CHEMJ
       CHARACTER*20 fmtstr
-      Integer nw
 
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PHOTABLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/BBLOK.inc'
@@ -33,7 +32,6 @@
       dimension TAUHCABS(kw),TAUHCEXT(kw), TAUHCEFF(kw)
       dimension vdep(nq), flux_H(nz),USOLORIG(NQ,NZ)
       dimension PSO2MIF(nz),PROSO2MIF(nz),PROSO(nz)
-      dimension PRES_bar(nz)
 
 
 C   THIS SUBROUTINE PRINTS OUT ALL THE DATA.  THE VARIABLE ISKIP SAYS
@@ -76,7 +74,7 @@ C
    8  CONTINUE
 C
 c      write(14, 106)
- 106  format(//1X,'S8AER MIXING RATIO'/)
+c106  format(//1X,'S8AER MIXING RATIO'/)
 c      write(14, 180) S8AER
       IF (N.EQ.0) RETURN
 C     
@@ -343,7 +341,7 @@ c  ok.  I've got the fluxes.
 
 c  there is another i hope equal measure of H, H2 escape
 c   experiment indicates that this is the same as what's in the model 
-      F_esc_H = usol(LH,NZ)*bHN2(NZ)*(1./H_atm(nz) - 1./scale_H(LH,nz))     
+      F_esc_H = usol(LH,NZ)*bHN2(NZ)*(1./H_atm(nz) - 1./scale_H(LH,nz))
       F_esc_H2 = usol(LH2,NZ)*bH2N2(NZ)
      $ *(1./H_atm(nz) - 1./scale_H(LH2,nz))     
 C
@@ -645,13 +643,13 @@ c            print 889, ISPEC(I),FLOW(I)
             oxy_rain_new=oxy_rain_new + SR(I)*redoxstate(I)
          else if (redoxstate(I) .LT. 0) then
 c            print 888, ISPEC(I),redoxstate(I)         
-            red_in_new=red_in_new+ FLOW(I)*redoxstate(I)*-1.0
-            red_out_new=red_out_new + FUP(I)*redoxstate(I)*-1.0
-            red_rain_new=red_rain_new + SR(I)*redoxstate(I)*-1.0
+            red_in_new=red_in_new+ FLOW(I)*redoxstate(I)*(-1.0)
+            red_out_new=red_out_new + FUP(I)*redoxstate(I)*(-1.0)
+            red_rain_new=red_rain_new + SR(I)*redoxstate(I)*(-1.0)
          endif
       enddo
  888  format (A8,2X,F5.1)
- 889  format (A8,2X,1PE10.3)
+c 889  format (A8,2X,1PE10.3)
 
       if(ISOTOPE.EQ.0) then 
 !what's left from Kevin's original scheme? (these are species that are potentially distributed+vdep
@@ -945,13 +943,14 @@ C
      2  TAUEDD(I),TAUC(I,2),CONVER(I,2),I=1,NZ,ISKIP)
 
       if (NP .GT. 2) then
+      J3 = 3
       write(14,301)
  301  FORMAT(/1X,"HC AEROSOL PARAMETERS")
       write(14,256)
  256  FORMAT(/4X,'Z',8X,'AERSOL',5X,'RPAR',6X,'WFALL',5X,'TAUSED',4X,
      2  'TAUEDD',4X,'TAUC',6X,'CONVER')
-      write(14,261) (Z(I),AERSOL(I,3),RPAR(I,3),WFALL(I,3),TAUSED(I,3),
-     2  TAUEDD(I),TAUC(I,3),CONVER(I,3),I=1,NZ,ISKIP)
+      write(14,261) (Z(I),AERSOL(I,J3),RPAR(I,J3),WFALL(I,J3),
+     2  TAUSED(I,J3),TAUEDD(I),TAUC(I,J3),CONVER(I,J3),I=1,NZ,ISKIP)
  261  FORMAT(1X,1P8E10.3)
       endif
 
@@ -959,14 +958,15 @@ C
 c GNA
 c HCAER type 1
       if (NP .GT. 2) then
+      J3 = 3
 c photo-clima couple file
       write(90,8901)
  8901  FORMAT(1X,"HC AEROSOL PARAMETERS")
       write(90,8257)
  8257 FORMAT(/4X,'Z',8X,'AERSOL',5X,'RPARs',6X,
      2  'WFALL',5X,'TAUSED',4X,'TAUEDD',4X,'TAUC',6X,'CONVER')
-      write(90,8262) (Z(I),AERSOL(I,3),RPAR(I,3),WFALL(I,3),
-     2  TAUSED(I,3),TAUEDD(I),TAUC(I,3),CONVER(I,3),I=1,NZ,ISKIP)
+      write(90,8262) (Z(I),AERSOL(I,J3),RPAR(I,J3),WFALL(I,J3),
+     2  TAUSED(I,J3),TAUEDD(I),TAUC(I,J3),CONVER(I,J3),I=1,NZ,ISKIP)
  8262 FORMAT(1X,1P8E10.3)
 
       if (frak .eq. 1) then     
@@ -975,9 +975,10 @@ c photo-clima couple file
       write(68,9256)
       print *, 'fractals #1'
  9256  FORMAT(/4X,'Z',8X,'AERSOL',5X,'RPAR',6X,'RFRAC',6X,
-     2  'WFALL',5X,'TAUSED',4X,'TAUEDD',4X,'TAUC',6X,'CONVER')
-      write(68,9261) (Z(I),AERSOL(I,3),RPAR(I,3),RFRAC(I,3),WFALL(I,3),
-     2  TAUSED(I,3),TAUEDD(I),TAUC(I,3),CONVER(I,3),I=1,NZ,ISKIP)
+     2    'WFALL',5X,'TAUSED',4X,'TAUEDD',4X,'TAUC',6X,'CONVER')
+      write(68,9261) (Z(I),AERSOL(I,J3),RPAR(I,J3),RFRAC(I,J3),
+     2    WFALL(I,J3), TAUSED(I,J3),TAUEDD(I),TAUC(I,J3),CONVER(I,J3),
+     3    I=1,NZ,ISKIP)
  9261  FORMAT(1X,1P9E10.3)
 
       else   
@@ -986,14 +987,15 @@ c photo-clima couple file
       write(68,9257)
  9257 FORMAT(/4X,'Z',8X,'AERSOL',5X,'RPARs',6X,
      2  'WFALL',5X,'TAUSED',4X,'TAUEDD',4X,'TAUC',6X,'CONVER')
-      write(68,9262) (Z(I),AERSOL(I,3),RPAR(I,3),WFALL(I,3),
-     2  TAUSED(I,3),TAUEDD(I),TAUC(I,3),CONVER(I,3),I=1,NZ,ISKIP)
+      write(68,9262) (Z(I),AERSOL(I,J3),RPAR(I,J3),WFALL(I,J3),
+     2  TAUSED(I,J3),TAUEDD(I),TAUC(I,J3),CONVER(I,J3),I=1,NZ,ISKIP)
  9262 FORMAT(1X,1P8E10.3)
       endif
       endif
       
 c HCAER type 2 (mostly spectrally irrelevant - Giada)
       if (NP .GT. 2) then
+      J4 = 4
       if (frak .eq. 1) then     
       write(69,7901)
  7901  FORMAT(/1X,"HC AEROSOL PARAMETERS")
@@ -1001,8 +1003,9 @@ c HCAER type 2 (mostly spectrally irrelevant - Giada)
       print *, 'fractals #2 '
  7256  FORMAT(/4X,'Z',8X,'AERSOL',5X,'RPAR',6X,'RFRAC',6X,
      2  'WFALL',5X,'TAUSED',4X,'TAUEDD',4X,'TAUC',6X,'CONVER')
-      write(69,7261) (Z(I),AERSOL(I,4),RPAR(I,4),RFRAC(I,4),WFALL(I,4),
-     2  TAUSED(I,4),TAUEDD(I),TAUC(I,4),CONVER(I,4),I=1,NZ,ISKIP)
+      write(69,7261) (Z(I),AERSOL(I,J4),RPAR(I,J4),RFRAC(I,J4),
+     2  WFALL(I,J4),TAUSED(I,J4),TAUEDD(I),TAUC(I,J4),CONVER(I,J4),
+     3  I=1,NZ,ISKIP)
  7261  FORMAT(1X,1P9E10.3)
 
       else   
@@ -1011,8 +1014,8 @@ c HCAER type 2 (mostly spectrally irrelevant - Giada)
       write(69,7257)
  7257 FORMAT(/4X,'Z',8X,'AERSOL',5X,'RPARs',6X,
      2  'WFALL',5X,'TAUSED',4X,'TAUEDD',4X,'TAUC',6X,'CONVER')
-      write(69,7262) (Z(I),AERSOL(I,4),RPAR(I,4),WFALL(I,4),
-     2  TAUSED(I,4),TAUEDD(I),TAUC(I,4),CONVER(I,4),I=1,NZ,ISKIP)
+      write(69,7262) (Z(I),AERSOL(I,J4),RPAR(I,J4),WFALL(I,J4),
+     2  TAUSED(I,J4),TAUEDD(I),TAUC(I,J4),CONVER(I,J4),I=1,NZ,ISKIP)
  7262 FORMAT(1X,1P8E10.3)
       endif
       endif
