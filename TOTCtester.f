@@ -1499,7 +1499,7 @@ C  PHOTOLYSIS RATES FORMATTED I/O AND PRINTOUT
 
  18   continue   !start here if we are skipping PHOTO
 C
-      CALL SEDMNT(FSULF,USETD,frak,HCDENS)
+      CALL SEDMNT(FSULF,USETD,frak,HCDENS, monsize)
 
       if (USETD.EQ.0) then   !particles in main loop
 
