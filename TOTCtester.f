@@ -1428,11 +1428,7 @@ c framework. -Shawn D-G
         NPS8 = LS8AER - NQ + NP
         NPHC = LHCAER - NQ + NP
         NPHC2 = LHCAER2 - NQ + NP
-c        print *,NQ
-c        print *,LSO4AER,NPSO4
-c        print *,LS8AER,NPS8
-c        print *,LHCAER,NPHC
-c        print *,LHCAER2,NPHC2
+
         VDEP(LSO4AER) = VDEP0(LSO4AER) + WFALL(1,NPSO4)
         VEFF(LSO4AER) = VEFF0(LSO4AER) + WFALL(NZ,NPSO4)
 
@@ -1453,11 +1449,6 @@ c        print *,LHCAER2,NPHC2
         NPS8 = LS8AER - NQ
         NPHC = LHCAER - NQ
         NPHC2 = LHCAER2 - NQ
-c        print *,NQ
-c        print *,LSO4AER,NPSO4
-c        print *,LS8AER,NPS8
-c        print *,LHCAER,NPHC
-c        print *,LHCAER2,NPHC2
       endif
 
 c estimate CO2 photolysis above the top of the grid and return CO + O to the upper grid point
@@ -2244,16 +2235,16 @@ c nb that vdep for particles is defined to include wfall when particles are in t
 
 !THIS STILL NEEDS WORK
 
-      do i=NQ+1,NQ1 !need to fill up rainout and depostion vectors for the triadiagonal species to make the budgets work out.
-       SR(I)=0.
-       do j=1,JTROP
-        SR(I) = SR(I)+ RAINGC(LH2SO4,J)*PARTICLES(J,i-nq)*DEN(J)*DZ(J)   !ACK - all particles raining out like H2SO4 !ISOHACK
-       enddo
+        do i=NQ+1,NQ1 !need to fill up rainout and depostion vectors for the triadiagonal species to make the budgets work out.
+          SR(I)=0.
+            do j=1,JTROP
+              SR(I) = SR(I)+ RAINGC(LH2SO4,J)*PARTICLES(J,i-nq)*DEN(J)*DZ(J)   !ACK - all particles raining out like H2SO4 !ISOHACK
+            enddo
 
-       PHIDEP(I)=(WFALL(1,i-nq)+vturb)* PARTICLES(1,i-nq)*DEN(1)  !ACK - hardcoded turbulent diffusion velocity !ISOHACK - will need to change in ISO
-       TLOSS(I) = SR(I) + PHIDEP(I)
+            PHIDEP(I)=(WFALL(1,i-nq)+vturb)* PARTICLES(1,i-nq)*DEN(1)  !ACK - hardcoded turbulent diffusion velocity !ISOHACK - will need to change in ISO
+            TLOSS(I) = SR(I) + PHIDEP(I)
 c       print *, ISPEC(I),SR(I),PHIDEP(I),SR(I)+PHIDEP(I)  !in general SR>>PHIDEP for particles,by about 100X
-      enddo
+        enddo
 
 c      stop
       endif  !end tri-diag budgeting loop
