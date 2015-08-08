@@ -1,4 +1,4 @@
-      SUBROUTINE DOCHEM(FVAL,N,JTROP,NINERT,NSHORT,USETD)
+      SUBROUTINE DOCHEM(FVAL,N,JTROP,NSHORT,USETD)
       INCLUDE 'PHOTOCHEM/INPUTFILES/parameters.inc'
       implicit real*8(A-H,O-Z)
       real*8 mass
@@ -59,8 +59,10 @@ c            print *, i, ISPEC(I),' inert densities'
       do J=1,NZ
 
        if(ISPEC(NSP-1).eq.'CO2') D(LCO2,J) = FCO2 * DEN(J) !if CO2 is inert, place above N2 in list (hardcoded position for CO2/N2 (NSP-1/NSP)
-       if(ISOTOPE.EQ.0) D(NSP,J) = (1. - USOL(LO2,J) - FCO2) * DEN(J)  ! N2 -defined as the "rest" of the density - wrong as it ignores Argon, CO, etc.
-       if(ISOTOPE.EQ.1) D(NSP,J)=(1.-UINERT(LO2-Loff,J)-FCO2) * DEN(J) ! N2 -defined as the "rest" of the density - wrong as it ignores Argon
+       if(ISOTOPE.EQ.0) D(NSP,J) = (1. - USOL(LO2,J) - FCO2 - FAR 
+     2  - FCO)* DEN(J)    ! N2 -defined as the "rest" of the density - wrong as it ignores Argon, CO, etc.
+       if(ISOTOPE.EQ.1) D(NSP,J)=(1.-UINERT(LO2-Loff,J)-FCO2 - FAR 
+     2  - FCO) * DEN(J)  ! N2 -defined as the "rest" of the density - wrong as it ignores Argon
        D(NSP1,J) = 1.                             ! HV has density of 1 for photorate calculations
        D(NSP2,J) = DEN(J)                         ! M - background density for three body reactions
       enddo
