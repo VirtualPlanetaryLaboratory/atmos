@@ -41,7 +41,7 @@ c      Pbar = P0/1.013E6   !converting from pascals to bars
        PH2 = UINERT(LH2-Loff,1) * Pbar   
       endif
       
-      FN2 = 1. - FO2 - FCO2 - FCO    ! ACK assuming the world is always 1 bar
+      FN2 = 1. - FO2 - FCO2 - FCO - FAR    ! EWS - now includes Argon
       PN2 = FN2*Pbar
       PO2 = FO2*Pbar
       PCO2 = FCO2*Pbar
@@ -66,7 +66,8 @@ C     NEWTON STEP
       NS = N
       XS = X
       X2 = SQRT(X)
-      FX = X + A*X2 - B/(1.+ALPHA*X2) - C/(1.+BETA*X2) + 2.*B + C - 1.  !C18) in JFK thesis
+      FX = X + A*X2 - B/(1.+ALPHA*X2) - C/(1.+BETA*X2) + 2.*B + C - 1. 
+       ! ^^^ C18) in JFK thesis
       FPX = 1. + (A + ALPHA*B/(1.+ALPHA*X2)**2 + BETA*C/(1.+BETA*X2)
      2  **2)/(2.*X2)
       X = X - FX/FPX
