@@ -1,7 +1,6 @@
       SUBROUTINE PHOTGRID
       INCLUDE 'PHOTOCHEM/INPUTFILES/parameters.inc'
       implicit real*8(A-H,O-Z)
-      real*8 mass
       character*8 PLANET
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PHOTABLOK.inc'
 C ***** SET UP THE VERTICAL GRID ZS *****
@@ -44,10 +43,10 @@ c-mc for now, since we are invoking constant dz, we can choose dzgrid based on N
 *-----------------------------------------------------------------------------*
 *=  EDIT HISTORY:                                                            =*
 *=  Original                                                                 =*
-C	R. F. Esswein	020214	Change all REAL declarations to REAL*8
-C	R. Esswein	020221	Change file references to full path names.
-C	R. Esswein	030407	Choose extension to lower wavelengths.
-C       M. Claire       060802  Integrating into Kevin's code
+C R. F. Esswein 020214 Change all REAL declarations to REAL*8
+C R. Esswein 020221 Change file references to full path names.
+C R. Esswein 030407 Choose extension to lower wavelengths.
+C M. Claire  060802  Integrating into Kevin's code
 *-----------------------------------------------------------------------------*
 *= This program is free software;  you can redistribute it and/or modify     =*
 *= it under the terms of the GNU General Public License as published by the  =*
@@ -61,12 +60,10 @@ C       M. Claire       060802  Integrating into Kevin's code
 *= Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.   =*
 *-----------------------------------------------------------------------------*
 
-c      IMPLICIT NONE
       INCLUDE 'PHOTOCHEM/INPUTFILES/parameters.inc'
       implicit real*8(A-H,O-Z)
-      real*8 mass
       character*60 string
-
+ 
 * input:
       INTEGER LGRID
 * output:
@@ -265,7 +262,7 @@ c      DO iw = 1, 108 !Isaken grid will only work with this line until we redo t
          nw = nw + 1
          READ(kin,*) wl(nw), wu(nw)
          wc(nw) = ( wl(nw) + wu(nw) ) / 2.
-         IF (iw	.eq. 1) THEN
+         IF (iw .eq. 1) THEN
              wu(nw-1) = wl(nw)
              wc(nw-1) = (wl(nw-1) + wu(nw-1))*0.5
          ENDIF
@@ -595,10 +592,10 @@ c-mc should probably print these out to output file rather than screen
 *=  02/97  Changed offset for grid-end interpolation to relative number      =*
 *=         (x * (1 +- deltax))                                               =*
 *=  05/96  Put in different preset options                                   =*
-C	R. F. Esswein	020214	Change all REAL declarations to REAL*8
-C				Use parameters "zero" and "largest" as
-C				  parameters to "addpnt" calls.
-C	R. Esswein	020221	Change file references to full path names.
+C R. F. Esswein 020214 Change all REAL declarations to REAL*8
+C    Use parameters "zero" and "largest" as
+C      parameters to "addpnt" calls.
+C R. Esswein 020221 Change file references to full path names.
 c       M. Claire       091306 integrating into Kevin's code
 *-----------------------------------------------------------------------------*
 *= Copyright (C) 1994,95,96  University Corporation for Atmospheric Research =*
@@ -622,11 +619,9 @@ c       M. Claire       091306 integrating into Kevin's code
 * INTERNAL:
 
 * work arrays for input data files:
-      CHARACTER*40 fil
       REAL*8 x1(kdata), x2(kdata), x3(kdata)
       REAL*8 y1(kdata), y2(kdata), y3(kdata)
       INTEGER nhead, n, i, ierr
-      REAL*8 dum
 
 * data gridded onto wl(kw) grid:
 
@@ -639,8 +634,6 @@ c       M. Claire       091306 integrating into Kevin's code
 !      INTEGER msun
       REAL*8 refrac
       EXTERNAL refrac
-
-      real*8 Y(3,26150),E(26150),WORK(26150)
 
 
 *_______________________________________________________________________
@@ -1087,7 +1080,7 @@ c 1.33432e+14 in photons/cm2/s
 *-----------------------------------------------------------------------------*
 *=  EDIT HISTORY:                                                            =*
 *=  Original                                                                 =*
-C	R. F. Esswein	020214	Change all REAL declarations to REAL*8
+C R. F. Esswein 020214 Change all REAL declarations to REAL*8
 C       M.C.            060802  Integrated into Kevin's code
 *-----------------------------------------------------------------------------*
 *= This program is free software;  you can redistribute it and/or modify     =*
@@ -1127,43 +1120,35 @@ C       M.C.            060802  Integrated into Kevin's code
 
       IF (n .GT. k) THEN
          ok = .false.
-c         WRITE(kout,100)
          print *,'Number of data exceeds dimension'
          print *, k,n
          RETURN
-      ENDIF         
-  100 FORMAT('Number of data exceeds dimension')
+       ENDIF         
 
       IF (n .LT. 2) THEN
          ok = .FALSE.
-c         WRITE(kout,101)
          print *, 'Too few data, number of data points must be >= 2'
          RETURN
       ENDIF
-  101 FORMAT('Too few data, number of data points must be >= 2')
 
 * disallow negative grid values
 
       IF(x(1) .LT. 0.) THEN
          ok = .FALSE.
-c         WRITE(kout,105)
          print *,'Grid cannot start below zero'
          RETURN
       ENDIF
-  105 FORMAT('Grid cannot start below zero')
 
 * check sorting
 
       DO 10, i = 2, n
          IF( x(i) .LE. x(i-1)) THEN
             ok = .FALSE.
-c            WRITE(kout,110)
             print *,'Grid is not sorted or contains multiple values'
             print *, i, x(i),x(i-1)
             RETURN
          ENDIF
    10 CONTINUE
-  110 FORMAT('Grid is not sorted or contains multiple values')
 *_______________________________________________________________________
 
       RETURN
@@ -1292,7 +1277,7 @@ C-----------------------------------------------------------------------
 *-----------------------------------------------------------------------------*
 *=  EDIT HISTORY:                                                            =*
 *=  01/95  Loop 10 restructured                                              =*
-C	R. F. Esswein	020214	Change all REAL declarations to REAL*8
+C R. F. Esswein 020214 Change all REAL declarations to REAL*8
 C $Id$
 *-----------------------------------------------------------------------------*
 *= This program is free software;  you can redistribute it and/or modify     =*
@@ -1336,7 +1321,7 @@ C $Id$
    10    CONTINUE
             IF ((x(j) .GT. xg(i)) .OR. (xg(i) .GE. x(j+1))) THEN
                j = j+1
-               IF (j .LE. n-1) GOTO 10
+            IF (j .LE. n-1) GOTO 10
 *        ---- end of loop 10 ----
             ELSE
                slope = (y(j+1)-y(j)) / (x(j+1)-x(j))
@@ -1556,7 +1541,7 @@ c                       print *,a2,a1,k,y(k),slope,b2,b1,darea
 *-----------------------------------------------------------------------------*
 *=  EDIT HISTORY:                                                            =*
 *=  06/96  Added FoldIn switch                                               =*
-C	R. F. Esswein	020214	Change all REAL declarations to REAL*8
+C R. F. Esswein 020214 Change all REAL declarations to REAL*8
 C                               Use generic names of intrinsic functions.
 C       M. Claire       060806  integrated into Kevin's code
 *-----------------------------------------------------------------------------*
@@ -1707,7 +1692,7 @@ C       M. Claire       060806  integrated into Kevin's code
 *-----------------------------------------------------------------------------*
 *=  EDIT HISTORY:                                                            =*
 *=  06/96  Added FoldIn switch                                               =*
-C	R. F. Esswein	020214	Change all REAL declarations to REAL*8
+C R. F. Esswein 020214 Change all REAL declarations to REAL*8
 C                               Use generic names of intrinsic functions.
 C $Id$
 *-----------------------------------------------------------------------------*

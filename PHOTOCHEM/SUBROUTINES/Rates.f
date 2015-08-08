@@ -1,23 +1,20 @@
-      SUBROUTINE RATES   !orig
+      SUBROUTINE RATES
       INCLUDE 'PHOTOCHEM/INPUTFILES/parameters.inc'
       implicit real*8(A-H,O-Z)
-      DIMENSION ANEW(NR,NZ),BLAH(300)
-      CHARACTER*8 BLAH,REACTYPE,PLANET,CHEMJ
+      CHARACTER*8 REACTYPE,PLANET,CHEMJ
       real*8 mass
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PHOTABLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/RBLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/ISOBLOK.inc'
       real*8 k0,kinf
-C
 
-
-c-mc rate constant units are  cm^3/mol/s
+c-mc rate constant units are cm^3/mol/s
 
       if (ISOTOPE.EQ.1) then
        open(9, file='PHOTOCHEM/INPUTFILES/ISOreactions.rx',status='OLD')          ! chemical reaction file
-       else
-        open(9, file='PHOTOCHEM/INPUTFILES/reactions.rx',status='OLD')          ! chemical reaction file
-       endif        
+      else
+       open(9, file='PHOTOCHEM/INPUTFILES/reactions.rx',status='OLD')          ! chemical reaction file
+      endif
 
 
  667   FORMAT(58X,E9.2,3X,F8.2)            !for two body reaction rates
@@ -27,7 +24,7 @@ c-mc rate constant units are  cm^3/mol/s
 C READ IN TWO BODY REACTION RATES
           if (REACTYPE(J) .EQ. '2BODY') then
            read (9,667) ARH, TFAC         !read in Arhenius and Temperature factor (note TFAC contains the negative sign. not standard practice)
- 
+
 
           do i=1,nz
             A(J,I) = ARH * EXP (TFAC/T(I))   !two body reaction rates
@@ -36,23 +33,23 @@ C READ IN TWO BODY REACTION RATES
 C READ IN THREE BODY REACTION RATES
           else if (REACTYPE(J) .EQ. '3BODY') then
              read(9,668) B,C,D,E          !read in K0, Kinf, T0exp, Tinfexp
-                                          !A(J,I) = TBDY(K0,KINF,T0exp,Tinfexp,T,DEN)  
+                                          !A(J,I) = TBDY(K0,KINF,T0exp,Tinfexp,T,DEN)
 c             print *, J, B,C,D,E
              if (PLANET .EQ. 'MARS') then
-                B=B*2.5      !multiply low density rate by 2.5 to account for CO2 rather than N2 as background gas (Nair, 94) 
-             endif   
+                B=B*2.5      !multiply low density rate by 2.5 to account for CO2 rather than N2 as background gas (Nair, 94)
+             endif
              do i=1,nz
               A(J,I)= TBDY(B,C,D,E,T(I),DEN(I))  !computed three body reaction rate
              enddo
- 
+
 C SPECIFY 'WEIRD' REACTION RATES
 C  FILL UP WEIRD RATE CONSTANTS
 c-mc the below are rate constants which don't fit in the 2BODY or 3BODY category
 
 
-         else if (REACTYPE(J) .EQ. 'WEIRD') then 
+         else if (REACTYPE(J) .EQ. 'WEIRD') then
           read(9,*) !move to the next line in the .rx file
-          DO I=1,NZ   
+          DO I=1,NZ
 
 !   H2 + O -> OH + H
       if (CHEMJ(1,J) .EQ. 'H2' .AND. CHEMJ(2,J) .EQ. 'O') THEN
@@ -76,7 +73,7 @@ c-mc the below are rate constants which don't fit in the 2BODY or 3BODY category
      $    (CHEMJ(1,J).EQ.'CS'.AND.CHEMJ(2,J).EQ.'HS') .OR.
      $    (CHEMJ(1,J).EQ.'CSX'.AND.CHEMJ(2,J).EQ.'HS') .OR.
      $    (CHEMJ(1,J).EQ.'CS'.AND.CHEMJ(2,J).EQ.'HSX')) THEN
-       PATM = DEN(I)*1.38E-16*T(I)/1.013E6   !a good pressure    
+       PATM = DEN(I)*1.38E-16*T(I)/1.013E6   !a good pressure
        A(J,I) = 1.5E-13 * (1. + 0.6*PATM)     !JPL-02
       endif
 
@@ -99,7 +96,7 @@ c-mc the below are rate constants which don't fit in the 2BODY or 3BODY category
 
 !   H + H + M -> H2 + M
       if (CHEMJ(1,J).EQ.'H'.AND.CHEMJ(2,J).EQ.'H') THEN
-       A(J,I) = 9.5E-33*(298./T(I))**1.33 * DEN(I)  ! in N2 77<T<298 !Walkauskas & Kaufman 1975 (NIST) 
+       A(J,I) = 9.5E-33*(298./T(I))**1.33 * DEN(I)  ! in N2 77<T<298 !Walkauskas & Kaufman 1975 (NIST)
       endif
 
 !   H + OH + M -> H2O + M
@@ -111,7 +108,7 @@ c-mc the below are rate constants which don't fit in the 2BODY or 3BODY category
       if (CHEMJ(1,J).EQ.'CH3'.AND.CHEMJ(2,J).EQ.'CH3') THEN
        A71_3 = 1.17e-25*exp(-500./T(I))
        if (PLANET .EQ. 'MARS') A71_3=A71_3*2.5    !CO2 rather than N2
-       A(J,I) = TBDY(A71_3,3.0D-11,3.75D0,1.0D0,T(I),DEN(I))   ! what a mess NIST 2005 - 
+       A(J,I) = TBDY(A71_3,3.0E-11,3.75E0,1.0E0,T(I),DEN(I))   ! what a mess NIST 2005 -
 c      A(J,I) = 1.7E-17/T(I)**2.3 * DEN(I)
       endif
 
@@ -124,7 +121,7 @@ c      A(J,I) = 1.7E-17/T(I)**2.3 * DEN(I)
 !   H + NO + M  ->  HNO + M
       if (CHEMJ(1,J).EQ.'H'.AND.CHEMJ(2,J).EQ.'NO') THEN
        A77_3 = 1.2E-31*EXP(-210./T(I))                       ! there was a bug here - one that mattered
-       A(J,I) = TBDY(A77_3,2.4D-10, 1.17D0,0.41D0,T(I),DEN(I))   ! taken from NIST 2005 Tsang/Hampson 91
+       A(J,I) = TBDY(A77_3,2.4E-10, 1.17E0,0.41E0,T(I),DEN(I))   ! taken from NIST 2005 Tsang/Hampson 91
 c      A(J,I) = 1.2E-31*(298./T(I))**1.17 *EXP(-210./T(I)) * DEN(I)
       endif
 
@@ -155,7 +152,7 @@ c       A(J,I) = 1.25E-32                   !NIST 2005
       endif
 
 !   SO + O -> SO2
-      if ((CHEMJ(1,J).EQ.'SO'.AND.CHEMJ(2,J).EQ.'O') .OR. 
+      if ((CHEMJ(1,J).EQ.'SO'.AND.CHEMJ(2,J).EQ.'O') .OR.
      $    (CHEMJ(1,J).EQ.'SXO'.AND.CHEMJ(2,J).EQ.'O') ) THEN
        A(J,I) = 5.1E-31 * DEN(I)         ! NIST 2005
 
@@ -173,12 +170,12 @@ c         if (ISOS.EQ.34) EPSILON=0.980 ! 20 permil
       endif
 
 !    S + S -> S2
-      if ((CHEMJ(1,J).EQ.'S'.AND.CHEMJ(2,J).EQ.'S') .OR. 
+      if ((CHEMJ(1,J).EQ.'S'.AND.CHEMJ(2,J).EQ.'S') .OR.
      $     (CHEMJ(1,J).EQ.'SX'.AND.CHEMJ(2,J).EQ.'S')) THEN
-c      A(J,I) = 1.2e-29 * DEN(I)   ! in H2S, but its much 1e4 slower in Ar 
-c       A(J,I) = min(5.D-11, 3* A(JOO_O2,I))      ! reported rate is 3X larger for S+S in Ar than for O+O in Ar  
+c      A(J,I) = 1.2e-29 * DEN(I)   ! in H2S, but its much 1e4 slower in Ar
+c       A(J,I) = min(5.E-11, 3* A(JOO_O2,I))      ! reported rate is 3X larger for S+S in Ar than for O+O in Ar
 
-       A(J,I) = min(5.D-11, 3*  9.46E-34*EXP(480./T(I))*DEN(I))      
+       A(J,I) = min(5.E-11, 3*  9.46E-34*EXP(480./T(I))*DEN(I))
        IF (CHEMJ(1,J).EQ.'SX') A(J,I)=A(J,I)*2    !doubling rate constant for "isotopic twin" reactions (Pavlov 02)
       endif
 
@@ -186,13 +183,13 @@ c       A(J,I) = min(5.D-11, 3* A(JOO_O2,I))      ! reported rate is 3X larger f
       if ((CHEMJ(1,J).EQ.'S'.AND.CHEMJ(2,J).EQ.'S2') .OR.
      $    (CHEMJ(1,J).EQ.'SX'.AND.CHEMJ(2,J).EQ.'S2') .OR.
      $    (CHEMJ(1,J).EQ.'S'.AND.CHEMJ(2,J).EQ.'SXS')  ) THEN
-       A(J,I) = MIN(5.0D-11,2.5D-30*DEN(I)/5.D1)    ! NIST reported In CO2 with factor 5 error
+       A(J,I) = MIN(5.0E-11,2.5E-30*DEN(I)/5.E1)    ! NIST reported In CO2 with factor 5 error
       endif
 
 !    S2 + S2 + M -> S4 + M
       if ((CHEMJ(1,J).EQ.'S2'.AND.CHEMJ(2,J).EQ.'S2') .OR.
      $    (CHEMJ(1,J).EQ.'SXS'.AND.CHEMJ(2,J).EQ.'S2')) THEN
-       A(J,I) = MIN(5.0D-11,2.5D-30*DEN(I)/1.D1)    ! NIST reported In CO2 with factor 5 error I'm taking lower bound
+       A(J,I) = MIN(5.0E-11,2.5E-30*DEN(I)/1.E1)    ! NIST reported In CO2 with factor 5 error I'm taking lower bound
        IF (CHEMJ(1,J).EQ.'SXS') A(J,I)=A(J,I)*2    !doubling rate constant for "isotopic twin" reactions (Pavlov 02)
       endif
 
@@ -200,7 +197,7 @@ c       A(J,I) = min(5.D-11, 3* A(JOO_O2,I))      ! reported rate is 3X larger f
       if ((CHEMJ(1,J).EQ.'S'.AND.CHEMJ(2,J).EQ.'S3') .OR.
      $    (CHEMJ(1,J).EQ.'SX'.AND.CHEMJ(2,J).EQ.'S3') .OR.
      $    (CHEMJ(1,J).EQ.'S'.AND.CHEMJ(2,J).EQ.'SXS2') ) THEN
-       A(J,I) = MIN(5.0D-11,2.5D-30*DEN(I)/5.D1)    ! NIST reported In CO2 with factor 5 error
+       A(J,I) = MIN(5.0E-11,2.5E-30*DEN(I)/5.E1)    ! NIST reported In CO2 with factor 5 error
        !assumed rate equal to the S+S2 rate
       endif
 
@@ -209,7 +206,7 @@ c       A(J,I) = min(5.D-11, 3* A(JOO_O2,I))      ! reported rate is 3X larger f
 !     S4 + S4 -> S8AER
       if ((CHEMJ(1,J).EQ.'S4'.AND.CHEMJ(2,J).EQ.'S4') .OR.
      $    (CHEMJ(1,J).EQ.'SXS3'.AND.CHEMJ(2,J).EQ.'S4') ) THEN
-       A(J,I) = MIN(5.0D-11,2.5D-30*DEN(I)/1.D1)    ! NIST reported In CO2 with factor 5 error I'm taking lower bound
+       A(J,I) = MIN(5.0E-11,2.5E-30*DEN(I)/1.E1)    ! NIST reported In CO2 with factor 5 error I'm taking lower bound
        !assumed rate equal to S2+S2
 !       IF (CHEMJ(1,J).EQ.'SXS3') A(J,I)=A(J,I)*2    !doubling rate constant for "isotopic twin" reactions (Pavlov 02)
 
@@ -217,7 +214,7 @@ c       A(J,I) = min(5.D-11, 3* A(JOO_O2,I))      ! reported rate is 3X larger f
           A(J,I)=A(J,I)*2       !doubling rate constant for "isotopic twin" reactions (Pavlov 02)
 c          print *, A(J,I),J
        endif
-      endif 
+      endif
 
 !     S + CO + M -> OCS + M
       if ((CHEMJ(1,J).EQ.'S'.AND.CHEMJ(2,J).EQ.'CO') .OR.
@@ -228,15 +225,15 @@ c  with the same activation energy and a 3X bigger A factor
 c-mc but yet factor of 1 out from, so this is the same as o+co
       endif
 
-!    OCS + S + M -> OCS2 + M   ! NIST 8.3e-33*Den in Ar  
+!    OCS + S + M -> OCS2 + M   ! NIST 8.3e-33*Den in Ar
       if ((CHEMJ(1,J).EQ.'OCS'.AND.CHEMJ(2,J).EQ.'S') .OR.
      $    (CHEMJ(1,J).EQ.'OCSX'.AND.CHEMJ(2,J).EQ.'S') .OR.
      $    (CHEMJ(1,J).EQ.'OCS'.AND.CHEMJ(2,J).EQ.'SX')) THEN
-       A(J,I) = 8.3E-33*Den(i)     ! reduce by 1000 to turn it off  
+       A(J,I) = 8.3E-33*Den(i)     ! reduce by 1000 to turn it off
       endif
 
 
-!    CO + O1D + M -> CO2 + M   
+!    CO + O1D + M -> CO2 + M
       if (CHEMJ(1,J).EQ.'CO'.AND.CHEMJ(2,J).EQ.'O1D') THEN
        A(J,I) = 0.0 * 8.00E-11           ! reported but no sign of density dependence
       endif
@@ -248,19 +245,19 @@ c-mc but yet factor of 1 out from, so this is the same as o+co
 
 !   CL + O2 + M -> CLOO + M    !IUPAC 2007 rec - only a low density rate (could modify TBDY to deal with this...)
       if (CHEMJ(1,J).EQ.'CL'.AND.CHEMJ(2,J).EQ.'O2') THEN
-       A(J,I) = 1.4D-33*DEN(I)*(T(I)/300.)**(-3.9)    !measured in N2
+       A(J,I) = 1.4E-33*DEN(I)*(T(I)/300.)**(-3.9)    !measured in N2
       endif
 
 
 !   CL + NO + M -> CLNO + M
       if (CHEMJ(1,J).EQ.'CL'.AND.CHEMJ(2,J).EQ.'NO') THEN
-       A(J,I) = 7.6D-32 * (300./T(I))**1.8 * DEN(I) !JPL-06 (no high pressure limit given)
+       A(J,I) = 7.6E-32 * (300./T(I))**1.8 * DEN(I) !JPL-06 (no high pressure limit given)
       endif
 
 !   CCL3NO4 + M -> CCL3O2 + NO2               WEIRD     !IUPAC-07
       if (CHEMJ(1,J).EQ.'CCL3NO4'.AND.CHEMJ(2,J).EQ.'M') THEN
-       k0 =4.3D-3*exp(-10235/T(I))*DEN(I)
-       kinf=4.8D16*exp(-11820/T(I))
+       k0 =4.3E-3*exp(-10235/T(I))*DEN(I)
+       kinf=4.8E16*exp(-11820/T(I))
        Fc=0.32
        A(J,I) = ((k0*kinf)/(k0 + kinf)* 10**(log10(Fc)/
      $  (1 +(log10(k0/kinf)/(0.75-1.27*log10(Fc)))**2)))/DEN(I)
@@ -274,18 +271,18 @@ c       A(J,I) = 4.8e16*exp(-11820/T(I))     !old
 
 !   NO2 + CH3O + M -> CH3ONO2 + M  IUPAC
       if (CHEMJ(1,J).EQ.'NO2'.AND.CHEMJ(2,J).EQ.'CH3O') THEN
-       k0 =(8.1D-29*(300./T(I))**4.5)*DEN(I)
-       kinf=2.1D-11
+       k0 =(8.1E-29*(300./T(I))**4.5)*DEN(I)
+       kinf=2.1E-11
        Fc=0.44
        A(J,I) = ((k0*kinf)/(k0 + kinf)* 10**(log10(Fc)/
      $  (1 +(log10(k0/kinf)/(0.75-1.27*log10(Fc)))**2)))/DEN(I)
       endif
 
 
-!   NO2 + CH3O2 + M -> CH3O2NO2 +M                   WEIRD     ! IUAPC-06 (yuk 131)  
+!   NO2 + CH3O2 + M -> CH3O2NO2 +M                   WEIRD     ! IUAPC-06 (yuk 131)
       if (CHEMJ(1,J).EQ.'NO2'.AND.CHEMJ(2,J).EQ.'CH3O2') THEN
-       k0 =(2.5D-30*(300./T(I))**5.5)*DEN(I)
-       kinf=1.8D-11
+       k0 =(2.5E-30*(300./T(I))**5.5)*DEN(I)
+       kinf=1.8E-11
        Fc=0.36
        A(J,I) = ((k0*kinf)/(k0 + kinf)* 10**(log10(Fc)/
      $  (1 +(log10(k0/kinf)/(0.75-1.27*log10(Fc)))**2)))/DEN(I)
@@ -293,8 +290,8 @@ c       A(J,I) = 4.8e16*exp(-11820/T(I))     !old
 
 !   CH3O2NO2  M -> CH3O2 + NO2               WEIRD     !IUPAC
       if (CHEMJ(1,J).EQ.'CH3O2NO2'.AND.CHEMJ(2,J).EQ.'M') THEN
-       k0 =9.0D-5*exp(-9690./T(I))*DEN(I)
-       kinf=1.1D16*exp(-10560./T(I))
+       k0 =9.0E-5*exp(-9690./T(I))*DEN(I)
+       kinf=1.1E16*exp(-10560./T(I))
        Fc=0.6
        A(J,I) = ((k0*kinf)/(k0 + kinf)* 10**(log10(Fc)/
      $  (1 +(log10(k0/kinf)/(0.75-1.27*log10(Fc)))**2)))/DEN(I)
@@ -304,22 +301,22 @@ c       A(J,I) = 4.8e16*exp(-11820/T(I))     !old
 !   CH2O2 + M -> CO + H2O               WEIRD     ! IUPAC-06 thermal decomp
       if (CHEMJ(1,J).EQ.'CH2O2'.AND.CHEMJ(2,J).EQ.'M') THEN
 c first order rate constant of 6e4
-       A(J,I)=6e4/Den(i) !because it will be multiplied by DEN(i) so net is 6e4*[CH2O2]
+       A(J,I)=6E4/Den(i) !because it will be multiplied by DEN(i) so net is 6e4*[CH2O2]
 c      A(J,I)=9.96E-20 !old version
       endif
 
 
 !   CH2OOH + M -> OH + H2CO              WEIRD     !Vaghjinai et al. 1989 (via NIST) as 1st order -(yuk 278) has 1e-10 as 2body
       if (CHEMJ(1,J).EQ.'CH2OOH'.AND.CHEMJ(2,J).EQ.'M') THEN
-       A(J,I)=5.e4/Den(i) !1st order rate, will be multiplied by DEN(i) so net is 5e4*[CH2OOH]
+       A(J,I)=5E4/Den(i) !1st order rate, will be multiplied by DEN(i) so net is 5e4*[CH2OOH]
 c       A(J,I) = 1.e-10   !yuks rate
       endif
 
 
 !    N2O5 + M -> NO3 + NO2               WEIRD   !IUPAC
       if (CHEMJ(1,J).EQ.'N2O5'.AND.CHEMJ(2,J).EQ.'M') THEN
-       k0 =1.3D-3*exp(-11000./T(I))*(300./T(I))**3.5*DEN(I)
-       kinf=9.7D14*exp(-11080./T(I))*(T(I)/300.)**0.1
+       k0 =1.3E-3*exp(-11000./T(I))*(300./T(I))**3.5*DEN(I)
+       kinf=9.7E14*exp(-11080./T(I))*(T(I)/300.)**0.1
        Fc=0.35
        A(J,I) = ((k0*kinf)/(k0 + kinf)* 10**(log10(Fc)/
      $  (1 +(log10(k0/kinf)/(0.75-1.27*log10(Fc)))**2)))/DEN(I)
@@ -328,17 +325,17 @@ c       A(J,I) = 1.e-10   !yuks rate
 
 !   HO2NO2 + M -> HO2 + NO2
       if (CHEMJ(1,J).EQ.'HO2NO2'.AND.CHEMJ(2,J).EQ.'M') THEN
-       k0 =4.1D-5*exp(-10650./T(I))*DEN(I)
-       kinf=4.8D15*exp(-11170./T(I))     !there was an error here. should be -11170
+       k0 =4.1E-5*exp(-10650./T(I))*DEN(I)
+       kinf=4.8E15*exp(-11170./T(I))     !there was an error here. should be -11170
        Fc=0.6                             !this should be Fc=0.6
        A(J,I) = ((k0*kinf)/(k0 + kinf)* 10**(log10(Fc)/
      $  (1 +(log10(k0/kinf)/(0.75-1.27*log10(Fc)))**2)))/DEN(I)
       endif
 
-!   CL2O2 + M -> CLO + CLO 
+!   CL2O2 + M -> CLO + CLO
       if (CHEMJ(1,J).EQ.'CL2O2'.AND.CHEMJ(2,J).EQ.'M') THEN
-       k0 =3.7D-7*exp(-7690./T(I))*DEN(I)
-       kinf=7.9D15*exp(-8820./T(I))
+       k0 =3.7E-7*exp(-7690./T(I))*DEN(I)
+       kinf=7.9E15*exp(-8820./T(I))
        Fc=0.45
 c       A(J,I) = (k0*kinf)/(k0 + kinf)* 10**(log10(Fc)/
 c     $  (1 +(log10(k0/kinf)/(0.75-1.27*log10(Fc)))**2))
@@ -355,28 +352,28 @@ c       A(J,I) = 1.06e15*exp(-18282./T(I))  !old
       endif
 
 
-!   CLO + O2 + M ->  CLO3 + M !  WEIRD     9.00D-28  (214 yuk) - THIS IS NOT IN JPL-06 ???
+!   CLO + O2 + M ->  CLO3 + M !  WEIRD     9.00E-28  (214 yuk) - THIS IS NOT IN JPL-06 ???
       if (CHEMJ(1,J).EQ.'CLO'.AND.CHEMJ(2,J).EQ.'O2'.AND.
      $    CHEMJ(3,J).EQ.'CLO3') THEN
-       A362_0=9.00D-28*T(i)**-2.0
-       A362_inf=4.50D-7*T(i)**-2.0
+       A362_0=9.00E-28*T(i)**(-2.0)
+       A362_inf=4.50E-7*T(i)**(-2.0)
 
 !tuning
-       A362_0=9.00D-38*T(i)**-2.0
-       A362_inf=4.50D-19*T(i)**-2.0
+       A362_0=9.00E-38*T(i)**(-2.0)
+       A362_inf=4.50E-19*T(i)**(-2.0)
 
 !rego - from DeMore 1990
-c      A362_0=1.00D-32*T(i)**-2.0
-c      A362_inf=5.00D-12*T(i)**-2.0
+c      A362_0=1.00D-32*T(i)**(-2.0)
+c      A362_inf=5.00D-12*T(i)**(-2.0)
 
 
 
-c       A(J,I) = TBDY(A362_0,A362_inf, 0.0D0,0.0D0,T(I),DEN(I))   ! from yuk (214)
+c       A(J,I) = TBDY(A362_0,A362_inf, 0.0E0,0.0E0,T(I),DEN(I))   ! from yuk (214)
 
 c temptest
        A(J,I) = 0.0   !zeroing for now. eventually rebuild this as CLO.O2
 
-c       A(J,I) = TBDY(1.0D-32,5.0D-12, 2.0D0,2.0D0,T(I),DEN(I))   ! from yuk (214)
+c       A(J,I) = TBDY(1.0D-32,5.0E-12, 2.0E0,2.0E0,T(I),DEN(I))   ! from yuk (214)
       endif
 
 !   CLO + CLO3 + M -> CL2O4 +M              WEIRD     !Xu and Lin 2003
@@ -384,9 +381,9 @@ c       A(J,I) = TBDY(1.0D-32,5.0D-12, 2.0D0,2.0D0,T(I),DEN(I))   ! from yuk (21
 c       A(J,I) = 1.85E-18*exp(-2417./T(I))*(T(I)/300.)**2.82
 c       A(J,I) = 1.85E-18*exp(-2417./T(I))*T(I)**2.28
 
-       A363_0=8.62D15*exp(-1826./T(I))*T(i)**-9.75
-       A363_inf=1.43D-10*exp(-82./T(I))*T(i)**0.094
-       A(J,I) = TBDY(A363_0,A363_inf, 0D0,0.0D0,T(I),DEN(I))
+       A363_0=8.62E15*exp(-1826./T(I))*T(i)**(-9.75)
+       A363_inf=1.43E-10*exp(-82./T(I))*T(i)**0.094
+       A(J,I) = TBDY(A363_0,A363_inf, 0E0,0.0E0,T(I),DEN(I))
       endif
 
 
@@ -403,18 +400,18 @@ c get back to orig - save an in.dist - then try to lower this.
       if (CHEMJ(1,J).EQ.'CLO'.AND.CHEMJ(2,J).EQ.'O2'.AND.
      $    CHEMJ(3,J).EQ.'CLOOO') THEN
 !from DeMore 1990      !could take this to classic 3body
-       A366_0=1.00D-36    !going for -3
-       A366_inf=5.00D-12!
-       A(J,I) = TBDY(A366_0,A366_inf, 2.0D0,2.0D0,T(I),DEN(I))  
+       A366_0=1.00E-36    !going for -3
+       A366_inf=5.00E-12!
+       A(J,I) = TBDY(A366_0,A366_inf, 2.0E0,2.0E0,T(I),DEN(I))
       endif
 
 !    CLOOO + M -> CLO + O2                WEIRD - thermal decomp (divide above by eq rate in Prassad) - Vogel has 3.1e-18 at 200K
 
       if (CHEMJ(1,J).EQ.'CLOOO'.AND.CHEMJ(2,J).EQ.'M') THEN
-       A367_EQ = 2.9e-26*exp(3500./T(I))
+       A367_EQ = 2.9E-26*exp(3500./T(I))
 
-       A(J,I) = TBDY(A366_0,A366_inf, 2.0D0,2.0D0,T(I),DEN(I))
-     $           /A367_EQ/1e5
+       A(J,I) = TBDY(A366_0,A366_inf, 2.0E0,2.0E0,T(I),DEN(I))
+     $           /A367_EQ/1E5
 !    note use of coefficients from formation reaction so this is a dependency
       endif
 
@@ -422,12 +419,12 @@ c get back to orig - save an in.dist - then try to lower this.
       if ((CHEMJ(1,J).EQ.'CS2'.AND.CHEMJ(2,J).EQ.'S') .OR.
      $    (CHEMJ(1,J).EQ.'CSXS'.AND.CHEMJ(2,J).EQ.'S') .OR.
      $    (CHEMJ(1,J).EQ.'CS2'.AND.CHEMJ(2,J).EQ.'SX')) THEN
-          
-          if (CHEMJ(1,J).EQ.'CS2'.AND.CHEMJ(2,J).EQ.'S') isofac=1.0
-          if (CHEMJ(3,J).EQ.'CSX'.AND.CHEMJ(4,J).EQ.'S2') isofac=1/3.
-          if (CHEMJ(3,J).EQ.'CS'.AND.CHEMJ(4,J).EQ.'SXS') isofac=2/3.
 
-       A(J,I) = isofac*1.9E-14 * EXP(-580./T(I)) * (T(I)/298.)**3.97    ! Woiki et al 1995
+          if (CHEMJ(1,J).EQ.'CS2'.AND.CHEMJ(2,J).EQ.'S') factor=1.0
+          if (CHEMJ(3,J).EQ.'CSX'.AND.CHEMJ(4,J).EQ.'S2') factor=1/3.
+          if (CHEMJ(3,J).EQ.'CS'.AND.CHEMJ(4,J).EQ.'SXS') factor=2/3.
+
+       A(J,I) = factor*1.9E-14 * EXP(-580./T(I)) * (T(I)/298.)**3.97    ! Woiki et al 1995
       endif
 
 !   C2H6S + H ->  CH3SH + CH3  !SORG
@@ -442,19 +439,19 @@ c get back to orig - save an in.dist - then try to lower this.
        A(J,I) = 4.81E-12 * EXP(-1100./T(I)) * (T(I)/298.)**1.70    ! theory - Zhang et al. 2005
       endif
 
-!   HCS + CH3S ->CS + CH3SH !SORG 
-      if ((CHEMJ(1,J).EQ.'HCS'.AND.CHEMJ(2,J).EQ.'CH3S').OR. 
-     $    (CHEMJ(1,J).EQ.'HCSX'.AND.CHEMJ(2,J).EQ.'CH3S').OR. 
+!   HCS + CH3S ->CS + CH3SH !SORG
+      if ((CHEMJ(1,J).EQ.'HCS'.AND.CHEMJ(2,J).EQ.'CH3S').OR.
+     $    (CHEMJ(1,J).EQ.'HCSX'.AND.CHEMJ(2,J).EQ.'CH3S').OR.
      $    (CHEMJ(1,J).EQ.'HCS'.AND.CHEMJ(2,J).EQ.'CH3SX')) THEN
 
          A(J,I) = 1.18E-12*EXP(-910./T(I))*(T(I)/298.)**0.65  !Liu et al. 2006 (via NIST)
 
          if (CHEMJ(1,J).EQ.'HCSX'.OR.CHEMJ(2,J).EQ.'CH3SX')
      $      A(J,I)=A(J,I)/2.   !halving of isotopic rate due to multiple channels
-  
-      endif   
 
-!   C + H2 -> CH23            
+      endif
+
+!   C + H2 -> CH23
       if (CHEMJ(1,J).EQ.'C'.AND.CHEMJ(2,J).EQ.'H2') THEN
       B0 = 8.75E-31 * EXP(524./T(I))
       BI = 8.3E-11
@@ -470,7 +467,7 @@ c get back to orig - save an in.dist - then try to lower this.
       endif
 
 
-!   CH23 + H -> CH3            
+!   CH23 + H -> CH3
       if (CHEMJ(1,J).EQ.'CH23'.AND.CHEMJ(2,J).EQ.'H'.AND.CHEMJ(3,J).EQ.
      $    'CH3') THEN
       B0 = 3.1E-30 * EXP(457./T(I))
@@ -478,14 +475,14 @@ c get back to orig - save an in.dist - then try to lower this.
       A(J,I) = B0*BI*DEN(I)/(B0*DEN(I) + BI)
       endif
 
-!  C2H + H -> C2H2 
+!  C2H + H -> C2H2
       if (CHEMJ(1,J).EQ.'C2H'.AND.CHEMJ(2,J).EQ.'H') THEN
       B0 = 1.26E-18 * EXP(-721./T(I)) / T(I)**3.1
       BI = 3.E-10
       A(J,I) = B0*BI*DEN(I)/(B0*DEN(I) + BI)
       endif
 
-!  CH23 + CO -> CH2CO 
+!  CH23 + CO -> CH2CO
 
       if (CHEMJ(1,J).EQ.'CH23'.AND.CHEMJ(2,J).EQ.'CO') THEN
       B0 = 1.E-28
@@ -493,7 +490,7 @@ c get back to orig - save an in.dist - then try to lower this.
       A(J,I) = B0*BI*DEN(I)/(B0*DEN(I) + BI)
       endif
 
-!  CH3 + CO -> CH3CO 
+!  CH3 + CO -> CH3CO
       if (CHEMJ(1,J).EQ.'CH3'.AND.CHEMJ(2,J).EQ.'CO') THEN
       A(J,I) = 1.4E-32 * EXP(-3000./T(I))*DEN(I)
       endif
@@ -510,7 +507,7 @@ c get back to orig - save an in.dist - then try to lower this.
       A(J,I) = 2.4E-24 * T(I)**4.02 * EXP(-2754./T(I))
       endif
 
-!  C2H4 + H -> C2H5 
+!  C2H4 + H -> C2H5
 !  C3H6 + H -> C3H7
       if ((CHEMJ(1,J).EQ.'C2H4'.AND.CHEMJ(2,J).EQ.'H') .OR.
      $    (CHEMJ(1,J).EQ.'C3H6'.AND.CHEMJ(2,J).EQ.'H')) THEN
@@ -633,7 +630,7 @@ c get back to orig - save an in.dist - then try to lower this.
       A(J,I) = B0*BI*DEN(I)/(B0*DEN(I) + BI)
       endif
 
-!  C2H5 + H -> C2H6                        WEIRD                                                            ! Gladstone [1983]  
+!  C2H5 + H -> C2H6                        WEIRD                                                            ! Gladstone [1983]
       if (CHEMJ(1,J).EQ.'C2H5'.AND.CHEMJ(2,J).EQ.'H'.AND.CHEMJ(3,J)
      $ .EQ.'C2H6') THEN
        B0 = 5.5E-23/T(I)**2 * EXP(-1040./T(I))
@@ -647,17 +644,17 @@ c mc some testing detritus...
 c      do i=280,180,-5.
 c         print *, i,A(295,1)/(9.3E-28*exp(8835./i)),1.3E-27*exp(8744./i)  !testing CL2O2
 c         print *, i,A(252,1)/(5.7E-25*exp(2500./i))*1e-9!,5.7E-25*exp(2500./i)
-c      enddo   
+c      enddo
 c      stop
 c      print *, (A(284,I),I=1,NZ)
 
 
 
-          ENDDO   
-         else  
-             read(9,*) !do nothing with PHOTO... 
+          ENDDO
+         else
+             read(9,*) !do nothing with PHOTO...
           endif
-       enddo   
+       enddo
 
        close(9)
 

@@ -128,10 +128,14 @@ generating a new in.dist file (ugh...). (in.dist has model initial conditions).
 You also cannot just add species to this file without also editing 
 in.dist, reactions.rx, and parameters.inc.
 
+!!!NOTE!!!: There's an annoying bit of hardcoding in Sedmnt.f that assumes
+particles are the last entries in the long lived (LL) species.
+
 -------------------------------------------------
 -----------------parameters.inc------------------
 This file is actually part of the code and so, if you edit it, you will need to
 recompile the code. 
+
 
 NZ: number of layers in the model atmosphere
 NQ: number of species you need to solve a diffusion equation for. This
