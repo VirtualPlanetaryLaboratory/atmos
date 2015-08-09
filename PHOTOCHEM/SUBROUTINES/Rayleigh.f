@@ -37,31 +37,29 @@ cc                                                                    cc
 cc    sigr2  - raleigh scattering cross section per molecule (cm**2)  cc
 cc                                                                    cc
 cccccccccccccccccccccccccccccc  r a y l e i g h  ccccccccccccccccccccccc
-c
+
       INCLUDE 'PHOTOCHEM/INPUTFILES/parameters.inc'
       implicit real*8(A-H,O-Z)
       double precision delta(6),a(6),b(6),wl2i,r,aniso,r2,sum
       dimension volmix(10,NZ),icomp(10,NZ),SIGR2(NZ),ncomp(NZ)
 
-
 c       depolarization factors for air, co2, n2, o2 (young, 1980)
-c
       data delta/0.02790d0,0.0780d0,0.0210d0,0.0580d0,0.0000,0.0000/
-c
+
 c***    wavelength dependence coefficients for the refractive index
 c       (allen, 1964) (note: wavelengths must be in microns)
-c
+
       data a/2.871d-04,4.39d-04,2.906d-04,2.663d-04,1.358d-4,3.48d-5/
       data b/5.67d-03,6.4d-03,7.7d-03,5.07d-03,7.52d-3,2.3d-3/
-c
+
 c****   Define the constant multiplier, cnst.  this 
 c	constant is equal to 24*pi**3/(1.e-24*L**2), 
 c	where L = loschmidt's number (mks units) ,
 c	(L = 2.687e25 molecules/m3) and the factor 1.e-24 is 
 c	needed to convert wl**4 from microns to meters.
-c
+
       data cnst /1.031d-24/
-c
+
       wl2i=1.0d0/(wleff*wleff)
 
       do j=1,nz
@@ -77,10 +75,9 @@ c          print *, icomp(i,j)
      $            ((r*r - 1.)/r2)**2
             
         enddo
-       sigr2(j)=cnst*wl2i*wl2i*sum*1d4 !1d4 converts from m^2 to cm^2 for photohcemical model
+       !1d4 converts from m^2 to cm^2 for photohcemical model
+       sigr2(j)=cnst*wl2i*wl2i*sum*1d4 
       enddo
-c
-      
 
       return
       end
