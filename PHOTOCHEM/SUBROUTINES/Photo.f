@@ -5,16 +5,15 @@
       real*8 mass
       Integer nw     !nw - number of wavelengths (nw<kw) set in gridw.f
       real*8 SQ(kj,nz,kw),TTOT(NZ),S(NZ),SALL(kw,NZ), STAU(kw),smax(kw)
-      real*8 temp(kj)
+c      real*8 temp(kj) !EWS - not used
       character*8 REACTYPE,PLANET,CHEMJ,ISPEC
       CHARACTER*20 fmtstr
-      DIMENSION SO2(NZ),SO3(NZ),SIGL(NZ),SIGNOL(NZ),CL(NZ),
-     2  CNO(NZ),D0(2),CL2(NZ)
-      dimension LLNO(35),ANO(9,2),BNO(5,2)
+      DIMENSION D0(2)
+      dimension LLNO(35)
 
       dimension SIGR(NZ)
 
-      dimension volmix(10,nz),icomp(10,nz),SIGR2(NZ),ncomp(nz)
+      dimension volmix(10,nz),icomp(10,nz),ncomp(nz)
 !above new for Rayleigh Scatering
 
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PHOTABLOK.inc'
@@ -32,10 +31,10 @@
 
 
       dimension columndepth(KJ,NZ)
-      dimension PLOG(NZ)
+c      dimension PLOG(NZ) !EWS - not used
 
 c testing
-      dimension ANEW(NR,NZ),SNEW(NZ)
+c      dimension ANEW(NR,NZ),SNEW(NZ) !EWS - not used
       dimension PRATESNO(NZ)  !used in High resolution model
 
 
