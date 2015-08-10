@@ -8,11 +8,12 @@
 * input
       dimension columndepth(KJ,NZ)  !testing this as an optional parameter 
       INTEGER nw,j,IO2
-      REAL*8 wl(nw+1), wc(nw)
-      REAL*8 tlev(nz)  !should go back to kz if I ever want to have a variable altitude grid
+! EWS - commented variables below are not needed and cause compilation warnings
+c      REAL*8 wl(nw+1), wc(nw)
+c      REAL*8 tlev(nz)  !should go back to kz if I ever want to have a variable altitude grid
       !I am no longer so sure about the above comment - NZ is set by the time we invoke XS's
       !it's not like we are going to change on the fly in the middle of a time-dependent run....
-      REAL*8 airlev(nz)
+c     REAL*8 airlev(nz) ! - EWS - not used ! EWS -not needed 
       REAL*8 sq(kj,nz,kw)
 
       Ja=0
@@ -20,97 +21,148 @@
       Jc=2
       Jd=3
 
-      IF(species.eq.'HNO3    ') CALL XS_HNO3(nw,wavl,wav,T,DEN,j,sq) !T dependent - also unexplained factor of 1000. (but not using T-dependent data right now)
-      IF(species.eq.'HO2     ') CALL XS_HO2(nw,wavl,wav,T,DEN,j,sq,0,Ja) ! the 0 is also an ISOHACK      
-      IF(species.eq.'NO2     ') CALL XS_NO2(nw,wavl,wav,T,DEN,j,sq)  !T-dependent (not in use) 
-      IF(species.eq.'H2O2    ') CALL XS_H2O2(nw,wavl,wav,T,DEN,j,sq)  !T-dependent (not in use) 
-      IF(species.eq.'H2O     ') CALL XS_H2O(nw,wavl,wav,T,DEN,j,sq) !HAVEN"T INTEGRATED GRACES CODE
-      IF(species.eq.'CO2     ') CALL XS_CO2(nw,wavl,wav,T,DEN,j,sq)  !returns CO+O to j and CO+O1D j+3 !ACK hardcoded needs fixing..
-      IF(species.eq.'H2CO    ') CALL XS_H2CO(nw,wavl,wav,T,DEN,j,sq) !returns H2, then HCO 
-      IF(species.eq.'O3      ') CALL XS_O3(nw,wavl,wav,T,DEN,j,sq)      !returns O2 + O(1D), then O2 + O(3P)
-      IF(species.eq.'CH4     ') CALL XS_CH4(nw,wavl,wav,T,DEN,j,sq)
-      IF(species.eq.'C2H6    ') CALL XS_C2H6(nw,wavl,wav,T,DEN,j,sq) !returns  2 (3)CH2 +H2 then CH4 + (1)CH2  
-      IF(species.eq.'NO3     ') CALL XS_NO3(nw,wavl,wav,T,DEN,j,sq) !2 channels: NO + O2, NO2 + O
-!note NO3 is temperature dependent so would need to change if t does...       
-      IF(species.eq.'N2O     ') CALL XS_N2O(nw,wavl,wav,T,DEN,j,sq)   !returns N2 + O1D
-      IF(species.eq.'HOCL    ') CALL XS_HOCL(nw,wavl,wav,T,DEN,j,sq) !returns OH + CL
-      IF(species.eq.'CL2     ') CALL XS_CL2(nw,wavl,wav,T,DEN,j,sq)   !returns CL + CL (temp dependent)
-      IF(species.eq.'CLOO    ') CALL XS_CLOO(nw,wavl,wav,T,DEN,j,sq)  !returns CLO + O
-      IF(species.eq.'OCLO    ') CALL XS_OCLO(nw,wavl,wav,T,DEN,j,sq)  !returns CLO + O
-      IF(species.eq.'CLONO   ') CALL XS_CLONO(nw,wavl,wav,T,DEN,j,sq) !returns CL + NO2
-      IF(species.eq.'CLNO    ') CALL XS_CLNO(nw,wavl,wav,T,DEN,j,sq)  !returns CL + NO
-      IF(species.eq.'CLNO2   ') CALL XS_CLNO2(nw,wavl,wav,T,DEN,j,sq) !returns CL + NO2
-      IF(species.eq.'CHCLO   ') CALL XS_CHCLO(nw,wavl,wav,T,DEN,j,sq) !returns HCO + CL (JPL calls this COHCL)  !products assumed from Yuk's model
-      IF(species.eq.'CH3CL   ') CALL XS_CH3CL(nw,wavl,wav,T,DEN,j,sq) !returns CL + CH3  (temperature dependent!)
-       !there is a far UV branch to H + CH2CL , but no JPL recomended cross section so ignored
-      IF(species.eq.'CCL4    ') CALL XS_CCL4(nw,wavl,wav,T,DEN,j,sq) !returns CL + CCL3  (temperature dependent!)
-      IF(species.eq.'COCL2   ') CALL XS_COCL2(nw,wavl,wav,T,DEN,j,sq) !returns CL + CL + CO 
-      IF(species.eq.'CH3O2NO2') CALL XS_CH3O2NO2(nw,wavl,wav,T,DEN,j,sq) !returns CH3O2 + NO2 
-      IF(species.eq.'CH3OCL  ') CALL XS_CH3OCL(nw,wavl,wav,T,DEN,j,sq) !returns CH3O + CL 
-      IF(species.eq.'CH3OOH  ') CALL XS_CH3OOH(nw,wavl,wav,T,DEN,j,sq)
-      IF(species.eq.'CLO     ') CALL XS_CLO(nw,wavl,wav,T,DEN,j,sq) !returns CL + O1D and CL + O
-      IF(species.eq.'CLONO2  ') CALL XS_CLONO2(nw,wavl,wav,T,DEN,j,sq) !returns CL + NO3, then CLO + NO2 (temperature dependent!)
-      IF(species.eq.'HO2NO2  ') CALL XS_HO2NO2(nw,wavl,wav,T,DEN,j,sq) !returns, HO2 + NO2, then OH + NO3
-      IF(species.eq.'N2O5    ') CALL XS_N2O5(nw,wavl,wav,T,DEN,j,sq) !returns NO3 + NO2, then NO3 + NO + O  (temperature dependent!)
-      IF(species.eq.'CL2O2   ') CALL XS_CL2O2(nw,wavl,wav,T,DEN,j,sq) !returns CL + CLOO, then CLO + CLO 
-      IF(species.eq.'CL2O    ') CALL XS_CL2O(nw,wavl,wav,T,DEN,j,sq)  !returns CL + CLO
-      IF(species.eq.'CLO3    ') CALL XS_CLO3(nw,wavl,wav,T,DEN,j,sq) !returns CLO + O2  
-      IF(species.eq.'CL2O4   ') CALL XS_CL2O4(nw,wavl,wav,T,DEN,j,sq) !returns CLOO + OCLO  
-      IF(species.eq.'HCL     ') CALL XS_HCL(nw,wavl,wav,T,DEN,j,sq) !returns H + CL. 
-      IF(species.eq.'O2      ') CALL XS_O2(nw,wavl,wav,T,DEN,j,sq,
-     $                                     columndepth,zy,IO2) !returns O + O(1D) then O + O
-      IF(species.eq.'NO      ') CALL XS_NO(nw,wavl,wav,T,DEN,j,sq,
-     $                                     columndepth)  !returns  signo(I,L) for now 
-
-      IF(species.eq.'SO      ') CALL XS_SO(nw,wavl,wav,T,DEN,j,sq,ISOS)
-      IF(species.eq.'OCS     ') CALL XS_OCS(nw,wavl,wav,T,DEN,j,sq,ISOS)
-      IF(species.eq.'SO2     ') CALL XS_SO2(nw,wavl,wav,T,DEN,j,sq,ISOS) !returns SO + O, SO21, SO23
-      IF(species.eq.'SO3     ') CALL XS_SO3(nw,wavl,wav,T,DEN,j,sq,ISOS)
-      IF(species.eq.'H2S     ') CALL XS_H2S(nw,wavl,wav,T,DEN,j,sq,ISOS)
-      IF(species.eq.'S8      ') CALL XS_S8(nw,wavl,wav,T,DEN,j,sq,ISOS) !returns SS8L then SS8R
-      IF(species.eq.'HSO     ') CALL XS_HO2(nw,wavl,wav,T,DEN,j,sq,ISOS,
-     $                                      Jb) !note using HO2 cross section for HSO
-      IF(species.eq.'S2      ') CALL XS_S2(nw,wavl,wav,T,DEN,j,sq,ISOS,
-     $                                     Ja)  !note this contains an unphysical scaling factor
-      IF(species.eq.'S4      ') CALL XS_S2(nw,wavl,wav,T,DEN,j,sq,ISOS,
-     $                                     Jb)  !note using S2 cross section for S4
-      IF(species.eq.'S3      ') CALL XS_S2(nw,wavl,wav,T,DEN,j,sq,ISOS,
-     $                                     Jc)  !note using S2 cross section for S3
+!---------EWS NOTE: I have removed unnecessary variables to avoid compilation warnings---!
+!---------EWS NOTE: Find original call formatting below update---------------------------!
+!---------EWS NOTE: nw=nw, wl=wavl, wc=wav, tlev=T, airlev=DEN,jn=j, sq=sq---------------!
+!----------------------------Comments Correspond to line below---------------------------!
+      !T dependent - also unexplained factor of 1000. (but not using T-dependent data right now)
+      IF(species.eq.'HNO3    ') CALL XS_HNO3(nw,wavl,T,j,sq) 
+      ! the 0 is also an ISOHACK 
+      IF(species.eq.'HO2     ') CALL XS_HO2(nw,wavl,wav,j,sq,0,Ja)
+      !T-dependent (not in use)   
+      IF(species.eq.'NO2     ') CALL XS_NO2(nw,wavl,T,j,sq)
+      !T-dependent (not in use) 
+      IF(species.eq.'H2O2    ') CALL XS_H2O2(nw,wavl,wav,T,j,sq)
+      !HAVEN"T INTEGRATED GRACES CODE
+      IF(species.eq.'H2O     ') CALL XS_H2O(nw,wavl,wav,j,sq)
+      !returns CO+O to j and CO+O1D j+3 !ACK hardcoded needs fixing.. 
+      IF(species.eq.'CO2     ') CALL XS_CO2(nw,wavl,j,sq)
+      !returns H2, then HCO  
+      IF(species.eq.'H2CO    ') CALL XS_H2CO(nw,wavl,j,sq)
+      !returns O2 + O(1D), then O2 + O(3P)
+      IF(species.eq.'O3      ') CALL XS_O3(nw,wavl,T,j,sq)
+      IF(species.eq.'CH4     ') CALL XS_CH4(nw,wavl,j,sq)
+      !returns  2 (3)CH2 +H2 then CH4 + (1)CH2  
+      IF(species.eq.'C2H6    ') CALL XS_C2H6(nw,wavl,j,sq)
+      !2 channels: NO + O2, NO2 + O
+      !note NO3 is temperature dependent so would need to change if it does...
+      IF(species.eq.'NO3     ') CALL XS_NO3(nw,wavl,T,j,sq)
+      !returns N2 + O1D
+      IF(species.eq.'N2O     ') CALL XS_N2O(nw,wavl,wav,T,j,sq)
+      !returns OH + CL
+      IF(species.eq.'HOCL    ') CALL XS_HOCL(nw,wavl,j,sq)
+      !returns CL + CL (temp dependent)
+      IF(species.eq.'CL2     ') CALL XS_CL2(nw,wavl,T,j,sq)
+      !returns CLO + O
+      IF(species.eq.'CLOO    ') CALL XS_CLOO(nw,wavl,j,sq)
+      !returns CLO + O
+      IF(species.eq.'OCLO    ') CALL XS_OCLO(nw,wavl,j,sq)
+      !returns CL + NO2
+      IF(species.eq.'CLONO   ') CALL XS_CLONO(nw,wavl,j,sq)
+      !returns CL + NO
+      IF(species.eq.'CLNO    ') CALL XS_CLNO(nw,wavl,j,sq)
+      !returns CL + NO2
+      IF(species.eq.'CLNO2   ') CALL XS_CLNO2(nw,wavl,j,sq)
+      !returns HCO + CL (JPL calls this COHCL)  !products assumed from Yuk's model
+      IF(species.eq.'CHCLO   ') CALL XS_CHCLO(nw,wavl,j,sq)
+      !returns CL + CH3  (temperature dependent!)
+      !there is a far UV branch to H + CH2CL , but no JPL recomended cross section so ignored
+      IF(species.eq.'CH3CL   ') CALL XS_CH3CL(nw,wavl,wav,T,j,sq)
+      !returns CL + CCL3  (temperature dependent!)
+      IF(species.eq.'CCL4    ') CALL XS_CCL4(nw,wavl,wav,T,j,sq)
+      !returns CL + CL + CO 
+      IF(species.eq.'COCL2   ') CALL XS_COCL2(nw,wavl,j,sq)
+      !returns CH3O2 + NO2 
+      IF(species.eq.'CH3O2NO2') CALL XS_CH3O2NO2(nw,wavl,j,sq)
+      !returns CH3O + CL 
+      IF(species.eq.'CH3OCL  ') CALL XS_CH3OCL(nw,wavl,j,sq)
+      IF(species.eq.'CH3OOH  ') CALL XS_CH3OOH(nw,wavl,j,sq)
+      !returns CL + O1D and CL + O
+      IF(species.eq.'CLO     ') CALL XS_CLO(nw,wavl,j,sq)
+      !returns CL + NO3, then CLO + NO2 (temperature dependent!)
+      IF(species.eq.'CLONO2  ') CALL XS_CLONO2(nw,wavl,wav,T,j,sq)
+      !returns, HO2 + NO2, then OH + NO3
+      IF(species.eq.'HO2NO2  ') CALL XS_HO2NO2(nw,wavl,j,sq)
+      !returns NO3 + NO2, then NO3 + NO + O  (temperature dependent!)
+      IF(species.eq.'N2O5    ') CALL XS_N2O5(nw,wavl,wav,T,j,sq)
+      !returns CL + CLOO, then CLO + CLO 
+      IF(species.eq.'CL2O2   ') CALL XS_CL2O2(nw,wavl,j,sq)
+      !returns CL + CLO
+      IF(species.eq.'CL2O    ') CALL XS_CL2O(nw,wavl,j,sq)
+      !returns CLO + O2  
+      IF(species.eq.'CLO3    ') CALL XS_CLO3(nw,wavl,j,sq)
+      !returns CLOO + OCLO  
+      IF(species.eq.'CL2O4   ') CALL XS_CL2O4(nw,wavl,j,sq)
+      !returns H + CL. 
+      IF(species.eq.'HCL     ') CALL XS_HCL(nw,wavl,j,sq)
+      !returns O + O(1D) then O + O
+      IF(species.eq.'O2      ') CALL XS_O2(nw,wavl,T,DEN,j,sq,
+     $                                     columndepth,zy,IO2)
+      !returns  signo(I,L) for now 
+      IF(species.eq.'NO      ') CALL XS_NO(T,DEN,j,columndepth)  
+      IF(species.eq.'SO      ') CALL XS_SO(nw,wavl,j,sq,ISOS)
+      IF(species.eq.'OCS     ') CALL XS_OCS(nw,wavl,j,sq,ISOS)
+      !returns SO + O, SO21, SO23
+      IF(species.eq.'SO2     ') CALL XS_SO2(nw,wavl,j,sq,ISOS)
+      IF(species.eq.'SO3     ') CALL XS_SO3(nw,wavl,j,sq,ISOS)
+      IF(species.eq.'H2S     ') CALL XS_H2S(nw,wavl,j,sq,ISOS)
+      !returns SS8L then SS8R
+      IF(species.eq.'S8      ') CALL XS_S8(nw,wavl,j,sq,ISOS)
+      !note using HO2 cross section for HSO
+      IF(species.eq.'HSO     ') CALL XS_HO2(nw,wavl,wav,j,sq,ISOS,
+     $                                      Jb)
+      !note this contains an unphysical scaling factor
+      IF(species.eq.'S2      ') CALL XS_S2(nw,wavl,j,sq,ISOS,
+     $                                     Ja)
+      !note using S2 cross section for S4
+      IF(species.eq.'S4      ') CALL XS_S2(nw,wavl,j,sq,ISOS,
+     $                                     Jb)
+      !note using S2 cross section for S3
+      IF(species.eq.'S3      ') CALL XS_S2(nw,wavl,j,sq,ISOS,
+     $                                     Jc)
 
 !isotopic sulfur species start here (only significant changes are in XS_S2 and XS_SO2)
 !ffft - once the ISOS adds are complete, I don't need both calls, just an OR in one IF call. 
 
-      IF(species.eq.'SXO    ') CALL XS_SO(nw,wavl,wav,T,DEN,j,sq,ISOS)
-      IF(species.eq.'OCSX   ') CALL XS_OCS(nw,wavl,wav,T,DEN,j,sq,ISOS)
-      IF(species.eq.'SXO2   ') CALL XS_SO2(nw,wavl,wav,T,DEN,j,sq,ISOS) !returns SXO + O, SXO21, SXO23
-      IF(species.eq.'SXO3   ') CALL XS_SO3(nw,wavl,wav,T,DEN,j,sq,ISOS)
-      IF(species.eq.'H2SX   ') CALL XS_H2S(nw,wavl,wav,T,DEN,j,sq,ISOS)
-      IF(species.eq.'SXS7   ') CALL XS_S8(nw,wavl,wav,T,DEN,j,sq,ISOS) !returns SS8L then SS8R
-      IF(species.eq.'HSXO   ') CALL XS_HO2(nw,wavl,wav,T,DEN,j,sq,ISOS,
-     $                                      Jb) !note using HO2 cross section for HSO
-      IF(species.eq.'SXS    ') CALL XS_S2(nw,wavl,wav,T,DEN,j,sq,ISOS,
-     $                                     Ja)  !note this contains an unphysical scaling factor
-      IF(species.eq.'SXS3   ') CALL XS_S2(nw,wavl,wav,T,DEN,j,sq,ISOS,
-     $                                     Jb)  !note using S2 cross section for S4 - returns differnt quantum yeilds for SXS+S, S2+SX (see Pavlov 02)
-      IF(species.eq.'SXS2   ') CALL XS_S2(nw,wavl,wav,T,DEN,j,sq,ISOS,
-     $                                     Jc)  !note using S2 cross section for S3
+      IF(species.eq.'SXO    ') CALL XS_SO(nw,wavl,j,sq,ISOS)
+      IF(species.eq.'OCSX   ') CALL XS_OCS(nw,wavl,j,sq,ISOS)
+      !returns SXO + O, SXO21, SXO23
+      IF(species.eq.'SXO2   ') CALL XS_SO2(nw,wavl,j,sq,ISOS)
+      IF(species.eq.'SXO3   ') CALL XS_SO3(nw,wavl,j,sq,ISOS)
+      IF(species.eq.'H2SX   ') CALL XS_H2S(nw,wavl,j,sq,ISOS)
+      !returns SS8L then SS8R
+      IF(species.eq.'SXS7   ') CALL XS_S8(nw,wavl,j,sq,ISOS)
+      !note using HO2 cross section for HSO
+      IF(species.eq.'HSXO   ') CALL XS_HO2(nw,wavl,wav,j,sq,ISOS,
+     $                                      Jb)
+      !note this contains an unphysical scaling factor 
+      IF(species.eq.'SXS    ') CALL XS_S2(nw,wavl,j,sq,ISOS,
+     $                                     Ja)
+      !note using S2 cross section for S4 - returns differnt quantum yeilds for SXS+S, S2+SX (see Pavlov 02)
+      IF(species.eq.'SXS3   ') CALL XS_S2(nw,wavl,j,sq,ISOS,
+     $                                     Jb) 
+      !note using S2 cross section for S3
+      IF(species.eq.'SXS2   ') CALL XS_S2(nw,wavl,j,sq,ISOS,
+     $                                     Jc)
 
 
 !sorg species
       IF((species.eq.'CS2    ').OR.(species.eq.'CSXS   '))
-     $      CALL XS_CS2(nw,wavl,wav,T,DEN,j,sq,ISOS)
+     $      CALL XS_CS2(nw,wavl,j,sq,ISOS)
       IF((species.eq.'CH3SH  ').OR.(species.eq.'CH3SXH ')) 
-     $      CALL XS_CH3SH(nw,wavl,wav,T,DEN,j,sq,ISOS)
+     $      CALL XS_CH3SH(nw,wavl,j,sq,ISOS)
       IF((species.eq.'C2H6S  ').OR.(species.eq.'C2H6SX ')) CALL
-     & XS_simple(species,nw,wavl,wav,T,DEN,j,sq)   
+     & XS_simple(species,nw,wavl,j,sq)   
       IF((species.eq.'C2H6S2 ').OR.(species.eq.'C2H6SXS')) CALL 
-     & XS_simple(species,nw,wavl,wav,T,DEN,j,sq)
+     & XS_simple(species,nw,wavl,j,sq)
 
 !corg species
-      IF(species.eq.'C2H2    ') CALL XS_C2H2(nw,wavl,wav,T,DEN,j,sq)  !OK
+      !OK
+      IF(species.eq.'C2H2    ') CALL XS_C2H2(nw,wavl,j,sq) 
 
-      IF(species.eq.'C2H4    ') CALL XS_C2H4(nw,wavl,wav,T,DEN,j,sq,Ja)  
-      IF(species.eq.'CH      ') CALL XS_C2H4(nw,wavl,wav,T,DEN,j,sq,Jd)  !shawn used C2H4 rate here
+      IF(species.eq.'C2H4    ') CALL XS_C2H4(nw,wavl,j,sq,Ja)
+      ! shawn used C2H4 rate here  
+      IF(species.eq.'CH      ') CALL XS_C2H4(nw,wavl,j,sq,Jd)
 
 !shawn's use of C2H4 photorate
 !212 * 0.51     212       C2H4      HV        C2H2      H2
@@ -125,20 +177,19 @@
 !260 * 0.05     260       C3H6      HV        C2H       CH4       H
 
 
-      IF(species.eq.'C3H8    ') CALL XS_C3H8(nw,wavl,wav,T,DEN,j,sq)
-
-
-
+      IF(species.eq.'C3H8    ') CALL XS_C3H8(nw,wavl,j,sq)
       IF(species.eq.'CH2CO   ') CALL 
-     & XS_simple(species,nw,wavl,wav,T,DEN,j,sq)
-      IF(species.eq.'CH3CHO  ') CALL XS_CH3CHO(nw,wavl,wav,T,DEN,j,sq)
-      IF(species.eq.'C3H6    ') CALL XS_C3H6(nw,wavl,wav,T,DEN,j,sq)  !shawn used C2H4 rate here with 0.57/0.02/0.05 quantum yields
+     & XS_simple(species,nw,wavl,j,sq)
+      IF(species.eq.'CH3CHO  ') CALL XS_CH3CHO(nw,wavl,j,sq)
+c      !shawn used C2H4 rate here with 0.57/0.02/0.05 quantum yields
+      IF(species.eq.'C3H6    ') CALL XS_C3H6(nw,wavl,j,sq)
       IF(species.eq.'C2H5CHO ') CALL 
-     & XS_simple(species,nw,wavl,wav,T,DEN,j,sq)
+     & XS_simple(species,nw,wavl,j,sq)
       IF(species.eq.'C3H3') CALL 
-     & XS_simple(species,nw,wavl,wav,T,DEN,j,sq)   !shawn used C2H4 rate here (check this xsection)
-      IF(species.eq.'CH3C2H') CALL XS_CH3C2H(nw,wavl,wav,T,DEN,j,sq)
-      IF(species.eq.'CH2CCH2') CALL XS_CH2CCH2(nw,wavl,wav,T,DEN,j,sq)
+c     !shawn used C2H4 rate here (check this xsection)
+     & XS_simple(species,nw,wavl,j,sq)
+      IF(species.eq.'CH3C2H') CALL XS_CH3C2H(nw,wavl,j,sq)
+      IF(species.eq.'CH2CCH2') CALL XS_CH2CCH2(nw,wavl,j,sq)
 
 c these are just here to remind us that these XS files exist
 c       CALL XS_CL2O3(nw,wavl,wav,T,DEN,JCL2O3,sq)  !returns CLO + CLOO  (branch to CLO3??)  
@@ -146,14 +197,195 @@ c       CALL XS_CL2O3(nw,wavl,wav,T,DEN,JCL2O3,sq)  !returns CLO + CLOO  (branch
 c       CALL XS_CHOCHO(nw,wavl,wav,T,DEN,100,sq,101,102)  !ACK - hardcoded "J-numbers" 
        !returns HCO + HCO, then H2 + CO + CO, then H2CO + CO  (never finished)
 
-
       RETURN
       END
+!-------------------------END UPDATED CALL FORMATTING--------------------------------!
+
+!------------------------BEGIN ORIGINAL CALL FORMATTING------------------------------!
+!!       EWS - !! or c!= originally commented
+
+!      !T dependent - also unexplained factor of 1000. (but not using T-dependent data right now)
+!      IF(species.eq.'HNO3    ') CALL XS_HNO3(nw,wavl,wav,T,DEN,j,sq) 
+!      ! the 0 is also an ISOHACK 
+!      IF(species.eq.'HO2     ') CALL XS_HO2(nw,wavl,wav,T,DEN,j,sq,0,Ja)
+!      !T-dependent (not in use)   
+!      IF(species.eq.'NO2     ') CALL XS_NO2(nw,wavl,wav,T,DEN,j,sq)
+!      !T-dependent (not in use) 
+!      IF(species.eq.'H2O2    ') CALL XS_H2O2(nw,wavl,wav,T,DEN,j,sq)
+!      !HAVEN"T INTEGRATED GRACES CODE
+!      IF(species.eq.'H2O     ') CALL XS_H2O(nw,wavl,wav,T,DEN,j,sq)
+!      !returns CO+O to j and CO+O1D j+3 !ACK hardcoded needs fixing.. 
+!      IF(species.eq.'CO2     ') CALL XS_CO2(nw,wavl,wav,T,DEN,j,sq)
+!      !returns H2, then HCO  
+!      IF(species.eq.'H2CO    ') CALL XS_H2CO(nw,wavl,wav,T,DEN,j,sq)
+!      !returns O2 + O(1D), then O2 + O(3P)
+!      IF(species.eq.'O3      ') CALL XS_O3(nw,wavl,wav,T,DEN,j,sq)
+!     IF(species.eq.'CH4     ') CALL XS_CH4(nw,wavl,wav,T,DEN,j,sq)
+!      !returns  2 (3)CH2 +H2 then CH4 + (1)CH2  
+!      IF(species.eq.'C2H6    ') CALL XS_C2H6(nw,wavl,wav,T,DEN,j,sq)
+!      !2 channels: NO + O2, NO2 + O
+!      !note NO3 is temperature dependent so would need to change if it does...
+!      IF(species.eq.'NO3     ') CALL XS_NO3(nw,wavl,wav,T,DEN,j,sq)
+!      !returns N2 + O1D
+!     IF(species.eq.'N2O     ') CALL XS_N2O(nw,wavl,wav,T,DEN,j,sq)
+!      !returns OH + CL
+!      IF(species.eq.'HOCL    ') CALL XS_HOCL(nw,wavl,wav,T,DEN,j,sq)
+!      !returns CL + CL (temp dependent)
+!      IF(species.eq.'CL2     ') CALL XS_CL2(nw,wavl,wav,T,DEN,j,sq)
+!      !returns CLO + O
+!     IF(species.eq.'CLOO    ') CALL XS_CLOO(nw,wavl,wav,T,DEN,j,sq)
+!      !returns CLO + O
+!      IF(species.eq.'OCLO    ') CALL XS_OCLO(nw,wavl,wav,T,DEN,j,sq)
+!      !returns CL + NO2
+!      IF(species.eq.'CLONO   ') CALL XS_CLONO(nw,wavl,wav,T,DEN,j,sq)
+!      !returns CL + NO
+!      IF(species.eq.'CLNO    ') CALL XS_CLNO(nw,wavl,wav,T,DEN,j,sq)
+!      !returns CL + NO2
+!      IF(species.eq.'CLNO2   ') CALL XS_CLNO2(nw,wavl,wav,T,DEN,j,sq)
+!      !returns HCO + CL (JPL calls this COHCL)  !products assumed from Yuk's model
+!      IF(species.eq.'CHCLO   ') CALL XS_CHCLO(nw,wavl,wav,T,DEN,j,sq)
+!      !returns CL + CH3  (temperature dependent!)
+!      !there is a far UV branch to H + CH2CL , but no JPL recomended cross section so ignored
+!      IF(species.eq.'CH3CL   ') CALL XS_CH3CL(nw,wavl,wav,T,DEN,j,sq)
+!      !returns CL + CCL3  (temperature dependent!)
+!      IF(species.eq.'CCL4    ') CALL XS_CCL4(nw,wavl,wav,T,DEN,j,sq)
+!      !returns CL + CL + CO 
+!      IF(species.eq.'COCL2   ') CALL XS_COCL2(nw,wavl,wav,T,DEN,j,sq)
+!      !returns CH3O2 + NO2 
+!      IF(species.eq.'CH3O2NO2') CALL XS_CH3O2NO2(nw,wavl,wav,T,DEN,j,sq)
+!      !returns CH3O + CL 
+!     IF(species.eq.'CH3OCL  ') CALL XS_CH3OCL(nw,wavl,wav,T,DEN,j,sq)
+!      IF(species.eq.'CH3OOH  ') CALL XS_CH3OOH(nw,wavl,wav,T,DEN,j,sq)
+!      !returns CL + O1D and CL + O
+!      IF(species.eq.'CLO     ') CALL XS_CLO(nw,wavl,wav,T,DEN,j,sq)
+!      !returns CL + NO3, then CLO + NO2 (temperature dependent!)
+!      IF(species.eq.'CLONO2  ') CALL XS_CLONO2(nw,wavl,wav,T,DEN,j,sq)
+!      !returns, HO2 + NO2, then OH + NO3
+!     IF(species.eq.'HO2NO2  ') CALL XS_HO2NO2(nw,wavl,wav,T,DEN,j,sq)
+!      !returns NO3 + NO2, then NO3 + NO + O  (temperature dependent!)
+!      IF(species.eq.'N2O5    ') CALL XS_N2O5(nw,wavl,wav,T,DEN,j,sq)
+!      !returns CL + CLOO, then CLO + CLO 
+!      IF(species.eq.'CL2O2   ') CALL XS_CL2O2(nw,wavl,wav,T,DEN,j,sq)
+!      !returns CL + CLO
+!      IF(species.eq.'CL2O    ') CALL XS_CL2O(nw,wavl,wav,T,DEN,j,sq)
+!      !returns CLO + O2  
+!      IF(species.eq.'CLO3    ') CALL XS_CLO3(nw,wavl,wav,T,DEN,j,sq)
+!      !returns CLOO + OCLO  
+!      IF(species.eq.'CL2O4   ') CALL XS_CL2O4(nw,wavl,wav,T,DEN,j,sq)
+!      !returns H + CL. 
+!      IF(species.eq.'HCL     ') CALL XS_HCL(nw,wavl,wav,T,DEN,j,sq)
+!      !returns O + O(1D) then O + O
+!      IF(species.eq.'O2      ') CALL XS_O2(nw,wavl,wav,T,DEN,j,sq,
+!     $                                     columndepth,zy,IO2)
+!     !returns  signo(I,L) for now 
+!      IF(species.eq.'NO      ') CALL XS_NO(nw,wavl,wav,T,DEN,j,sq,
+!     $                                     columndepth)  
+!      IF(species.eq.'SO      ') CALL XS_SO(nw,wavl,wav,T,DEN,j,sq,ISOS)
+!      IF(species.eq.'OCS     ') CALL XS_OCS(nw,wavl,wav,T,DEN,j,sq,ISOS)
+!      !returns SO + O, SO21, SO23
+!      IF(species.eq.'SO2     ') CALL XS_SO2(nw,wavl,wav,T,DEN,j,sq,ISOS)
+!      IF(species.eq.'SO3     ') CALL XS_SO3(nw,wavl,wav,T,DEN,j,sq,ISOS)
+!      IF(species.eq.'H2S     ') CALL XS_H2S(nw,wavl,wav,T,DEN,j,sq,ISOS)
+!     !returns SS8L then SS8R
+!      IF(species.eq.'S8      ') CALL XS_S8(nw,wavl,wav,T,DEN,j,sq,ISOS)
+!     !note using HO2 cross section for HSO
+!      IF(species.eq.'HSO     ') CALL XS_HO2(nw,wavl,wav,T,DEN,j,sq,ISOS,
+!     $                                      Jb)
+!      !note this contains an unphysical scaling factor
+!      IF(species.eq.'S2      ') CALL XS_S2(nw,wavl,wav,T,DEN,j,sq,ISOS,
+!     $                                     Ja)
+!     !note using S2 cross section for S4
+!      IF(species.eq.'S4      ') CALL XS_S2(nw,wavl,wav,T,DEN,j,sq,ISOS,
+!     $                                     Jb)
+!      !note using S2 cross section for S3
+!      IF(species.eq.'S3      ') CALL XS_S2(nw,wavl,wav,T,DEN,j,sq,ISOS,
+!     $                                     Jc)
+!
+!!isotopic sulfur species start here (only significant changes are in XS_S2 and XS_SO2)
+!!ffft - once the ISOS adds are complete, I don't need both calls, just an OR in one IF call. 
+!
+!      IF(species.eq.'SXO    ') CALL XS_SO(nw,wavl,wav,T,DEN,j,sq,ISOS)
+!      IF(species.eq.'OCSX   ') CALL XS_OCS(nw,wavl,wav,T,DEN,j,sq,ISOS)
+!      !returns SXO + O, SXO21, SXO23
+!      IF(species.eq.'SXO2   ') CALL XS_SO2(nw,wavl,wav,T,DEN,j,sq,ISOS)
+!      IF(species.eq.'SXO3   ') CALL XS_SO3(nw,wavl,wav,T,DEN,j,sq,ISOS)
+!      IF(species.eq.'H2SX   ') CALL XS_H2S(nw,wavl,wav,T,DEN,j,sq,ISOS)
+!     !returns SS8L then SS8R
+!      IF(species.eq.'SXS7   ') CALL XS_S8(nw,wavl,wav,T,DEN,j,sq,ISOS)
+!      !note using HO2 cross section for HSO
+!      IF(species.eq.'HSXO   ') CALL XS_HO2(nw,wavl,wav,T,DEN,j,sq,ISOS,
+!     $                                      Jb)
+!     !note this contains an unphysical scaling factor 
+!      IF(species.eq.'SXS    ') CALL XS_S2(nw,wavl,wav,T,DEN,j,sq,ISOS,
+!     $                                     Ja)
+!      !note using S2 cross section for S4 - returns differnt quantum yeilds for SXS+S, S2+SX (see Pavlov 02)
+!      IF(species.eq.'SXS3   ') CALL XS_S2(nw,wavl,wav,T,DEN,j,sq,ISOS,
+!     $                                     Jb) 
+!      !note using S2 cross section for S3
+!      IF(species.eq.'SXS2   ') CALL XS_S2(nw,wavl,wav,T,DEN,j,sq,ISOS,
+!     $                                     Jc)
+!
+!
+!!sorg species
+!      IF((species.eq.'CS2    ').OR.(species.eq.'CSXS   '))
+!     $      CALL XS_CS2(nw,wavl,wav,T,DEN,j,sq,ISOS)
+!      IF((species.eq.'CH3SH  ').OR.(species.eq.'CH3SXH ')) 
+!     $      CALL XS_CH3SH(nw,wavl,wav,T,DEN,j,sq,ISOS)
+!      IF((species.eq.'C2H6S  ').OR.(species.eq.'C2H6SX ')) CALL
+!     & XS_simple(species,nw,wavl,wav,T,DEN,j,sq)   
+!      IF((species.eq.'C2H6S2 ').OR.(species.eq.'C2H6SXS')) CALL 
+!     & XS_simple(species,nw,wavl,wav,T,DEN,j,sq)
+!
+!!corg species
+!      !OK
+!      IF(species.eq.'C2H2    ') CALL XS_C2H2(nw,wavl,wav,T,DEN,j,sq) 
+!
+!      IF(species.eq.'C2H4    ') CALL XS_C2H4(nw,wavl,wav,T,DEN,j,sq,Ja)
+!      ! shawn used C2H4 rate here  
+!      IF(species.eq.'CH      ') CALL XS_C2H4(nw,wavl,wav,T,DEN,j,sq,Jd)
+!
+!!shawn's use of C2H4 photorate
+!!212 * 0.51     212       C2H4      HV        C2H2      H2
+!!242 * 0.49     242       C2H4      HV        C2H2      H         H
+!!246 * 1.0      246       CH        HV        C         H
 
 
-      SUBROUTINE XS_HNO3(nw,wl,wc,tlev,airlev,jn,sq)
+!!243 * 0.34     243       C3H6      HV        C2H2      CH3       H
+!!251 * 1.0      251       C3H3      HV        C3H2      H
+!!258 * 0.57     258       C3H6      HV        CH2CCH2   H2
+!!259 * 0.02     259       C3H6      HV        C2H4      CH23
+!!260 * 0.05     260       C3H6      HV        C2H       CH4       H
+!
+!
+!      IF(species.eq.'C3H8    ') CALL XS_C3H8(nw,wavl,wav,T,DEN,j,sq)
+!      IF(species.eq.'CH2CO   ') CALL 
+!     & XS_simple(species,nw,wavl,wav,T,DEN,j,sq)
+!      IF(species.eq.'CH3CHO  ') CALL XS_CH3CHO(nw,wavl,wav,T,DEN,j,sq)
+!c      !shawn used C2H4 rate here with 0.57/0.02/0.05 quantum yields
+!      IF(species.eq.'C3H6    ') CALL XS_C3H6(nw,wavl,wav,T,DEN,j,sq)
+!      IF(species.eq.'C2H5CHO ') CALL 
+!     & XS_simple(species,nw,wavl,wav,T,DEN,j,sq)
+!      IF(species.eq.'C3H3') CALL 
+!c     !shawn used C2H4 rate here (check this xsection)
+!     & XS_simple(species,nw,wavl,wav,T,DEN,j,sq)
+!      IF(species.eq.'CH3C2H') CALL XS_CH3C2H(nw,wavl,wav,T,DEN,j,sq)
+!      IF(species.eq.'CH2CCH2') CALL XS_CH2CCH2(nw,wavl,wav,T,DEN,j,sq)
+!
+!c these are just here to remind us that these XS files exist
+!c       CALL XS_CL2O3(nw,wavl,wav,T,DEN,JCL2O3,sq)  !returns CLO + CLOO  (branch to CLO3??)  
+!
+!c       CALL XS_CHOCHO(nw,wavl,wav,T,DEN,100,sq,101,102)  !ACK - hardcoded "J-numbers" 
+!       !returns HCO + HCO, then H2 + CO + CO, then H2CO + CO  (never finished)
+!
+!      RETURN
+!      END
 
+!--------END ORIGINAL CALL FORMATING-------------------------------------------------------!
+       !EWS - airlev & wc not needed, not sure why it was there
+c      SUBROUTINE XS_HNO3(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_HNO3(nw,wl,tlev,jn,sq)
 
+!---------------------------------------------------------------------------------------!
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for HNO3 photolysis =*
@@ -188,12 +420,13 @@ c       CALL XS_CHOCHO(nw,wavl,wav,T,DEN,100,sq,101,102)  !ACK - hardcoded "J-nu
 * input
       INTEGER nw,jn
 c      REAL*8 wl(kw), wc(kw)
-      REAL*8 wl(nw+1), wc(nw)
-      REAL*8 tlev(nz)  !should go back to kz if I ever want to have a variable altitude grid
+      REAL*8 wl(nw+1) !EWS wc not needed 
+      !Eddie - Currently testing commenting out the below. Compilation warning says it isn't used
+      !  but it is. curious. 
+c      REAL*8 tlev(nz)  ! EWS - not used
       !I am no longer so sure about the above comment - NZ is set by the time we invoke XS's
       !it's not like we are going to change on the fly in the middle of a time-dependent run....
-c      REAL*8 airlev(kz)
-      REAL*8 airlev(nz)
+c      REAL*8 airlev(kz) ! currently this isn't used until declared again below
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -319,7 +552,9 @@ c      print *, yg1
       RETURN
       END
 
-      SUBROUTINE XS_HO2(nw,wl,wc,tlev,airlev,jn,sq,ISOS,jdum)
+       !EWS - airlev and tlev not needed
+c      SUBROUTINE XS_HO2(nw,wl,wc,tlev,airlev,jn,sq,ISOS,jdum)
+       SUBROUTINE XS_HO2(nw,wl,wc,jn,sq,ISOS,jdum)
 
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
@@ -351,14 +586,16 @@ c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reacti
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
-      INTEGER nw,jn,jdum,jhack,ISOS
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      INTEGER nw,jn,jdum,ISOS
+      REAL*8 wl(nw+1) !EWS - wc not used 
+      !orig was kw, but don't see why this is needed once nw is defined by gridw.f 
+      !could go back to kz if I ever want to have a variable altitude grid?
+c      REAL*8 tlev(nz)  ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -366,14 +603,14 @@ c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reacti
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=100)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+      INTEGER n1 
+      REAL*8 x1(kdata)
+      REAL*8 y1(kdata)
 
 * local
-      REAL*8 yg1(nw), yg2(nw), yg(nw)   !orig kw
+      REAL*8 yg1(nw), yg(nw)   !orig kw
       REAL*8 qy
-      INTEGER i, iw, n, idum,iz
+      INTEGER i, iw, n, iz
       INTEGER ierr
       INTEGER option
       ierr = 0
@@ -419,7 +656,7 @@ c option 2) from Kevin no qy
 ****        shorter wavelengths a linear decrease with lambda is assumed
 
       DO iw = 1, nw
-         IF (wc(iw) .GE. 248.) THEN
+         IF (wc(iw) .GE. 248.) THEN !EWS - weird. wc never declared. 
             qy = 1.
          ELSE
             qy = 1./15. + (wc(iw)-193.)*(14./15.)/(248.-193.)
@@ -480,8 +717,10 @@ c      print *, yg1
 
       RETURN
       END
-
-      SUBROUTINE XS_NO2(nw,wl,wc,tlev,airlev,jn,sq)
+ 
+       !EWS - airlev & wc not used for the below
+c      SUBROUTINE XS_NO2(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_NO2(nw,wl,tlev,jn,sq)
 
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
@@ -504,9 +743,9 @@ c      print *, yg1
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed (NO2)
+      REAL*8 tlev(nz) ! EWS - used here
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -514,14 +753,14 @@ c      print *, yg1
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=100)
-      INTEGER n1, n2
+      INTEGER n1
       REAL*8 x1(kdata), x2(kdata), x3(kdata)
       REAL*8 y1(kdata), y2(kdata)
 
 * local
-      REAL*8 yg1(nw), yg2(nw), yg(nw)   !orig kw
-      REAL*8 qy,dum
-      INTEGER i, iw, n, idum,iz,ierr,option
+      REAL*8 yg1(nw), yg2(nw)  !orig kw
+      REAL*8 dum
+      INTEGER i, iw, n, idum, ierr,option
       REAL*8 xsno2(nz,nw),wavn
       ierr = 0
 
@@ -768,7 +1007,9 @@ c      print *, jn,photolabel
       RETURN
       END
 
-      SUBROUTINE XS_H2O2(nw,wl,wc,tlev,airlev,jn,sq)
+       ! EWS - airlev not used below
+c      SUBROUTINE XS_H2O2(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_H2O2(nw,wl,wc,tlev,jn,sq)
 
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
@@ -790,9 +1031,9 @@ c      print *, jn,photolabel
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1), wc(nw) ! EWS - wc needed here (H2O2)
+      REAL*8 tlev(nz) ! EWS - used here
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -800,12 +1041,12 @@ c      print *, jn,photolabel
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=100)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+      INTEGER n1
+      REAL*8 x1(kdata)
+      REAL*8 y1(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw)
+      REAL*8 yg(nw), yg1(nw)
       REAL*8 qy
       REAL*8 a0, a1, a2, a3, a4, a5, a6, a7
       REAL*8 b0, b1, b2, b3, b4
@@ -949,8 +1190,9 @@ c      stop
       END
 
 
-
-      SUBROUTINE XS_OCS(nw,wl,wc,tlev,airlev,jn,sq,ISOS)
+       ! EWS - airlev, tlev, and wc not used
+c      SUBROUTINE XS_OCS(nw,wl,wc,tlev,airlev,jn,sq,ISOS)
+       SUBROUTINE XS_OCS(nw,wl,jn,sq,ISOS)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for OCS photolysis  =*
@@ -966,14 +1208,14 @@ c      stop
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn,ISOS
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed (OCS)
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -981,14 +1223,14 @@ c      stop
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=100)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+      INTEGER n1
+      REAL*8 x1(kdata)
+      REAL*8 y1(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw)
+      REAL*8 yg1(nw)
       REAL*8 qy
-      INTEGER i, iw, n, idum
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0      
 
@@ -1048,9 +1290,9 @@ c Quantum yield (from Kevin's code - no reference)
       RETURN
       END
 
-
-
-      SUBROUTINE XS_SO3(nw,wl,wc,tlev,airlev,jn,sq,ISOS)
+       ! EWS - airlev, tlev, and wc not used
+c      SUBROUTINE XS_SO3(nw,wl,wc,tlev,airlev,jn,sq,ISOS)
+       SUBROUTINE XS_SO3(nw,wl,jn,sq,ISOS)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for SO3 photolysis  =*
@@ -1068,14 +1310,14 @@ c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reacti
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn,ISOS
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed (SO3)
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -1083,14 +1325,14 @@ c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reacti
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=100)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+      INTEGER n1
+      REAL*8 x1(kdata)
+      REAL*8 y1(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw)
+      REAL*8 yg1(nw)
       REAL*8 qy
-      INTEGER i, iw, n, idum
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0      
 
@@ -1153,8 +1395,10 @@ c Quantum yield (no reference nor research)
 
       RETURN
       END
-
-      SUBROUTINE XS_S2(nw,wl,wc,tlev,airlev,jn,sq,ISOS,jdum)
+       
+       !EWS - airlev, tlev, and wc not used
+c      SUBROUTINE XS_S2(nw,wl,wc,tlev,airlev,jn,sq,ISOS,jdum)
+       SUBROUTINE XS_S2(nw,wl,jn,sq,ISOS,jdum)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for S2 photolysis   =*
@@ -1172,14 +1416,14 @@ c Quantum yield (no reference nor research)
 
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn,ISOS
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed (S2)
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -1187,14 +1431,14 @@ c Quantum yield (no reference nor research)
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=100)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+      INTEGER n1
+      REAL*8 x1(kdata)
+      REAL*8 y1(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw)
-      REAL*8 qy,scale
-      INTEGER i, iw, n, idum
+      REAL*8 yg1(nw)
+      REAL*8 qy, scale
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0      
 
@@ -1290,8 +1534,10 @@ c      print *, jn,photolabel
 
       RETURN
       END
-
-      SUBROUTINE XS_S8(nw,wl,wc,tlev,airlev,jn,sq,ISOS)
+      
+       !EWS - wc, tlev, and airlev not used
+c      SUBROUTINE XS_S8(nw,wl,wc,tlev,airlev,jn,sq,ISOS)
+       SUBROUTINE XS_S8(nw,wl,jn,sq,ISOS)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for S8  photolysis  =*
@@ -1310,17 +1556,17 @@ c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reacti
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn,ISOS
 c orig      REAL*8 wl(nw), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
+      REAL*8 wl(nw+1) ! EWS - wc not needed (S8)
 
 
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -1328,14 +1574,14 @@ c orig      REAL*8 wl(nw), wc(nw)   !orig was kw, but don't see why this is need
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=120)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
+      INTEGER n1
+      REAL*8 x1(kdata), x2(kdata)
       REAL*8 y1(kdata), y2(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw), yg2(nw)
-      REAL*8 qy,scale
-      INTEGER i, iw, n, idum
+      REAL*8 yg1(nw), yg2(nw)
+      REAL*8 qy
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0           
 
@@ -1440,8 +1686,9 @@ c        enddo
       RETURN
       END
 
-
-      SUBROUTINE XS_H2S(nw,wl,wc,tlev,airlev,jn,sq,ISOS)
+      !EWS - wc, tlev, and airlev not needed
+c      SUBROUTINE XS_H2S(nw,wl,wc,tlev,airlev,jn,sq,ISOS)
+       SUBROUTINE XS_H2S(nw,wl,jn,sq,ISOS)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for H2S photolysis  =*
@@ -1460,14 +1707,14 @@ c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reacti
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn,ISOS
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed (H2S)
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -1475,14 +1722,14 @@ c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reacti
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=21000)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+      INTEGER n1
+      REAL*8 x1(kdata)
+      REAL*8 y1(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw)
-      REAL*8 qy,scale
-      INTEGER i, iw, n, idum
+      REAL*8 yg1(nw)
+      REAL*8 qy
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0      
 
@@ -1592,8 +1839,9 @@ c Quantum yield (no reference nor research)
       RETURN
       END
 
-
-      subroutine XS_H2O(nw,wl,wc,tlev,airlev,jn,sq)
+       !EWS - airlev and tlev not used
+c      subroutine XS_H2O(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_H2O(nw,wl,wc,jn,sq)
 !-----------------------------------------------------------------------------!
 !   purpose:                                                                  !
 !   provide product (cross section) x (quantum yield) for H2O photolysis:     !
@@ -1611,19 +1859,20 @@ c Quantum yield (no reference nor research)
 
 c      IMPLICIT NONE
 c      INTEGER kin,kj,kw 
-c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reactions defined - will need to abstract or figure out
+c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  
+       !kj=number of reactions defined - will need to abstract or figure out
       INCLUDE 'PHOTOCHEM/INPUTFILES/parameters.inc'
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
-      INTEGER nw,jn,jdum
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      INTEGER nw,jn
+      REAL*8 wl(nw+1), wc(nw) ! EWS - wc needed here (H2O)
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -1640,7 +1889,7 @@ c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reacti
       real*8 y3(kdata)
       real*8 yg(nw), yg1(nw), yg2(nw), yg3(nw)
       real*8 qy
-      integer i, iw, n1, n2, n3, idum,iz
+      INTEGER i, n2, n3, idum,iz
       ierr = 0
 
 ***************** H2O *************
@@ -1857,8 +2106,9 @@ c Quantum yield (no reference nor research)
       END 
 c      end subroutine XS_H2O
 
-
-      SUBROUTINE XS_SO(nw,wl,wc,tlev,airlev,jn,sq,ISOS)
+       !EWS - airlev, tlev, and wc not needed
+c      SUBROUTINE XS_SO(nw,wl,wc,tlev,airlev,jn,sq,ISOS)
+       SUBROUTINE XS_SO(nw,wl,jn,sq,ISOS)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for SO photolysis   =*
@@ -1876,14 +2126,14 @@ c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reacti
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
-      INTEGER nw,jn,jdum,ISO,ISOS
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      INTEGER nw,jn,ISOS
+      REAL*8 wl(nw+1) ! EWS - wc not needed (SO)
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -1891,14 +2141,14 @@ c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reacti
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=100)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+      INTEGER n1
+      REAL*8 x1(kdata)
+      REAL*8 y1(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw)
-      REAL*8 qy,scale
-      INTEGER i, iw, n, idum
+      REAL*8 yg1(nw)
+      REAL*8 qy
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0      
 
@@ -1962,7 +2212,9 @@ c Quantum yield (no reference nor research)
       RETURN
       END
 
-      SUBROUTINE XS_CO2(nw,wl,wc,tlev,airlev,jn,sq)
+       !EWS - airlev, tlev, wc not needed
+c      SUBROUTINE XS_CO2(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_CO2(nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for CO2 photolysis  =*
@@ -1981,14 +2233,14 @@ c Quantum yield (no reference nor research)
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
-      INTEGER nw,jn,jdum
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      INTEGER nw,jn
+      REAL*8 wl(nw+1) ! EWS - wc not needed (CO2)
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -1996,14 +2248,14 @@ c Quantum yield (no reference nor research)
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=100)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
+      INTEGER n1
+      REAL*8 x1(kdata), x2(kdata)
       REAL*8 y1(kdata), y2(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw),yg2(nw)
-      REAL*8 qy,scale
-      INTEGER i, iw, n, idum
+      REAL*8 yg1(nw),yg2(nw)
+c      REAL*8 qy !EWS - not used
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0
 
@@ -2134,8 +2386,9 @@ c      print *, jn, photolabel
       RETURN
       END
 
-
-      SUBROUTINE XS_H2CO(nw,wl,wc,tlev,airlev,jn,sq)
+       !EWS - airlev, tlev, wc not used
+c      SUBROUTINE XS_H2CO(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_H2CO(nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for H2CO photolysis =*
@@ -2154,14 +2407,14 @@ c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reacti
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed (H2CO)
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -2174,9 +2427,9 @@ c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reacti
       REAL*8 y1(kdata), y2(kdata), y3(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw), yg2(nw), yg3(nw)
-      REAL*8 qy,scale
-      INTEGER i, iw, n, idum
+      REAL*8 yg1(nw), yg2(nw), yg3(nw)
+c      REAL*8 qy !EWS - not used
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0      
 
@@ -2270,8 +2523,9 @@ c Quantum yields:  from Kevin's photo.dat file
       END
 
 
-
-      SUBROUTINE XS_SO2(nw,wl,wc,tlev,airlev,jn,sq,ISOS)
+       ! EWS - airlev, tlev, wc not used
+c      SUBROUTINE XS_SO2(nw,wl,wc,tlev,airlev,jn,sq,ISOS)
+       SUBROUTINE XS_SO2(nw,wl,jn,sq,ISOS)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for SO2 photolysis  =*
@@ -2291,15 +2545,15 @@ c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reacti
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PHOTABLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
-      INTEGER nw,jn,jdum,ISOS
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      INTEGER nw,jn,ISOS
+      REAL*8 wl(nw+1) ! EWS - wc not needed (SO2)
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -2318,12 +2572,12 @@ c      PARAMETER(kdata=120,kdataHR=4200)  !for longward calculations
 
 
 * local
-      REAL*8 yg(nw),yg1(nw), yg2(nw), yg3(nw)
-      REAL*8 yg32(nw),yg33(nw), yg34(nw),ygnew(nw)
+      REAL*8 yg1(nw), yg2(nw), yg3(nw), ygnew(nw)
+c      REAL*8 yg32(nw),yg33(nw), yg34(nw) ! EWS - not used
 
-      REAL*8 qy,scale
+c      REAL*8 qy !EWS - not used
       real*8 mass  !from PHOTABLOK
-      INTEGER i, iw, n, idum
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0      
 
@@ -2608,8 +2862,9 @@ c      print *, wl(i),yg1(i),yg2(i),ygnew(i)
       RETURN
       END
 
-
-      SUBROUTINE XS_O3(nw,wl,wc,tlev,airlev,jn,sq)
+       !EWS - airlev & wc not used
+c      SUBROUTINE XS_O3(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_O3(nw,wl,tlev,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for O3 photolysis   =*
@@ -2625,14 +2880,14 @@ c      print *, wl(i),yg1(i),yg2(i),ygnew(i)
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn!,jdum
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed (O3)
+      REAL*8 tlev(nz) ! EWS - used here
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -2640,16 +2895,16 @@ c      print *, wl(i),yg1(i),yg2(i),ygnew(i)
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=130)
-      INTEGER n1, n2,n3
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
-      REAL*8 y1(kdata), y2(kdata), y3(kdata)
+      INTEGER n1, n2
+      REAL*8 x1(kdata), x2(kdata)
+      REAL*8 y1(kdata), y2(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw), yg2(nw), yg3(nw)
+      REAL*8 yg1(nw), yg2(nw)
       REAL*8 o3xs(nz,nw),T273,T203,TI,FR,zero_9, RO3
       REAL*8 TAU,TAU2,TAU3, AT(nz),BT(nz),CT(nz),ALM0(nz),BL
-      REAL*8 qy(nz,nw),scale
-      INTEGER i, iw, n, idum
+      REAL*8 qy(nz,nw)
+      INTEGER i, iw
       INTEGER ierr,option
       INTEGER L
       ierr = 0
@@ -2820,8 +3075,9 @@ c      print *, jn, photolabel
       RETURN
       END
 
-
-      SUBROUTINE XS_HCL(nw,wl,wc,tlev,airlev,jn,sq)
+       !EWS - airlev, tlev, and wc not used
+c      SUBROUTINE XS_HCL(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_HCL(nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for HCL photolysis  =*
@@ -2839,14 +3095,14 @@ c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reacti
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed (HCL)
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -2854,14 +3110,14 @@ c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reacti
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=100)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+      INTEGER n1
+      REAL*8 x1(kdata)
+      REAL*8 y1(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw)
-      REAL*8 qy,scale
-      INTEGER i, iw, n, idum
+      REAL*8 yg(nw), yg1(nw)
+      REAL*8 qy
+      INTEGER i
       INTEGER ierr,option
       ierr = 0      
 
@@ -2969,8 +3225,9 @@ c Quantum yield ( - there are some channel data for excited states of CL but wha
 
 
 
-
-      SUBROUTINE XS_O2(nw,wl,wc,tlev,airlev,jn,sq,columndepth,zy,IO2)
+       !EWS - wc not used
+c      SUBROUTINE XS_O2(nw,wl,wc,tlev,airlev,jn,sq,columndepth,zy,IO2)
+       SUBROUTINE XS_O2(nw,wl,tlev,airlev,jn,sq,columndepth,zy,IO2)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for O2 photolysis   =*
@@ -2987,15 +3244,15 @@ c Quantum yield ( - there are some channel data for excited states of CL but wha
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER jn,nw
-      INTEGER jdum,IO2
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      INTEGER IO2
+      REAL*8 wl(nw+1) ! EWS - wc needed here (O2)
+      REAL*8 tlev(nz) ! EWS - used here
+      REAL*8 airlev(nz) ! - EWS - used here
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -3004,8 +3261,8 @@ c Quantum yield ( - there are some channel data for excited states of CL but wha
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=100)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
+      INTEGER n1
+      REAL*8 x1(kdata), x2(kdata)
       REAL*8 y1(kdata), y2(kdata)
 
       INTEGER kdata2
@@ -3013,21 +3270,22 @@ c Quantum yield ( - there are some channel data for excited states of CL but wha
       real*8 x5(kdata2),y5(kdata2)
 
 * local
-      REAL*8 yg(nw),yg1(nw),yg2(nw),yg5(nw)
-      REAL*8 qy,scale
-      INTEGER i, iw, n, idum
+      REAL*8 yg1(nw),yg2(nw),yg5(nw)
+c      REAL*8 qy, scale !EWS - not used
+      INTEGER i
       INTEGER ierr,option
       real*8 PLOG(NZ),SIGL(NZ),BIGX(NZ),KA(17),SIG0(NZ,17),CL(NZ),KB(17)
-      real*8 A(17,9), B(17,5),SRO2(NZ,17),TO2L(NZ),O2COL(NZ)
+      real*8 A(17,9), B(17,5),SRO2(NZ,17),TO2L(NZ)
       real*8 columndepth(KJ,NZ) 
       real*8 BK,C,SD,AM,e_19,zy,PI,ZYR,U0
       integer KMAX,L,K
-      BK = 1.38E-16               !Boltzmann constant - in erg/K
+      BK = 1.38E-16 !Boltzmann constant - in erg/K
       PI = 3.14159
-      ZYR = ZY*PI/180.            ! note ZY is passed in subroutine call - solar angle in radians
+      ZYR = ZY*PI/180. ! note ZY is passed in subroutine call ! - solar angle in radians
       U0 = COS(ZYR)
       AM = 1./U0
-      e_19=2e-19                 !1 don't know why kevin had this in here. something about double precision      
+      !1 don't know why kevin had this in here. something about double precision     
+      e_19=2e-19
       ierr =0 
 
 **************** O2 photodissociation
@@ -3342,7 +3600,9 @@ c      print *, jn, photolabel
       RETURN
       END
 
-      SUBROUTINE XS_CH4(nw,wl,wc,tlev,airlev,jn,sq)
+       !EWS - airlev, tlev, and wc not used
+c      SUBROUTINE XS_CH4(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_CH4(nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for CH4 photolysis  =*
@@ -3359,16 +3619,16 @@ c      print *, jn, photolabel
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       CHARACTER*8 ISPEC
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/DBLOK.inc'      
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed (CH4)
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 
 * weighting functions
@@ -3377,14 +3637,14 @@ c      print *, jn, photolabel
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=100)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+      INTEGER n1
+      REAL*8 x1(kdata)
+      REAL*8 y1(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw)
-      REAL*8 qy,scale
-      INTEGER i, iw, n, idum
+      REAL*8 yg1(nw)
+      REAL*8 qy
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0      
 
@@ -3479,8 +3739,9 @@ c      print *, jn, photolabel
       END
 
 
-
-      SUBROUTINE XS_C2H6(nw,wl,wc,tlev,airlev,jn,sq)
+       ! EWS - airlev, tlev, and wc not used
+c      SUBROUTINE XS_C2H6(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_C2H6(nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for C2H6 photolysis =*
@@ -3506,16 +3767,16 @@ c      print *, jn, photolabel
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       CHARACTER*8 ISPEC
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/DBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed (C2H6)
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -3523,14 +3784,14 @@ c      print *, jn, photolabel
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=100)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+      INTEGER n1
+      REAL*8 x1(kdata)
+      REAL*8 y1(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw)
-      REAL*8 qy,qy2,scale
-      INTEGER i, iw, n, idum
+      REAL*8 yg1(nw)
+      REAL*8 qy,qy2
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0      
 
@@ -3635,8 +3896,9 @@ c       print *, 'upon seeing this note for the first time...'
       RETURN
       END
 
-
-      SUBROUTINE XS_NO(nw,wl,wc,tlev,airlev,jn,sq,columndepth)
+       ! EWS - wl, wc, sq, and nw not used
+c      SUBROUTINE XS_NO(nw,wl,wc,tlev,airlev,jn,sq,columndepth)
+       SUBROUTINE XS_NO(tlev,airlev,jn,columndepth)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for NO photolysis   =*
@@ -3651,33 +3913,33 @@ c       print *, 'upon seeing this note for the first time...'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/QBLOK.inc'
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
-      INTEGER nw,jn
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      INTEGER jn
+c      REAL*8 wl(nw+1), wc(nw) ! EWS - not used
+      REAL*8 tlev(nz) ! EWS - used here
+      REAL*8 airlev(nz) ! - EWS - used here
 
 * weighting functions
-      REAL*8 sq(kj,nz,kw)
+c      REAL*8 sq(kj,nz,kw) !EWS - not used
 
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=100)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+c      INTEGER n1, n2 ! EWS - not used
+c      REAL*8 x1(kdata), x2(kdata), x3(kdata) ! EWS - not used
+c      REAL*8 y1(kdata), y2(kdata) ! EWS - not used
 
 * local
-      REAL*8 yg(nw),yg1(nw),yg2(nw)
-      REAL*8 qy,scale
-      INTEGER i, iw, n, idum
+c      REAL*8 yg1(nw),yg2(nw) ! EWS - not used
+c      REAL*8 qy ! EWS - not used
+      INTEGER i
       INTEGER ierr,option
       real*8 columndepth(KJ,NZ),PLOG(NZ),signol(NZ) 
-      real*8 BK,C,SD,AM,e_19,zy,PI,ZYR,U0
-      integer KMAX,L,K
+      real*8 BK,SD,AM,zy,PI,ZYR,U0
+      integer L,K
       real*8 ANO(9,2),BNO(5,2),LLNO(35),CNO(NZ)
       ierr = 0
       BK = 1.38E-16               !Boltzmann constant - in erg/K
@@ -3783,7 +4045,9 @@ C            COEFFICIENTS FOR NO
       RETURN
       END
 
-      SUBROUTINE XS_NO3(nw,wl,wc,tlev,airlev,jn,sq)
+       !EWS - airlev and wc not used
+c      SUBROUTINE XS_NO3(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_NO3(nw,wl,tlev,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for NO3 photolysis  =*
@@ -3798,14 +4062,14 @@ C            COEFFICIENTS FOR NO
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
-      INTEGER nw,jn,jdum,jhack
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      INTEGER nw,jn
+      REAL*8 wl(nw+1) ! EWS - wc not needed (NO3)
+      REAL*8 tlev(nz) ! EWS - used here
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -3813,17 +4077,17 @@ C            COEFFICIENTS FOR NO
 * data arrays
       INTEGER kdata,kdata2
       PARAMETER(kdata=300,kdata2=100)
-      INTEGER n1, n2,n1o
+      INTEGER n1, n1o
       REAL*8 x1(kdata), x2(kdata2),x2o(kdata2)
       REAL*8 y1(kdata), y2(kdata2),y3(kdata2),y4(kdata2),y5(kdata2)
       REAL*8 y6(kdata2), y7(kdata2)
 
 * local
-      REAL*8 yg(nw),yg1(nw),yg2(nw),yg3(nw),yg4(nw),yg5(nw)
+      REAL*8 yg1(nw),yg2(nw),yg3(nw),yg4(nw),yg5(nw)
       REAL*8 yg6(nw),yg7(nw)
       REAL*8 qy1(nw,nz),qy2(nw,nz)
       REAL*8 T1,T2,T3
-      INTEGER i, iw, n, idum
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0      
 
@@ -3982,8 +4246,9 @@ c      write(14,*) jn, photolabel
 
 
 
-
-      SUBROUTINE XS_N2O(nw,wl,wc,tlev,airlev,jn,sq)
+       !EWS - airlev not used
+c      SUBROUTINE XS_N2O(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_N2O(nw,wl,wc,tlev,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for N2O photolysis  =*
@@ -3997,14 +4262,14 @@ c      write(14,*) jn, photolabel
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1), wc(nw) ! EWS - wc needed here (N2O)
+      REAL*8 tlev(nz) ! EWS - used here
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -4013,15 +4278,14 @@ c      write(14,*) jn, photolabel
       INTEGER kdata
       PARAMETER(kdata=100)
       INTEGER n1
-      REAL*8 x1(kdata), x2(kdata)
-      REAL*8 y1(kdata), y2(kdata)
-
+      REAL*8 x1(kdata)
+      REAL*8 y1(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw)
+      REAL*8 yg1(nw)
       REAL*8 qy
-      REAL*8 T1,T2,T3
-      INTEGER i, iw, n, idum
+c      REAL*8 T1,T2,T3 !EWS - not used
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0      
 
@@ -4109,8 +4373,9 @@ c             print *, B
       END
 
 
-
-      SUBROUTINE XS_CLO(nw,wl,wc,tlev,airlev,jn,sq)
+       !EWS - airlev, tlev, and wc not used
+c      SUBROUTINE XS_CLO(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_CLO(nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for CLO photolysis  =*
@@ -4126,14 +4391,14 @@ c             print *, B
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed (CLO)
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -4141,14 +4406,14 @@ c             print *, B
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=100)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+      INTEGER n1
+      REAL*8 x1(kdata)
+      REAL*8 y1(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw)
-      REAL*8 qy,scale
-      INTEGER i, iw, n, idum
+      REAL*8 yg1(nw)
+      REAL*8 qy
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0      
 
@@ -4213,8 +4478,9 @@ c Quantum yield (1 for O1D < 265 nm then 1 for O longward
       END
 
 
-
-      SUBROUTINE XS_HOCL(nw,wl,wc,tlev,airlev,jn,sq)
+       !EWS airlev, tlev, and wc not needed
+c      SUBROUTINE XS_HOCL(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_HOCL(nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for HOCL photolysis =*
@@ -4229,14 +4495,14 @@ c Quantum yield (1 for O1D < 265 nm then 1 for O longward
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed (HOCL)
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -4244,14 +4510,14 @@ c Quantum yield (1 for O1D < 265 nm then 1 for O longward
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=150)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+      INTEGER n1
+      REAL*8 x1(kdata)
+      REAL*8 y1(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw)
-      REAL*8 qy,scale
-      INTEGER i, iw, n, idum
+      REAL*8 yg1(nw)
+      REAL*8 qy
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0      
 
@@ -4306,8 +4572,9 @@ c      (i.e. ignoring HOCL + HV -> HCL + O)
       RETURN
       END
 
-
-      SUBROUTINE XS_CL2(nw,wl,wc,tlev,airlev,jn,sq)
+       !EWS - airlev and wc not used
+c      SUBROUTINE XS_CL2(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_CL2(nw,wl,tlev,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for HOCL photolysis =*
@@ -4322,14 +4589,14 @@ c      (i.e. ignoring HOCL + HV -> HCL + O)
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed (CL2)
+      REAL*8 tlev(nz) ! EWS - used here
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -4337,14 +4604,14 @@ c      (i.e. ignoring HOCL + HV -> HCL + O)
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=350)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+c      INTEGER n1, n2 ! EWS - not used
+c      REAL*8 x1(kdata), x2(kdata), x3(kdata) !EWS - not used
+c      REAL*8 y1(kdata), y2(kdata) !EWS - not used
 
 * local
-      REAL*8 yg(nw),yg1(nw),a
-      REAL*8 qy,scale
-      INTEGER i, iw, n, idum
+c      REAL*8 yg1(nw) !EWS - not used
+      REAL*8 qy, a
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0      
 
@@ -4384,10 +4651,9 @@ c Quantum yield is 1 (jpl-06)
       RETURN
       END
 
-
-
-
-      SUBROUTINE XS_CLOO(nw,wl,wc,tlev,airlev,jn,sq)
+       !EWS - airlev, tlev, and wc not used
+c      SUBROUTINE XS_CLOO(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_CLOO(nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for CLOO photolysis =*
@@ -4402,14 +4668,14 @@ c Quantum yield is 1 (jpl-06)
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed (CLOO)
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -4417,14 +4683,14 @@ c Quantum yield is 1 (jpl-06)
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=50)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+      INTEGER n1
+      REAL*8 x1(kdata)
+      REAL*8 y1(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw)
-      REAL*8 qy,scale
-      INTEGER i, iw, n, idum
+      REAL*8 yg1(nw)
+      REAL*8 qy
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0      
 
@@ -4479,12 +4745,9 @@ c Quantum yield is 1  (JPL-06)
       RETURN
       END
 
-
-
-
-
-
-      SUBROUTINE XS_OCLO(nw,wl,wc,tlev,airlev,jn,sq)
+       !EWS - airlev, tlev, and wc not used
+c      SUBROUTINE XS_OCLO(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_OCLO(nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for OCLO photolysis =*
@@ -4499,14 +4762,14 @@ c Quantum yield is 1  (JPL-06)
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed (OCLO)
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -4514,14 +4777,14 @@ c Quantum yield is 1  (JPL-06)
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=250)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+      INTEGER n1
+      REAL*8 x1(kdata)
+      REAL*8 y1(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw)
-      REAL*8 qy,scale
-      INTEGER i, iw, n, idum
+      REAL*8 yg1(nw)
+      REAL*8 qy
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0      
 
@@ -4578,9 +4841,9 @@ c of extra branches (CL + O2 and CLOO), but following rec and using 1 and 1 bran
       RETURN
       END
 
-
-
-      SUBROUTINE XS_CLONO(nw,wl,wc,tlev,airlev,jn,sq)
+       !EWS - airlev, tlev, and wc not used
+c      SUBROUTINE XS_CLONO(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_CLONO(nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for CLONO photolysis=*
@@ -4595,14 +4858,14 @@ c of extra branches (CL + O2 and CLOO), but following rec and using 1 and 1 bran
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed (CLONO)
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -4610,14 +4873,14 @@ c of extra branches (CL + O2 and CLOO), but following rec and using 1 and 1 bran
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=50)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+      INTEGER n1
+      REAL*8 x1(kdata)
+      REAL*8 y1(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw)
-      REAL*8 qy,scale
-      INTEGER i, iw, n, idum
+      REAL*8 yg1(nw)
+      REAL*8 qy
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0      
 
@@ -4670,9 +4933,9 @@ c Quantum yield is 1  (JPL-06)
       RETURN
       END
 
-
-
-      SUBROUTINE XS_CLONO2(nw,wl,wc,tlev,airlev,jn,sq)
+       !EWS - airlev not used
+c      SUBROUTINE XS_CLONO2(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_CLONO2(nw,wl,wc,tlev,jn,sq)
 *-------------------------------------------------------------------------------*
 *=  PURPOSE:                                                                   =*
 *=  Provide product of (cross section) x (quantum yield) for CLONO2 photolysis =*
@@ -4688,14 +4951,14 @@ c Quantum yield is 1  (JPL-06)
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
-      INTEGER nw,jn,j2
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      INTEGER nw,jn
+      REAL*8 wl(nw+1), wc(nw) ! EWS - wc needed here (CLONO2)
+      REAL*8 tlev(nz) ! EWS - used here
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -4709,8 +4972,8 @@ c Quantum yield is 1  (JPL-06)
 
 * local
       REAL*8 yg1(nw),yg2(nw),yg3(nw)
-      REAL*8 qy1,qy2,scale
-      INTEGER i, iw, n, idum,iz
+      REAL*8 qy1,qy2
+      INTEGER i, iw,iz
       INTEGER ierr,option
       ierr = 0      
 
@@ -4819,7 +5082,9 @@ c 333        format(0pf8.3,1pe11.4)
       RETURN
       END
 
-      SUBROUTINE XS_CLNO(nw,wl,wc,tlev,airlev,jn,sq)
+       !EWS - airlev, tlev, and wc not used
+c      SUBROUTINE XS_CLNO(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_CLNO(nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for CLNO photolysis =*
@@ -4834,14 +5099,14 @@ c 333        format(0pf8.3,1pe11.4)
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed (CLNO)
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -4849,14 +5114,14 @@ c 333        format(0pf8.3,1pe11.4)
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=150)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+      INTEGER n1
+      REAL*8 x1(kdata)
+      REAL*8 y1(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw)
-      REAL*8 qy,scale
-      INTEGER i, iw, n, idum
+      REAL*8 yg1(nw)
+      REAL*8 qy
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0      
 
@@ -4909,7 +5174,9 @@ c Quantum yield is 1  (JPL-06)
       RETURN
       END
 
-      SUBROUTINE XS_CLNO2(nw,wl,wc,tlev,airlev,jn,sq)
+       !EWS - airlev, tlev, and wc not used
+c      SUBROUTINE XS_CLNO2(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_CLNO2(nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for CLNO2 photolysis =*
@@ -4925,14 +5192,14 @@ c Quantum yield is 1  (JPL-06)
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed (CLNO2)
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -4940,14 +5207,14 @@ c Quantum yield is 1  (JPL-06)
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=50)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+      INTEGER n1
+      REAL*8 x1(kdata)
+      REAL*8 y1(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw)
-      REAL*8 qy,scale
-      INTEGER i, iw, n, idum
+      REAL*8 yg1(nw)
+      REAL*8 qy
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0      
 
@@ -5000,10 +5267,9 @@ c Quantum yield is 1  (JPL-06)
       RETURN
       END
 
-
-
-
-      SUBROUTINE XS_CHCLO(nw,wl,wc,tlev,airlev,jn,sq)
+       !EWS - airlev, tlev, and wc not used
+c      SUBROUTINE XS_CHCLO(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_CHCLO(nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for CHCLO photolysis=*
@@ -5020,14 +5286,14 @@ c Quantum yield is 1  (JPL-06)
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed (CHCLO)
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -5035,14 +5301,14 @@ c Quantum yield is 1  (JPL-06)
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=100)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+      INTEGER n1
+      REAL*8 x1(kdata)
+      REAL*8 y1(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw)
-      REAL*8 qy,scale
-      INTEGER i, iw, n, idum
+      REAL*8 yg1(nw)
+      REAL*8 qy
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0      
 
@@ -5095,7 +5361,9 @@ c Quantum yield is 1  (JPL-06)
       RETURN
       END
 
-      SUBROUTINE XS_CH3CL(nw,wl,wc,tlev,airlev,jn,sq)
+       !EWS - airlev not used
+c      SUBROUTINE XS_CH3CL(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_CH3CL(nw,wl,wc,tlev,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for CH3CL photolysis=*
@@ -5112,14 +5380,14 @@ c Quantum yield is 1  (JPL-06)
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1),wc(nw) ! EWS - wc needed here
+      REAL*8 tlev(nz) ! EWS - used here
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -5128,15 +5396,15 @@ c Quantum yield is 1  (JPL-06)
       INTEGER kdata
       PARAMETER(kdata=50)
       INTEGER n1
-      REAL*8 x1(kdata), x2(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+      REAL*8 x1(kdata)
+      REAL*8 y1(kdata)
 
 
 * local
-      REAL*8 yg(nw),yg1(nw)
+      REAL*8 yg1(nw)
       REAL*8 qy
-      REAL*8 T1,T2,T3
-      INTEGER i, iw, n, idum
+c      REAL*8 T1,T2,T3 !EWS - not used
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0      
 
@@ -5226,7 +5494,9 @@ c      stop
       RETURN
       END
 
-      SUBROUTINE XS_CCL4(nw,wl,wc,tlev,airlev,jn,sq)
+       !EWS - airlev not used
+c      SUBROUTINE XS_CCL4(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_CCL4(nw,wl,wc,tlev,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for CCL4 photolysis =*
@@ -5240,14 +5510,14 @@ c      stop
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed (CCL4)
+      REAL*8 tlev(nz) ! EWS - used here
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -5256,15 +5526,15 @@ c      stop
       INTEGER kdata
       PARAMETER(kdata=50)
       INTEGER n1
-      REAL*8 x1(kdata), x2(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+      REAL*8 x1(kdata)
+      REAL*8 y1(kdata)
 
 
 * local
-      REAL*8 yg(nw),yg1(nw)
+      REAL*8 yg1(nw)
       REAL*8 qy
-      REAL*8 T1,T2,T3
-      INTEGER i, iw, n, idum
+c      REAL*8 T1,T2,T3 !EWS - not used
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0      
 
@@ -5352,9 +5622,9 @@ c      stop
       RETURN
       END
 
-
-
-      SUBROUTINE XS_COCL2(nw,wl,wc,tlev,airlev,jn,sq)
+       !EWS - airlev, tlev, and wc not used
+c      SUBROUTINE XS_COCL2(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_COCL2(nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for COCL2 photolysis=*
@@ -5370,14 +5640,14 @@ c      stop
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed (COCOL2)
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -5385,14 +5655,14 @@ c      stop
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=60)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+      INTEGER n1
+      REAL*8 x1(kdata)
+      REAL*8 y1(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw)
-      REAL*8 qy,scale
-      INTEGER i, iw, n, idum
+      REAL*8 yg1(nw)
+      REAL*8 qy
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0      
 
@@ -5445,8 +5715,9 @@ c Quantum yield is 1  (JPL-06)
       RETURN
       END
 
-
-      SUBROUTINE XS_CL2O2(nw,wl,wc,tlev,airlev,jn,sq)
+       !EWS - airlev, tlev, and wc not used
+c      SUBROUTINE XS_CL2O2(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_CL2O2(nw,wl,jn,sq)
 *-------------------------------------------------------------------------------*
 *=  PURPOSE:                                                                   =*
 *=  Provide product of (cross section) x (quantum yield) for CL2O2 photolysis  =*
@@ -5462,14 +5733,14 @@ c Quantum yield is 1  (JPL-06)
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed (CL2O2)
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -5477,14 +5748,14 @@ c Quantum yield is 1  (JPL-06)
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=150)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+      INTEGER n1
+      REAL*8 x1(kdata)
+      REAL*8 y1(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw)
-      REAL*8 qy,scale,qy2
-      INTEGER i, iw, n, idum
+      REAL*8 yg1(nw)
+      REAL*8 qy,qy2
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0      
 
@@ -5551,8 +5822,9 @@ cNOTE - the second branch is uncertain - I should try to vary this when tuning
       RETURN
       END
 
-
-      SUBROUTINE XS_CH3O2NO2(nw,wl,wc,tlev,airlev,jn,sq)
+       !EWS - airlev, tlev, and wc not used
+c      SUBROUTINE XS_CH3O2NO2(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_CH3O2NO2(nw,wl,jn,sq)
 *---------------------------------------------------------------------------------*
 *=  PURPOSE:                                                                     =*
 *=  Provide product of (cross section) x (quantum yield) for CH3O2NO2 photolysis =*
@@ -5567,14 +5839,14 @@ cNOTE - the second branch is uncertain - I should try to vary this when tuning
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed (CH3O2NO2)
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -5582,14 +5854,14 @@ cNOTE - the second branch is uncertain - I should try to vary this when tuning
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=35)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+      INTEGER n1
+      REAL*8 x1(kdata)
+      REAL*8 y1(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw)
-      REAL*8 qy,scale
-      INTEGER i, iw, n, idum
+      REAL*8 yg1(nw)
+      REAL*8 qy
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0      
 
@@ -5642,8 +5914,9 @@ c assuming Quantum yield is 1 without research
       RETURN
       END
 
-
-      SUBROUTINE XS_CH3OCL(nw,wl,wc,tlev,airlev,jn,sq)
+       !EWS - airlev, tlev, and wc not used
+c      SUBROUTINE XS_CH3OCL(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_CH3OCL(nw,wl,jn,sq)
 *---------------------------------------------------------------------------------*
 *=  PURPOSE:                                                                     =*
 *=  Provide product of (cross section) x (quantum yield) for CH3OCL photolysis   =*
@@ -5658,14 +5931,14 @@ c assuming Quantum yield is 1 without research
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed (CH3OCL)
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -5673,14 +5946,14 @@ c assuming Quantum yield is 1 without research
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=35)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+      INTEGER n1
+      REAL*8 x1(kdata)
+      REAL*8 y1(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw)
-      REAL*8 qy,scale
-      INTEGER i, iw, n, idum
+      REAL*8 yg1(nw)
+      REAL*8 qy
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0      
 
@@ -5733,7 +6006,9 @@ c assuming Quantum yield is 1 (other channel is negligble (plus we don't do CH2O
       RETURN
       END
 
-      SUBROUTINE XS_CH3OOH(nw,wl,wc,tlev,airlev,jn,sq)
+       !EWS - airlev, tlev, and wc not used
+c      SUBROUTINE XS_CH3OOH(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_CH3OOH(nw,wl,jn,sq)
 *---------------------------------------------------------------------------------*
 *=  PURPOSE:                                                                     =*
 *=  Provide product of (cross section) x (quantum yield) for CH3OCL photolysis   =*
@@ -5748,14 +6023,14 @@ c assuming Quantum yield is 1 (other channel is negligble (plus we don't do CH2O
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed (CH3OOH)
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -5763,14 +6038,14 @@ c assuming Quantum yield is 1 (other channel is negligble (plus we don't do CH2O
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=40)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+      INTEGER n1
+      REAL*8 x1(kdata)
+      REAL*8 y1(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw)
-      REAL*8 qy,scale
-      INTEGER i, iw, n, idum
+      REAL*8 yg1(nw)
+      REAL*8 qy
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0      
 
@@ -5822,8 +6097,9 @@ c Quantum yield is 1
 
       RETURN
       END
-
-      SUBROUTINE XS_HO2NO2(nw,wl,wc,tlev,airlev,jn,sq)
+       !EWS - airlev, tlev, and wc not used
+c      SUBROUTINE XS_HO2NO2(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_HO2NO2(nw,wl,jn,sq)
 *---------------------------------------------------------------------------------*
 *=  PURPOSE:                                                                     =*
 *=  Provide product of (cross section) x (quantum yield) for HO2NO2 photolysis   =*
@@ -5839,14 +6115,14 @@ c Quantum yield is 1
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed (HO2NO2)
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -5854,14 +6130,14 @@ c Quantum yield is 1
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=65)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+      INTEGER n1
+      REAL*8 x1(kdata)
+      REAL*8 y1(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw)
-      REAL*8 qy,scale
-      INTEGER i, iw, n, idum
+      REAL*8 yg1(nw)
+      REAL*8 qy
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0      
 
@@ -5919,8 +6195,9 @@ c Quantum yield depends on wavelength
       RETURN
       END
 
-
-      SUBROUTINE XS_CL2O(nw,wl,wc,tlev,airlev,jn,sq)
+       !EWS - airlev, tlev, and wc not used
+c      SUBROUTINE XS_CL2O(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_CL2O(nw,wl,jn,sq)
 *---------------------------------------------------------------------------------*
 *=  PURPOSE:                                                                     =*
 *=  Provide product of (cross section) x (quantum yield) for CL2O photolysis     =*
@@ -5936,14 +6213,14 @@ c Quantum yield depends on wavelength
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed (CL2O)
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -5951,14 +6228,14 @@ c Quantum yield depends on wavelength
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=55)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+      INTEGER n1
+      REAL*8 x1(kdata)
+      REAL*8 y1(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw)
-      REAL*8 qy,scale
-      INTEGER i, iw, n, idum
+      REAL*8 yg1(nw)
+      REAL*8 qy
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0      
 
@@ -6011,8 +6288,9 @@ c Quantum yield is 1, ignoring potential other branches at short wavelengths...
       RETURN
       END
 
-
-      SUBROUTINE XS_N2O5(nw,wl,wc,tlev,airlev,jn,sq)
+       !EWS - airlev not used
+c      SUBROUTINE XS_N2O5(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_N2O5(nw,wl,wc,tlev,jn,sq)
 *---------------------------------------------------------------------------------*
 *=  PURPOSE:                                                                     =*
 *=  Provide product of (cross section) x (quantum yield) for N2O5 photolysis     =*
@@ -6030,14 +6308,14 @@ c Quantum yield is 1, ignoring potential other branches at short wavelengths...
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1), wc(nw) ! EWS - wc needed here (N2O5)
+      REAL*8 tlev(nz) ! EWS - used here
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -6050,9 +6328,9 @@ c Quantum yield is 1, ignoring potential other branches at short wavelengths...
       REAL*8 y1(kdata), y2(kdata), y3(kdata),A(kdata),B(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw)
-      REAL*8 qy,scale
-      INTEGER i, iw, n, idum
+      REAL*8 yg1(nw)
+      REAL*8 qy
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0      
 
@@ -6180,9 +6458,9 @@ c             print *, qy
       RETURN
       END
 
-
-
-      SUBROUTINE XS_CLO3(nw,wl,wc,tlev,airlev,jn,sq)
+       !EWS - airlev, tlev, and wc not used
+c      SUBROUTINE XS_CLO3(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_CLO3(nw,wl,jn,sq)
 *---------------------------------------------------------------------------------*
 *=  PURPOSE:                                                                     =*
 *=  Provide product of (cross section) x (quantum yield) for CLO3 photolysis     =*
@@ -6197,14 +6475,14 @@ c             print *, qy
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed (CLO3)
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -6212,14 +6490,14 @@ c             print *, qy
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=55)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+      INTEGER n1
+      REAL*8 x1(kdata)
+      REAL*8 y1(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw)
-      REAL*8 qy,scale
-      INTEGER i, iw, n, idum
+      REAL*8 yg1(nw)
+      REAL*8 qy
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0      
 
@@ -6274,8 +6552,9 @@ c assuming Quantum yield is 1,
       END
 
 
-
-      SUBROUTINE XS_CL2O3(nw,wl,wc,tlev,airlev,jn,sq)
+       !EWS - airlev, tlev, and wc not used
+c      SUBROUTINE XS_CL2O3(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_CL2O3(nw,wl,jn,sq)
 *---------------------------------------------------------------------------------*
 *=  PURPOSE:                                                                     =*
 *=  Provide product of (cross section) x (quantum yield) for CL2O3 photolysis    =*
@@ -6290,14 +6569,14 @@ c assuming Quantum yield is 1,
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed (CL2O3)
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -6305,14 +6584,14 @@ c assuming Quantum yield is 1,
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=30)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+      INTEGER n1
+      REAL*8 x1(kdata)
+      REAL*8 y1(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw)
-      REAL*8 qy,scale
-      INTEGER i, iw, n, idum
+      REAL*8 yg1(nw)
+      REAL*8 qy
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0      
 
@@ -6365,9 +6644,9 @@ c assuming Quantum yield is 1,
       RETURN
       END
 
-
-
-      SUBROUTINE XS_CL2O4(nw,wl,wc,tlev,airlev,jn,sq)
+       !EWS - airlev, tlev, and wc not used
+c      SUBROUTINE XS_CL2O4(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_CL2O4(nw,wl,jn,sq)
 *---------------------------------------------------------------------------------*
 *=  PURPOSE:                                                                     =*
 *=  Provide product of (cross section) x (quantum yield) for CL2O4 photolysis    =*
@@ -6382,14 +6661,14 @@ c assuming Quantum yield is 1,
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed (CL2O4)
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -6397,14 +6676,14 @@ c assuming Quantum yield is 1,
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=85)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+      INTEGER n1
+      REAL*8 x1(kdata)
+      REAL*8 y1(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw)
-      REAL*8 qy,scale
-      INTEGER i, iw, n, idum
+      REAL*8 yg1(nw)
+      REAL*8 qy
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0      
 
@@ -6457,9 +6736,9 @@ c assuming Quantum yield is 1,
       RETURN
       END
 
-
-
-      SUBROUTINE XS_CS2(nw,wl,wc,tlev,airlev,jn,sq,ISOS)
+       !EWS - airlev, tlev, and wc not used
+c      SUBROUTINE XS_CS2(nw,wl,wc,tlev,airlev,jn,sq,ISOS)
+       SUBROUTINE XS_CS2(nw,wl,jn,sq,ISOS)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for CS2 photolysis  =*
@@ -6479,14 +6758,14 @@ c assuming Quantum yield is 1,
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn,ISOS
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed (CS2)
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -6494,14 +6773,14 @@ c assuming Quantum yield is 1,
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=1200)
-      INTEGER n1, n2,n3
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
-      REAL*8 y1(kdata), y2(kdata), y3(kdata)
+      INTEGER n1, n2
+      REAL*8 x1(kdata), x2(kdata)
+      REAL*8 y1(kdata), y2(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw), yg2(nw), yg3(nw)
-      REAL*8 qy,scale
-      INTEGER i, iw, n, idum
+      REAL*8 yg1(nw), yg2(nw)
+c      REAL*8 qy  !EWS - not used
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0      
 
@@ -6606,7 +6885,9 @@ c     1)from MPI database
       RETURN
       END
 
-      SUBROUTINE XS_CH3SH(nw,wl,wc,tlev,airlev,jn,sq,ISOS)
+       !EWS - airlev, tlev, and wc not used
+c      SUBROUTINE XS_CH3SH(nw,wl,wc,tlev,airlev,jn,sq,ISOS)
+       SUBROUTINE XS_CH3SH(nw,wl,jn,sq,ISOS)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for CH3SH photo.    =*
@@ -6621,14 +6902,14 @@ c     1)from MPI database
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn,ISOS
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -6636,14 +6917,14 @@ c     1)from MPI database
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=1000)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+      INTEGER n1
+      REAL*8 x1(kdata)
+      REAL*8 y1(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw)
-      REAL*8 qy,qy2,scale
-      INTEGER i, iw, n, idum
+      REAL*8 yg1(nw)
+      REAL*8 qy,qy2
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0
 
@@ -6704,8 +6985,9 @@ c Quantum yield (fix this) - sddg
       RETURN
       END
 
-
-      SUBROUTINE XS_simple(species,nw,wl,wc,tlev,airlev,jn,sq)
+       !EWS - airlev, tlev, and wc not used
+c      SUBROUTINE XS_simple(species,nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_simple(species,nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for generic photo.  =*
@@ -6736,22 +7018,22 @@ c Quantum yield (fix this) - sddg
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
 
 * data arrays
       INTEGER kdata
-      INTEGER n1, n2
+      INTEGER n1
       REAL(kind=8),dimension(:),allocatable :: x1,y1
 
 * local
-      REAL*8 yg(nw),yg1(nw)
+      REAL*8 yg1(nw)
       REAL*8 qy
-      INTEGER i, iw, n, idum
+      INTEGER i, iw
       INTEGER ierr,option
       CHARACTER*90 XsecFile
       CHARACTER*8 species
@@ -6848,15 +7130,9 @@ c              sq(jn,i,iw) = 2.0*yg1(iw)*qy  !doubling rate due to symmetry of p
       RETURN
       END
 
-
-
-
-
-
-
-
-
-      SUBROUTINE XS_CHOCHO(nw,wl,wc,tlev,airlev,jn,sq)
+       !EWS - airlev, tlev, and wc not used
+c      SUBROUTINE XS_CHOCHO(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_CHOCHO(nw,wl,jn,sq)
 *---------------------------------------------------------------------------------*
 *=  PURPOSE:                                                                     =*
 *=  Provide product of (cross section) x (quantum yield) for CHOCHO photolysis   =*
@@ -6874,14 +7150,14 @@ c              sq(jn,i,iw) = 2.0*yg1(iw)*qy  !doubling rate due to symmetry of p
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
-      INTEGER nw,j,j2,j3,jn
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      INTEGER nw,jn
+      REAL*8 wl(nw+1) ! EWS - wc not needed
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -6894,9 +7170,9 @@ c              sq(jn,i,iw) = 2.0*yg1(iw)*qy  !doubling rate due to symmetry of p
       REAL*8 y1(kdata), y2(kdata2),y3(kdata2),y4(kdata2),y5(kdata2)
 
 * local
-      REAL*8 yg(nw),yg1(nw),yg2(nw),yg3(nw),yg4(nw),yg5(nw)
-      REAL*8 qy,scale
-      INTEGER i, iw, n, idum
+      REAL*8 yg1(nw),yg2(nw),yg3(nw),yg4(nw),yg5(nw)
+      REAL*8 qy
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0      
 
@@ -7032,7 +7308,9 @@ c this is not finished, only used for interpolative purposes...
       RETURN
       END
 
-      SUBROUTINE XS_C2H2(nw,wl,wc,tlev,airlev,jn,sq)
+       !EWS - airlev, tlev, and wc not used
+c      SUBROUTINE XS_C2H2(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_C2H2(nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for C2H2 photolysis =*
@@ -7051,15 +7329,15 @@ c this is not finished, only used for interpolative purposes...
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 
 * input
       INTEGER nw,jn,jdum
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -7067,14 +7345,14 @@ c this is not finished, only used for interpolative purposes...
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=100000)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+      INTEGER n1
+      REAL*8 x1(kdata)
+      REAL*8 y1(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw)
-      REAL*8 qy,qy2,scale
-      INTEGER i, iw, n, idum
+      REAL*8 yg1(nw)
+      REAL*8 qy,qy2
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0
 
@@ -7147,8 +7425,10 @@ c Quantum yields
 
       RETURN
       END
-
-      SUBROUTINE XS_CH3CHO(nw,wl,wc,tlev,airlev,jn,sq)
+     
+       !EWS - airlev, tlev, and wc not used
+c      SUBROUTINE XS_CH3CHO(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_CH3CHO(nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for CH3CHO photo.   =*
@@ -7164,15 +7444,15 @@ c Quantum yields
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 
 * input
       INTEGER nw,jn
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -7180,14 +7460,14 @@ c Quantum yields
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=150)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+      INTEGER n1
+      REAL*8 x1(kdata)
+      REAL*8 y1(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw)
-      REAL*8 qy,qy2,scale
-      INTEGER i, iw, n, idum
+      REAL*8 yg1(nw)
+      REAL*8 qy,qy2
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0
 
@@ -7248,9 +7528,9 @@ c Quantum yield (fix this)
       RETURN
       END
 
-
-
-      SUBROUTINE XS_C3H6(nw,wl,wc,tlev,airlev,jn,sq)
+       !EWS - airlev, tlev, and wc not used
+c      SUBROUTINE XS_C3H6(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_C3H6(nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for C3H6 photolysis =*
@@ -7267,15 +7547,15 @@ c Quantum yield (fix this)
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 
 * input
       INTEGER nw,jn
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -7283,14 +7563,14 @@ c Quantum yield (fix this)
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=100)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+      INTEGER n1
+      REAL*8 x1(kdata)
+      REAL*8 y1(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw)
-      REAL*8 qy,qy2,scale
-      INTEGER i, iw, n, idum
+      REAL*8 yg1(nw)
+      REAL*8 qy,qy2
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0
 
@@ -7361,7 +7641,9 @@ c Quantum yield (fix this)
       RETURN
       END
 
-      SUBROUTINE XS_CH3C2H(nw,wl,wc,tlev,airlev,jn,sq)
+       !EWS - airlev, tlev, and wc not used
+c      SUBROUTINE XS_CH3C2H(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_CH3C2H(nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for CH3C2H photo.   =*
@@ -7378,14 +7660,14 @@ c Quantum yield (fix this)
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -7393,14 +7675,14 @@ c Quantum yield (fix this)
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=1000)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+      INTEGER n1
+      REAL*8 x1(kdata)
+      REAL*8 y1(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw)
-      REAL*8 qy,qy2,scale
-      INTEGER i, iw, n, idum
+      REAL*8 yg1(nw)
+      REAL*8 qy,qy2
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0
 
@@ -7467,8 +7749,9 @@ c Quantum yield (fix this)
       RETURN
       END
 
-
-      SUBROUTINE XS_CH2CCH2(nw,wl,wc,tlev,airlev,jn,sq)
+       !EWS - airlev, tlev, and wc not used
+c      SUBROUTINE XS_CH2CCH2(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_CH2CCH2(nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for CH2CCH2 photo.  =*
@@ -7484,15 +7767,15 @@ c Quantum yield (fix this)
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 
 * input
       INTEGER nw,jn
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -7500,14 +7783,14 @@ c Quantum yield (fix this)
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=100)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+      INTEGER n1
+      REAL*8 x1(kdata)
+      REAL*8 y1(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw)
-      REAL*8 qy,qy2,scale
-      INTEGER i, iw, n, idum
+      REAL*8 yg1(nw)
+      REAL*8 qy,qy2
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0
 
@@ -7572,8 +7855,10 @@ c Quantum yield (fix this)
 
       RETURN
       END
-
-      SUBROUTINE XS_C2H4(nw,wl,wc,tlev,airlev,jn,sq,Jdum)
+ 
+       !EWS - airlev, tlev, and wc not used
+c      SUBROUTINE XS_C2H4(nw,wl,wc,tlev,airlev,jn,sq,Jdum)
+       SUBROUTINE XS_C2H4(nw,wl,jn,sq,Jdum)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for C2H4 photolysis =*
@@ -7588,14 +7873,14 @@ c Quantum yield (fix this)
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -7603,14 +7888,14 @@ c Quantum yield (fix this)
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=100)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+      INTEGER n1
+      REAL*8 x1(kdata)
+      REAL*8 y1(kdata)
 c
 * local
-      REAL*8 yg(nw),yg1(nw)
-      REAL*8 qy,qy2,scale
-      INTEGER i, iw, n, idum,Jdum
+      REAL*8 yg1(nw)
+      REAL*8 qy,qy2
+      INTEGER i, iw,Jdum
       INTEGER ierr,option
       ierr = 0
 
@@ -7676,7 +7961,9 @@ c Quantum yield (fix this)
       RETURN
       END
 
-      SUBROUTINE XS_C3H8(nw,wl,wc,tlev,airlev,jn,sq)
+       !EWS - airlev, tlev, and wc not used
+c      SUBROUTINE XS_C3H8(nw,wl,wc,tlev,airlev,jn,sq)
+       SUBROUTINE XS_C3H8(nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for C3H8 photolysis =*
@@ -7693,14 +7980,14 @@ c Quantum yield (fix this)
       implicit real*8(A-H,O-Z)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      CHARACTER*11 photolabel,plab
+      CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
-      REAL*8 wl(nw+1), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
-      REAL*8 tlev(nz)  !could go back to kz if I ever want to have a variable altitude grid?
-      REAL*8 airlev(nz)
+      REAL*8 wl(nw+1) ! EWS - wc not needed
+c      REAL*8 tlev(nz) ! EWS - not used
+c      REAL*8 airlev(nz) ! - EWS - not used
 
 * weighting functions
       REAL*8 sq(kj,nz,kw)
@@ -7708,14 +7995,14 @@ c Quantum yield (fix this)
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=200)
-      INTEGER n1, n2
-      REAL*8 x1(kdata), x2(kdata), x3(kdata)
-      REAL*8 y1(kdata), y2(kdata)
+      INTEGER n1
+      REAL*8 x1(kdata)
+      REAL*8 y1(kdata)
 
 * local
-      REAL*8 yg(nw),yg1(nw)
-      REAL*8 qy,qy2,scale
-      INTEGER i, iw, n, idum
+      REAL*8 yg1(nw)
+      REAL*8 qy,qy2
+      INTEGER i, iw
       INTEGER ierr,option
       ierr = 0
 
