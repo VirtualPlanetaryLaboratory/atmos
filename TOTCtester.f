@@ -446,10 +446,12 @@ c OPEN FILES
       open(2, file='PHOTOCHEM/DATA/aerosol.table',status='OLD') !,form='UNFORMATTED')
       open(3, file='PHOTOCHEM/DATA/photo.dat',status='OLD')
       open(4, file='PHOTOCHEM/INPUTFILES/species.dat',status='OLD')
-      open(7, file='PHOTOCHEM/INPUTFILES/PLANET.dat',status='OLD')                !planet parameters (G, FSCALE, ALB,ZTROP,etc)
+      !planet parameters (G, FSCALE, ALB,ZTROP,etc)
+      open(7, file='PHOTOCHEM/INPUTFILES/PLANET.dat',status='OLD')
       open(231, file='PHOTOCHEM/INPUTFILES/input_photchem.dat',
      &          status='OLD')       !model parameters (AGL, IO2,INO, LGRID, etc)
-      open(9, file='PHOTOCHEM/INPUTFILES/reactions.rx',status='OLD')          ! reaction file
+      ! reaction file
+      open(9, file='PHOTOCHEM/INPUTFILES/reactions.rx',status='OLD')
       open(14, file='PHOTOCHEM/out.out',status='UNKNOWN')    ! output
       open(17, file='PHOTOCHEM/in.dist',status='OLD')         ! formatted input
       open(18, file='PHOTOCHEM/out.dist',status='UNKNOWN')    ! formatted output
@@ -716,7 +718,8 @@ c-mc this is bad code.  there is probably some way to do this with the read in a
 c-mc or even if necessary, some way to redo the read without closing and opening the file again
 c-mc whatever
       close(9)
-      open(9, file='PHOTOCHEM/INPUTFILES/reactions.rx',status='OLD')          ! chemical reaction file
+      ! chemical reaction file
+      open(9, file='PHOTOCHEM/INPUTFILES/reactions.rx',status='OLD') 
       read(9,204) REACTYPE
  204  FORMAT(48X,A5)
 
@@ -2238,7 +2241,9 @@ c nb that vdep for particles is defined to include wfall when particles are in t
         do i=NQ+1,NQ1 !need to fill up rainout and depostion vectors for the triadiagonal species to make the budgets work out.
           SR(I)=0.
             do j=1,JTROP
-              SR(I) = SR(I)+ RAINGC(LH2SO4,J)*PARTICLES(J,i-nq)*DEN(J)*DZ(J)   !ACK - all particles raining out like H2SO4 !ISOHACK
+              !ACK - all particles raining out like H2SO4 !ISOHACK
+              SR(I) = SR(I)+ RAINGC(LH2SO4,J)*PARTICLES(J,i-nq)
+     $                *DEN(J)*DZ(J)
             enddo
 
             PHIDEP(I)=(WFALL(1,i-nq)+vturb)* PARTICLES(1,i-nq)*DEN(1)  !ACK - hardcoded turbulent diffusion velocity !ISOHACK - will need to change in ISO
