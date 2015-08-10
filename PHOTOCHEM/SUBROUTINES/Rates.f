@@ -11,9 +11,11 @@
 c-mc rate constant units are cm^3/mol/s
 
       if (ISOTOPE.EQ.1) then
-       open(9, file='PHOTOCHEM/INPUTFILES/ISOreactions.rx',status='OLD')          ! chemical reaction file
+       ! chemical reaction file
+       open(9, file='PHOTOCHEM/INPUTFILES/ISOreactions.rx',status='OLD')
       else
-       open(9, file='PHOTOCHEM/INPUTFILES/reactions.rx',status='OLD')          ! chemical reaction file
+       ! chemical reaction file
+       open(9, file='PHOTOCHEM/INPUTFILES/reactions.rx',status='OLD')
       endif
 
 
@@ -23,7 +25,8 @@ c-mc rate constant units are cm^3/mol/s
        do J=1,NR
 C READ IN TWO BODY REACTION RATES
           if (REACTYPE(J) .EQ. '2BODY') then
-           read (9,667) ARH, TFAC         !read in Arhenius and Temperature factor (note TFAC contains the negative sign. not standard practice)
+           !read in Arhenius and Temperature factor (note TFAC contains the negative sign. not standard practice)
+           read (9,667) ARH, TFAC         
 
 
           do i=1,nz
@@ -58,7 +61,8 @@ c-mc the below are rate constants which don't fit in the 2BODY or 3BODY category
 
 !   HO2 + HO2 -> H2O2 + O2
       if (CHEMJ(1,J).EQ.'HO2'.AND.CHEMJ(2,J).EQ.'HO2') THEN
-       A(J,I) = 2.3E-13*EXP(590./T(I)) + 1.7E-33*EXP(1000./T(I))*DEN(I)   !JPL-02
+       !JPL-02
+       A(J,I) = 2.3E-13*EXP(590./T(I)) + 1.7E-33*EXP(1000./T(I))*DEN(I)
       endif
 
 !   O + O + M -> O2 + M
@@ -424,7 +428,8 @@ c get back to orig - save an in.dist - then try to lower this.
           if (CHEMJ(3,J).EQ.'CSX'.AND.CHEMJ(4,J).EQ.'S2') factor=1/3.
           if (CHEMJ(3,J).EQ.'CS'.AND.CHEMJ(4,J).EQ.'SXS') factor=2/3.
 
-       A(J,I) = factor*1.9E-14 * EXP(-580./T(I)) * (T(I)/298.)**3.97    ! Woiki et al 1995
+       ! Woiki et al 1995
+       A(J,I) = factor*1.9E-14 * EXP(-580./T(I)) * (T(I)/298.)**3.97 
       endif
 
 !   C2H6S + H ->  CH3SH + CH3  !SORG
