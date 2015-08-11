@@ -98,14 +98,20 @@ c   lets play guess the units.  looks like mol/liter/atm
        if(ISPEC(J).EQ.'S4'.OR.ISPEC(J).EQ.'SXS3')       H(J,I) = 0.
        if(ISPEC(J).EQ.'S8'.OR.ISPEC(J).EQ.'SXS7')       H(J,I) = 0.
 !       if(ISPEC(J).EQ.'S8AER'.OR.ISPEC(J).EQ.'SXS7AER') H(J,I) = 0
-       if(ISPEC(J).EQ.'S8AER'.OR.ISPEC(J).EQ.'SXS7AER') H(J,I) = 7.E11  !infinite (CHECK THIS against PAVLOV/KEVIN)
+      !infinite (CHECK THIS against PAVLOV/KEVIN)
+       if(ISPEC(J).EQ.'S8AER'.OR.ISPEC(J).EQ.'SXS7AER') H(J,I) = 7.E11
        if(ISPEC(J).EQ.'HNO') H(J,I) = 7.E11
-       if(ISPEC(J).EQ.'HS'.OR.ISPEC(J).EQ.'HSX')        H(J,I) = 1.E5     ! I think jim made this up
-       if(ISPEC(J).EQ.'SO'.OR.ISPEC(J).EQ.'SXO')        H(J,I) = 1.9E-3   ! I think jim made this up
-       if(ISPEC(J).EQ.'SO3'.OR.ISPEC(J).EQ.'SXO3')      H(J,I) = 7.E11  ! updated, infinite
+       ! I think jim made the below up
+       if(ISPEC(J).EQ.'HS'.OR.ISPEC(J).EQ.'HSX')        H(J,I) = 1.E5
+       ! I think jim made the below up
+       if(ISPEC(J).EQ.'SO'.OR.ISPEC(J).EQ.'SXO')        H(J,I) = 1.9E-3
+       ! updated, infinite
+       if(ISPEC(J).EQ.'SO3'.OR.ISPEC(J).EQ.'SXO3')      H(J,I) = 7.E11
        if(ISPEC(J).EQ.'H2SO4'.OR.ISPEC(J).EQ.'H2SXO4')  H(J,I) = 7.E11
-       if(ISPEC(J).EQ.'HSO'.OR.ISPEC(J).EQ.'HSXO')      H(J,I) = 9.E3   ! I think jim made this up
-       if(ISPEC(J).EQ.'SO4AER'.OR.ISPEC(J).EQ.'SXO4AER')H(J,I) = 7.E11  !infinite for particle species 
+       ! I think jim made the below up
+       if(ISPEC(J).EQ.'HSO'.OR.ISPEC(J).EQ.'HSXO')      H(J,I) = 9.E3
+       !infinite for particle species 
+       if(ISPEC(J).EQ.'SO4AER'.OR.ISPEC(J).EQ.'SXO4AER')H(J,I) = 7.E11
        if(ISPEC(J).EQ.'HCAER') H(J,I) = 7.E11   !infinite for particle species 
        if(ISPEC(J).EQ.'HCAER2') H(J,I) = 7.E11   !infinite for particle species 
        if(ISPEC(J).EQ.'O2') H(J,I) = 1.3E-3* EXP(1500.*tfac) ! updated
@@ -262,7 +268,7 @@ C ***** LOOP OVER ALTITUDE *****
         SO4_2 = (USOL(LH2SO4,I) + USOL(LSO4AER,I))/ALPHARAIN  
        endif   
       else !if ISOTOPE=1, use the major species concentrations which are stored as inert species
-       SO4_2= (UINERT(LH2SO4-Loff,I) + UINERT(LSO4AER-Loff,I))/ALPHARAIN  
+       SO4_2= (UINERT(LH2SO4-Loff,I) + UINERT(LSO4AER-Loff,I))/ALPHARAIN
       endif   
       SO4SAV(I) = SO4_2
       CO2aq = FCO2*DEN(I)*HCO2(I)*R*TAQ(I)
@@ -360,7 +366,7 @@ C   SAVE DENSITIES AND CALCULATE ENHANCEMENTS
       if(ISOTOPE.EQ.0) ENHAN(LH2CO,I) = HEFF(LH2CO)/H(LH2CO,I)
       ENHAN(L1,I) = HEFF(L1)/H(L1,I)
       ENHAN(L2,I) = HEFF(L2)/H(L2,I)
-  17  CONTINUE
+c  17  CONTINUE !EWS - not used
 C
 c what follows is incomprehensible to me
 c  they state that the vertical integral of WH2O is the rainout rate

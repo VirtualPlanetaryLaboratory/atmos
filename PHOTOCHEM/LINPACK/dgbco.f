@@ -148,7 +148,7 @@ c
 c     solve trans(u)*w = e
 c
       ek = 1.0d0
-  998 FORMAT(1X,"j = ",I5,", z(j) = ",1PE9.3)
+c  998 FORMAT(1X,"j = ",I5,", z(j) = ",1PE9.3) !EWS - not currently used
          z = 0.0d0
       m = ml + mu + 1
       ju = 0

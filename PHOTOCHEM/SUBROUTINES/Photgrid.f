@@ -673,10 +673,10 @@ c         OPEN(UNIT=kin,file='PHOTOCHEM/DATA/FLUX/composite.atl3',STATUS='old')
          ENDDO
          DO i = 1, n
             READ(kin,*) x1(i), y1(i)  !this flux in mw/m2/nm, but is sampled at subangstom resolution
-            x1(i)=x1(i)*10d0   !convert wavelength from nm to Angstoms
+            x1(i)=x1(i)*10e0   !convert wavelength from nm to Angstoms
             x2(i)=x1(i)      ! x2 also angstroms
             x3(i)=x1(i)      ! x3 also angstroms
-            y3(i)=y1(i)/10d0   ! for y3, convert thuillier flux to mw/m2/A
+            y3(i)=y1(i)/10e0   ! for y3, convert thuillier flux to mw/m2/A
          ENDDO
          CLOSE (kin)
 
@@ -751,7 +751,7 @@ c - the youngsun correction will be overwritten and should be done in energy spa
 
          DO iw = 1, nw
             if (wl(iw).eq.1216) then
-               f(iw)=5.6d11*y2(indexLa)
+               f(iw)=5.6e11*y2(indexLa)
                relflux(iw)=y2(indexLa)
             else 
                f(iw) = yg3(iw)*(wl(iw+1)-wl(iw))*5.039e8*wl(iw)/10. !convert to photons/cm2/s
@@ -1018,10 +1018,10 @@ c 1.33432e+14 in photons/cm2/s
          ENDDO
          DO i = 1, n
             READ(kin,*) x1(i), y1(i)  !this flux in mw/m2/nm, but is sampled at subangstom resolution
-            x1(i)=x1(i)*10d0   !convert wavelength from nm to Angstoms
+            x1(i)=x1(i)*10e0   !convert wavelength from nm to Angstoms
             x2(i)=x1(i)      ! x2 also angstroms
             x3(i)=x1(i)      ! x3 also angstroms
-            y3(i)=y1(i)/10d0   ! for y3, convert thuillier flux to mw/m2/A
+            y3(i)=y1(i)/10e0   ! for y3, convert thuillier flux to mw/m2/A
          ENDDO
          CLOSE (kin)
 

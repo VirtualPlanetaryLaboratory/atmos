@@ -6,20 +6,18 @@
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/ISOBLOK.inc'
 
 * input
+!------- EWS - these are the variables that need to be declared here-------!
       dimension columndepth(KJ,NZ)  !testing this as an optional parameter 
       INTEGER nw,j,IO2
-! EWS - commented variables below are not needed and cause compilation warnings
-c      REAL*8 wl(nw+1), wc(nw)
-c      REAL*8 tlev(nz)  !should go back to kz if I ever want to have a variable altitude grid
-      !I am no longer so sure about the above comment - NZ is set by the time we invoke XS's
-      !it's not like we are going to change on the fly in the middle of a time-dependent run....
-c     REAL*8 airlev(nz) ! - EWS - not used ! EWS -not needed 
+      REAL*8 wavl(nw+1), wav(nw)
+      REAL*8 T(NZ), DEN(NZ)
       REAL*8 sq(kj,nz,kw)
-
+      REAL*8 zy
       Ja=0
       Jb=1
       Jc=2
       Jd=3
+!---------------------------------------------------------------------------!
 
 !---------EWS NOTE: I have removed unnecessary variables to avoid compilation warnings---!
 !---------EWS NOTE: Find original call formatting below update---------------------------!
@@ -423,7 +421,7 @@ c      REAL*8 wl(kw), wc(kw)
       REAL*8 wl(nw+1) !EWS wc not needed 
       !Eddie - Currently testing commenting out the below. Compilation warning says it isn't used
       !  but it is. curious. 
-c      REAL*8 tlev(nz)  ! EWS - not used
+      REAL*8 tlev(nz)  ! EWS - used here
       !I am no longer so sure about the above comment - NZ is set by the time we invoke XS's
       !it's not like we are going to change on the fly in the middle of a time-dependent run....
 c      REAL*8 airlev(kz) ! currently this isn't used until declared again below
@@ -591,7 +589,7 @@ c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reacti
       SAVE/PBLOK/
 * input
       INTEGER nw,jn,jdum,ISOS
-      REAL*8 wl(nw+1) !EWS - wc not used 
+      REAL*8 wl(nw+1), wc(nw) !EWS - wc used here
       !orig was kw, but don't see why this is needed once nw is defined by gridw.f 
       !could go back to kz if I ever want to have a variable altitude grid?
 c      REAL*8 tlev(nz)  ! EWS - not used
@@ -656,7 +654,7 @@ c option 2) from Kevin no qy
 ****        shorter wavelengths a linear decrease with lambda is assumed
 
       DO iw = 1, nw
-         IF (wc(iw) .GE. 248.) THEN !EWS - weird. wc never declared. 
+         IF (wc(iw) .GE. 248.) THEN
             qy = 1.
          ELSE
             qy = 1./15. + (wc(iw)-193.)*(14./15.)/(248.-193.)
@@ -3250,7 +3248,7 @@ c      SUBROUTINE XS_O2(nw,wl,wc,tlev,airlev,jn,sq,columndepth,zy,IO2)
 * input
       INTEGER jn,nw
       INTEGER IO2
-      REAL*8 wl(nw+1) ! EWS - wc needed here (O2)
+      REAL*8 wl(nw+1) ! EWS - wc not needed here (O2)
       REAL*8 tlev(nz) ! EWS - used here
       REAL*8 airlev(nz) ! - EWS - used here
 
@@ -3394,7 +3392,7 @@ c (i.e. call this subroutine when it needs to be called...)
          IF (L .GE. 15) BIGX(I) = TLEV(I)
         enddo 
 
-        KMAX = KA(L)   !number of coefficients
+        KMAX = INT(KA(L)) !number of coefficients
 
         do K=1,KMAX
          do I=1,NZ
@@ -3438,7 +3436,7 @@ c (i.e. call this subroutine when it needs to be called...)
             CL(I) = 0.
            enddo
 
-          KMAX = KB(L)   !number of coefficients
+          KMAX = INT(KB(L))   !number of coefficients
 
            do K=1,KMAX
             do I=1,NZ
@@ -4284,6 +4282,7 @@ c      REAL*8 airlev(nz) ! - EWS - not used
 * local
       REAL*8 yg1(nw)
       REAL*8 qy
+      REAL*8 lambda
 c      REAL*8 T1,T2,T3 !EWS - not used
       INTEGER i, iw
       INTEGER ierr,option
@@ -4345,7 +4344,7 @@ c cross section is temperature dependent - see JPL-06
 
 
       DO iw = 1, nw
-         lambda = wc(iw)/10.   !convet to nm
+         lambda = wc(iw)/10. !convet to nm
 
          IF (lambda .GE. 173. .AND. lambda .LE. 240.) THEN
            DO iz = 1, nz
@@ -5403,6 +5402,7 @@ c      REAL*8 airlev(nz) ! - EWS - not used
 * local
       REAL*8 yg1(nw)
       REAL*8 qy
+      REAL*8 lambda
 c      REAL*8 T1,T2,T3 !EWS - not used
       INTEGER i, iw
       INTEGER ierr,option
@@ -5464,7 +5464,7 @@ c cross section is temperature dependent - see JPL-06
 
 
       DO iw = 1, nw
-         lambda = wc(iw)/10.   !convet to nm
+         lambda = wc(iw)/10. !convet to nm
 
          IF (lambda .GE. 174. .AND. lambda .LE. 216.) THEN
            DO iz = 1, nz
@@ -5515,7 +5515,7 @@ c      SUBROUTINE XS_CCL4(nw,wl,wc,tlev,airlev,jn,sq)
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
-      REAL*8 wl(nw+1) ! EWS - wc not needed (CCL4)
+      REAL*8 wl(nw+1), wc(nw) !EWS - wc needed here
       REAL*8 tlev(nz) ! EWS - used here
 c      REAL*8 airlev(nz) ! - EWS - not used
 
@@ -5529,10 +5529,10 @@ c      REAL*8 airlev(nz) ! - EWS - not used
       REAL*8 x1(kdata)
       REAL*8 y1(kdata)
 
-
 * local
       REAL*8 yg1(nw)
       REAL*8 qy
+      REAL*8 lambda
 c      REAL*8 T1,T2,T3 !EWS - not used
       INTEGER i, iw
       INTEGER ierr,option
@@ -6330,6 +6330,7 @@ c      REAL*8 airlev(nz) ! - EWS - not used
 * local
       REAL*8 yg1(nw)
       REAL*8 qy
+      REAL*8 lambda
       INTEGER i, iw
       INTEGER ierr,option
       ierr = 0      
@@ -6428,7 +6429,7 @@ c - also check 420 nm.
 
 
       DO iw = 1, nw
-         lambda = wc(iw)/10.   !convet to nm
+         lambda = wc(iw)/10. !convet to nm
 
          IF (lambda .GE. 260. .AND. lambda .LE. 420.) THEN
            DO iz = 1, nz

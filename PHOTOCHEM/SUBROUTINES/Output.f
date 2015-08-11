@@ -135,8 +135,8 @@ c      print *, W0T(j,1)
 c      stop
 
       if (NP.gt.2) then
-
-      do L=3,NP  !ACK - hardcoded for HCAER/HCAER2 to be the final particle...
+         L3 = 3 !EWS - prevents gfortran compilation warnings
+      do L=L3,NP  !ACK - hardcoded for HCAER/HCAER2 to be the final particle
       do j=1,kw
       do I=1,NZ
       R = RPAR(I,L)  !hcaer  (ACK - should be an if here)
