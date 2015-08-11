@@ -33,12 +33,12 @@ c   heights
         enddo
 
       if (PLANET .EQ. 'EARTH') then 
-        bHN2(i) = 2.7D19*(TAV/200.)**0.75   ! correct for N2
-        bH2N2(i) = 1.4D19*(TAV/200.)**0.75  ! correct for N2
+        bHN2(i) = 2.7E19*(TAV/200.)**0.75   ! correct for N2
+        bH2N2(i) = 1.4E19*(TAV/200.)**0.75  ! correct for N2
 c       bXN2(i) = 4.0D18*(TAV/200.)**0.75
       else if (PLANET .EQ. 'MARS') then
-        bHN2(i) = 0.8*1.8*1.4D19*(TAV/200.)**0.75  ! correct for CO2
-        bH2N2(i) = 0.8*1.4D19*(TAV/200.)**0.75  ! correct for CO2
+        bHN2(i) = 0.8*1.8*1.4E19*(TAV/200.)**0.75  ! correct for CO2
+        bH2N2(i) = 0.8*1.4E19*(TAV/200.)**0.75  ! correct for CO2
 c       bXN2(i) = 4.0D18*(TAV/200.)**0.75
       endif   
 
@@ -52,12 +52,12 @@ c       bXN2(i) = 4.0D18*(TAV/200.)**0.75
       enddo
 
       if (PLANET .EQ. 'EARTH') then 
-      bHN2(nz) = 2.7D19*(T(nz)/200.)**0.75   ! correct for N2
-      bH2N2(nz) = 1.4D19*(T(nz)/200.)**0.75  ! correct for N2
+      bHN2(nz) = 2.7E19*(T(nz)/200.)**0.75   ! correct for N2
+      bH2N2(nz) = 1.4E19*(T(nz)/200.)**0.75  ! correct for N2
 c     bXN2(nz) = 4.0D18*(T(nz)/200.)**0.75
       else if (PLANET .EQ. 'MARS') then
-      bHN2(nz) = 0.8*1.8*1.4D19*(T(nz)/200.)**0.75  ! correct for CO2
-      bH2N2(nz) = 0.8*1.4D19*(T(nz)/200.)**0.75     ! correct for CO2
+      bHN2(nz) = 0.8*1.8*1.4E19*(T(nz)/200.)**0.75  ! correct for CO2
+      bH2N2(nz) = 0.8*1.4E19*(T(nz)/200.)**0.75     ! correct for CO2
 c     bXN2(nz) = 4.0D18*(T(nz)/200.)**0.75
       endif   
 
