@@ -39,7 +39,7 @@ cc                                                                    cc
 cccccccccccccccccccccccccccccc  r a y l e i g h  ccccccccccccccccccccccc
 
       INCLUDE 'PHOTOCHEM/INPUTFILES/parameters.inc'
-      implicit real*16(A-H,O-Z)
+      implicit DOUBLE PRECISION(A-H,O-Z)
       double precision delta(6),a(6),b(6),wl2i,r,aniso,r2,sum
       dimension volmix(10,NZ),icomp(10,NZ),SIGR2(NZ),ncomp(NZ)
 
