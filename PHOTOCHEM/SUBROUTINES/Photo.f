@@ -247,7 +247,8 @@ c       do j=1,nz
 c          print *, RPAR(j,3)
 c       enddo
       if (NP.GE.3) then
-      do L=3,NP  !loop over hydrocarbon particles ONLY RIGHT now
+         L3 = 3 !EWS - removes compilation warning
+      do L=L3,NP  !loop over hydrocarbon particles ONLY RIGHT now
       DO I=1,nw
       DO J=1,NZ                                       !ISOHACK - i will need to interpolate the MIE parameters to the wavelength grid
       DO k=1,33  !ACK - hardcoded num particles (probably OK - this is how the HC grid was computed)
