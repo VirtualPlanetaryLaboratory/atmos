@@ -1,4 +1,4 @@
-C 1    C     PROGRAM SURFT(INPUT,OUTPUT,TAPE1,TAPE2,TAPE3)
+cC 1    C     PROGRAM SURFT(INPUT,OUTPUT,TAPE1,TAPE2,TAPE3)
 
 C  This program is a modified version of the climate model SURFTEM made 
 c  by James Kasting. The program has been modified by Michael Mischna (mm),
@@ -432,15 +432,16 @@ c*******Changed for now*********
       IF (ICOUPLE.eq.1) THEN 
       OPEN(unit=999,FILE= 'COUPLE/time_frak_photo.out')
  107  FORMAT(1X, F4.2, 7X, F8.3, 5X, F18.16, 5X, I2, 5X, I2, 
-     &     9X, I4)
+     &     9X, I4, 6X, F4.2)
       READ(999,*)
-      READ(999,107) timega, P0ground, frak, msun, monsize, nzp
+      READ(999,107) timega, P0ground, frak, msun, monsize, nzp, fscale
       print *, timega
       print *, P0ground
       print *, frak
       print *, msun
       print *, monsize
       print *, nzp
+      print *, fscale
       IF (msun.eq.13) STARR = "Sun"
       IF (msun.eq.14) STARR = "Sun"
       IF (msun.eq.15) STARR = "ADLEO"
@@ -454,7 +455,7 @@ c*******Changed for now*********
       
          age = 4.7
          time = age-timega
-         SOLCON = (1+0.4*(1-time/4.7))**(-1)
+         SOLCON = (1+0.4*(1-time/4.7))**(-1)*FSCALE
          PG0 = P0ground
          print *, STARR
          
@@ -513,7 +514,6 @@ c Reading the atmospheric composition from mixing_ratios.dat
          READ(114,*) FH22                        ! c-rr 5/29/2012 added H2 mixing ratio
          READ(114,*) FNO2                        !Nitrogen dioxide
          READ(114,*) Jcold                !Tropopause layer
-
 
 c***********Calculate new FCO2**************
 c sk        FCO2 = PCO2/((.8/28.+PCO2/44.)*44.)
@@ -679,13 +679,22 @@ c       print *,'j =',j,'  fi(1,j)=',fi(1,j)
        END IF
 
       else
+
         DO J=1,ND
          CALL SATRAT(T(J),PSAT)
          FSATURATION(J) = (PSAT/P(J))*RELHUM(P(J))
+!         print *, fsaturation(j), P(j), j
+
 C-KK   The following line was modified to finish filling H2O grid. 
+
+
          IF (J .GE. JCOLD) FI(1,J)=FSATURATION(J)
         END DO
        FI(1,JCOLD)=(3.*FI(1,JCOLD+1)+FI(1,JCOLD)+3.*FI(1,JCOLD-1))/7.
+       print *, 'FI(1, jcold) = ', FI(1, jcold)
+
+ 
+
 c
 c jkf 6/26/08 Change H2O initialization in the stratosphere
        do j=1,jcold
@@ -694,6 +703,8 @@ c       if (imw.eq.2) FI(1,J) = 4.e-6
        end do
       endif
  
+
+
       DO 2 J=1,ND
       PF1(J) = PF(J)*1.E6      !PF1 in dyn/cm^2
       TOLD(J) = T(J)
@@ -705,16 +716,20 @@ c
 c jfk 6/27/08
       do j=1,nd
       fsave(j) = fi(1,j)
+
+      
       end do
+
 
 !     Initializing FNC c-rr 6/7/2012
       do J = 1,ND
       FNC(J) = 0.0  
       enddo
-
       do J = 1, ND
       FNC(J) = 1. - FI(1,J) - FI(2,J)   ! Added initial FNC array c-rr 6/7/2012
-!      print *, 'IN CLIMA_FNC=', FNC(J), J
+ !     print *, 'IN CLIMA_FI(1,J)=', FI(1,J), J
+ !     print *, 'IN CLIMA_FI(2,J)=', FI(2,J), J
+ !     print *, 'IN CLIMA_FNC=', FNC(J), J
       enddo
 
 
@@ -768,7 +783,7 @@ c  climate model
         print *,'called input_interp'
 c        print *, 'temp_alt,water,co2,ch4,o3(after input_interp)'
 c        DO J=1,ND
-c         print 353, alt(J), (FI(I,J),I=1,4) 
+c         print 353, alt(J), (FI(I,J),I=1,5) 
 c        ENDDO
        ENDIF
 
@@ -794,6 +809,8 @@ c      PRINT 161,NST
 C Set up gas concentrations for Solar code and former IR code
       
       print *, 'about to call gascon'
+ 
+
       CALL GASCON(T,PF,FO2,FH22,FI,FNC,CGAS,NST)  ! Added FH2 to GASCON input argument 5/30/2012
       print *, 'called gascon'
 C SWITCH FOR OLD IR CODE
@@ -1300,11 +1317,9 @@ c parameterization added by Giada based on Charnay et al 2014
               SRFALB=0.65+(0.3-0.65)*( (T(ND)-240)/(290-240) )**0.37
 
          end if
-
        print *, 'Surface albedo=', SRFALB
 
        end if
-
 
 
 c Adjusting the time stepper
