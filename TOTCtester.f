@@ -1,5 +1,6 @@
             PROGRAM TOTCtester
-c test test
+
+ccc test test
 c I am attempting to abtract this so we can have an Earth/Mars switch
 c I should also think about adding extra abstraction for the humidty stuff
 c
@@ -604,6 +605,7 @@ C - READ IN SPECIES NAMES, ATOMIC NUMBERS, AND BOUNDARY CONDITIONS
                   endif
                   read(4,210) LBC, XX,YY,ZZ,XXX,LG,YYY,ZZZ !read in boundary conditions
                endif
+               print *, LBC
                LBOUND(iLL)=LBC
                VDEP0(iLL)=XX
                FIXEDMR(iLL)=YY
@@ -1012,17 +1014,18 @@ c finish setting boundary conditions:
 
 C added by giada
       OPEN(unit=999, file='COUPLE/time_frak_photo.out')
- 909  FORMAT(1X, F4.2, 7X, F8.3, 5X, F18.16, 5X, I2, 5X, I2,
-     &     9X, I4)
- 908  FORMAT(1X, 'timega', 5X, 'P0', 10X, 'frak', 18X, 'msun', 4X,
-     &   'monsize', 6X, 'NZ')
+ 909  FORMAT(1X, F4.2, 7X, F8.3, 5X, F18.16, 5X, I2, 5X, I2, 
+     &     9X, I4, 6X, F4.2)
+ 908  FORMAT(1X, 'timega', 5X, 'P0', 10X, 'frak', 18X, 'msun', 4X, 
+     &   'monsize', 6X, 'NZ', 6X, 'FSCALE')
       print *, frak
       print *, P0
       print *, msun
       print *, monsize
-      print *, NZ
+      print *, NZ     
+      print *, FSCALE
       WRITE(999,908)
-      WRITE(999,909) timega, P0, frak, msun, monsize, NZ
+      WRITE(999,909) timega, P0, frak, msun, monsize, NZ, FSCALE
 
 C
 C
