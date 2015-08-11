@@ -39,7 +39,7 @@ cc                                                                    cc
 cccccccccccccccccccccccccccccc  r a y l e i g h  ccccccccccccccccccccccc
 
       INCLUDE 'PHOTOCHEM/INPUTFILES/parameters.inc'
-      implicit real*8(A-H,O-Z)
+      implicit real*16(A-H,O-Z)
       double precision delta(6),a(6),b(6),wl2i,r,aniso,r2,sum
       dimension volmix(10,NZ),icomp(10,NZ),SIGR2(NZ),ncomp(NZ)
 
@@ -76,7 +76,7 @@ c          print *, icomp(i,j)
             
         enddo
        !1d4 converts from m^2 to cm^2 for photohcemical model
-       sigr2(j)=cnst*wl2i*wl2i*sum*1d4 
+       sigr2(j)=cnst*wl2i*wl2i*sum*1d4
       enddo
 
       return
