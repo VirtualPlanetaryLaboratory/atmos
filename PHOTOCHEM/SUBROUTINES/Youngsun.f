@@ -28,7 +28,7 @@ c     dummy is read from 'DATA/FLUX/kuruczflux.dat', which has 44 columns and 12
 
       REAL*8 RnormBahcall(41),LnormBahcall(41),BahcallAge(41)
       REAL*8 temp(41) !used by cubic spline
-      REAL*8 Rnorm, Lnorm,now
+      REAL*8 Rnorm, Lnorm,now, LnormNOW, RnormNOW, lowerl, upperl !EWS - added some extra variable declarations
 
 c      INTEGER diff !EWS - not currently used
       !used to calculate offset between wavl and chromomult/fit vectors, 
