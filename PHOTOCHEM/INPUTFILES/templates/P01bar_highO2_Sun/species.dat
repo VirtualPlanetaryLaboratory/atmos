@@ -70,7 +70,7 @@ HSO3       SL  3 1 0 1 0 0
 OCS2       SL  1 0 1 2 0 0
 *   INERT SPECIES
 CO2        IN  2 0 1 0 0 0    3.6E-4       !must be second to last IN 
-N2         IN  0 0 0 0 2 0    0.04          !must be last IN  (FIXED MR NOT YET USED...)
+N2         IN  0 0 0 0 2 0    0.02          !must be last IN  (FIXED MR NOT YET USED...)
 * NSP should be the number directly above
 HV         HV  0 0 0 0 0 0
 M          M   0 0 0 0 0 0
