@@ -952,9 +952,10 @@ c read in formatted input data file
        ENDIF
       enddo
 
+      !EWS - there was an error in this loop fixed 8/12/2015
       DO K=1,LR
          DO I=1,NZ
-           IF(USOL(K,I).lt.1.e-30) USOL=1.e-30
+           IF(USOL(K,I).lt.1.e-30) USOL(K,I)=1.e-30  !EWS - fixed an error here where USOL=1.e-30 instead of USOL(K,I)=1.e-30
          END DO
       END DO
 
