@@ -1,5 +1,5 @@
 cC 1    C     PROGRAM SURFT(INPUT,OUTPUT,TAPE1,TAPE2,TAPE3)
-
+c
 C  This program is a modified version of the climate model SURFTEM made 
 c  by James Kasting. The program has been modified by Michael Mischna (mm),
 c  Alex Pavlov (AP), Kara Krelove (KK), Hilary Justh (HJ), Ravi Kopparapu (RK), 
@@ -680,19 +680,38 @@ c       print *,'j =',j,'  fi(1,j)=',fi(1,j)
 
       else
 
-        DO J=1,ND
+       DO J=1,ND
          CALL SATRAT(T(J),PSAT)
          FSATURATION(J) = (PSAT/P(J))*RELHUM(P(J))
-!         print *, fsaturation(j), P(j), j
 
 C-KK   The following line was modified to finish filling H2O grid. 
+         END DO
+ 
+       print *, 'JCOLD original is', JCOLD
 
-
-         IF (J .GE. JCOLD) FI(1,J)=FSATURATION(J)
-        END DO
+       !first try to make JCOLD more sensible - giada
+       !it's looking for where FSATURATION goes above 1
+       !testing needed for all situations when it needs to change JCOLD?
+       IF (IUP.EQ.0) THEN !it's starting w/ fresh JCOLD otherwise
+       IF (FSATURATION(1).GT.1) THEN !test if > 1 at start of grid
+          JCOLD_NEW = -1
+          DO j =1, ND
+             IF ((JCOLD_NEW .EQ. -1).and.(FSATURATION(J).LT.1)) THEN 
+                JCOLD_NEW = J
+             end if
+          end do
+          !Update JCOLD if needed 
+          If (JCOLD_NEW.NE.-1) THEN
+             JCOLD = JCOLD_NEW
+           end if
+       end if
+       end if
+       
+       print *, 'JCOLD updated is ', JCOLD
+       DO J=1, ND 
+          IF (J .GE. JCOLD) FI(1,J)=FSATURATION(J)
+       END DO
        FI(1,JCOLD)=(3.*FI(1,JCOLD+1)+FI(1,JCOLD)+3.*FI(1,JCOLD-1))/7.
-       print *, 'FI(1, jcold) = ', FI(1, jcold)
-
  
 
 c
