@@ -7,16 +7,16 @@
 PLATFORM = osx
 
 # COMPILATION FLAGS:
-#FC = ifort
-#FCFLAG = -i8 -r8 -align all -zero
+FC = ifort
+FCFLAG = -O3 -parallel -i8 -r8 -align all -zero
 # For debugging, use this flag set instead:
 #FCFLAG = -i8 -r8 -debug -fp-stack-check -check bounds -g -traceback -heap-arrays -gen-interfaces -warn interfaces -check arg_temp_created -align all -Bstatic
 # more debugging options
 #FCFLAG = -r8 -i8 -diag-enable sv-include
 
 #optimized
-FC = gfortran
-FCFLAG = -O3 -I. -fno-automatic -ftree-vectorize -fdefault-integer-8 -fdefault-real-8 -ffpe-trap=invalid
+#FC = gfortran
+#FCFLAG = -O3 -I. -fno-automatic -ftree-vectorize -fdefault-integer-8 -fdefault-real-8 -ffpe-trap=invalid
 #debugging versions
 #FCFLAG = -g -fbounds-check -Wall -fbacktrace -finit-real=nan
 #FCFLAG = -g -fno-automatic -ftrapv -fbounds-check -O
