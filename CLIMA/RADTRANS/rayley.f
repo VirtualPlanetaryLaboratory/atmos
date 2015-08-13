@@ -1,5 +1,4 @@
- 1    
-      SUBROUTINE RAYLEY(SIGR,AL2,Fwater,FNCR)  ! 6/7/2012 added FNCR to RAYLEY argument
+       SUBROUTINE RAYLEY(SIGR,AL2,Fwater,FNCR)  ! 6/7/2012 added FNCR to RAYLEY argument
 C
       INCLUDE 'CLIMA/INCLUDE/header.inc'
       PARAMETER (NSOL=38, NGS=8) !gna ngas changed to 8
