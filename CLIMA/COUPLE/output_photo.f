@@ -12,6 +12,7 @@ c  Althogh NZ_=1000, it only works with & writes the first nzp indices.
 c  argh fortran and its strict declaration and formatting rules :/
       PARAMETER(NZ_=1000)
       PARAMETER(NZ=200)
+      INTEGER*8 i, J, nzp, diffpts
       DIMENSION T(ND), FI(5,ND), alt_new(NZ), T_new(NZ)
       DIMENSION water(NZ), ALT(ND)
       DIMENSION alt_new_(NZ_), T_new_(NZ_), water_(NZ_)
@@ -83,7 +84,7 @@ c the high O2, high pressure atmospheres.  I don't think this works if the photo
 c is smaller than the clima grid...anyone want to test that out?  We haven't needed
 c to run something like that yet.
 
-        diffpts = abs(nz-nzp)
+        diffpts = int(abs(nz-nzp))
        
         
            print *, diffpts
@@ -95,7 +96,7 @@ c to run something like that yet.
 
 
         if (diffpts.ne.0) then
-        do i = 0, diffpts
+        do i = 1, diffpts
 c         
            water_(i) = water(1)
 c           alt_new_(i) = alt_new_(i)

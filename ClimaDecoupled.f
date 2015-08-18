@@ -698,7 +698,7 @@ C-KK   The following line was modified to finish filling H2O grid.
        !first try to make JCOLD more sensible - giada
        !it's looking for where FSATURATION goes above 1
        !testing needed for all situations when it needs to change JCOLD?
-       IF (IUP.EQ.0) THEN !it's starting w/ fresh JCOLD otherwise
+       IF (IUP.EQ.0.and.P(ND).GE.0.93) THEN !it's starting w/ fresh JCOLD otherwise ! EWS- and pressure is high enough
        IF (FSATURATION(1).GT.1) THEN !test if > 1 at start of grid
           JCOLD_NEW = -1
           DO j =1, ND
@@ -711,6 +711,7 @@ C-KK   The following line was modified to finish filling H2O grid.
              JCOLD = JCOLD_NEW
            end if
        end if
+            JCOLD = max(JCOLD,13) !EWS ensure JCOLD isn't too small.
        end if
        
        print *, 'JCOLD updated is ', JCOLD
@@ -735,8 +736,8 @@ c       if (imw.eq.2) FI(1,J) = 4.e-6
       TOLD(J) = T(J)
       FI(2,J) = FCO2
       IF(IUP.EQ.1) FI(2,J)=FCO2V(J)
-      FI(5,J) = FC2H6 !ethane
-   2  FI(3,J) = FCH4
+      FI(5,J) = max(FC2H6,1.e-60) !ethane !EWS - debug for low mixing ratios 
+   2  FI(3,J) = max(FCH4,1.e-60)  !methane !EWS - debug for low mixing ratios
 c
 c jfk 6/27/08
       do j=1,nd

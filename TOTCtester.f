@@ -967,7 +967,7 @@ c read in formatted input data file
       IF(ICOUPLE.EQ.1) THEN
          DO I=1, NZ
             IF(T_new(I).gt.100) THEN !gna - avoid some crazy unconverged clima solutions that make photo not converge -- better ideas to check for this?
-               IF(T_new(I).lt.350) THEN
+               IF(T_new(I).lt.400) THEN
                T(I) = T_new(I)
                ENDIF
             ENDIF
@@ -2733,16 +2733,16 @@ C Transfer results to the climate model (COUPLING)
         DO 255 I=1,NZ
 C Transfer O3 and H2O
          WRITE(84,254) Z(I),PRESS(I),USOL(LO3,I),USOL(LH2O,I),
-     &                 USOL(LCH4,I),SL(LCO2,I)/DEN(I),
-     &                 USOL(LC2H6,I)
+     &                 max(USOL(LCH4,I),1.e-60),SL(LCO2,I)/DEN(I),
+     &                 max(USOL(LC2H6,I),1.e-60) !EWS debug to prevent floating poitn errors
   254    FORMAT(1PE9.3,6(E10.2))
   255   CONTINUE
         close(84)
 c       endif
 
          IF (IRESET.eq.0) FAR=1.000E-02     ! Because argon is not normally calculated in photochem
-         FCH4=USOL(LCH4,1)
-         FC2H6=USOL(LC2H6,1)
+         FCH4=max(USOL(LCH4,1),1.e-60) !EWS - debug to prevent floating point errors
+         FC2H6=max(USOL(LC2H6,1),1.e-60) !EWS - debug to prevent floating point errors
          FCO2=SL(LCO2,1)/DEN(1)
          FN2=SL(LN2,1)/DEN(1)
          FO2=USOL(LO2,1)
