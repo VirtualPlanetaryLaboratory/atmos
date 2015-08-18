@@ -123,6 +123,7 @@ C-jdh DIMENSION LAM(NF),ALAM(NF),AVOLD(NF)
       DIMENSION PML(ND),PSATCO2(ND) 
       DIMENSION FNC(ND)        ! Added FNC array c-rr 6/7/2012
 
+
 c     vectors for gaussian zenith angles      
       dimension fdnsoltot(nd), fupsoltot(nd) 
       dimension xi(nrow,20), wi(nrow,20), ngauss(nrow)        
@@ -304,6 +305,8 @@ c  Starting temperature profile
 c  US standard atmosphere O3 profile used when the climate model is not
 c  coupled to the photochemical model
       OPEN (unit=22,file= DIRINOUT//'/Ozone_standard.dat')
+      OPEN(UNIT=244,file='IHZ.dat')
+      OPEN(UNIT=24,file='waterloss_IHZ.dat')
 c  Ozone and water profiles from the photochemical model
 c    File formerly called Pass2SurfMP.dat      
       OPEN (unit=113,file= 'COUPLE/fromPhoto2Clima.dat') 
@@ -386,6 +389,7 @@ C JK   Idry   - If Idry = 0, use the moist adiabat. If Idry = 1, use a dry adiab
 
 
       READ(1,51)
+      print *,'reading in'
       READ(1,*) AA,NSTEPS       !step number
       READ(1,*) AA,IMW
       READ(1,*) AA,RSURF               
@@ -415,6 +419,8 @@ c*******Changed for now*********
       READ(1,*) AA, IHAZE       ! IHAZE (flag 0 or 1)
       READ(1,*) AA, monsize
       READ(1,*) AA, icealbedo
+      READ(1,*) AA, INVERSE
+      print *, 'inverse', inverse
 
 
 !gna - moved this part here so now we know what ICOUPLE is supposed to be  
@@ -1027,7 +1033,7 @@ c      if (j.eq.1) print *, 'FDNSOL=', FDNSOL(1)
 
 C
 
-
+      IF(INVERSE.EQ.0) THEN !only do if not wanting inverse calculations
 C New temperature calculation for all layers from radiative equilibrum
       DO 41 J=1,ND-1
       TN(J)=T(J)-(FTOTAL(J+1)-FTOTAL(J))*dt0*GNEW(J)/CPNT(J)
@@ -1354,6 +1360,7 @@ c Adjusting the time stepper
        IF (dt0.GE.dtmax) dt0 = dtmax
 c       print *, 'Hello9'
        CALL ALTITUDE(NST,T,FI,DZ)
+       END IF !end skipping for inverse model
 
 C***********************************************************
 c***  WRITING OUTPUT FILES
@@ -1371,9 +1378,9 @@ C 571   CONTINUE
      & "F_H2= ", 1pe10.4,2x,"F_AR= ", 1pe10.4,2x,
      & "IO3 = ",I2,3x,"IUP= ",I2)
 
-      WRITE(98,556) ICONSERV,FAC,ND,SRFALB,G,IMW
+      WRITE(98,556) ICONSERV,FAC,ND,SRFALB,G,IMW, INVERSE
  556  format(1x,'ICONSERV=',I2,2X,'FAC=',F4.1,2X,'ND=',I3,2X,'SRFALB='
-     & ,F6.3,2X,'G=',F6.1,2X,'IMW=',I2)
+     & ,F6.3,2X,'G=',F6.1,2X,'IMW=',I2, 2X, 'INVERSE=', I2)
       WRITE(98,557) FNO2
  557  FORMAT(/1x,'FNO2 =',1pe10.3)
       WRITE(98,*)

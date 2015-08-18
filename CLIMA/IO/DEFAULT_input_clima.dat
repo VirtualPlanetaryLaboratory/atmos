@@ -30,6 +30,8 @@ nga=       6
 IHAZE=     1
 monsize=   0
 icealbedo= 0
+INVERSE=   0    
+
 
 *******************************************************
 **   VARIABLE INPUT PARAMETERS
