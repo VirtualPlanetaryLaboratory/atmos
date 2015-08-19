@@ -110,17 +110,17 @@ C      CHARACTER*5 :: ICO2A   !Changed to make STARR hold up to 5 characters
       CHARACTER :: DIRINOUT*8,DIRDATA*10
 
       DIMENSION TRAD(ND),DZ(ND),Z(ND),ZF(ND)     
-      DIMENSION temp_alt(NZ), temp_T(NZ), water(NZ), O3(NZ), PRESS(NZ),
+      DIMENSION temp_alt(NZ), water(NZ), O3(NZ), PRESS(NZ), !EWS - temp_t(NZ) removed because it wasn't used
      &  CH4(NZ), CO2(NZ), ethane(NZ)
       DIMENSION T(ND),TOLD(ND),FTOTAL(ND),FTIR(ND),
      &  FTSO(ND),PF1(ND),DELT(ND),DELTRAD(ND),TN(ND),
-     &  dt(ND),DIVF(ND),TCOOL(ND),THEAT(ND),FLAGCONVEC(ND)
-      DIMENSION FSATURATION(ND),FSATUR(ND),FSAVE(ND)
+     &  DIVF(ND),TCOOL(ND),THEAT(ND),FLAGCONVEC(ND)
+      DIMENSION FSATURATION(ND),FSATUR(ND),FSAVE(ND) !EWS dt(ND) removed, not used 8/18/2015
 C      DIMENSION newalt(ND),HEATNET(ND),BETA(ND),FCO2V(ND),FH2O(ND)
       DIMENSION HEATNET(ND),BETA(ND),FCO2V(ND),FH2O(ND)
-      DIMENSION ALAM(NF),AVOLD(NF)
+      DIMENSION AVOLD(NF) !EWS - ALAM not used
 C-jdh DIMENSION LAM(NF),ALAM(NF),AVOLD(NF)
-      DIMENSION PML(ND),PSATCO2(ND) 
+      DIMENSION PSATCO2(ND) !EWS - PML(ND) removed because it wasn't used 
       DIMENSION FNC(ND)        ! Added FNC array c-rr 6/7/2012
 
 
@@ -128,7 +128,7 @@ c     vectors for gaussian zenith angles
       dimension fdnsoltot(nd), fupsoltot(nd) 
       dimension xi(nrow,20), wi(nrow,20), ngauss(nrow)        
 
-      REAL newalt, kappa_ir ! removed extraneous kappa and FLAGCONVE(ND) declarations 
+      REAL*8 newalt ! removed extraneous kappa, kappa_ir, and FLAGCONVE(ND) declarations 
                
       COMMON/DIR/DIRINOUT,DIRDATA
       COMMON/WAVE/AV(NF),LAM(NF),W(NF)
@@ -506,7 +506,7 @@ C **** Read the Gauss points and weights for the solar zenith angle int
 c*********Calculate PGO*************
 c sk      PG0 = .8 + PCO2
 c      print 999, PG0
-999   FORMAT(1x,'PG0 =',1PE12.5)
+c999   FORMAT(1x,'PG0 =',1PE12.5)
 c      print 999, PCO2
 c===================================================================
 
@@ -524,7 +524,7 @@ c Reading the atmospheric composition from mixing_ratios.dat
 c***********Calculate new FCO2**************
 c sk        FCO2 = PCO2/((.8/28.+PCO2/44.)*44.)
 c        print 997, FCO2
-997   FORMAT(1x,'FCO2 =',1PE12.5) 
+c997   FORMAT(1x,'FCO2 =',1PE12.5) 
 c WJL- changed mixing ratios below to include NO2
 
 c-rr Added methane flag. Ensures FCH4 is 0 when methane flag is turned off 5/2/11
@@ -799,8 +799,8 @@ c        FI(2,ND)=FCO2
         IF(FC2H6.LT.1.e-60) FC2H6 = 1.e-60 !!! Debug to prevent memory underflow issues - Eddie (8/3/2015)
         IF(FCH4.LT.1.e-60) FCH4 = 1.e-60   !!! Note that these are read whether or not IMETH or IEMETH flags are set
         print *, 'FC2H6 is ', FC2H6
-  352   FORMAT("Alt = ",1PE12.3," H20=",1PE12.3)
-  353   FORMAT(6(1PE9.2,1x))
+c  352   FORMAT("Alt = ",1PE12.3," H20=",1PE12.3)
+c  353   FORMAT(6(1PE9.2,1x))
 c  Interpolate the grid from the photochemical model to the grid of the
 c  climate model 
         print *,'about to call input_interp'
@@ -826,9 +826,9 @@ C************************************************************
       print *, 'in NST loop'
       ITROP = 1
 c      PRINT 161,NST
- 160  FORMAT(/1X,"---------------------------------------------",
-     2  //1X,"NST =",I6)
- 161  format(1x,"NST =", I6)
+c 160  FORMAT(/1X,"---------------------------------------------",
+c     2  //1X,"NST =",I6)
+c 161  format(1x,"NST =", I6)
       TIME = Time + dt0
       print *, 'found time'
       
@@ -957,8 +957,8 @@ c   Units erg/K/cm^2
         
 C
 c        print 1300,nga,ng2,k,amu0,zy,weightt
-1300    format(1x,'nga=',i2,' ng2=',i2,' k=',i2,' amu0=',f8.5,
-     2  ' zy =',f5.2,' weightt=',f8.5)
+c1300    format(1x,'nga=',i2,' ng2=',i2,' k=',i2,' amu0=',f8.5,
+c     2  ' zy =',f5.2,' weightt=',f8.5)
 
         
 
@@ -986,7 +986,7 @@ c          print *, 'FCH4=', FI(3,1)
 c          print *, 'FC2H6=', FI(5,1)
 c        print *, 'fdnsol',f
 c      print 1301,fdnsol
-1301  format(1x,1p8e9.2)
+c1301  format(1x,1p8e9.2)
 c        print *
 c      print *, 'fupsol'
 c      print 1301,fupsol
@@ -1314,7 +1314,7 @@ c      print *,'T after DIVF calculation'
 c      print 4309,T
 c      print *
 c      print *,'JCOLD =',JCOLD
- 4309 format(1p8e9.2)
+c 4309 format(1p8e9.2)
     
 c Smoothing the temperature profile in the non-strict time step case
 c-jdh **check on this when comparing "conserving" vs "non-conserving"**
@@ -1409,10 +1409,10 @@ c      if(nst.eq.nsteps3) write(98,*)
       if(nst.eq.1 .or. nst.eq.nsteps) then 
 c       WRITE(98,965) NST,dt0,DIVF(1),FTOTAL(ND-1),FTIR(ND-1),
 c    & FTSO(ND-1),DELT(ND),T(ND) 
- 965   FORMAT(1x,"NST=",I3,2X,"dt0=",1PE9.3,
-     & 2X,"DIVF(1)=",1PE12.5,2X,"Ftot(ND-1)=",1pe11.4,2x,"FtIR(ND-1)="
-     & ,1pe11.4,2x,"FtSol(ND-1)=",1pe11.4,/,1x,"DT(ND)=",1PE10.3,2x,
-     & "T(ND)=",1PE10.4)
+c 965   FORMAT(1x,"NST=",I3,2X,"dt0=",1PE9.3,
+c     & 2X,"DIVF(1)=",1PE12.5,2X,"Ftot(ND-1)=",1pe11.4,2x,"FtIR(ND-1)="
+c     & ,1pe11.4,2x,"FtSol(ND-1)=",1pe11.4,/,1x,"DT(ND)=",1PE10.3,2x,
+c     & "T(ND)=",1PE10.4)
 c
       TIMEDAYS = TIME/24./3600.
       WRITE(98,567) TIME,TIMEDAYS
@@ -1545,9 +1545,9 @@ C=============================================================================
         dimension xi(nrow,20), wi(nrow,20), n(nrow)        
 100     format(2x, I2)                
 200     format(F7.5,1x,F7.5)
-300     format (20(f7.5,1x))
-400     format (/)
-500     format (11i3)                  
+c300     format (20(f7.5,1x))
+c400     format (/)
+c500     format (11i3)                  
         do i = 1,nrow
         read (66,100) n(i)
           do j=1,n(i)                                
@@ -1568,7 +1568,7 @@ C        print 500,n
         sum = 0.
            do j=1,n(i)                                
         !print 20,j,xi(i,j),wi(i,j)
-20      format(5x,'j=',i2,1x,2f8.5)
+c20      format(5x,'j=',i2,1x,2f8.5)
           sum = sum + xi(i,j)*wi(i,j)
           enddo
 C        print*,'n=',n(i),' sum =', sum
