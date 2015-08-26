@@ -43,7 +43,7 @@ C     Clouds are treated with random overlap scheme.
 
       COMMON /CVRRTC/    HVRRTC
 
-      CHARACTER*15       HVRRTC
+      CHARACTER*16       HVRRTC
 
       DIMENSION BBUGAS(MXLAY)
       DIMENSION BBUTOT(MXLAY)
@@ -328,7 +328,7 @@ C        Calculate Heating Rates.
  7000 CONTINUE
       HTR(NLAYERS) = 0.0
 
- 9000 CONTINUE
+c 9000 CONTINUE !EWS - not used
 
       RETURN
       END   
