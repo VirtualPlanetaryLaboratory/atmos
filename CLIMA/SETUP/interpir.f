@@ -5,7 +5,7 @@ c-rr    i is wavelength counter and j is the altitude counter used in ir, respec
 
         INCLUDE 'CLIMA/INCLUDE/header.inc'
         PARAMETER(NF=55,IK=8)
-        INTEGER LINE,i,j,lam,Tindex,pindex,Tp1,pp1, Temp
+        INTEGER i,j,lam,Tindex,pindex,Tp1,pp1, Temp !EWS - LINE not used here
         REAL kappapp(55,8),kappapm(55,8) ! methane kappas
         REAL kappa(55,6)! methane kappas
         REAL TempR,tempg(8),press(8),p1,kappa_irh2o, kappa_irco2, 
@@ -19,13 +19,11 @@ c-rr    i is wavelength counter and j is the altitude counter used in ir, respec
         COMMON/weightsIR/weightco2_h2oIR(IK)
 
 
-
-
 C        There are separate loops for pressures lower than 1e-4 bar,  
 C        for pressures higher than 1 bar, and those in between. For 
 C        the pressures in between:
-
-         
+ 
+           j=j !EWS -avoid complaining         
            Do L=1,8
                 LS=L 
                  

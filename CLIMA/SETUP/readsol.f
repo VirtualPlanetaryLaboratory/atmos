@@ -8,7 +8,8 @@ c-as parameters for the subroutine SOLAR and CONVEC
       PARAMETER(NT=76, MT=36)
       PARAMETER(NSOL=38, NGS=8) !gna changed to 8 from 7
       PARAMETER(IK=8) ! Changed to 8 sums 3/15/2012
-      REAL kappa_solh2o, kappa_solco2,press(8), temp(3),alch4 ! Declaring H2O and CO2 arrays as real 8/27/2012 
+      REAL kappa_solh2o, kappa_solco2,alch4 ! Declaring H2O and CO2 arrays as real 8/27/2012 
+                                            ! EWS - press(8) and temp(3) not used 8/26/2015
       
 
 !      DATA kappa/5472*0./ 
@@ -233,7 +234,7 @@ c Reading Karkoshka data for CH4
      
  176  FORMAT(4X,F6.4,4x,F6.4,4x,F6.4,4x,F6.4)
  177  FORMAT(/)
- 178  FORMAT(//)
+c 178  FORMAT(//) !EWS - not used
  179  FORMAT(F9.5,2x,F9.4,1x,F9.3,1x,F12.2)
  181  FORMAT(2x,F8.5,2x,F8.5,2x,F8.5,2x,F8.5)
  182  FORMAT(4x,F8.5)
@@ -514,7 +515,7 @@ C-rr COMBINING ALPHACH4Kark and ALPHACH4NEW weights into one ALCH4 matrix 10/23/
 
         BETAO2 = 0.38*4.0999998E-06/2.687E19 !C-rr O2 absoprtion coefficient times single weight of 0.38 (b) divided by Loschmidt's is the actual absorption coefficient value 3/19/2012
         
- 360    format(7(/))
+c 360    format(7(/))  ! EWS - not used
 
        DO I = 1,38
            DO K = 1,IK

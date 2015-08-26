@@ -17,8 +17,10 @@ c-mm  Index #5:  Spec   1=co2  2=h2o  3=ch4
       include 'CLIMA/INCLUDE/header.inc'
 c      PARAMETER (NF=55,NGS=7)
       PARAMETER(NF = 55)
-      INTEGER LINE,i,lam,junk,Tind,pind,j,k,l,m, Tind2  ! Added Tind2 and removed Tinddum 3/23/2012
-      REAL zeroed, CIA1(7,NF), kappa_irh2o, kappa_irco2 ! Declaring CO2 and H2O coefficient arrays as real. 8/27/2012
+      INTEGER i,lam,junk,pind,j,k, Tind2  ! Added Tind2 and removed Tinddum 3/23/2012
+                                                        ! EWS - removed unused l, LINE, m, and Tind 8/26/2015
+      REAL  CIA1(7,NF), kappa_irh2o, kappa_irco2 ! Declaring CO2 and H2O coefficient arrays as real. 8/27/2012
+                                                   ! EWS - rmeoved unused variable zeroed 8/26/2015 
       PARAMETER (IK=8)
 c     REAL xkappa(8,12,55,8,3)
 c     DIMENSION WEIGHT(8,3)
@@ -125,12 +127,12 @@ C-----------------------------------------------------------------------
 	do i = 1,NF
 
          	do it = 1, 8 ! 8 temperatures
-            		read(17,*) ! skip 3 more lines to read data
-            		read(17,*)
-            		read(17,*)
-            		read(18,*) ! skip 3 more lines to read data
-            		read(18,*)
-            		read(18,*)
+                        read(17,*) ! skip 3 more lines to read data
+                        read(17,*)
+                        read(17,*)
+                        read(18,*) ! skip 3 more lines to read data
+                        read(18,*)
+                        read(18,*)
             		do ip = 1,8  ! 8 pressures
            		 read(17,*)a,(kappa_irh2o(i,it,ip,k),k=1,IK)
            		 read(18,*)a,(kappa_irco2(i,it,ip,k),k=1,IK)
@@ -166,24 +168,24 @@ C-rr reads CO2 CIA matrix(3/22/2011)----------------------
 		read(30,9801) (CIA1(it,k),it=1,7)  ! Put CIA values in the right bins
 	enddo
 
-         
-        do it=1,7
-		do k=1,NF
-			CIA(it,k)=amax1(CIA1(it,k),1.e-60) ! set all zero CIA values to 1.e-60
-		enddo
-	enddo
 
-        
+        do it=1,7
+	        do k=1,NF
+		     CIA(it,k)=amax1(CIA1(it,k),1.e-60) ! set all zero CIA values to 1.e-60
+	        enddo
+        enddo
+
+
  9800   format(/)
  9801   format(19x, 1pe24.17,6(3x,1pe24.17))
- 9802   format(i3, 3x,1pe24.17,6(3x,1pe24.17))
+c 9802   format(i3, 3x,1pe24.17,6(3x,1pe24.17)) !EWS - not used
 
- 
- 9950   format(/)
- 9952   format(27X,E16.10)
- 9956   format(83X,E9.3)
- 9958   format(56X,E12.6)
- 9960   format(21X,E12.6)
+
+c 9950   format(/)         !EWS - not used
+c 9952   format(27X,E16.10)!EWS - not used
+c 9956   format(83X,E9.3)  !EWS - not used
+c 9958   format(56X,E12.6) !EWS - not used
+c 9960   format(21X,E12.6) !EWS - not used
 
 
 c-rr -------------------------------------------------------
@@ -227,7 +229,7 @@ c-rr   read O2-O2 CIA matrix 6/17/2012
           enddo
        enddo
 
-       
+
               do k = 21,28
                read(26, *)a, (O2O2CIA(it,k), it=1,15)
 !               print *, (O2O2CIA(it,k),it=1,6)
@@ -248,8 +250,8 @@ c-rr    reads in H2-H2 CIA matrix 7/2/2012
         do it = 1,6
             do k = 1,NF
             H2H2CIA(it,k) = 1.e-60 ! initializing H2 CIA matrix first
-            
-	    enddo
+
+            enddo
         enddo
 
 
@@ -266,13 +268,13 @@ c-rr   reads in BPS CONTINUUM coefficients at T = 296K for IR  8/30/2012
    	 OPEN(unit = 36, file = DIRDATA//'/IR_BPS.dat')
 
   ! initialize arrays
- 
+
 	 do i = 1,NF
-		s_abir(i) = 0.0d0
-		f_abir(i) = 0.0d0
-		TDir(i) =0.0d0
-		Bsir(i) = 0.0d0
-		Bfir(i) =0.0d0
+                s_abir(i) = 0.0d0
+                f_abir(i) = 0.0d0
+                TDir(i) =0.0d0
+                Bsir(i) = 0.0d0
+                Bfir(i) =0.0d0
 	 enddo
  
       
@@ -281,11 +283,11 @@ c-rr   reads in BPS CONTINUUM coefficients at T = 296K for IR  8/30/2012
 	enddo
 
 
-	 do j = 1,NF
-    	read(36,*)a,b,s_abir(j), f_abir(j), Bsir(j), Bfir(j), TDir(j)
+        do j = 1,NF
+        read(36,*)a,b,s_abir(j), f_abir(j), Bsir(j), Bfir(j), TDir(j)
 !		print *, s_abir(j), f_abir(j), Bsir(j), Bfir(j), TDir(j)
-	 enddo
-	 
+        enddo
+
 !--------------------------------------------------------------------	 
         RETURN
         END

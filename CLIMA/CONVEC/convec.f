@@ -1,5 +1,5 @@
       SUBROUTINE CONVEC(T1,T2,P1,P2,FH1,FH2,FC1,FC2,DZ,ITROP,
-     2	  cflag,Idry,IMCO2)
+     2          cflag,Idry,IMCO2)
 C   THIS SUBROUTINE FINDS THE CONVECTIVE LAPSE RATE BETWEEN GRID
 C   POINTS J1 AND J. IT CONSIDERS THE CASE FOR HIGH CO2.
 
@@ -35,6 +35,7 @@ c  Tag code: 1-Main loop
 c            Units-Options IN the main loop   
 c            1x-Moist adiabatic lapse rate
 c            2x-CO2 condensation   
+      itrop = itrop !EWS - no complaining
       NDIV = 10                     !number of sublevels
       PLT = DZ
       IF(P2.LT.P1) PLT = - DZ
@@ -60,12 +61,12 @@ c      imco2 = 0
 ! 1500  format(1x,'P =',1pe10.3,2x,'T =',e10.3,2x,
 !     .           'CFLAG =',e10.3,2x'IDRY =',I3,2x,
 !     .           'IMOIST =',I3,2x,'PSAT =',e10.3)
-C-KK	Begin Sublevel Integration
+C-KK        Begin Sublevel Integration
       DO 1 L=1,NDIV
 c Calculation of heat capacities (cal/mol/K)
-c-rr	  Putting new curve fit equations 3/29/11
+c-rr          Putting new curve fit equations 3/29/11
        CPO2 = 7.47 -4.84E-3*T + 1.38E-5*T*T 
-     &         -8.73E-9*T*T*T - 1.76E-9/T/T	
+     &         -8.73E-9*T*T*T - 1.76E-9/T/T        
         CPCO2 = 5.89 + 6.06E-3*T + 2.39E-5*T*T 
      &          -3.44E-8*T*T*T  
        CPN2 = 6.76 + 6.06E-4*T + 1.3E-7*T*T
@@ -178,12 +179,12 @@ c   WATER MOIST ADIABAT
    3   CALL SATRAT(T,PSAT)
        cflag =1.
        
-C-KK	Calculate a dry standard adiabat above tropopause. 
+C-KK        Calculate a dry standard adiabat above tropopause. 
 c--JFK 7/14/08 Dont allow these dry adiabats. They seem to be
 c      occurring within the mesosphere, which is unphysical.
 c      IF (ITROP .EQ. 0) THEN 
        IF (IMW.eq.5) THEN   ! This does the dry adiabat only
-	DLPDLT = CPN/R
+        DLPDLT = CPN/R
 c        print *, 'CPN=',CPN, 'R=', R
         cflag = 2.
         GO TO 2
@@ -294,7 +295,7 @@ C   DRY ADIABAT ABOVE 374 C
       IF (L.EQ.1) BETA1 = BET
       DLPDLT = FH1*DLPVLT + (1.-FH1)*CPNW/R
 !      print 6969, TC,TCP(N),DLPDLT,CPNW,R,M,N
-6969  format(1p5e14.5,0p,2x,i3,2x,i3)
+c 6969  format(1p5e14.5,0p,2x,i3,2x,i3) !EWS - not used
       GO TO 2
 
 C   CLAUSIUS-CLAPEYRON EQUATION BELOW 0 C
@@ -382,6 +383,6 @@ C Dry adiabat
 !      imco2 = 0
       
 !      print 1501,P2,T2
- 1501 format(1x,'P2 =',1pe10.3,2x,'T2 =',e10.3)
+c 1501 format(1x,'P2 =',1pe10.3,2x,'T2 =',e10.3) !EWS - not used
       RETURN
       END

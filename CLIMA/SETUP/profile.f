@@ -5,7 +5,7 @@
       INCLUDE 'CLIMA/INCLUDE/header.inc'
       PARAMETER(NS=3, NS1=NS+2, NS4=NS+5)
       DIMENSION P(ND),T(ND),DZ(ND),FH2O(ND),BETA(ND),
-     & FLAGCONVEC(ND),FCO2V(ND), YO(ND)
+     & FLAGCONVEC(ND),FCO2V(ND) ! YO(ND) - not used - EWS
 c     COMMON/CBLOK/FO2,FN2,FCO2,FAR,FCH4
       COMMON/CBLOK/FO2,FN2,FCO2,FAR,FCH4,FC2H6,FNO2,FI(NS1,ND),
      &  FH22
@@ -129,8 +129,3 @@ c to zero out water
       RETURN
       END
 C ----------------------------------------------------------------
-
-
-
-
-

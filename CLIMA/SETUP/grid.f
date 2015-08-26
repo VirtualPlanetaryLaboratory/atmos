@@ -8,7 +8,7 @@ C   TEMPERATURE GRIP POINTS.  BOTH GRIDS HAVE A POINT AT THE GROUND.
       INCLUDE 'CLIMA/INCLUDE/header.inc'
       PARAMETER(NT=76)
       PARAMETER(NSOL=38, NGS=8)
-      REAL kmatrix_sol, weights
+c      REAL kmatrix_sol, weights !EWS - not used
       DIMENSION Z(ND),ZF(ND),DZ(ND)
       COMMON/SOLARBLK/AMU0,SRFALB,OMG0A(NSOL,ND-1),
      &  ASYA(NSOL,ND-1),TAUAER(NSOL),SIGERT(NSOL),FMA(NSOL),PF(ND),
@@ -94,8 +94,8 @@ C     2		891.46, 1013./
 
 C	PF(ND) = P(ND)
 C	do j = 1, (ND-1)
-C	  PF(j) = (P(j) + P(j+1))/2.
-C	end do
+C         PF(j) = (P(j) + P(j+1))/2.
+c       end do
 
 C   RECOMPUTE DZ AS THE DISTANCE BETWEEN TEMPERATURE GRID POINTS
       DZ(1) = LOG(P(1)) - LOG(PF(1))

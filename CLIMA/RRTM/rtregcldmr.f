@@ -34,7 +34,7 @@ C     Clouds are treated with maximum/random overlap scheme.
       COMMON /CLOUDDAT/  NCBANDS,CLDFRAC(MXLAY),TAUCLOUD(MXLAY,NBANDS)
       COMMON /PLNKDAT/   PLANKLAY(MXLAY,NBANDS),
      &                   PLANKLEV(0:MXLAY,NBANDS),PLANKBND(NBANDS)
-      COMMON /PLANKG/    FRACS(MXLAY,MG)                                       
+      COMMON /PLANKG/    FRACS(MXLAY,MG)
       COMMON /TAUGCOM/   TAUG(MXLAY,MG)
       COMMON /OUTPUT/    TOTUFLUX(0:MXLAY), TOTDFLUX(0:MXLAY),
      &                   FNET(0:MXLAY), HTR(0:MXLAY)
@@ -43,7 +43,7 @@ C     Clouds are treated with maximum/random overlap scheme.
 
       COMMON /CVRRGX/    HVRRGX
 
-      CHARACTER*15       HVRRGX
+      CHARACTER*16       HVRRGX
 
       DIMENSION ATRANS(MXLAY,MXANG),BBUGAS(MXLAY,MXANG)
       DIMENSION ATOT(MXLAY,MXANG),ODCLD(MXLAY,NBANDS,MXANG)
