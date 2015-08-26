@@ -51,7 +51,7 @@ C  --------
 
       COMMON /CVRSET/    HVRSET
 
-      CHARACTER*15       HVRSET
+      CHARACTER*16       HVRSET
 
       DIMENSION SELFFAC(MXLAY),SELFFRAC(MXLAY),INDSELF(MXLAY)
       DIMENSION PREF(59),PREFLOG(59),TREF(59),CHI_MLS(7,59)
@@ -276,7 +276,7 @@ C        species parameter in upper atmosphere.
          RAT_H2OCO2_1(LAY)=CHI_MLS(1,JP(LAY)+1)/CHI_MLS(2,JP(LAY)+1)         
 
          RAT_O3CO2(LAY)=CHI_MLS(3,JP(LAY))/CHI_MLS(2,JP(LAY))
-         RAT_O3CO2_1(LAY)=CHI_MLS(3,JP(LAY)+1)/CHI_MLS(2,JP(LAY)+1)         
+         RAT_O3CO2_1(LAY)=CHI_MLS(3,JP(LAY)+1)/CHI_MLS(2,JP(LAY)+1)
 
 C        Calculate needed column amounts.
          COLH2O(LAY) = 1.E-20 * WKL(1,LAY)
