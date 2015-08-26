@@ -147,7 +147,7 @@ C           10-250 cm-1 (low - H2O; high - H2O)
 C  Output
 
       COMMON /TAUGCOM/  TAUG(MXLAY,MG)
-      COMMON /PLANKG/   FRACS(MXLAY,MG)                                       
+      COMMON /PLANKG/   FRACS(MXLAY,MG)
 
 C  Input
 
@@ -159,7 +159,7 @@ C  Input
      &                  COLN2O(MXLAY),COLCO(MXLAY),COLCH4(MXLAY),  
      &                  COLO2(MXLAY),COLBRD(MXLAY)
       COMMON /INTFAC/   FAC00(MXLAY),FAC01(MXLAY),                            
-     &                  FAC10(MXLAY),FAC11(MXLAY)                             
+     &                  FAC10(MXLAY),FAC11(MXLAY)
       COMMON /INTIND/   JP(MXLAY),JT(MXLAY),JT1(MXLAY)
       COMMON /SELF/     SELFFAC(MXLAY), SELFFRAC(MXLAY), INDSELF(MXLAY)
       COMMON /FOREIGN/  FORFAC(MXLAY), FORFRAC(MXLAY), INDFOR(MXLAY)
@@ -170,7 +170,7 @@ C  Input
 
       COMMON /CVRTAU/    HVRTAU
 
-      CHARACTER*15       HVRTAU
+      CHARACTER*16       HVRTAU
 
       DIMENSION ABSA(65,MG),ABSB(235,MG)
       DIMENSION FRACREFA(MG),FRACREFB(MG)
@@ -298,7 +298,7 @@ C  Input
      &                  COLN2O(MXLAY),COLCO(MXLAY),COLCH4(MXLAY),  
      &                  COLO2(MXLAY),COLBRD(MXLAY)
       COMMON /INTFAC/   FAC00(MXLAY),FAC01(MXLAY),                            
-     &                  FAC10(MXLAY),FAC11(MXLAY)                             
+     &                  FAC10(MXLAY),FAC11(MXLAY)
       COMMON /INTIND/   JP(MXLAY),JT(MXLAY),JT1(MXLAY)
       COMMON /SELF/     SELFFAC(MXLAY), SELFFRAC(MXLAY), INDSELF(MXLAY)
       COMMON /FOREIGN/  FORFAC(MXLAY), FORFRAC(MXLAY), INDFOR(MXLAY)
@@ -307,7 +307,7 @@ C  Input
 
       COMMON /CVRTAU/    HVRTAU
 
-      CHARACTER*15       HVRTAU
+      CHARACTER*16       HVRTAU
 
       DIMENSION ABSA(65,MG),ABSB(235,MG)
       DIMENSION FRACREFA(MG),FRACREFB(MG)
@@ -408,8 +408,8 @@ C  Input
       COMMON /SPECIES/  COLDRY(MXLAY),WKL(35,MXLAY),WBROAD(MXLAY),
      &                  COLMOL(MXLAY),NMOL
       COMMON /INTFAC/   FAC00(MXLAY),FAC01(MXLAY),                            
-     &                  FAC10(MXLAY),FAC11(MXLAY)  
-      COMMON /MLS_REF/  PREF(59),PREFLOG(59),TREF(59),CHI_MLS(7,59)            
+     &                  FAC10(MXLAY),FAC11(MXLAY)
+      COMMON /MLS_REF/  PREF(59),PREFLOG(59),TREF(59),CHI_MLS(7,59)
       COMMON /INTIND/   JP(MXLAY),JT(MXLAY),JT1(MXLAY)
       COMMON /REFRAT_ETA/ RAT_H2OCO2(MXLAY),RAT_H2OCO2_1(MXLAY),
      &                  RAT_H2OO3(MXLAY),RAT_H2OO3_1(MXLAY),
@@ -427,7 +427,7 @@ C  Input
 
       COMMON /CVRTAU/    HVRTAU
 
-      CHARACTER*15       HVRTAU
+      CHARACTER*16       HVRTAU
 
       REAL KA,KB
       REAL KA_MN2O, KB_MN2O, MINORFRAC
@@ -838,7 +838,7 @@ C  Input
      &                  COLO2(MXLAY),COLBRD(MXLAY)
       COMMON /MLS_REF/  PREF(59),PREFLOG(59),TREF(59),CHI_MLS(7,59)
       COMMON /INTFAC/   FAC00(MXLAY),FAC01(MXLAY),                            
-     &                  FAC10(MXLAY),FAC11(MXLAY)                             
+     &                  FAC10(MXLAY),FAC11(MXLAY)
       COMMON /INTIND/   JP(MXLAY),JT(MXLAY),JT1(MXLAY)
       COMMON /REFRAT_ETA/ RAT_H2OCO2(MXLAY),RAT_H2OCO2_1(MXLAY),
      &                  RAT_H2OO3(MXLAY),RAT_H2OO3_1(MXLAY),
@@ -853,7 +853,7 @@ C  Input
 
       COMMON /CVRTAU/    HVRTAU
 
-      CHARACTER*15       HVRTAU
+      CHARACTER*16       HVRTAU
 
       DIMENSION ABSA(585,MG),ABSB(1175,MG)
       DIMENSION FRACREFA(MG,9), FRACREFB(MG,6)
@@ -1188,7 +1188,7 @@ C  Input
       COMMON /MLS_REF/  PREF(59),PREFLOG(59),TREF(59),CHI_MLS(7,59)
       COMMON /XSEC/     WX(MAXXSEC,MXLAY)
       COMMON /INTFAC/   FAC00(MXLAY),FAC01(MXLAY),                            
-     &                  FAC10(MXLAY),FAC11(MXLAY)                             
+     &                  FAC10(MXLAY),FAC11(MXLAY)
       COMMON /INTIND/   JP(MXLAY),JT(MXLAY),JT1(MXLAY)
       COMMON /REFRAT_ETA/ RAT_H2OCO2(MXLAY),RAT_H2OCO2_1(MXLAY),
      &                  RAT_H2OO3(MXLAY),RAT_H2OO3_1(MXLAY),
@@ -1205,7 +1205,7 @@ C  Input
 
       COMMON /CVRTAU/    HVRTAU
 
-      CHARACTER*15       HVRTAU
+      CHARACTER*16       HVRTAU
 
       DIMENSION ABSA(585,MG),ABSB(1175,MG)
       DIMENSION FRACREFA(MG,9), FRACREFB(MG,5), CCL4(MG)
@@ -1567,7 +1567,7 @@ C                           (high key - nothing; high minor - CFC11, CFC12)
 C  Output
 
       COMMON /TAUGCOM/  TAUG(MXLAY,MG)
-      COMMON /PLANKG/   FRACS(MXLAY,MG)                                       
+      COMMON /PLANKG/   FRACS(MXLAY,MG)
 
 C  Input
 
@@ -1582,8 +1582,8 @@ C  Input
      &                  COLMOL(MXLAY),NMOL
       COMMON /XSEC/     WX(MAXXSEC,MXLAY)
       COMMON /INTFAC/   FAC00(MXLAY),FAC01(MXLAY),                            
-     &                  FAC10(MXLAY),FAC11(MXLAY)                             
-      COMMON /MLS_REF/  PREF(59),PREFLOG(59),TREF(59),CHI_MLS(7,59)            
+     &                  FAC10(MXLAY),FAC11(MXLAY)
+      COMMON /MLS_REF/  PREF(59),PREFLOG(59),TREF(59),CHI_MLS(7,59)
       COMMON /INTIND/   JP(MXLAY),JT(MXLAY),JT1(MXLAY)
       COMMON /SELF/     SELFFAC(MXLAY), SELFFRAC(MXLAY), INDSELF(MXLAY)
       COMMON /FOREIGN/  FORFAC(MXLAY), FORFRAC(MXLAY), INDFOR(MXLAY)
@@ -1594,7 +1594,7 @@ C  Input
 
       COMMON /CVRTAU/    HVRTAU
 
-      CHARACTER*15       HVRTAU
+      CHARACTER*16       HVRTAU
 
       DIMENSION ABSA(65,MG)
       DIMENSION FRACREFA(MG),CFC11ADJ(MG), CFC12(MG)
@@ -1707,7 +1707,7 @@ C                            (high key - O3; high minor - CO2)
 C  Output
 
       COMMON /TAUGCOM/  TAUG(MXLAY,MG)
-      COMMON /PLANKG/   FRACS(MXLAY,MG)                                       
+      COMMON /PLANKG/   FRACS(MXLAY,MG)
 
 C  Input
 
@@ -1722,7 +1722,7 @@ C  Input
       COMMON /SPECIES/  COLDRY(MXLAY),WKL(35,MXLAY),WBROAD(MXLAY),
      &                  COLMOL(MXLAY),NMOL
       COMMON /INTFAC/   FAC00(MXLAY),FAC01(MXLAY),                            
-     &                  FAC10(MXLAY),FAC11(MXLAY) 
+     &                  FAC10(MXLAY),FAC11(MXLAY)
       COMMON /MLS_REF/  PREF(59),PREFLOG(59),TREF(59),CHI_MLS(7,59)
       COMMON /INTIND/   JP(MXLAY),JT(MXLAY),JT1(MXLAY)
       COMMON /REFRAT_ETA/ RAT_H2OCO2(MXLAY),RAT_H2OCO2_1(MXLAY),
@@ -1740,7 +1740,7 @@ C  Input
 
       COMMON /CVRTAU/    HVRTAU
 
-      CHARACTER*15       HVRTAU
+      CHARACTER*16       HVRTAU
 
       DIMENSION ABSA(585,MG),ABSB(235,MG)
       DIMENSION FRACREFA(MG,9),FRACREFB(MG)
@@ -2083,7 +2083,7 @@ C                             (high key - O3; high minor - CO2, N2O)
 C  Output
 
       COMMON /TAUGCOM/  TAUG(MXLAY,MG)
-      COMMON /PLANKG/   FRACS(MXLAY,MG)                                       
+      COMMON /PLANKG/   FRACS(MXLAY,MG)
 
 C  Input
 
@@ -2098,8 +2098,8 @@ C  Input
      &                  COLMOL(MXLAY),NMOL
       COMMON /XSEC/     WX(MAXXSEC,MXLAY)
       COMMON /INTFAC/   FAC00(MXLAY),FAC01(MXLAY),                            
-     &                  FAC10(MXLAY),FAC11(MXLAY)                             
-      COMMON /MLS_REF/  PREF(59),PREFLOG(59),TREF(59),CHI_MLS(7,59)            
+     &                  FAC10(MXLAY),FAC11(MXLAY)
+      COMMON /MLS_REF/  PREF(59),PREFLOG(59),TREF(59),CHI_MLS(7,59)
       COMMON /INTIND/   JP(MXLAY),JT(MXLAY),JT1(MXLAY)
       COMMON /SELF/     SELFFAC(MXLAY),SELFFRAC(MXLAY),INDSELF(MXLAY)
       COMMON /FOREIGN/  FORFAC(MXLAY), FORFRAC(MXLAY), INDFOR(MXLAY)
@@ -2112,9 +2112,9 @@ C  Input
 
       COMMON /CVRTAU/    HVRTAU
 
-      CHARACTER*15       HVRTAU
+      CHARACTER*16       HVRTAU
 
-      REAL KA,KB,KA_MCO2,KA_MO3,KA_MN2O,KB_MCO2,KB_MN2O, MINORFRAC              
+      REAL KA,KB,KA_MCO2,KA_MO3,KA_MN2O,KB_MCO2,KB_MN2O, MINORFRAC
 
       DIMENSION ABSA(65,MG),ABSB(235,MG),CFC12(MG),CFC22ADJ(MG)
       DIMENSION FRACREFA(MG),FRACREFB(MG)
@@ -2266,7 +2266,7 @@ C                             (high key - CH4; high minor - N2O)
 C  Output
 
       COMMON /TAUGCOM/  TAUG(MXLAY,MG)
-      COMMON /PLANKG/   FRACS(MXLAY,MG)                                       
+      COMMON /PLANKG/   FRACS(MXLAY,MG) 
 
 C  Input
 
@@ -2282,7 +2282,7 @@ C  Input
      &                  COLMOL(MXLAY),NMOL
       COMMON /MLS_REF/  PREF(59),PREFLOG(59),TREF(59),CHI_MLS(7,59)
       COMMON /INTFAC/   FAC00(MXLAY),FAC01(MXLAY),                            
-     &                  FAC10(MXLAY),FAC11(MXLAY)                             
+     &                  FAC10(MXLAY),FAC11(MXLAY)
       COMMON /INTIND/   JP(MXLAY),JT(MXLAY),JT1(MXLAY)
       COMMON /REFRAT_ETA/ RAT_H2OCO2(MXLAY),RAT_H2OCO2_1(MXLAY),
      &                  RAT_H2OO3(MXLAY),RAT_H2OO3_1(MXLAY),
@@ -2299,7 +2299,7 @@ C  Input
 
       COMMON /CVRTAU/    HVRTAU
 
-      CHARACTER*15       HVRTAU
+      CHARACTER*16       HVRTAU
 
       REAL KA,KB
       REAL KA_MN2O,KB_MN2O,MINORFRAC,N2OM1,N2OM2
@@ -2629,7 +2629,7 @@ C     BAND 10:  1390-1480 cm-1 (low key - H2O; high key - H2O)
 C  Output
 
       COMMON /TAUGCOM/  TAUG(MXLAY,MG)
-      COMMON /PLANKG/   FRACS(MXLAY,MG)                                       
+      COMMON /PLANKG/   FRACS(MXLAY,MG)
 
 C  Input
 
@@ -2641,7 +2641,7 @@ C  Input
      &                  COLN2O(MXLAY),COLCO(MXLAY),COLCH4(MXLAY),  
      &                  COLO2(MXLAY),COLBRD(MXLAY)
       COMMON /INTFAC/   FAC00(MXLAY),FAC01(MXLAY),                            
-     &                  FAC10(MXLAY),FAC11(MXLAY)                             
+     &                  FAC10(MXLAY),FAC11(MXLAY)
       COMMON /INTIND/   JP(MXLAY),JT(MXLAY),JT1(MXLAY)
       COMMON /SELF/     SELFFAC(MXLAY), SELFFRAC(MXLAY), INDSELF(MXLAY)
       COMMON /FOREIGN/  FORFAC(MXLAY), FORFRAC(MXLAY), INDFOR(MXLAY)
@@ -2650,7 +2650,7 @@ C  Input
 
       COMMON /CVRTAU/    HVRTAU
 
-      CHARACTER*15       HVRTAU
+      CHARACTER*16       HVRTAU
 
       DIMENSION ABSA(65,MG),ABSB(235,MG)
       DIMENSION FRACREFA(MG),FRACREFB(MG)
@@ -2732,7 +2732,7 @@ C                              (high key - H2O; high minor - O2)
 C  Output
 
       COMMON /TAUGCOM/  TAUG(MXLAY,MG)
-      COMMON /PLANKG/   FRACS(MXLAY,MG)                                       
+      COMMON /PLANKG/   FRACS(MXLAY,MG)
 
 C  Input
 
@@ -2744,7 +2744,7 @@ C  Input
      &                  COLN2O(MXLAY),COLCO(MXLAY),COLCH4(MXLAY),  
      &                  COLO2(MXLAY),COLBRD(MXLAY)
       COMMON /INTFAC/   FAC00(MXLAY),FAC01(MXLAY),                            
-     &                  FAC10(MXLAY),FAC11(MXLAY)                             
+     &                  FAC10(MXLAY),FAC11(MXLAY)
       COMMON /INTIND/   JP(MXLAY),JT(MXLAY),JT1(MXLAY)
       COMMON /SELF/     SELFFAC(MXLAY), SELFFRAC(MXLAY), INDSELF(MXLAY)
       COMMON /FOREIGN/  FORFAC(MXLAY), FORFRAC(MXLAY), INDFOR(MXLAY)
@@ -2755,7 +2755,7 @@ C  Input
 
       COMMON /CVRTAU/    HVRTAU
 
-      CHARACTER*15       HVRTAU
+      CHARACTER*16       HVRTAU
 
       DIMENSION ABSA(65,MG),ABSB(235,MG)
       DIMENSION FRACREFA(MG),FRACREFB(MG)
@@ -2852,7 +2852,7 @@ C     BAND 12:  1800-2080 cm-1 (low - H2O,CO2; high - nothing)
 C  Output
 
       COMMON /TAUGCOM/  TAUG(MXLAY,MG)
-      COMMON /PLANKG/   FRACS(MXLAY,MG)                                       
+      COMMON /PLANKG/   FRACS(MXLAY,MG)
 
 C  Input
 
@@ -2865,8 +2865,8 @@ C  Input
      &                  COLN2O(MXLAY),COLCO(MXLAY),COLCH4(MXLAY),  
      &                  COLO2(MXLAY),COLBRD(MXLAY)
       COMMON /INTFAC/   FAC00(MXLAY),FAC01(MXLAY),                            
-     &                  FAC10(MXLAY),FAC11(MXLAY)  
-      COMMON /MLS_REF/  PREF(59),PREFLOG(59),TREF(59),CHI_MLS(7,59)            
+     &                  FAC10(MXLAY),FAC11(MXLAY)
+      COMMON /MLS_REF/  PREF(59),PREFLOG(59),TREF(59),CHI_MLS(7,59)
       COMMON /INTIND/   JP(MXLAY),JT(MXLAY),JT1(MXLAY)
       COMMON /REFRAT_ETA/ RAT_H2OCO2(MXLAY),RAT_H2OCO2_1(MXLAY),
      &                  RAT_H2OO3(MXLAY),RAT_H2OO3_1(MXLAY),
@@ -2880,7 +2880,7 @@ C  Input
 
       COMMON /CVRTAU/    HVRTAU
 
-      CHARACTER*15       HVRTAU
+      CHARACTER*16       HVRTAU
 
       DIMENSION ABSA(585,MG)
       DIMENSION FRACREFA(MG,9)
@@ -3123,7 +3123,7 @@ C     BAND 13:  2080-2250 cm-1 (low key - H2O,N2O; high minor - O3 minor)
 C  Output
 
       COMMON /TAUGCOM/  TAUG(MXLAY,MG)
-      COMMON /PLANKG/   FRACS(MXLAY,MG)                                       
+      COMMON /PLANKG/   FRACS(MXLAY,MG)
 
 C  Input
 
@@ -3139,7 +3139,7 @@ C  Input
      &                  COLMOL(MXLAY),NMOL
       COMMON /MLS_REF/  PREF(59),PREFLOG(59),TREF(59),CHI_MLS(7,59)
       COMMON /INTFAC/   FAC00(MXLAY),FAC01(MXLAY),                            
-     &                  FAC10(MXLAY),FAC11(MXLAY)                             
+     &                  FAC10(MXLAY),FAC11(MXLAY)
       COMMON /INTIND/   JP(MXLAY),JT(MXLAY),JT1(MXLAY)
       COMMON /REFRAT_ETA/ RAT_H2OCO2(MXLAY),RAT_H2OCO2_1(MXLAY),
      &                  RAT_H2OO3(MXLAY),RAT_H2OO3_1(MXLAY),
@@ -3156,7 +3156,7 @@ C  Input
 
       COMMON /CVRTAU/    HVRTAU
 
-      CHARACTER*15       HVRTAU
+      CHARACTER*16       HVRTAU
 
       DIMENSION ABSA(585,MG)
       DIMENSION FRACREFA(MG,9),FRACREFB(MG)
@@ -3503,7 +3503,7 @@ C     BAND 14:  2250-2380 cm-1 (low - CO2; high - CO2)
 C  Output
 
       COMMON /TAUGCOM/  TAUG(MXLAY,MG)
-      COMMON /PLANKG/   FRACS(MXLAY,MG)                                       
+      COMMON /PLANKG/   FRACS(MXLAY,MG)
 
 C  Input
 
@@ -3515,7 +3515,7 @@ C  Input
      &                  COLN2O(MXLAY),COLCO(MXLAY),COLCH4(MXLAY),  
      &                  COLO2(MXLAY),COLBRD(MXLAY)
       COMMON /INTFAC/   FAC00(MXLAY),FAC01(MXLAY),                            
-     &                  FAC10(MXLAY),FAC11(MXLAY)                             
+     &                  FAC10(MXLAY),FAC11(MXLAY)
       COMMON /INTIND/   JP(MXLAY),JT(MXLAY),JT1(MXLAY)
       COMMON /SELF/     SELFFAC(MXLAY), SELFFRAC(MXLAY), INDSELF(MXLAY)
       COMMON /FOREIGN/  FORFAC(MXLAY), FORFRAC(MXLAY), INDFOR(MXLAY)
@@ -3524,7 +3524,7 @@ C  Input
 
       COMMON /CVRTAU/    HVRTAU
 
-      CHARACTER*15       HVRTAU
+      CHARACTER*16       HVRTAU
 
       DIMENSION ABSA(65,MG),ABSB(235,MG)
       DIMENSION FRACREFA(MG),FRACREFB(MG)
@@ -3601,7 +3601,7 @@ C                              (high - nothing)
 C  Output
 
       COMMON /TAUGCOM/  TAUG(MXLAY,MG)
-      COMMON /PLANKG/   FRACS(MXLAY,MG)                                       
+      COMMON /PLANKG/   FRACS(MXLAY,MG)
 
 C  Input
 
@@ -3617,7 +3617,7 @@ C  Input
       COMMON /SPECIES/  COLDRY(MXLAY),WKL(35,MXLAY),WBROAD(MXLAY),
      &                  COLMOL(MXLAY),NMOL
       COMMON /INTFAC/   FAC00(MXLAY),FAC01(MXLAY),                            
-     &                  FAC10(MXLAY),FAC11(MXLAY)                             
+     &                  FAC10(MXLAY),FAC11(MXLAY)
       COMMON /INTIND/   JP(MXLAY),JT(MXLAY),JT1(MXLAY)
       COMMON /REFRAT_ETA/ RAT_H2OCO2(MXLAY),RAT_H2OCO2_1(MXLAY),
      &                  RAT_H2OO3(MXLAY),RAT_H2OO3_1(MXLAY),
@@ -3634,7 +3634,7 @@ C  Input
 
       COMMON /CVRTAU/    HVRTAU
 
-      CHARACTER*15       HVRTAU
+      CHARACTER*16       HVRTAU
 
       DIMENSION ABSA(585,MG)
       DIMENSION FRACREFA(MG,9)
@@ -3920,7 +3920,7 @@ C     BAND 16:  2600-3250 cm-1 (low key- H2O,CH4; high key - CH4)
 C  Output
 
       COMMON /TAUGCOM/  TAUG(MXLAY,MG)
-      COMMON /PLANKG/   FRACS(MXLAY,MG)                                       
+      COMMON /PLANKG/   FRACS(MXLAY,MG)
 
 C  Input
 
@@ -3934,7 +3934,7 @@ C  Input
      &                  COLO2(MXLAY),COLBRD(MXLAY)
       COMMON /MLS_REF/  PREF(59),PREFLOG(59),TREF(59),CHI_MLS(7,59)
       COMMON /INTFAC/   FAC00(MXLAY),FAC01(MXLAY),                            
-     &                  FAC10(MXLAY),FAC11(MXLAY)                             
+     &                  FAC10(MXLAY),FAC11(MXLAY)
       COMMON /INTIND/   JP(MXLAY),JT(MXLAY),JT1(MXLAY)
       COMMON /REFRAT_ETA/ RAT_H2OCO2(MXLAY),RAT_H2OCO2_1(MXLAY),
      &                  RAT_H2OO3(MXLAY),RAT_H2OO3_1(MXLAY),
@@ -3950,7 +3950,7 @@ C  Input
 
       COMMON /CVRTAU/    HVRTAU
 
-      CHARACTER*15       HVRTAU
+      CHARACTER*16       HVRTAU
 
       DIMENSION ABSA(585,MG), ABSB(235,MG)
       DIMENSION FRACREFA(MG,9), FRACREFB(MG)
