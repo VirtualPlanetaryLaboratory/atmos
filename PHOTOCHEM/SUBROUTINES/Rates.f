@@ -441,10 +441,108 @@ c get back to orig - save an in.dist - then try to lower this.
      $    CHEMJ(3,J).EQ.'H2').or.(CHEMJ(1,J).EQ.'C2H6SX'.AND.
      $    CHEMJ(2,J).EQ.'H'.AND.CHEMJ(3,J).EQ.'H2')  ) THEN
 
+!gna - possible mistake here: in D.-G. et al 2011  C2H6S + H ->  H2 + C2H4 + HS is listed with different reaction rate coefficients
+!  8.34E-12    -2212.     1.6
+! can't parse the Zhang paper so not sure what is correct.
        A(J,I) = 4.81E-12 * EXP(-1100./T(I)) * (T(I)/298.)**1.70    ! theory - Zhang et al. 2005
       endif
 
-!   HCS + CH3S ->CS + CH3SH !SORG
+!gna
+!C2H6S + O -> CH3 + CH3 + SO
+!CH3SH + O -> CH3 + HSO
+!in reactions list as "WEIRD" but wasn't here...
+      if ((CHEMJ(1,J).EQ.'C2H6S'.AND.CHEMJ(2,J).EQ.'O'.AND. 
+     $    CHEMJ(3,J).EQ.'CH3') .OR. 
+     $   (CHEMJ(1,J).EQ.'C2H6SH'.AND.CHEMJ(2,J).EQ.'O'.AND.
+     $    CHEMJ(3,J).EQ.'CH3') )THEN
+      A(J,I) = 1.30E-11 * EXP(-410./T(I)) * (T(I)/298.)**1.1    ! Sander 2006
+      endif
+
+!gna
+!C2H6S2 + O -> CH3 + CH3S + SO
+!in reactions list as "WEIRD" but wasn't here...
+      if ((CHEMJ(1,J).EQ.'C2H6S2'.AND.CHEMJ(2,J).EQ.'O'.AND.
+     $    CHEMJ(3,J).EQ.'CH3') )THEN
+      A(J,I) = 3.90E-11 * EXP(290./T(I)) * (T(I)/298.)**1.1    ! Sander 2006
+      endif
+
+!gna
+!C2H6S + OH -> CH21 + CH3S + H2O
+!in reactions list as "WEIRD" but wasn't here...
+      if ((CHEMJ(1,J).EQ.'C2H6S'.AND.CHEMJ(2,J).EQ.'OH'.AND. 
+     $    CHEMJ(3,J).EQ.'CH21') )THEN
+      A(J,I) = 1.10E-11 * EXP(400./T(I)) * (T(I)/298.)**1.1    ! Sander 2006
+      endif
+
+!gna
+!C2H6S2 + OH -> CH3 + CH3SH + S
+!in reactions list as "WEIRD" but wasn't here...
+      if ((CHEMJ(1,J).EQ.'C2H6S2'.AND.CHEMJ(2,J).EQ.'OH'.AND. 
+     $    CHEMJ(3,J).EQ.'CH3') )THEN
+      A(J,I) = 6.00E-11 * EXP(400./T(I)) * (T(I)/298.)**1.2    ! Sander 2006
+      endif
+
+!gna
+!CH3 + OH -> CH3O + H
+!in reactions list as "WEIRD" but wasn't here...
+      if ((CHEMJ(1,J).EQ.'CH3'.AND.CHEMJ(2,J).EQ.'OH'.AND. 
+     $    CHEMJ(3,J).EQ.'CH3O') )THEN
+      A(J,I) = 9.3E-11 * EXP(-1606/T(I)) * (T(I)/298.)**1.    ! Jasper 2007
+      endif
+
+!gna
+!CH3 + HNO -> CH4 + NO
+!in reactions list as "WEIRD" but wasn't here...
+      if ((CHEMJ(1,J).EQ.'CH3'.AND.CHEMJ(2,J).EQ.'HNO'.AND. 
+     $    CHEMJ(3,J).EQ.'CH4') )THEN
+      A(J,I) = 1.85E-11 * EXP(-176/T(I)) * (T(I)/298.)**0.6    ! Choi and Lin 2005
+      endif
+
+
+!gna
+!H2S + H -> H2 + HS
+!in reactions list as "WEIRD" but wasn't here...
+      if ((CHEMJ(1,J).EQ.'H2S'.AND.CHEMJ(2,J).EQ.'H'.AND. 
+     $    CHEMJ(3,J).EQ.'H2') )THEN
+      A(J,I) = 3.66E-12 * EXP(-455/T(I)) * (T(I)/298.)**1.94    ! Choi and Lin 2005
+      endif
+
+!gna
+!SO + HCO -> HSO + CO
+!in reactions list as "WEIRD" but wasn't here...
+      if ((CHEMJ(1,J).EQ.'SO'.AND.CHEMJ(2,J).EQ.'HCO'.AND. 
+     $    CHEMJ(3,J).EQ.'HSO') )THEN
+      A(J,I) = 5.6E-12 *  * (T(I)/298.)**0.4    ! Kasting 1990
+      endif
+
+!gna
+!NH2 + H -> NH3
+!in reactions list as "WEIRD" but wasn't here...
+      if ((CHEMJ(1,J).EQ.'NH2'.AND.CHEMJ(2,J).EQ.'H'.AND. 
+     $    CHEMJ(3,J).EQ.'NH3') )THEN
+      A(J,I) = (6.E-30*DEN(I))/(1.+3.E-20*DEN(I))    ! Gordon 1971
+      endif
+
+!gna
+!NH + H -> NH2
+!in reactions list as "WEIRD" but wasn't here...
+      if ((CHEMJ(1,J).EQ.'NH'.AND.CHEMJ(2,J).EQ.'H'.AND. 
+     $    CHEMJ(3,J).EQ.'NH2') )THEN
+      A(J,I) =  (6.E-30*DEN(I))/(1.+3.E-20*DEN(I))   ! Kasting 1982
+      endif
+
+!gna
+!CS + HS -> CS2 + H
+!in reactions list as "WEIRD" but wasn't here...
+      if ((CHEMJ(1,J).EQ.'CS'.AND.CHEMJ(2,J).EQ.'CS'.AND. 
+     $    CHEMJ(3,J).EQ.'CS2') )THEN
+      A(J,I) =  1.5E-13*(1.+0.6*DEN(I))   ! assumed samed as k(CO+OH)
+      endif
+
+
+
+
+!   CH3S + HCS ->CS + CH3SH !SORG
       if ((CHEMJ(1,J).EQ.'HCS'.AND.CHEMJ(2,J).EQ.'CH3S').OR.
      $    (CHEMJ(1,J).EQ.'HCSX'.AND.CHEMJ(2,J).EQ.'CH3S').OR.
      $    (CHEMJ(1,J).EQ.'HCS'.AND.CHEMJ(2,J).EQ.'CH3SX')) THEN
