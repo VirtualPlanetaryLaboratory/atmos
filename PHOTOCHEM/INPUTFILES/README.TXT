@@ -12,11 +12,8 @@ Copy in.dist to:
  /PHOTOCHEM   
 If the model does not converge in less than ~ 100 steps, check to make sure
 you correctly copied in.dist to the PHOTOCHEM directory. If you still have 
-problems, talk to Giada. The other templates in that folder were generated 
-by other people for a different incarnation of this model and may or may not 
-work for you without editing... I have not tried any of the others except for
-ArcheanSORG+haze, and that does NOT currently work with this version of 
-the model. :-( 
+problems, talk to Giada. The other templates SHOULD work, too, but 
+your mileage may vary....
 
 ----------------------------------------------
 ----------------planet.dat--------------------
@@ -168,7 +165,7 @@ KIN: File unit for cross sections.  Probably no need to change this?
 -------------------------------------------------
 -----------------reactions.rx--------------------
 All the reactions in your model!  Adding to this or removing from it 
-means you need to also edit parameters.inc and (I'm guessing) in.dist.
+means you need to also edit parameters.inc 
 Format of reactions is:
 first column + second column ---> third column + fourth column + fifth column
 

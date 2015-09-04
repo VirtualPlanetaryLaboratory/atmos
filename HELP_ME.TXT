@@ -33,6 +33,7 @@ QUESTION: Where are the inputfiles for these codes?
 ANSWER: The PHOTOCHEM inputfiles live in PHOTOCHEM/INPUTFILES
 The CLIMA input files live in CLIMA/IO.  I've written a description
 of the photochem inputfiles in PHOTOCHEM/INPUTFILES/README.TXT.
+I've also attempted a description of Clima in CLIMA/IO/README.
 
 ***
 
@@ -76,10 +77,6 @@ the code from Eddie or from the bitbucket:
 https://bitbucket.org/bitbucket_vpl/photochem_smart/
 It will allow you to make spectra with photochemical code outputs pretty 
 easily if you follow the directions.
-
-Need fancy aerosols or clouds?  Need transit transmission spectra or other 
-stellar types?  Talk to Giada for her version of code... It will be integrated
-into the main code when she has time... :-P 
 
 ***
 
