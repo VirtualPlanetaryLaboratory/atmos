@@ -17,7 +17,7 @@ c  This subroutine contains CH4
 !gna - changed ngs to 8 to account for c2h6
       PARAMETER(NS=3, NS1=NS+2, NS4=NS+5) ! Adding parameter statement needed for FI(NS1,ND) 5/23/2011
       REAL kmatrix_solh2o, kmatrix_solco2, weights, KAPPALAYERSOL_CO2,
-     &   KAPPALAYERSOL_H2O, BETA
+     &   KAPPALAYERSOL_H2O   !EWS - removed BETA because it wasn't used 9/4/2015
 C
 
        COMMON/SOLARBLK/AMU0,SRFALB,OMG0A(NSOL,ND-1),
@@ -62,7 +62,7 @@ c     COMMON/CBLOK/FO2,FN2,FCO2,FAR,FCH4
       COMMON/CPHEAT/CPO2(ND),CPCO2(ND), CPN2(ND), CPH2O(ND),
      & CPN(ND), CPNT(ND)
 
-      DIMENSION  TAUAS(ND-1),TAUS(ND-1),TAUA(ND-1),
+      DIMENSION  TAUAS(ND-1),TAUS(ND-1), ! EWS - removed TAUA(ND-1) because it wasn't used 9/4/2015
      &  TAUR(ND-1),TAUG(ND-1),FRAC(ND-1),INDEX(ND-1),
      &  CRAY(ND-1),DPLYR(ND-1),PLAYR(ND),PMID(ND-1),
      &  FUP(ND),FDN(ND),FUPA(ND),FDNA(ND),ALPHACH4(4,38),
@@ -72,7 +72,7 @@ c     COMMON/CBLOK/FO2,FN2,FCO2,FAR,FCH4
      &  KMATRIX_SOLCO2(NSOL,IK),self_absol(NSOL,ND),  
      &   forn_absol(NSOL,ND),  ! Added self and foreign water continuum solar coefficients 8/30/2012 c-rr
      &  SOLAV(NSOL+1) ! Added solar intervals
-      DIMENSION W(NF), ALAM(NF), AVOLD(NF),TAUCONTSOL(ND),  ! Added water continuum tau for solar 8/30/2012
+      DIMENSION TAUCONTSOL(ND),  ! Added water continuum tau for solar 8/30/2012 ! Removed W(NF), ALAM(NF), AVOLD(NF) since they weren't used 9/4/2015 - EWS
      &  KAPPALAYERSOL_CO2(NSOL,ND,IK),KAPPALAYERSOL_H2O(NSOL,ND,IK) ! Turning SIGR into a scalar quantity not an array 5/23/2011
 !     Added KAPPALAYERSOL which is KMATRIX_SOL looped over all heights
 c     DIMENSION W(NF), ALAM(NF), AVOLD(NF),SIGR(NSOL)
@@ -170,8 +170,8 @@ C PLUGGING IN CH4 DATA FROM KARKOSHKAs file
        BETACH4(K3,J) = BETACH4Kark(K3,J)/2.687E24
  3337  CONTINUE
  3338 CONTINUE
-	DO J = 1,ND
-	   PF1(J) = PF(J)*1.E6
+        DO J = 1,ND
+           PF1(J) = PF(J)*1.E6
         END DO
 C
 
@@ -203,7 +203,7 @@ C
        ENDDO
          ENDDO
 
-3456     format(1p4e14.5,3(2x,i3))
+c 3456     format(1p4e14.5,3(2x,i3)) !EWS - not used
 
 !         print *,'OUT OF INTERPSOLAR....'
 
@@ -216,29 +216,29 @@ C
             FDNA(J) = 0.0
  1160    CONTINUE
  
-	     AL2 = ALAMBDA(I)**2  ! Took AL2 out of Rayley in order to do altitude loop and get AL2 for each individual mixing ratio.
+             AL2 = ALAMBDA(I)**2  ! Took AL2 out of Rayley in order to do altitude loop and get AL2 for each individual mixing ratio.
              
-!2233 	     format(6(f9.5))            
+!2233              format(6(f9.5))            
 
 ! 5/23/2011
        DO 1165 IL=1,NLAYERS
 c-rr Recalculation of mixing rations for the noncondensibles
 c FI(1,J)= water
 c FI(2,J)= carbon dioxide
-c FI(3,J) = methane	   
-	   
+c FI(3,J) = methane           
+           
    
 c The condensibles are water and carbon dioxide. Water convects for planets closer in and CO2 condenses for planets further out
 c FNC = noncondensible mixing ratio = FN2 + FO2 + FCH4 + FAR = 1 - FH20 - FCO2  5/3/2011
            Fwater = FI(1,IL) ! Needed for rayley
-	   FCO2 = FI(2,IL)  ! Needed for rayley
-	   FNCR = FNC(IL)  ! This is the FNC that is passed into rayley, one layer at a time  c-rr 6/7/2012
+           FCO2 = FI(2,IL)  ! Needed for rayley
+           FNCR = FNC(IL)  ! This is the FNC that is passed into rayley, one layer at a time  c-rr 6/7/2012
             
-c-----------------------------------------------------------------------------------------	   
-	   CALL RAYLEY(SIGR, AL2,Fwater,FNCR) ! Call rayley to output SIGR at a given altitude and wavelength, inputting AL2. 5/23/2011
+c-----------------------------------------------------------------------------------------           
+           CALL RAYLEY(SIGR, AL2,Fwater,FNCR) ! Call rayley to output SIGR at a given altitude and wavelength, inputting AL2. 5/23/2011
            ! 8/31/2011 removed FNC from rayley argument
-	   
-c	   TAUR(IL)= SIGR(I)*CRAY(IL)	   
+           
+c           TAUR(IL)= SIGR(I)*CRAY(IL)           
         TAUR(IL)= SIGR*CRAY(IL)  ! SIGR is a scalar now 5/23/2011
         r = RAER(IL)
         np = PARTICLES(IL)
@@ -280,7 +280,7 @@ C
        TAUASTOTAL = TAUASTOTAL + TAUAS(IL)
        ENDDO
        ENDIF
-   19   FORMAT(/1X,1PE10.4)
+c   19   FORMAT(/1X,1PE10.4) !EWS - not used
          NPR1=NPR(1,I)
          NPR2=NPR(2,I)
          NPR3=4  ! 4 terms for CH4 for intervals 1-21
@@ -292,14 +292,14 @@ C
  
 !----------------BPS WATER CONTINUUM 8/30/2012 c-rr
                  IF(I.le.8)THEN
-		 DO IL = 1,NLAYERS
-		 TAUCONTSOL(IL) = 0.0d0
-		 ENDDO
-		 ENDIF      
+                 DO IL = 1,NLAYERS
+                 TAUCONTSOL(IL) = 0.0d0
+                 ENDDO
+                 ENDIF      
 
                 IF (I.ge.9) THEN  ! water continuum only in solar intervals 9 - 38
-!		IF (((I.ge.30).and.(I.le.31)).or.((I.ge.34).and.(I.le.38)))THEN
-!		IF ((I.eq.30).or.(I.eq.31))THEN
+!                IF (((I.ge.30).and.(I.le.31)).or.((I.ge.34).and.(I.le.38)))THEN
+!                IF ((I.eq.30).or.(I.eq.31))THEN
 
                 DO IL = 1, NLAYERS
 
@@ -308,20 +308,21 @@ C
                 RHOW = (PH2O/1.)*(296./TF(IL))  ! RHO_water. Different from MT_CKD? Why does BPS use Ph2o instead of P? 
                 RHOF = (PDRY/1.)*(296./TF(IL))  ! RHO_foreign. Different from MT_CKD? Why does BPS use Pdry instead of P?
 
-!		   Bssol(i) = 0.0d0
-!		   Bfsol(i) = 0.0d0
+!                   Bssol(i) = 0.0d0
+!                   Bfsol(i) = 0.0d0
                 RADFLD = 1.  ! radiation field term is always negligible in solar because wavenumber always greater than 500cm-1.
                 self_absol(I,IL) = RHOW*(s_absol(i)*
      &                            exp(TDsol(i)*(296.-TF(IL)))
      &         + RADFLD*Bssol(i)) ! Self broadening coefficient with radiation field and temperature dependence included (cm^2/molecule)
-                forn_absol(I,IL) = RHOF*(f_absol(i) + Bfsol(i))*RADFLD  ! foreign broadening coefficient with radiation field and temperature dependence included (cm^2/molecule)
+                forn_absol(I,IL) = RHOF*(f_absol(i) + Bfsol(i))*RADFLD 
+                   ! foreign broadening coefficient with radiation field and temperature dependence included (cm^2/molecule)
 
                 ABSCONT = self_absol(I,IL) + forn_absol(I,IL)
                 TAUCONTSOL(IL) = ABSCONT*CGAS(IL,6) !optical depth
 !                TAUCONTSOL(IL) = 0.0d0
               ENDDO  ! ENDS LAYER LOOP IN CONTINUUM
                  
-              ENDIF! water continuum only in solar intervals 9 - 38	 
+              ENDIF! water continuum only in solar intervals 9 - 38         
 
 !------------------------------------------------------------------
 
@@ -344,9 +345,9 @@ C     ALPHACH4NEW(K3) for Intervals 22-38 have been combined into ALCH4(K3,I). 1
 !            ENDIF
 !         DO 1170 K1=1,NPR1              !**BEGIN NPR1 LOOP** K1 is gas 1 from solar38
 !            DO 1175 K2=1,NPR2           !**BEGIN NPR2 LOOP** K2 is gas 2 from solar38
-!               IF(I.lt.17) THEN	      
+!               IF(I.lt.17) THEN              
 !               AP=WGHT(K1,1,I)*WGHT(K2,2,I)*ALCH4(K3,I) 
-!	       ELSE
+!               ELSE
 !               AP = WGHT(K1,1,I)*weight(K2)*ALCH4(K3,I)
 !               END IF
   
@@ -382,7 +383,7 @@ c  Add the NO2 absorption in here. Scale everything to CH4.
 c         IF (I .eq. 7) THEN
 c         PRINT 99923, IL, FNO2, TAUG(IL), SIGNO2(I)
 c         ENDIF
-99923 FORMAT("in solar.f:",I5, 1P10E10.2)
+c 99923 FORMAT("in solar.f:",I5, 1P10E10.2) !EWS - label not used
      
             IF(I<22) THEN
             TAUG(IL)= TAUG(IL) + BETACH4(K3,I)*CGAS(IL,2) ! c-rr change gas CH4 number from 5 to 2. 3/19/2012
@@ -391,10 +392,10 @@ c         ENDIF
          IF(I>21) THEN
          II = I - 21
 C*********************ADDING STUFF HERE*****************************
-C	Interpolation scheme to select the correct K-coefficients for BETACH4
-C	Pressures are -4,-3,-2,-1,0
-C	Temps are 112,188,295
-C	Assumes Temp will never be lower than 112, log10(pressure) never lower than -4
+C        Interpolation scheme to select the correct K-coefficients for BETACH4
+C        Pressures are -4,-3,-2,-1,0
+C        Temps are 112,188,295
+C        Assumes Temp will never be lower than 112, log10(pressure) never lower than -4
 
       AFP = 0.0
       AFT = 0.0
@@ -406,7 +407,7 @@ C	Assumes Temp will never be lower than 112, log10(pressure) never lower than -4
       PP = AMIN1(PP,1.)      
       ANEWBETA = 0.0
  
-	
+        
       IF(TP-112. < 76.) THEN
         AFT = (TP-112.)/76.
         LOGP = PPLOG-1
@@ -464,19 +465,19 @@ C	Assumes Temp will never be lower than 112, log10(pressure) never lower than -4
      1    BETACH4NEW(II,2,4,K3)+AFT*(1-AFP)*BETACH4NEW(II,3,4,K3)+
      2    AFP*(1-AFT)*BETACH4NEW(II,2,5,K3)
         END SELECT
-      END IF  	
+      END IF          
             TAUG(IL)= TAUG(IL) + ANEWBETA*CGAS(IL,2)  ! Change CH4 from 5 to 2
 c            print 9999,TAUG(IL),ANEWBETA
 c            print 9998,TP,LOGP
 c           print 9999,AFT,pp
-9998        format(1PE12.5,2x,I2)
+c 9998        format(1PE12.5,2x,I2) !EWS - not used
       END IF
  
  1181    CONTINUE
 
 !               IF (IG1.LE.4) THEN
 C-rr           10/19/2010. Gas "3" is CO2 added 
-C	       from Richard Freedmans eb.txt.
+C               from Richard Freedmans eb.txt.
 C              For intervals 1-16 use Tom Ackerman's kcoefficients to get BETAs
 C              otherwise use Richard Freedman's.
 !                  DO 1185 IL=1,NLAYERS
@@ -510,7 +511,7 @@ C
 
                        CGAS(IL,3) = AMAX1(CGAS(IL,3),1.E-20)
                        CGAS(IL,4) = AMAX1(CGAS(IL,4),1.E-20)
-		       TAUG(IL)= TAUG(IL) + BETAH2O*CGAS(IL,6) 
+                       TAUG(IL)= TAUG(IL) + BETAH2O*CGAS(IL,6) 
      &                 + BETAO3(I)*CGAS(IL,4) ! FOR CGAS: Gas 3 is O2, Gas 4 is O3, Gas 5 is CO2, and Gas 6 is H2O. Gas 2 (CH4) is handled above)
 !                         if (IL.eq.1) then
 !                         print *, BETAO3(I)*2.687E19, I, CGAS(IL,1)
@@ -549,7 +550,7 @@ C
 !                      TAUG(IL)=TAUG(IL)+BETA*CGAS(IL,IG2)  ! CGAS is in units of what units for gas(from gascon) and BETA is inverse of that. We need to change them to molecules/CM2 and CM2/molcule, respectively.
 !                     ELSE
 !                       BETA = KMATRIX(I,IL,K1)
-!		       TAUG(IL)= TAUG(IL) + BETA*CGAS(IL,3)
+!                       TAUG(IL)= TAUG(IL) + BETA*CGAS(IL,3)
 
                     
 !                          ENDIF
@@ -561,7 +562,7 @@ c-rr 6/7/2011 near IR CO2 CIA section-------------------------------------------
                      DO IL =1,NLAYERS
                      TAUG(IL) = TAUG(IL) + 1.5E-9*(CGAS(IL,5)
      &                             /2.687E19)*FI(2,IL)*P(IL) ! Lochsmidt's value converts CGAS for CO2 from mol/cm^2 into atm-cm. The CIA values (i.e. 1.5E-9 are 
-!                              					in inverse amagat^2cm. So tau is unitless.
+!                                                                      in inverse amagat^2cm. So tau is unitless.
                      ENDDO
                   
 
@@ -577,7 +578,7 @@ c-rr 6/7/2011 near IR CO2 CIA section-------------------------------------------
      &                            /2.687E19)*FI(2,IL)*P(IL)
                      ENDDO
                      ENDIF
-!		     ENDIF	
+!                     ENDIF        
 C------------------------------------------------------------------------------------------
                  
 
@@ -595,7 +596,7 @@ C-------------------------------------------------------------------------------
 
 
 
-9999   format(1P6E12.5,3(2x,I3), 2x,1p3e12.5)
+c 9999   format(1P6E12.5,3(2x,I3), 2x,1p3e12.5) !EWS - not used
 c               TAULAM(IL) = AMIN1(TAULAM(IL),1000.)
                OMG0(IL) = TAUS(IL)/TAULAM(IL)
 C
@@ -648,20 +649,20 @@ C-rr         PLAYING AROUND WITH FLUXES HERE
 c             IF ((I==26).and.(J==95)) THEN
 c             print *, 'FDNSOL=',FDNSOL(J),'FUPSOL=',FUPSOL(J)             
 c             ENDIF
-	     Fdiff(J) = SOLINT(I)*(FDNA(J)-FUPA(J))
-c	      CPCO2 = 7.7 + 5.3E-3*TF(J) - 8.3E-7*TF(J)*TF(J) 
-c-rr	      Putting new CPCO2 parametrization here. Why is there no FCH4?
-c	      CPCO2 = 5.89 + 6.06E-3*TF(J) + 2.39E-5*TF(J)*TF(J) 
+             Fdiff(J) = SOLINT(I)*(FDNA(J)-FUPA(J))
+c              CPCO2 = 7.7 + 5.3E-3*TF(J) - 8.3E-7*TF(J)*TF(J) 
+c-rr              Putting new CPCO2 parametrization here. Why is there no FCH4?
+c              CPCO2 = 5.89 + 6.06E-3*TF(J) + 2.39E-5*TF(J)*TF(J) 
 c     &        -3.44E-8*TF(J)*TF(J)*TF(J)  
-c		if (j.eq.1)print *, 'CPCO2=', CPCO2
-c   	      CPN2 = 6.76 + 6.06E-4*TF(J) + 1.3E-7*TF(J)*TF(J)
+c                if (j.eq.1)print *, 'CPCO2=', CPCO2
+c                 CPN2 = 6.76 + 6.06E-4*TF(J) + 1.3E-7*TF(J)*TF(J)
 c-rr              CPO2 = 8.27 + 2.58E-4*TF(J) - 1.877E5/TF(J)/TF(J)
-c	      Putting new CPO2 parametrization 3/28/11
-c	      CPO2 = 7.47 -4.84E-3*TF(J) + 1.38E-5*TF(J)*TF(J) 
+c              Putting new CPO2 parametrization 3/28/11
+c              CPO2 = 7.47 -4.84E-3*TF(J) + 1.38E-5*TF(J)*TF(J) 
 c     &        -8.73E-9*TF(J)*TF(J)*TF(J) - 1.76E-9/TF(J)/TF(J)
-c   	      CPO2 = AMAX1(CPO2,CPN2)
+c                 CPO2 = AMAX1(CPO2,CPN2)
 c              CPN = FCO2*CPCO2 + FN2*CPN2 + FO2*CPO2 + FAR*4.97
-c	      CPNT(J) = CPN*4.18*1.E7/DM
+c              CPNT(J) = CPN*4.18*1.E7/DM
 c            IF(J.eq.ND) CPNT(J)= 50.* 4.18*1.E7 
 
 
@@ -670,17 +671,17 @@ c            IF(J.eq.ND) CPNT(J)= 50.* 4.18*1.E7
 
  1210    CONTINUE
 
-	IF (LAST .EQ. 1) THEN
-	 DO J=1,NLAYERS
-	   DFdiff=Fdiff(J+1)-Fdiff(J)
-	   SolHeat(I,J)=-(DFdiff*GNEW(J)/CPNT(J)
+        IF (LAST .EQ. 1) THEN
+         DO J=1,NLAYERS
+           DFdiff=Fdiff(J+1)-Fdiff(J)
+           SolHeat(I,J)=-(DFdiff*GNEW(J)/CPNT(J)
      &                   /(PF1(J+1)-PF1(J))*86400)
-	 END DO	  
-	END IF
+         END DO          
+        END IF
 c      print 99999, i,fupa(1)
-99999 format(1x,'i =',i2,2x,1pe10.3)
+c 99999 format(1x,'i =',i2,2x,1pe10.3) !EWS - not used
  
-	
+        
 c        IF (NST.eq.100)then
 c        print *, TAUG(IL),ALAMBDA(I),I
 c        endif
@@ -715,19 +716,19 @@ c       WRITE(96,151) ALAM
  151   FORMAT(1X,10F6.1)
        ENDIF
 
-	IF (LAST .EQ. 1) THEN       
+        IF (LAST .EQ. 1) THEN       
         do k=1,5
          istart = (k-1)*9 + 1
          istop = istart + 8
          istop = min0(istop,nsol)
-   	 WRITE(96,456)(i,i=istart,istop)
+            WRITE(96,456)(i,i=istart,istop)
          do j=1,nlayers
-	   WRITE(96,457)PF(j),(SolHeat(i,j),i=istart,istop)
+           WRITE(96,457)PF(j),(SolHeat(i,j),i=istart,istop)
          enddo
         enddo
-	CLOSE(96)
-	END IF
- 456	FORMAT(9x,9I10)  	 
+        CLOSE(96)
+        END IF
+ 456        FORMAT(9x,9I10)           
  457    FORMAT(1P10E10.2)
 
 

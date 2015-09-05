@@ -14,7 +14,7 @@ C
       PARAMETER(NZ=ND-1, NZ2=2*NZ)
       DIMENSION TAU(NZ), TAUC(NZ), G(NZ), GAM1(NZ), GAM2(NZ), GAM3(NZ),
      1  GAM4(NZ), ALAM(NZ), CGAM(NZ), E1(NZ), E2(NZ), E3(NZ), E4(NZ),
-     2  CP0(NZ), CPB(NZ), CM0(NZ), CMB(NZ), Y1(NZ), Y2(NZ), AMEAN(ND),
+     2  CP0(NZ), CPB(NZ), CM0(NZ), CMB(NZ), Y1(NZ), Y2(NZ), ! EWS - AMEAN(ND) variable not used
      3  W0(NZ),DIRECT(ND)
       DIMENSION A(NZ2), B(NZ2), D(NZ2), E(NZ2), Y(NZ2)
       DIMENSION ASY(NZ),TAULAM(NZ),FMT(NZ),OMG0(NZ),
@@ -129,12 +129,12 @@ C 105  FORMAT(1X,1P6E10.3)
 C      WRITE(1,110)
 C 110  FORMAT(/1X,'E')
 C      WRITE(1,111) E
-  111  FORMAT(1X,1P5E10.3)
+c  111  FORMAT(1X,1P5E10.3) !EWS - not used
 C
 C   Call the tridiagonal solver.  Use Numerical Recipes for now.
       CALL TRIDAG(A,B,D,E,Y,MZ2)
 C      WRITE(1,210)
- 210  FORMAT(/1X,'Y (after TRIDAG)')
+c 210  FORMAT(/1X,'Y (after TRIDAG)') !EWS - not used
 C      WRITE(1,111) Y
 C
       DO 9 N=1,NZ

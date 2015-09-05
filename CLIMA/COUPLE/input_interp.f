@@ -22,6 +22,7 @@ C-KK from atm_chem.
       COMMON/PRESSURE/P(ND),PLOG(ND)
       print *,'read in defs'
 C-KK   both indices starting at ground level
+        T = T ! EWS - note unused dummy argument
         istart = 1
         j = ND
         FI(1,j) = water(istart)     ! Not defined in mixing_ratios.dat

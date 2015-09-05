@@ -2,6 +2,8 @@
       INCLUDE 'CLIMA/INCLUDE/header.inc'
       PARAMETER(NS=3, NS1=NS+2,NGS2=8) ! NGS2 to differentiate from NGS 5/30/2012
       !gna - changed ngas2 to 8 (ethane added) and NS1 to NS+2
+c      NST = NST ! EWS - note that 'NST' isn't used in the subroutine
+c      T = T   ! EWS - 'T' isn't used either
 C
 C  NGS is the number of gases in the solar code. The order of gases in
 C  this subroutine is: AIR, CH4,O2, O3, CO2, H2O, and H2. 
@@ -12,8 +14,9 @@ C  this subroutine is: AIR, CH4,O2, O3, CO2, H2O, and H2.
       COMMON/CONSS/C,BK,G,GNEW(ND),PI,SM,DM,DM2
 
 
-C
-
+C  
+      NST = NST ! EWS - note that these are dummy arguments here
+      T = T   
       ND1 = ND - 1 !gna - number of layers = ND I think
       CON = 2.687E19 ! to convert CGAS into molecules/cm^2.
       ! CON is taken by multiplying Loshcmidt's numnber 
@@ -88,7 +91,7 @@ C
  !200  format(1p2e12.5)
 !      stop
 
- 100  FORMAT(1X,1P10E12.5)
+c 100  FORMAT(1X,1P10E12.5)
  
       RETURN
       END

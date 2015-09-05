@@ -4,13 +4,19 @@
       PARAMETER (NMAX=500)
       INTEGER j
       REAL bet,gam(NMAX)
-      if(b(1).eq.0.)pause 'tridag: rewrite equations'
+      if (b(1).eq.0.) THEN
+        PRINT *, 'tridag: rewrite equations' !EWS - rewrite to remove deprecated pause statement 9/4/2015
+        STOP 
+      endif 
       bet=b(1)
       u(1)=r(1)/bet
       do 11 j=2,n
         gam(j)=c(j-1)/bet
         bet=b(j)-a(j)*gam(j)
-        if(bet.eq.0.)pause 'tridag failed'
+        if (bet.eq.0.) THEN
+          PRINT *,  'tridag failed' !EWS - rewrite to remove deprecated pause statement 9/4/2015
+          STOP
+        endif
         u(j)=(r(j)-a(j)*u(j-1))/bet
 11    continue
       do 12 j=n-1,1,-1

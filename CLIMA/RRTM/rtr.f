@@ -39,7 +39,7 @@ C     Gaussian quadrature.
 
       COMMON /CVRRTR/    HVRRTR
 
-      CHARACTER*15       HVRRTR
+      CHARACTER*16       HVRRTR
 
       DIMENSION BBU1(MXLAY)
       DIMENSION ATRANS1(MXLAY)
@@ -147,7 +147,7 @@ C           Lambertian reflection.
             RADLU1 = RADLU1 + (BBU1(LEV)-RADLU1)*ATRANS1(LEV)
             URAD1(LEV) = URAD1(LEV) + RADLU1
  2600    CONTINUE
- 4000    CONTINUE
+c 4000    CONTINUE !EWS - label not used
          IG = IG + 1
          IF (IG .LE. NG(IBAND)) GO TO 1000
          
@@ -175,7 +175,7 @@ C        Calculate Heating Rates.
  7000 CONTINUE
       HTR(NLAYERS) = 0.0
 
- 9000 CONTINUE
+c 9000 CONTINUE !EWS - label not used
 
       RETURN
 

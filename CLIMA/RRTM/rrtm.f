@@ -36,7 +36,6 @@ C     created:   $Date: 2002/08/15 18:33:27 $
 *                                                                          *
 ****************************************************************************
 
-
 C THIS PROGRAM HAS BEEN MODIFIED TO RUN AS A SUBROUTINE OF THE CLIMATE MODEL
 C ALL CHANGES ARE MARKED WITH THE WORD ojo (MINDS "EYE" IN SPANISH)
 C CHANGES WERE ORIGINALLY MADE BY KARA KRELOVE FOR RRTM V2.3 
@@ -123,13 +122,13 @@ C ojo COMMON BLOCK added
      &                  COLMOL(MXLAY),NMOL
 
 
-      CHARACTER*15 HVRRTM,HVRREG,HVRRTR,HVRATM,HVRSET,HVRTAU,
+      CHARACTER*16 HVRRTM,HVRREG,HVRRTR,HVRATM,HVRSET,HVRTAU,
      *            HVRRGC,HVRRTC,HVRCLD,HVRUTL,HVREXT,
      *            HVRRTX,HVRRGX
 
-      CHARACTER*15 HVRKG1,HVRKG2,HVRKG3,HVRKG4,HVRKG5
-      CHARACTER*15 HVRKG6,HVRKG7,HVRKG8,HVRKG9,HVRKG10,HVRKG11
-      CHARACTER*15 HVRKG12,HVRKG13,HVRKG14,HVRKG15,HVRKG16
+      CHARACTER*16 HVRKG1,HVRKG2,HVRKG3,HVRKG4,HVRKG5
+      CHARACTER*16 HVRKG6,HVRKG7,HVRKG8,HVRKG9,HVRKG10,HVRKG11
+      CHARACTER*16 HVRKG12,HVRKG13,HVRKG14,HVRKG15,HVRKG16
       CHARACTER PAGE
 
 C      DATA WAVENUM1(1) /10./, WAVENUM2(1) /350./, DELWAVE(1) /340./
@@ -330,7 +329,7 @@ c         CLOSE(IRD)
      &FLUX       HEATING RATE')
  9901 FORMAT(1X,'            mb          W/m2          W/m2           W/
      &m2          degree/day')
- 9902 FORMAT(1X,I3,3X,F11.6,4X,1P,2(G12.6,2X),G13.6,3X,G16.9,0P)
+c 9902 FORMAT(1X,I3,3X,F11.6,4X,1P,2(G12.6,2X),G13.6,3X,G16.9,0P) !EWS - not used
  9903 FORMAT(A)
  9910 FORMAT('  Modules and versions used in this calculation:',/,/,5X,
      *        '    rrtm.f: ',6X,A15,10X, 'rrtatm.f: ',6X,A15,/,5X,
@@ -357,12 +356,12 @@ c      STOP
 
 C************************  SUBROUTINE READPROF  *****************************C
 
-      SUBROUTINE READPROF                                                     
-                                                                         
+      SUBROUTINE READPROF
+                    
 C     Read in atmospheric profile.
 
-      IMPLICIT DOUBLE PRECISION (V)                                      
-                                                                         
+      IMPLICIT DOUBLE PRECISION (V)
+                    
       PARAMETER (MXLAY=203)
       PARAMETER (NBANDS = 16)
       PARAMETER (MAXINPX=35)
@@ -382,14 +381,14 @@ C     DIMENSION ALTZ(0:MXLAY), IXTRANS(14),SEMIS(NBANDS)
       COMMON /IFIL/     IRD,IPR,IPU,IDUM(15)
       COMMON /XSECCTRL/ NXMOL,IXINDX(MAXINPX)
       COMMON /XSEC/     WX(MAXXSEC,MXLAY)
-      COMMON /PATHX/    IXMAX,NXMOL0,IXINDX0(MAXINPX),WX0(MAXINPX,MXLAY)    
+      COMMON /PATHX/    IXMAX,NXMOL0,IXINDX0(MAXINPX),WX0(MAXINPX,MXLAY)
       COMMON /XRRTATM/  IXSECT
 
 c ojo COMMON BLOCK added      
       COMMON /ALTI/ ALTZ(0:MXLAY)
       
       CHARACTER*80 FORM1(0:1),FORM2(0:1),FORM3(0:1)
-      CHARACTER*1 CTEST, CDOLLAR, CPRCNT,CDUM
+      CHARACTER*1 CDOLLAR, CPRCNT ! variables CDUM, CTEST not used
 
       DATA CDOLLAR /'$'/
       DATA CPRCNT /'%'/
@@ -405,7 +404,7 @@ c      DATA WX /MAXPROD*0.0/
 
       IXMAX = MAXINPX
 
- 1000 CONTINUE
+c 1000 CONTINUE
  
 c ojo ALL READ lines commented
 c      READ (IRD,9010,END=8800) CTEST
@@ -429,7 +428,7 @@ c ojo Definition of INPUT parameters
       IPTHAK = 3
       IXSECT = 0
       do j = 1,NBANDS
-	SEMIS(j) = 1.
+        SEMIS(j) = 1.
       end do
       IREFLECT = 0 
 c ojo  END definitions
@@ -459,7 +458,7 @@ c            READ (IRD,FORM2(IFORM)) PAVEL(L),TAVEL(L),SECNTK,CINP,
 c     &           IPTHRK,ALTZ(L),PZ(L),TZ(L)
 c            READ (IRD,FORM3(IFORM)) (WKL(M,L),M=1,7), WBRODL(L)
 c           IF(NMOL .GT. 7) READ (IRD,FORM3(IFORM)) (WKL(M,L),M=8,NMOL)
-c 2000    CONTINUE                                                            
+c 2000    CONTINUE       
 c           
 c         IF (IXSECT .EQ. 1) THEN                                 
 c            READ (IRD,9300) NXMOL0
@@ -530,22 +529,22 @@ c                     WX(IXINDX(IX),L) = WX0(IX,L) * 1.E-20
 c                  ENDIF
 c               ENDIF
                
- 4400       CONTINUE
+c 4400       CONTINUE
 c         ENDIF
  5000 CONTINUE
 
       GO TO 9000
 
- 8800 CONTINUE
- 8900 IF (CTEST.EQ.'%') STOP 'END OF INPUT FILE'
+c 8800 CONTINUE
+c 8900 IF (CTEST.EQ.'%') STOP 'END OF INPUT FILE'
  9000 CONTINUE
 
- 9010 FORMAT (A1)
- 9011 FORMAT (49X,I1,19X,I1,13X,I2,2X,I3,4X,I1)
- 9012 FORMAT (E10.3,1X,I1,2X,I1,16E5.3)
- 9013 FORMAT (1X,I1,I3,I5)                                     
- 9300 FORMAT (I5)
- 9301 FORMAT (1X,I1)
+c 9010 FORMAT (A1)
+c 9011 FORMAT (49X,I1,19X,I1,13X,I2,2X,I3,4X,I1)
+c 9012 FORMAT (E10.3,1X,I1,2X,I1,16E5.3)
+c 9013 FORMAT (1X,I1,I3,I5)                                     
+c 9300 FORMAT (I5)
+c 9301 FORMAT (1X,I1)
 
       RETURN
       END 
@@ -604,16 +603,16 @@ C     cloudy layers to process.
 C************************  SUBROUTINE XSIDENT  *****************************C
 
       SUBROUTINE XSIDENT(IRD)
-C                                                                         
+C                    
 C     This subroutine identifies which cross-sections are to be used.
 
       PARAMETER (MAXINPX=35)
       PARAMETER (MAXXSEC=4)
 
-      IMPLICIT DOUBLE PRECISION (V)                                     ! 
-C                                                                         
+      IMPLICIT DOUBLE PRECISION (V)  ! 
+C                    
       COMMON /XSECCTRL/ NXMOL,IXINDX(MAXINPX)
-C                                                                         
+C                    
 C     NXMOL     - number of cross-sections input by user
 C     IXINDX(I) - index of cross-section molecule corresponding to Ith
 C                 cross-section specified by user
@@ -622,39 +621,39 @@ C                 = 1 -- CCL4
 C                 = 2 -- CFC11
 C                 = 3 -- CFC12
 C                 = 4 -- CFC22
-C                                                                         
+C                    
 C     XSNAME=NAMES, ALIAS=ALIASES OF THE CROSS-SECTION MOLECULES          
-C                                                                         
+C                    
       CHARACTER*10 XSNAME(MAXINPX),ALIAS(MAXXSEC,4),BLANK               
-C                                                                         
+C                    
       DATA (ALIAS(1,I),I=1,4)/                                           
-     *    'CCL4      ', 'CCL3F     ', 'CCL2F2    ', 'CHCLF2    '/ 
+     *    'CCL4      ', 'CCL3F     ', 'CCL2F2    ', 'CHCLF2    '/
       DATA (ALIAS(2,I),I=1,4)/                                           
-     *    ' ZZZZZZZZ ', 'CFCL3     ', 'CF2CL2    ', 'CHF2CL    '/         
+     *    ' ZZZZZZZZ ', 'CFCL3     ', 'CF2CL2    ', 'CHF2CL    '/ 
       DATA (ALIAS(3,I),I=1,4)/                                           
-     *    ' ZZZZZZZZ ', 'CFC11     ', 'CFC12     ', 'CFC22     '/         
+     *    ' ZZZZZZZZ ', 'CFC11     ', 'CFC12     ', 'CFC22     '/
       DATA (ALIAS(4,I),I=1,4)/                                           
-     *    ' ZZZZZZZZ ', 'F11       ', 'F12       ', 'F22       '/        
+     *    ' ZZZZZZZZ ', 'F11       ', 'F12       ', 'F22       '/
 
-      DATA BLANK / '          '/                                          
-C                                                                         
-      DO 10 I = 1, NXMOL                                                 
-         XSNAME(I) = BLANK                                                
-   10 CONTINUE                                                            
-C                                                                         
+      DATA BLANK / '          '/
+C                    
+      DO 10 I = 1, NXMOL
+         XSNAME(I) = BLANK
+   10 CONTINUE       
+C                    
 C     READ IN THE NAMES OF THE MOLECULES                                  
-C                                                                         
-      IF (NXMOL.GT.7) THEN                                               
-         READ (IRD,'(7A10)') (XSNAME(I),I=1,7)                            
-         READ (IRD,'(8A10)') (XSNAME(I),I=8,NXMOL)                       
-      ELSE                                                                
-         READ (IRD,'(7A10)') (XSNAME(I),I=1,NXMOL)                       
-      ENDIF                                                               
-C                                                                         
+C                    
+      IF (NXMOL.GT.7) THEN
+         READ (IRD,'(7A10)') (XSNAME(I),I=1,7)
+         READ (IRD,'(8A10)') (XSNAME(I),I=8,NXMOL)
+      ELSE           
+         READ (IRD,'(7A10)') (XSNAME(I),I=1,NXMOL)
+      ENDIF          
+C                    
 C     MATCH THE NAMES READ IN AGAINST THE NAMES STORED IN ALIAS           
 C     AND DETERMINE THE INDEX VALUE.  
-      IXMAX = 4                                                          
-      DO 40 I = 1, NXMOL                                                 
+      IXMAX = 4     
+      DO 40 I = 1, NXMOL
 C        Left-justify all inputed names.                                      
          CALL CLJUST (XSNAME(I),10)
          IXINDX(I) = 0
@@ -662,11 +661,11 @@ C        Left-justify all inputed names.
             IF ((XSNAME(I).EQ.ALIAS(1,J)) .OR.                            
      *          (XSNAME(I).EQ.ALIAS(2,J)) .OR.                            
      *          (XSNAME(I).EQ.ALIAS(3,J)) .OR.                            
-     *          (XSNAME(I).EQ.ALIAS(4,J))) THEN                           
-               IXINDX(I) = J                                              
-            ENDIF                                                         
+     *          (XSNAME(I).EQ.ALIAS(4,J))) THEN
+               IXINDX(I) = J
+            ENDIF    
    20    CONTINUE
-   40 CONTINUE                                                            
+   40 CONTINUE       
 
       RETURN
       END
@@ -818,7 +817,7 @@ C   original subroutine, since that part of the code is out.
 c     PARAMETER (ND = 52, NL=51, MXLAY=203, NBANDS=16)
 
       COMMON/ MLAWERI/  layers, numspec, newalt(ND), TempT(0:NL), 
-     & 			Pres(0:NL), gasses(7, 0:NL), COLDEP(ND)
+     &                         Pres(0:NL), gasses(7, 0:NL), COLDEP(ND)
       COMMON /PROFI/   NLAYERS,PAVEL(MXLAY),TAVEL(MXLAY),
      &                   PZ(0:MXLAY), TZ(0:MXLAY)
       COMMON /SURFACE/   TBOUND,IREFLECT,SEMISS(NBANDS)
@@ -827,31 +826,31 @@ c     PARAMETER (ND = 52, NL=51, MXLAY=203, NBANDS=16)
       COMMON /ALTI/  altz(0:MXLAY)
 
 
-	integer x, z
-	real newalt
+        integer x, z
+        real newalt
 
-	do x = 0, layers
-	  TZ(x) = TempT(x)
-	  PZ(x) = Pres(x)
-	  WBRODL(x) = COLDEP(x)
-	  altz(x) = newalt(x)
-	  do z = 1, 7
- 	    wkl(z, x+1) = gasses(z,x)
-	  end do
-	end do
+        do x = 0, layers
+          TZ(x) = TempT(x)
+          PZ(x) = Pres(x)
+          WBRODL(x) = COLDEP(x)
+          altz(x) = newalt(x)
+          do z = 1, 7
+             wkl(z, x+1) = gasses(z,x)
+          end do
+        end do
 
-	altz(0) = 0.0
+        altz(0) = 0.0
 
-	NMOL = 7
-	NLAYERS = layers
+        NMOL = 7
+        NLAYERS = layers
 
 C  calculate average Ts and Ps
 
-	do x = 1, NLAYERS
-	  TAVEL(x) = (TZ(x-1) + TZ(x))/2.
-	  PAVEL(x) = (PZ(x-1) + PZ(x))/2.
-	end do
-	
+        do x = 1, NLAYERS
+          TAVEL(x) = (TZ(x-1) + TZ(x))/2.
+          PAVEL(x) = (PZ(x-1) + PZ(x))/2.
+        end do
+        
         TBOUND = TAVEL(1)
 
       return
@@ -885,8 +884,8 @@ C        tempUflux(n) = (TOTUFLUX(n-1) + TOTUFLUX(n))/2.
 C        tempDflux(n) = (TOTDFLUX(n-1) + TOTDFLUX(n))/2.
 C      end do
 
-C	tempUflux(0)=TOTUFLUX(0)
-C	tempDflux(0)=TOTDFLUX(0)
+C        tempUflux(0)=TOTUFLUX(0)
+C        tempDflux(0)=TOTDFLUX(0)
 
 C   Previous line of code not quite correct. TOT and F*IR have same # of
 C   points, and therefor I have to substitute at the bottom. 
