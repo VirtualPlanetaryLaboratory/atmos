@@ -420,6 +420,7 @@ c*******Changed for now*********
       READ(1,*) AA, monsize
       READ(1,*) AA, icealbedo
       READ(1,*) AA, INVERSE
+      READ(1,*) AA, FRAK        !can get a fractal haze without being coupled now
       print *, 'inverse', inverse
 
 
