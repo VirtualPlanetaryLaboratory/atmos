@@ -1,7 +1,7 @@
-Running the photochemical model for a high-O2 (95% O2) Earth with the Sun remaining as the host star.
+Running the photochemical model for a high-O2 (95% O2) Earth with GJ 876 as the host star.
 
-Assumption is a post-runaway abiotic O2 atmosphere (e.g., Luger & Barnes 2015), but recognizing this can
-only happen inside the inner edge of the habitable zone for a sun-type star. Mantle/surface oxidized. 
+Assumption is a post-runaway abiotic O2 atmosphere (e.g., Luger & Barnes 2015), with the planet residing in the CHZ, but
+experiencing a runaway during the pre-main sequence super-luminous phase of the star. Mantle/surface oxidized. 
 No reduced gases should be present. 
 
 Changes to the species.dat file from the "ModernEarthThatWorks" template:
@@ -14,4 +14,4 @@ N2 --> Rmix 0.78 --> 0.02
 
 in.dist close to convergence. Note H2O still present. 
 
--EWS 07/29/2015 (eschwiet@uw.edu)
+-EWS 09/08/2015 (eschwiet@uw.edu)
