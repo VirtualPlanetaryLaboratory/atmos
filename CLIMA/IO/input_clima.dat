@@ -3,21 +3,21 @@
 * Write the value AFTER the 11th space
 *2345678901HERE
 
-NSTEPS=    500			 !step number (200 recommended for coupling)
-IMW=       2         
+NSTEPS=    2000           !step number (200 recommended for coupling)
+IMW=       1         
 RSURF=     0.8                
 ZY=	   60.     
 DTAU0=     0.5
 ZCON=      20
 P0=        1.e-5
 PGO=       1.
-G=	   980.			!Gravity (Mars=373., Earth=980., Gliese581d=1744.0, assuming 5.6 earth masses) 
+G=	   980.         !Gravity (Mars=373., Earth=980., Gliese581d=1744.0, assuming 5.6 earth masses) 
 FAC=       4.0
 IO3=       1   			!Ozone?
-IUP=       1                    !1 means that it starts a new run and doesn't read TempIn.dat
-TG0=       260.			!Surface temperature for IUP=1   
+IUP=       0                    !1 means that it starts a new run and doesn't read TempIn.dat
+TG0=       290.			!Surface temperature for IUP=1   
 TSTRAT=    200.             	!Stratospheric temperature for IUP=1
-STARR=     "Sun"		!What star? (when coupling is on it ignores this and gets from Photo)
+STARR=     "B5034"		!What star? (when coupling is on it ignores this and gets from Photo)
 ICONSERV=  0          	        !Type of energy conservation
 ICOUPLE=   1            	!Coupled(1) or not(0)
 SRFALB=    0.32	               !fixed planetary albedo (0.2)
@@ -30,8 +30,8 @@ nga=       4
 IHAZE=     0
 monsize=   0
 icealbedo= 0
-INVERSE=   0    
-FRAK=      1   
+INVERSE=   0
+FRAK=      1    
 
 *******************************************************
 **   VARIABLE INPUT PARAMETERS

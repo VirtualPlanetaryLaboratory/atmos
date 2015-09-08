@@ -17,7 +17,7 @@ IO3=       1   			!Ozone?
 IUP=       1                    !1 means that it starts a new run and doesn't read TempIn.dat
 TG0=       290.			!Surface temperature for IUP=1   
 TSTRAT=    200.             	!Stratospheric temperature for IUP=1
-STARR=     "Sun"		!What star? (when coupling is on it ignores this and gets from Photo)
+STARR=     "B5034"		!What star? (when coupling is on it ignores this and gets from Photo)
 ICONSERV=  0          	        !Type of energy conservation
 ICOUPLE=   1            	!Coupled(1) or not(0)
 SRFALB=    0.32	               !fixed planetary albedo (0.2)
@@ -30,7 +30,8 @@ nga=       4
 IHAZE=     0
 monsize=   0
 icealbedo= 0
-INVERSE=   0   
+INVERSE=   0 
+FRAK=      0   
 
 *******************************************************
 **   VARIABLE INPUT PARAMETERS
