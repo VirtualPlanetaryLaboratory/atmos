@@ -2734,7 +2734,7 @@ C Transfer results to the climate model (COUPLING)
 C Transfer O3 and H2O
          WRITE(84,254) Z(I),PRESS(I),USOL(LO3,I),USOL(LH2O,I),
      &                 max(USOL(LCH4,I),1.e-60),SL(LCO2,I)/DEN(I),
-     &                 max(USOL(LC2H6,I),1.e-60) !EWS debug to prevent floating poitn errors
+     &                 max(USOL(LC2H6,I),1.e-60) !EWS debug to prevent floating point errors
   254    FORMAT(1PE9.3,6(E10.2))
   255   CONTINUE
         close(84)
@@ -2744,9 +2744,10 @@ c       endif
          FCH4=max(USOL(LCH4,1),1.e-60) !EWS - debug to prevent floating point errors
          FC2H6=max(USOL(LC2H6,1),1.e-60) !EWS - debug to prevent floating point errors
          FCO2=SL(LCO2,1)/DEN(1)
-         FN2=SL(LN2,1)/DEN(1)
-         FO2=USOL(LO2,1)
-         FH2=USOL(LH2,1)
+         FN2=SL(LN2,1)/DEN(1) + FCO2 !EWS - note that CLIMA/mixing_ratios.dat treats the condensible (CO2) and non-consibles mixing ratios differently
+         FO2=USOL(LO2,1)             !      e.g., if the atmosphere is 99% N2 and 1% CO2, then the CO2 fraction is 0.01 and N2 should be set to 1,
+         FH2=USOL(LH2,1)             !      because it is 100% of noncondensibles. In practice, N2 should be = (1 - [everything but CO2]). 
+c                                    !      But in other parts of photochem, N2 is of the total, not excluding CO2, so we only change it here. 9/8/2015
          FNO2=USOL(LNO2,1)/1.0E60 !gna - clima can't currently cope with NO2 and having it is screwing it up
          JCOLD=JTROP
 
