@@ -183,6 +183,8 @@ c         if (ISPEC(I).EQ.'SO4AER') YL(I,J) = YL(I,J) + RAINGC(LH2SO4,J)
        CONFAC = 1.6E-5          !condensation factor
       else if (PLANET .EQ. 'MARS') then
        CONFAC = 1.6E-5 * 10.    ! reduce supersaturation of stratosphere
+      else if (PLANET .EQ. 'DRY') then !added by EWS 9/14/2015
+       CONFAC = 1.0 ! atmosphere is dry everywhere
       endif   
 
 

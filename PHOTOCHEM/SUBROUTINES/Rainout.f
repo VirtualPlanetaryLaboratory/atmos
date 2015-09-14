@@ -402,6 +402,8 @@ C  Find WH2O
 c       wh2o=1e-9*wh2o  !ATACAMA
       else if (PLANET .EQ. 'MARS') then
        wh2o = 1e-9*wh2o   !turn off the rain  
+      else if (PLANET .EQ. 'DRY') then
+       wh2o = 1e-9*wh2o   !turn off rain for dry planet - EWS 9/14/2015
       endif   
  
 C  Find F(Z)
