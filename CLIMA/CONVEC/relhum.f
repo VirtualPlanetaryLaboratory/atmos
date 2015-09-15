@@ -19,5 +19,5 @@ C-KK  added for low-O2 environments, to prevent water from
 C-KK  zeroing itself out. 8% rel hum is present-day atmosphere
 C-KK  at approximately 15 km (cold trap level)
       IF (RELHUM .LT. 0.08) RELHUM = 0.08
-      RETURN
+      IF (IMW.EQ.5) RELHUM = 1.e-10
       END

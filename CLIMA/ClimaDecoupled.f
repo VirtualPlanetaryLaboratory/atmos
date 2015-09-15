@@ -347,7 +347,7 @@ c======================================================
 C      NSTEPS - NUMBER OF ITERATIONS
 C         IMW - 0 FOR SATURATED TROPOSPHERE, 1 FOR MANABE/WETHERALD
 C               RELATIVE HUMIDITY, 2 FOR M/W WITH CONSTANT
-C               STRATOSPHERIC H2O CONTENT
+C               STRATOSPHERIC H2O CONTENT, 5 for forced dry planet 
 C        RSURF - SURFACE RELATIVE HUMIDITY
 C           ZY - SOLAR ZENITH ANGLE (DEGREES)
 C        DTAU0 - OPTICAL DEPTH STEP IN SUBLEVEL INTEGRATION
@@ -609,6 +609,9 @@ c jfk 6/25/08 Added four lines below
        FI(1,J) = 4.E-6
 c       print *,'j =',j,'  fi(1,j)=',fi(1,j)
        END DO
+       ELSE IF(IMW.EQ.5) THEN
+       DO J=1,JCOLD
+       FI(1,J) = 1.e-15 ! dry planet
        END IF
 
       else
@@ -623,7 +626,11 @@ c
 c jkf 6/26/08 Change H2O initialization in the stratosphere
        do j=1,jcold
 c       if (imw.eq.2) FI(1,J) = 4.e-6
-       fi(1,j) = 4.e-6
+       IF (IMW.eq.5) THEN
+        fi(1,j) = 1.e-15 ! dry planet
+       ELSE
+        fi(1,j) = 4.e-6
+       ENDIF 
        end do
       endif
  
@@ -1122,6 +1129,7 @@ c Water from the cold trap to the ground
       DO J = JCOLD, ND
        FI(1,J) = FSATUR(J)*RELHUM(P(J))
        if(imw.eq.2) FI(1,J) = amax1(FI(1,J),4.e-6)
+       if(imw.eq.5) FI(1,J) = 1.e-15 ! dry planet
       END DO
 
 c Water from the cold trap to the top (if it is used in the coupled 
