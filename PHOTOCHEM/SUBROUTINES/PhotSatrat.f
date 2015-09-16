@@ -54,7 +54,7 @@ c      REL = 0.12                         ! 7 microns
 ! this makes the model very dry  - warning nonstandard!!!      
 
       else if (PLANET .EQ. 'DRY') then !Dry planets. Implemented originally for post-runaway, O2-rich atmospheres
-       REL= 1.e-10 ! For H2O-free atmospheres. Set above zero to prevent floating point errors. - EWS - 9/14/2015
+       REL= 1.e-8 ! For H2O-free atmospheres. Set above zero to prevent floating point errors. - EWS - 9/14/2015
       endif   
 
       RELH(J) = REL 
