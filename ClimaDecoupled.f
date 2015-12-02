@@ -1035,6 +1035,14 @@ c      if (j.eq.1) print *, 'FDNSOL=', FDNSOL(1)
 
 C
 
+
+
+
+C BEGIN INVERSE SKIPS
+
+
+
+
       IF(INVERSE.EQ.0) THEN !only do if not wanting inverse calculations
 C New temperature calculation for all layers from radiative equilibrum
       DO 41 J=1,ND-1
@@ -1363,6 +1371,11 @@ c Adjusting the time stepper
 c       print *, 'Hello9'
        CALL ALTITUDE(NST,T,FI,DZ)
        END IF !end skipping for inverse model
+
+
+
+C /INVERSE 
+
 
 C***********************************************************
 c***  WRITING OUTPUT FILES
