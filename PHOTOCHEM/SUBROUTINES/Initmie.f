@@ -6,16 +6,16 @@
 
 c
 !local variables for hydrocarbon optical properties
-      DIMENSION WAVLS(108), WAVUS(108), QEXTSTAND(108,34)
-      dimension W0STAND(108,34), GSTAND(108,34)
+      DIMENSION WAVLS(108), WAVUS(108), QEXTSTAND(108,51)
+      dimension W0STAND(108,51), GSTAND(108,51)
 
 !C-GA dimensions of fractal hydrocarbon arrays (they have more points)
 !C-GA because the fractals were recalculated for a wide wavelength range
-      DIMENSION WAVLSF(118), WAVUSF(118), QEXTSTANDF(118,34)
-      dimension W0STANDF(118,34), GSTANDF(118,34)
+      DIMENSION WAVLSF(118), WAVUSF(118), QEXTSTANDF(118,51)
+      dimension W0STANDF(118,51), GSTANDF(118,51)
 
       CHARACTER*31 root,filenames
-      dimension filenames(34)
+      dimension filenames(51)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
 * input
@@ -34,17 +34,24 @@ c
       ierr = 0      
 
 C-AP RADIUS of particles for which Mie calculations were run
+C-GA - increasing number of particle size bins in the model from 
+C     31 to 51...also making the bins more consistent between clima and 
+C     photo for the 0.1 micron scale particles.
 C-AP **********************************************************
       DATA RSTAND/0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007,
      2  0.008, 0.009, 0.01, 0.03, 0.05, 0.07, 0.1, 0.13, 0.15,
-     3  0.17, 0.2, 0.23, 0.27, 0.3, 0.33, 0.37, 0.4, 0.43, 0.47,
-     4  0.5, 0.55, 0.6, 0.7, 0.8, 0.9, 1., 2./
+     3  0.17, 0.2, 0.23, 0.25,0.27, 0.3, 0.33,0.35, 0.37, 
+     4  .4, 0.43,0.45, 0.47,0.5,0.53, 0.55,0.57,0.6,0.63,0.65,
+     5  0.67,0.7,0.730,0.750,0.770,0.8,0.83,0.85,0.87,0.9,0.93,0.95,
+     6  0.97,1.,2./          
+ 
+
 C-AP ***********************************************************
 
       print *, 'monsize is: ', monsize
 C************SPHERICAL***************************************** 
       if (frak.eq.0) then  !using spherical sized arrays (MIE)
-         DO k=1,34
+         DO k=1,51
             RSTAND(k) = RSTAND(k)/10000.
          ENDDO
 
@@ -54,14 +61,17 @@ C************SPHERICAL*****************************************
      $           '0001.DAT','0002.DAT','0003.DAT','0004.DAT','0005.DAT',
      $           '0006.DAT','0007.DAT','0008.DAT','0009.DAT','001.DAT ',
      $           '003.DAT ','005.DAT ','007.DAT ','01.DAT  ','013.DAT ',
-     $           '015.DAT ','017.DAT ','02.DAT  ','023.DAT ','027.DAT ',
-     $           '03.DAT  ','033.DAT ','037.DAT ','04.DAT  ','043.DAT ',
-     $           '047.DAT ','05.DAT  ','055.DAT ','06.DAT  ','07.DAT  ',
-     $           '08.DAT  ','09.DAT  ','1.DAT   ','2.DAT   ']
- 
-        
+     $           '015.DAT ','017.DAT ','02.DAT  ','023.DAT ','025.DAT ',
+     $           '027.DAT ','03.DAT  ','033.DAT ','035.DAT ','037.DAT ',
+     $           '04.DAT  ','043.DAT ','045.DAT ','047.DAT ','05.DAT  ',
+     $           '053.DAT ','055.DAT ','057.DAT ','06.DAT  ','063.DAT ',
+     $           '065.DAT ','067.DAT ','07.DAT  ','073.DAT ','075.DAT ',
+     $           '077.DAT ','08.DAT  ','083.DAT ','085.DAT ','087.DAT ',
+     $           '09.DAT  ','093.DAT ','095.DAT ','097.DAT ','1.DAT   ',
+     $           '2.DAT   ']
 
-         do j=1,34              !there are 34 particle sizes for hydrocarbons
+
+         do j=1,51              !there are 51 particle sizes for hydrocarbons
             open(unit=125,file=trim(root)//trim(filenames(j))) !open up MIE FILES
 
             do i=1,108          !there are 108 wavlength bins in the spherical data files
@@ -72,7 +82,7 @@ C************SPHERICAL*****************************************
          enddo   
 
  
-      do j=1,34 !for each particle size
+      do j=1,51 !for each particle size
          n1=108 !number of wavelength points
          n2=n1
          n3=n1
@@ -159,7 +169,7 @@ C************SPHERICAL*****************************************
 
          npts=118
 
-         DO k=1,34
+         DO k=1,51
             RSTAND(k) = RSTAND(k)/10000.
          ENDDO
 
@@ -193,17 +203,19 @@ C-   spherical particles
      $          ,'0.005um.txt','0.006um.txt','0.007um.txt','0.008um.txt'
      $          ,'0.009um.txt','0.010um.txt','0.030um.txt','0.050um.txt'
      $          ,'0.070um.txt','0.100um.txt','0.130um.txt','0.150um.txt'
-     $          ,'0.170um.txt','0.200um.txt','0.230um.txt','0.270um.txt'
-     $          ,'0.300um.txt','0.330um.txt','0.370um.txt','0.400um.txt'
-     $          ,'0.430um.txt','0.470um.txt','0.500um.txt','0.550um.txt'
-     $          ,'0.600um.txt','0.700um.txt','0.800um.txt','0.900um.txt'
-     $          ,'1.000um.txt','2.000um.txt']
+     $          ,'0.170um.txt','0.200um.txt','0.230um.txt','0.250um.txt'
+     $          ,'0.270um.txt','0.300um.txt','0.330um.txt','0.350um.txt'
+     $          ,'0.370um.txt','0.400um.txt','0.430um.txt','0.450um.txt'
+     $          ,'0.470um.txt','0.500um.txt','0.530um.txt','0.550um.txt'
+     $          ,'0.570um.txt','0.600um.txt','0.630um.txt','0.650um.txt'
+     $          ,'0.670um.txt','0.700um.txt','0.730um.txt','0.750um.txt'
+     $          ,'0.770um.txt','0.800um.txt','0.830um.txt','0.850um.txt'
+     $          ,'0.870um.txt','0.900um.txt','0.930um.txt','0.950um.txt'
+     $          ,'0.970um.txt','1.000um.txt','2.000um.txt']
+   
+     
 
-
-      
-
-
-      do j=1,34                 !there are 34 particle sizes for hydrocarbons
+      do j=1,51                 !there are 51 particle sizes for hydrocarbons
          open(unit=125,file=trim(root)//trim(filenames(j))) !open up MIE FILES
 
        
@@ -216,7 +228,7 @@ C-   spherical particles
       close (125)
       enddo   
 
-      do j=1,34
+      do j=1,51
          n1=npts                !108->118
          n2=n1
          n3=n1

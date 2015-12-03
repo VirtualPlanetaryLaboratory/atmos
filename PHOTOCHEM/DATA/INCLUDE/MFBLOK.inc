@@ -1,2 +1,2 @@
-      COMMON/FRACMIE/RSTAND(34),W0HC(kw,34),GHC(kw,34),QEXTHC(kw,34),
+      COMMON/FRACMIE/RSTAND(51),W0HC(kw,51),GHC(kw,51),QEXTHC(kw,51),
      2   QEXTT(kw,NZ,NP), W0T(kw,NZ,NP), GFT(kw,NZ,NP)  
