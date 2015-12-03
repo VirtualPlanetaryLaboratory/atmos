@@ -20,11 +20,13 @@ C     &  QEXTIR(NF,ND-1)
      &  ASYAIR(NF,ND-1),IO3,QEXTIR(NF,ND-1)
      
 ****** IR fitting
-        DO i = 1,55
-        DO j = 1,ND-1
-        DO k = 1,45
+        DO i = 1,55 !number of wavlengths
+        DO j = 1,ND-1 !number of layers
+        DO k = 1,72    !number of particle bins - 1
         IF ((RAER(j).GE.radstand(k)).and.(RAER(j).LT.radstand(k+1)))
      &   THEN
+                     
+         
         dra = RAER(j) - radstand(k)
         dr = radstand(k+1) - radstand(k)
         QEXTIR(i,j)=Qextirst(k,i)+((Qextirst(k+1,i)-Qextirst(k,i))
@@ -42,9 +44,9 @@ C        ASYAIR(i,j) = girst(1,i)
         ENDDO
         ENDDO
 ****** SOLAR fitting 
-        DO i = 1,38
-        DO j = 1,ND-1
-        DO k = 1,45
+        DO i = 1,38 !number of wavelengths 
+        DO j = 1,ND-1 !number of layers
+        DO k = 1,72   ! number of particle bins - 1
         IF ((RAER(j).GE.radstand(k)).and.(RAER(j).LT.radstand(k+1)))
      &   THEN
         dra = RAER(j) - radstand(k)
