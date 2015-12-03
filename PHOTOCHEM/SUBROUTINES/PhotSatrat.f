@@ -49,9 +49,12 @@ c       REL = 1.0 ! Saturated troposphere - eventual should abstract this and AT
 
 c       REL = 0.17   !test ATACAMA
       else if (PLANET .EQ. 'MARS') then
-c     REL = 0.12                         ! 7 microns
-      REL = 0.17                         ! this is good for 9.5 micrometers  
+c      REL = 0.12                         ! 7 microns
+       REL = 0.17                         ! this is good for 9.5 micrometers  
 ! this makes the model very dry  - warning nonstandard!!!      
+
+      else if (PLANET .EQ. 'DRY') then !Dry planets. Implemented originally for post-runaway, O2-rich atmospheres
+       REL= 1.e-8 ! For H2O-free atmospheres. Set above zero to prevent floating point errors. - EWS - 9/14/2015
       endif   
 
       RELH(J) = REL 

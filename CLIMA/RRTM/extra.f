@@ -38,10 +38,9 @@ C                                                                         E00280
       COMMON /XSECTR/ V1FX(5,35),V2FX(5,35),DVFX(5,35),WXM(35),    !      E00310
      *                NTEMPF(5,35),NSPECR(35),IXFORM(5,35),        !      E00320
      *                XSMASS(35),XDOPLR(5,35),NUMXS,IXSBIN         !      E00325
-
       COMMON /CVREXT/    HVREXT
 
-      CHARACTER*15       HVREXT
+      CHARACTER*16       HVREXT
 C                                                                         E00330
       DIMENSION IXFLG(35)                                          !      E00340
 C                                                                  !      E00350
@@ -57,7 +56,9 @@ C                                                                         E00413
       DATA T296 / 296.0 /                                          !      E00414
 C
       HVREXT = '$Revision: 3.1 $'
-C                                                                  !      E00420
+C    NOTE THAT XV1 and XV2 aren't actually used here..             !      E00420
+      XV1 = XV1
+      XV2 = XV2
       IXMAX = 35                                                   !      E00430
       DO 10 I = 1, IXMAX                                           !      E00440
          XSNAME(I) = BLANK                                         !      E00450
@@ -108,15 +109,15 @@ C                                                                   !     E00870
       RETURN                                                        !     E01490
 C                                                                   !     E01500
   900 FORMAT (/,'  THE NAME: ',A10, ' IS NOT ONE OF THE ',          !     E01510
-     *        'CROSS SECTION MOLECULES. CHECK THE SPELLING.')       !     E01520
-  905 FORMAT (/)                                                    !     E01530
-  910 FORMAT (A120)                                                 !     E01540
-  915 FORMAT (A10,2F10.4,F10.8,I5,5X,I5,A1,4X,6A10)                 !     E01550
-  920 FORMAT (/,'******* ERROR IN XSREAD ** MOLECULE SECLECTED -',A10,!   E01560
-     *        '- HAS ',I2,' SPECTRAL REGIONS ON FILE FSCDXS, BUT THE',!   E01570
-     *        ' MAXIMUM ALLOWED IS 6 *******',/)                      !   E01580
-  925 FORMAT (/,'******* MOLECULE SELECTED -',A10,'- IS NOT FOUND ON',!   E01590
-     *        ' FILE FSCDXS *******',/)                               !   E01600
+     &        'CROSS SECTION MOLECULES. CHECK THE SPELLING.')       !     E01520
+c  905 FORMAT (/)                                                    !    E01530 !EWS - label not used
+c  910 FORMAT (A120)                                                 !    E01540 !EWS - label not used
+c  915 FORMAT (A10,2F10.4,F10.8,I5,5X,I5,A1,4X,6A10)                 !    E01550 !EWS - label not used
+c  920 FORMAT (/,'******* ERROR IN XSREAD ** MOLECULE SECLECTED -',A10,!  E01560 !EWS - label not used
+c     *        '- HAS ',I2,' SPECTRAL REGIONS ON FILE FSCDXS, BUT THE',!   E01570
+c     *        ' MAXIMUM ALLOWED IS 6 *******',/)                      !   E01580
+c  925 FORMAT (/,'******* MOLECULE SELECTED -',A10,'- IS NOT FOUND ON',!  E01590 !EWS - not used
+c     *        ' FILE FSCDXS *******',/)                               !   E01600
 C                                                                  !      E01610
       END                                                          !      E01620
       BLOCK DATA BXSECT                                            !      E01630
@@ -228,3 +229,4 @@ C                                                                  !      A10730
       RETURN                                                       !      A10740
 C                                                                  !      A10750
       END                                                          !      A10760
+C**********************************************************************   A10770

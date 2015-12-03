@@ -284,7 +284,7 @@ C           250 - 500 cm-1 (low - H2O; high - H2O)
 C  Output
 
       COMMON /TAUGCOM/  TAUG(MXLAY,MG)
-      COMMON /PLANKG/   FRACS(MXLAY,MG)                                       
+      COMMON /PLANKG/   FRACS(MXLAY,MG)
 
 C  Input
 
@@ -393,7 +393,7 @@ C                           (high key - H2O,CO2; high minor - n2o)
 C  Output
 
       COMMON /TAUGCOM/  TAUG(MXLAY,MG)
-      COMMON /PLANKG/   FRACS(MXLAY,MG)                                       
+      COMMON /PLANKG/   FRACS(MXLAY,MG)
 
 C  Input
 
@@ -1173,7 +1173,7 @@ C                           (high key - O3,CO2)
 C  Output
 
       COMMON /TAUGCOM/  TAUG(MXLAY,MG)
-      COMMON /PLANKG/   FRACS(MXLAY,MG)                                       
+      COMMON /PLANKG/   FRACS(MXLAY,MG) 
 
 C  Input
 
@@ -2266,7 +2266,7 @@ C                             (high key - CH4; high minor - N2O)
 C  Output
 
       COMMON /TAUGCOM/  TAUG(MXLAY,MG)
-      COMMON /PLANKG/   FRACS(MXLAY,MG) 
+      COMMON /PLANKG/   FRACS(MXLAY,MG)
 
 C  Input
 

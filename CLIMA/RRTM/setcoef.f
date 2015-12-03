@@ -223,16 +223,16 @@ C        species parameter in lower atmosphere.
          
          RAT_H2OCO2(LAY)=CHI_MLS(1,JP(LAY))/CHI_MLS(2,JP(LAY))
          RAT_H2OCO2_1(LAY)=CHI_MLS(1,JP(LAY)+1)/CHI_MLS(2,JP(LAY)+1)
-
+!
          RAT_H2OO3(LAY)=CHI_MLS(1,JP(LAY))/CHI_MLS(3,JP(LAY))
          RAT_H2OO3_1(LAY)=CHI_MLS(1,JP(LAY)+1)/CHI_MLS(3,JP(LAY)+1)
-
+!
          RAT_H2ON2O(LAY)=CHI_MLS(1,JP(LAY))/CHI_MLS(4,JP(LAY))
          RAT_H2ON2O_1(LAY)=CHI_MLS(1,JP(LAY)+1)/CHI_MLS(4,JP(LAY)+1)
-
+!
          RAT_H2OCH4(LAY)=CHI_MLS(1,JP(LAY))/CHI_MLS(6,JP(LAY))
          RAT_H2OCH4_1(LAY)=CHI_MLS(1,JP(LAY)+1)/CHI_MLS(6,JP(LAY)+1)
-
+!
          RAT_N2OCO2(LAY)=CHI_MLS(4,JP(LAY))/CHI_MLS(2,JP(LAY))
          RAT_N2OCO2_1(LAY)=CHI_MLS(4,JP(LAY)+1)/CHI_MLS(2,JP(LAY)+1)
 
@@ -273,8 +273,8 @@ C        Setup reference ratio to be used in calculation of binary
 C        species parameter in upper atmosphere.
 
          RAT_H2OCO2(LAY)=CHI_MLS(1,JP(LAY))/CHI_MLS(2,JP(LAY))
-         RAT_H2OCO2_1(LAY)=CHI_MLS(1,JP(LAY)+1)/CHI_MLS(2,JP(LAY)+1)         
-
+         RAT_H2OCO2_1(LAY)=CHI_MLS(1,JP(LAY)+1)/CHI_MLS(2,JP(LAY)+1)
+!
          RAT_O3CO2(LAY)=CHI_MLS(3,JP(LAY))/CHI_MLS(2,JP(LAY))
          RAT_O3CO2_1(LAY)=CHI_MLS(3,JP(LAY)+1)/CHI_MLS(2,JP(LAY)+1)
 

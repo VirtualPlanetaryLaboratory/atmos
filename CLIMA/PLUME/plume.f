@@ -134,7 +134,9 @@ c     and tracers 4-7 are used for flux reservoirs (not mixed by plume).
      *  (cpluc,   aplu(1,0,1)),
      *  (cplua,   aplu(1,0,2)),
      *  (cplus,   aplu(1,0,3))
-      parameter (ntraca=8, ntracb=ntrace)
+      parameter (ntraca=ntrace, ntracb=ntrace) !EWS - ntraca was hardcoded to '8', but could never go up that high due
+                                               ! to dimensions of declared variabiables, so I reset it to 'ntrace'. 
+                                               ! Hopefully didn't screw something up, need to test - 9/4/2015
 
       dimension
      *  zarea(nlon,nlev),      zrad(nlon,nlev),
@@ -1093,7 +1095,7 @@ c       if (mod(nstep,nz).eq.1) write(iuout,8020) ji,jj
 c       ji = nlon/2
       if (jj.eq.1) then                                            !cloc
         ji = 1                                                     !cloc
- 8020   format(/' ji,jj=',2i3)
+c 8020   format(/' ji,jj=',2i3) !EWS - not used
         do 8022 jk=1,nlev
           chaplu(jk) = '   '
  8022   continue

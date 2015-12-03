@@ -104,75 +104,75 @@ C-rr READ in the new separate CO2 and H2O absorption coefficients for IR interva
 C-----------------------------------------------------------------------
 
 ! Initializing k-coefficient array
-	do i = 1,NF
-         	do it = 1, 8 ! 8 temperatures
-            		do ip = 1,8  ! 8 pressures
-               			do k = 1,IK
-            			kappa_irh2o(i,it,ip,k) = 1.e-60
-            			kappa_irco2(i,it,ip,k) = 1.e-60
-               			enddo ! k loop
-           		enddo ! ends pressure loop
-		enddo ! ends temperature loop
-	enddo  ! ends interval loop
+        do i = 1,NF
+                 do it = 1, 8 ! 8 temperatures
+                            do ip = 1,8  ! 8 pressures
+                                       do k = 1,IK
+                                    kappa_irh2o(i,it,ip,k) = 1.e-60
+                                    kappa_irco2(i,it,ip,k) = 1.e-60
+                                       enddo ! k loop
+                           enddo ! ends pressure loop
+                enddo ! ends temperature loop
+        enddo  ! ends interval loop
 
 
 
 
       do iii = 1,16
-      	read(17,*) ! Initially skip 16 lines
-      	read(18,*) !
+              read(17,*) ! Initially skip 16 lines
+              read(18,*) !
       enddo
 
 
-	do i = 1,NF
+        do i = 1,NF
 
-         	do it = 1, 8 ! 8 temperatures
+                 do it = 1, 8 ! 8 temperatures
                         read(17,*) ! skip 3 more lines to read data
                         read(17,*)
                         read(17,*)
                         read(18,*) ! skip 3 more lines to read data
                         read(18,*)
                         read(18,*)
-            		do ip = 1,8  ! 8 pressures
-           		 read(17,*)a,(kappa_irh2o(i,it,ip,k),k=1,IK)
-           		 read(18,*)a,(kappa_irco2(i,it,ip,k),k=1,IK)
+                            do ip = 1,8  ! 8 pressures
+                            read(17,*)a,(kappa_irh2o(i,it,ip,k),k=1,IK)
+                            read(18,*)a,(kappa_irco2(i,it,ip,k),k=1,IK)
 
 
-!		           IF ((i.ge.1).and.(i.le.8))then
+!                           IF ((i.ge.1).and.(i.le.8))then
 !                                 do k = 1,IK
-!            			 kappa_irco2(i,it,ip,k) = 1.d-60 ! No CO2 coefficients in these intervals according to irexpsums.pdat 8/29/2012
+!                                     kappa_irco2(i,it,ip,k) = 1.d-60 ! No CO2 coefficients in these intervals according to irexpsums.pdat 8/29/2012
 !                                 enddo
-!           		   ENDIF
+!                              ENDIF
           
-!           		   IF((i.ge.49).and.(i.le.NF))then
+!                              IF((i.ge.49).and.(i.le.NF))then
 !                                do k = 1,IK  
-!            			kappa_irco2(i,it,ip,k) = 1.d-60 ! No CO2 coefficients in these intervals according to irexpsums.pdat 8/29/2012
-!           		   	enddo
+!                                    kappa_irco2(i,it,ip,k) = 1.d-60 ! No CO2 coefficients in these intervals according to irexpsums.pdat 8/29/2012
+!                                      enddo
 !                           ENDIF
 
-          		enddo ! ends pressure loop
-		enddo ! ends temperature loop
-	enddo  ! ends interval loop
+                          enddo ! ends pressure loop
+                enddo ! ends temperature loop
+        enddo  ! ends interval loop
 
 
 C-rr-----------------------------------------
 
 C-rr reads CO2 CIA matrix(3/22/2011)----------------------
-	read(30,9800) !skips two lines
-	do k=1,9
-		read(30,9801) (CIA1(it,k),it=1,7)  ! Put CIA values in the right bins 
-	enddo
+        read(30,9800) !skips two lines
+        do k=1,9
+                read(30,9801) (CIA1(it,k),it=1,7)  ! Put CIA values in the right bins 
+        enddo
         
 
-	do k=20,27
-		read(30,9801) (CIA1(it,k),it=1,7)  ! Put CIA values in the right bins
-	enddo
+        do k=20,27
+                read(30,9801) (CIA1(it,k),it=1,7)  ! Put CIA values in the right bins
+        enddo
 
 
         do it=1,7
-	        do k=1,NF
-		     CIA(it,k)=amax1(CIA1(it,k),1.e-60) ! set all zero CIA values to 1.e-60
-	        enddo
+                do k=1,NF
+                     CIA(it,k)=amax1(CIA1(it,k),1.e-60) ! set all zero CIA values to 1.e-60
+                enddo
         enddo
 
 
@@ -211,7 +211,7 @@ c-rr   reads H2-N2 CIA matrix 4/29/2012
                read(25, *)a, (H2N2CIA(it,k), it=1,5)
 !               print *, (H2N2CIA(it,k),it=1,6)
 !               pause
-	      enddo  ! ends k loop
+              enddo  ! ends k loop
        
 c-rr-----------------------------------------------------
 
@@ -234,18 +234,18 @@ c-rr   read O2-O2 CIA matrix 6/17/2012
                read(26, *)a, (O2O2CIA(it,k), it=1,15)
 !               print *, (O2O2CIA(it,k),it=1,6)
 !               pause
-	      enddo  ! ends k loop         
+              enddo  ! ends k loop         
 
 
 c-rr ----------------------------------------------------
 
 c-rr    reads in H2-H2 CIA matrix 7/2/2012
 
-   	OPEN(unit = 27, file = DIRDATA//'/H2CIA_TABLE.pdat')
+           OPEN(unit = 27, file = DIRDATA//'/H2CIA_TABLE.pdat')
 
-	do i = 1,3
+        do i = 1,3
          read(27,*) ! skips three lines before reading H2 CIA
-	enddo
+        enddo
 
         do it = 1,6
             do k = 1,NF
@@ -255,7 +255,7 @@ c-rr    reads in H2-H2 CIA matrix 7/2/2012
         enddo
 
 
-	do k = 1,NF
+        do k = 1,NF
          read(27,*)a, (H2H2CIA(it,k), it =1,6)
 !         print *, (H2H2CIA(it,k),it=1,6)
 !         pause
@@ -265,29 +265,29 @@ c-rr    reads in H2-H2 CIA matrix 7/2/2012
 
 c-rr   reads in BPS CONTINUUM coefficients at T = 296K for IR  8/30/2012
 
-   	 OPEN(unit = 36, file = DIRDATA//'/IR_BPS.dat')
+            OPEN(unit = 36, file = DIRDATA//'/IR_BPS.dat')
 
   ! initialize arrays
 
-	 do i = 1,NF
+         do i = 1,NF
                 s_abir(i) = 0.0d0
                 f_abir(i) = 0.0d0
                 TDir(i) =0.0d0
                 Bsir(i) = 0.0d0
                 Bfir(i) =0.0d0
-	 enddo
+         enddo
  
       
-	do i = 1,5
-		read(36,*)
-	enddo
+        do i = 1,5
+                read(36,*)
+        enddo
 
 
         do j = 1,NF
         read(36,*)a,b,s_abir(j), f_abir(j), Bsir(j), Bfir(j), TDir(j)
-!		print *, s_abir(j), f_abir(j), Bsir(j), Bfir(j), TDir(j)
+!                print *, s_abir(j), f_abir(j), Bsir(j), Bfir(j), TDir(j)
         enddo
 
-!--------------------------------------------------------------------	 
+!--------------------------------------------------------------------         
         RETURN
         END

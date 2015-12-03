@@ -16,7 +16,7 @@ c  This subroutine contains CH4
       PARAMETER (NSOL=38,NGS=8,NF=55, IK=8)  !c-rr Adding IK=8, number of sums for CO2 and H2O absorption coefficients 8/27/2012
       PARAMETER(NS=3, NS1=NS+2, NS4=NS+5) ! Adding parameter statement needed for FI(NS1,ND) 5/23/2011
       REAL kmatrix_solh2o, kmatrix_solco2, weights, KAPPALAYERSOL_CO2,
-     &   KAPPALAYERSOL_H2O, BETA
+     &   KAPPALAYERSOL_H2O ! EWS - BETA not used
 C
 
        COMMON/SOLARBLK/AMU0,SRFALB,OMG0A(NSOL,ND-1),
@@ -61,7 +61,7 @@ c     COMMON/CBLOK/FO2,FN2,FCO2,FAR,FCH4
       COMMON/CPHEAT/CPO2(ND),CPCO2(ND), CPN2(ND), CPH2O(ND),
      & CPN(ND), CPNT(ND)
 
-      DIMENSION  TAUAS(ND-1),TAUS(ND-1),TAUA(ND-1),
+      DIMENSION  TAUAS(ND-1),TAUS(ND-1), ! EWS - TAUA(ND-1) not used
      &  TAUR(ND-1),TAUG(ND-1),FRAC(ND-1),INDEX(ND-1),
      &  CRAY(ND-1),DPLYR(ND-1),PLAYR(ND),PMID(ND-1),
      &  FUP(ND),FDN(ND),FUPA(ND),FDNA(ND),ALPHACH4(4,38),
@@ -71,7 +71,7 @@ c     COMMON/CBLOK/FO2,FN2,FCO2,FAR,FCH4
      &  KMATRIX_SOLCO2(NSOL,IK),self_absol(NSOL,ND),  
      &   forn_absol(NSOL,ND),  ! Added self and foreign water continuum solar coefficients 8/30/2012 c-rr
      &  SOLAV(NSOL+1) ! Added solar intervals
-      DIMENSION W(NF), AVOLD(NF),TAUCONTSOL(ND),  ! Added water continuum tau for solar 8/30/2012
+      DIMENSION TAUCONTSOL(ND),  ! Added water continuum tau for solar 8/30/2012 !EWS - W(NF), AVOLD(NF) not used 9/4/2015
      &  KAPPALAYERSOL_CO2(NSOL,ND,IK),KAPPALAYERSOL_H2O(NSOL,ND,IK) ! Turning SIGR into a scalar quantity not an array 5/23/2011
 !     Added KAPPALAYERSOL which is KMATRIX_SOL looped over all heights
 c     DIMENSION W(NF), ALAM(NF), AVOLD(NF),SIGR(NSOL)
@@ -202,7 +202,7 @@ C
        ENDDO
          ENDDO
 
-3456     format(1p4e14.5,3(2x,i3))
+c 3456     format(1p4e14.5,3(2x,i3)) !EWS - label not used
 
 !         print *,'OUT OF INTERPSOLAR....'
 
@@ -279,7 +279,7 @@ C
        TAUASTOTAL = TAUASTOTAL + TAUAS(IL)
        ENDDO
        ENDIF
-   19   FORMAT(/1X,1PE10.4)
+c   19   FORMAT(/1X,1PE10.4) !EWS - label not used
          NPR1=NPR(1,I)
          NPR2=NPR(2,I)
          NPR3=4  ! 4 terms for CH4 for intervals 1-21
@@ -313,7 +313,8 @@ C
                 self_absol(I,IL) = RHOW*(s_absol(i)*
      &                            exp(TDsol(i)*(296.-TF(IL)))
      &         + RADFLD*Bssol(i)) ! Self broadening coefficient with radiation field and temperature dependence included (cm^2/molecule)
-                forn_absol(I,IL) = RHOF*(f_absol(i) + Bfsol(i))*RADFLD  ! foreign broadening coefficient with radiation field and temperature dependence included (cm^2/molecule)
+                forn_absol(I,IL) = RHOF*(f_absol(i) + Bfsol(i))*RADFLD 
+               ! foreign broadening coefficient with radiation field and temperature dependence included (cm^2/molecule)
 
                 ABSCONT = self_absol(I,IL) + forn_absol(I,IL)
                 TAUCONTSOL(IL) = ABSCONT*CGAS(IL,6) !optical depth
@@ -376,7 +377,7 @@ c  Add the NO2 absorption in here. Scale everything to CH4.
 c         IF (I .eq. 7) THEN
 c         PRINT 99923, IL, FNO2, TAUG(IL), SIGNO2(I)
 c         ENDIF
-99923 FORMAT("in solar.f:",I5, 1P10E10.2)
+c 99923 FORMAT("in solar.f:",I5, 1P10E10.2) !EWS - label not used
      
             IF(I<22) THEN
             TAUG(IL)= TAUG(IL) + BETACH4(K3,I)*CGAS(IL,2) ! c-rr change gas CH4 number from 5 to 2. 3/19/2012
@@ -463,7 +464,7 @@ C        Assumes Temp will never be lower than 112, log10(pressure) never lower 
 c            print 9999,TAUG(IL),ANEWBETA
 c            print 9998,TP,LOGP
 c           print 9999,AFT,pp
-9998        format(1PE12.5,2x,I2)
+c 9998        format(1PE12.5,2x,I2) !EWS - label not used
       END IF
  
  1181    CONTINUE
@@ -589,7 +590,7 @@ C-------------------------------------------------------------------------------
 
 
 
-9999   format(1P6E12.5,3(2x,I3), 2x,1p3e12.5)
+c 9999   format(1P6E12.5,3(2x,I3), 2x,1p3e12.5) !EWS - label not used
 c               TAULAM(IL) = AMIN1(TAULAM(IL),1000.)
                OMG0(IL) = TAUS(IL)/TAULAM(IL)
 C
@@ -672,7 +673,7 @@ c            IF(J.eq.ND) CPNT(J)= 50.* 4.18*1.E7
          END DO          
         END IF
 c      print 99999, i,fupa(1)
-99999 format(1x,'i =',i2,2x,1pe10.3)
+c 99999 format(1x,'i =',i2,2x,1pe10.3) !EWS - label not used
  
         
 c        IF (NST.eq.100)then

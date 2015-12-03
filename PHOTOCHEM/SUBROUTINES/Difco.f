@@ -40,6 +40,10 @@ c       bXN2(i) = 4.0D18*(TAV/200.)**0.75
         bHN2(i) = 0.8*1.8*1.4E19*(TAV/200.)**0.75  ! correct for CO2
         bH2N2(i) = 0.8*1.4E19*(TAV/200.)**0.75  ! correct for CO2
 c       bXN2(i) = 4.0D18*(TAV/200.)**0.75
+      else if (PLANET .EQ. 'DRY') then ! assume O2-dominated - this is the same as N2 for now
+        bHN2(i) = 2.7E19*(TAV/200.)**0.75   ! correct for N2
+        bH2N2(i) = 1.4E19*(TAV/200.)**0.75  ! correct for N2
+c       bXN2(i) = 4.0D18*(TAV/200.)**0.75
       endif   
 
 
@@ -59,7 +63,11 @@ c     bXN2(nz) = 4.0D18*(T(nz)/200.)**0.75
       bHN2(nz) = 0.8*1.8*1.4E19*(T(nz)/200.)**0.75  ! correct for CO2
       bH2N2(nz) = 0.8*1.4E19*(T(nz)/200.)**0.75     ! correct for CO2
 c     bXN2(nz) = 4.0D18*(T(nz)/200.)**0.75
-      endif   
+      else if (PLANET .EQ. 'DRY') then ! assume O2-dominated - this is the same as N2 for now
+        bHN2(i) = 2.7E19*(TAV/200.)**0.75   ! correct for N2
+        bH2N2(i) = 1.4E19*(TAV/200.)**0.75  ! correct for N2
+c       bXN2(i) = 4.0D18*(TAV/200.)**0.75
+      endif    
 
 
 

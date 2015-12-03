@@ -34,10 +34,15 @@ C
 !              if((II.eq.9).and.(K12.eq.16))then
 !               print *, 'INTO DELTATWOSTRIR',TAULAM(1)
 !               pause
-!		endif
+!               endif
 
+! ---- EWS - UNUSED DUMMY ARGUMENTS  --- !
+      dummy1 = II + 0
+      dummy2 = TAUTOP + 0
+      dummy3 = K12 + 0
+      dummy4 = IL2 + 0
+! --------------------------------------!
 
-      
       ALB = SRFALB
       PI = 3.14159
       emissivity = 1.
@@ -187,7 +192,7 @@ C  Calculate upward and downward fluxes.
 !       endif
 
 
-1166     FORMAT(1P7E14.5,3(2x,i3))
+c 1166     FORMAT(1P7E14.5,3(2x,i3)) !EWS - not used
 
  10   CONTINUE
  !     pause

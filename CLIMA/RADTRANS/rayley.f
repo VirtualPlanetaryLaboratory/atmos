@@ -2,8 +2,8 @@
 C
       INCLUDE 'CLIMA/INCLUDE/header.inc'
       PARAMETER (NSOL=38, NGS=8) !gna ngas changed to 8
-      PARAMETER(NS=3, NS1=NS+2, NS4=NS+5) ! Adding parameter statement needed for FI(NS1,ND) 5/23/2011	  
-      REAL kmatrix_sol, weights
+      PARAMETER(NS=3, NS1=NS+2, NS4=NS+5) ! Adding parameter statement needed for FI(NS1,ND) 5/23/2011          
+c      REAL kmatrix_sol, weights ! EWS - not used
       COMMON/SOLARBLK/AMU0,SRFALB,OMG0A(NSOL,ND-1),
      &  ASYA(NSOL,ND-1),TAUAER(NSOL),SIGERT(NSOL),FMA(NSOL),PF(ND),
      &  ALAMBDA(NSOL),CGAS(ND,NGS),FUPSOL(ND),FDNSOL(ND),
@@ -44,9 +44,9 @@ C
             SMDEL=(6.+3.*DEL(J))/(6.-7.*DEL(J))
             SIG(J)=4.577E-21*SMDEL*PAREN/AL4
  1140    CONTINUE
-C	   c-rr 5/29/2011
-	  ! SIG(1) is Nitrogen. SIG(2) is oxygen . SIG(3) is carbon dioxide. SIG(4) IS ARGON.SIG(5) is methane. N2,O2,AR, and CH4 make up the non-condensible (NC)
-	  !rayleigh scattering components for air. SIG(6) is the rayleigh scattering component due to water. There is no known A term for water but it is assumed that A ~30. 
+C           c-rr 5/29/2011
+          ! SIG(1) is Nitrogen. SIG(2) is oxygen . SIG(3) is carbon dioxide. SIG(4) IS ARGON.SIG(5) is methane. N2,O2,AR, and CH4 make up the non-condensible (NC)
+          !rayleigh scattering components for air. SIG(6) is the rayleigh scattering component due to water. There is no known A term for water but it is assumed that A ~30. 
          ! Then, and since the term (A(J)*1E-5)^2 is of order ~1E-7, it is multiplied by 4.557E-21, resulting in the 4.55E-28 term.
           
 !          AIRSCAT =  FO2*SIG(2) + FN2*SIG(1) + FAR*SIG(4) 
@@ -81,7 +81,7 @@ C	   c-rr 5/29/2011
 !        Valid for inner edge comparison with above SIGR only.
 
 !         print *, 'SUMMIX=', Fwater + FCO2 + FNC
- 1135 CONTINUE 
+c 1135 CONTINUE !EWS - not used
 
       RETURN
       END  

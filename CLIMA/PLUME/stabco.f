@@ -82,7 +82,7 @@ c              temperature.Store condensed amount in delq.
 c              (alw is a namelist param).
 
             zstrat = min (1., max (0., ylwc_s(ji,jj,jk)/clw_s ))
- 777        zqmax = zsvq(ji) * ( zstrat  + (1.-zstrat)*alw )
+c 777        zqmax = zsvq(ji) * ( zstrat  + (1.-zstrat)*alw ) !EWS - label not used
 c777        zqmax = zsvq(ji) * alw  ! (early v2)
 
             if (zq(ji).gt.zqmax) then

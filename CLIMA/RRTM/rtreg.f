@@ -30,7 +30,7 @@ C     is used for the angle integration.
       COMMON /SURFACE/   TBOUND,IREFLECT,SEMISS(NBANDS)
       COMMON /PLNKDAT/   PLANKLAY(MXLAY,NBANDS),
      &                   PLANKLEV(0:MXLAY,NBANDS),PLANKBND(NBANDS)
-      COMMON /PLANKG/    FRACS(MXLAY,MG)                                       
+      COMMON /PLANKG/    FRACS(MXLAY,MG)
       COMMON /TAUGCOM/   TAUG(MXLAY,MG)
       COMMON /OUTPUT/    TOTUFLUX(0:MXLAY), TOTDFLUX(0:MXLAY),
      &                   FNET(0:MXLAY), HTR(0:MXLAY)
@@ -39,7 +39,7 @@ C     is used for the angle integration.
 
       COMMON /CVRREG/    HVRREG
 
-      CHARACTER*15       HVRREG
+      CHARACTER*16       HVRREG
 
       DIMENSION ATRANS(MXLAY,MXANG),BBU(MXLAY,MXANG), RAD(MXANG)
       DIMENSION UFLUX(0:MXLAY),DFLUX(0:MXLAY)
@@ -177,7 +177,7 @@ C ***       Upward radiative transfer.
             DO 3500 LEV = 1, NLAYERS
                RADLU = RADLU + (BBU(LEV,IANG)-RADLU)*ATRANS(LEV,IANG)
                URAD(LEV,IANG) = URAD(LEV,IANG) + RADLU
- 3500       CONTINUE
+3500       CONTINUE
  4000    CONTINUE
          RADSUM = 0.
 
