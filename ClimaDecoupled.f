@@ -184,9 +184,9 @@ c-rr !3/23/11 put CIA matrix in IRDATA
 
       COMMON/IRBLK/FUPIR(ND),FDNIR(ND),SRFALBIR,OMG0AIR(NF,ND-1),
      & ASYAIR(NF,ND-1),IO3,QEXTIR(NF,ND-1)
-      COMMON/HYDROCARB/Qextirst(46,55),w0irst(46,55),
-     &  girst(46,55),Qextsolst(46,38),w0solst(46,38),gsolst(46,38),
-     &  radstand(46)
+      COMMON/HYDROCARB/Qextirst(73,55),w0irst(73,55),
+     &  girst(73,55),Qextsolst(73,38),w0solst(73,38),gsolst(73,38),
+     &  radstand(73)
       COMMON/CH4BLOCK/ALPHACH4T188(4,17),BETACH4T188(4,17),
      & ALPHACH4T295(4,17),BETACH4T295(4,17),ALPHACH4Kark(4,21),
      & BETACH4Kark(4,21),GAMMAEXP188(17),GAMMAEXP295(17),

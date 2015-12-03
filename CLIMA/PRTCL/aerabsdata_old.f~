@@ -3,9 +3,9 @@
         DIMENSION wavirst(55), wavsolst(38)
         CHARACTER :: DIRINOUT*8,DIRDATA*10
         COMMON/DIR/DIRINOUT,DIRDATA
-        COMMON/HYDROCARB/Qextirst(73,55),w0irst(73,55),
-     &  girst(73,55),Qextsolst(73,38),w0solst(73,38),gsolst(73,38),
-     &  radstand(73)
+        COMMON/HYDROCARB/Qextirst(46,55),w0irst(46,55),
+     &  girst(46,55),Qextsolst(46,38),w0solst(46,38),gsolst(46,38),
+     &  radstand(46)
 C  radius of particles is given in cm
         DATA radstand/0.001E-5, 0.002E-5, 0.003E-5, 0.004E-5,
      &  0.005E-5, 0.006E-5, 0.007E-5, 0.008E-5, 0.009E-5, 
@@ -13,19 +13,10 @@ C  radius of particles is given in cm
      &  0.005E-4, 0.006E-4, 0.007E-4, 0.008E-4, 0.009E-4, 
      &  0.01E-4, 0.02E-4, 0.03E-4, 0.04E-4, 0.05E-4,
      &  0.06E-4, 0.07E-4,
-     &  0.08E-4, 0.09E-4, 
-     &  0.1E-4,  0.13E-4, 0.15E-4, 0.17E-4,
-     &  0.2E-4,  0.23E-4, 0.25E-4, 0.27E-4,
-     &  0.3E-4,  0.33E-4, 0.35E-4, 0.37E-4,
-     &  0.4E-4,  0.43E-4, 0.45E-4, 0.47E-4,
-     &  0.5E-4,  0.53E-4, 0.55E-4, 0.57E-4,      
-     &  0.6E-4,  0.63E-4, 0.65E-4, 0.67E-4,
-     &  0.7E-4,  0.73E-4, 0.75E-4, 0.77E-4,
-     &  0.8E-4,  0.83E-4, 0.85E-4, 0.87E-4,
-     &  0.9E-4, 0.93E-4, 0.95E-4, 0.97E-4,
+     &  0.08E-4, 0.09E-4, 0.1E-4, 0.2E-4, 0.3E-4, 0.4E-4, 0.5E-4,
+     &  0.6E-4, 0.7E-4, 0.8E-4, 0.9E-4,
      &  1.E-4, 2.E-4, 3.E-4, 4.E-4, 5.E-4, 6.E-4, 7.E-4, 8.E-4,
      &  9.E-4, 1.E-3/
-
 
         print *, 'monsize is: ', monsize
         IF (frak.eq.1) THEN
@@ -65,7 +56,7 @@ C  radius of particles is given in cm
          print *,'doing spherical particles'
         ENDIF
 C READING IR particle absorption data
-         DO J=1,73
+         DO J=1,46
           READ(40,100)
          DO i=1,55
          READ(40,*) wavirst(i),Qextirst(J,i),w0irst(J,i),
@@ -73,7 +64,7 @@ C READING IR particle absorption data
          ENDDO
          ENDDO
 C READING SOLAR particle absorption data
-         DO J=1,73
+         DO J=1,46
           READ(41,100)
          DO i=1,38
          READ(41,*) wavsolst(i),Qextsolst(J,i),w0solst(J,i),

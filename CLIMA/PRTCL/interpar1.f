@@ -3,9 +3,9 @@
         INCLUDE 'CLIMA/INCLUDE/header.inc'
         PARAMETER (NF=55, NSOL=38, NGS=8)
         DIMENSION RAER(ND)
-        COMMON/HYDROCARB/Qextirst(46,55),w0irst(46,55),
-     &  girst(46,55),Qextsolst(46,38),w0solst(46,38),gsolst(46,38),
-     &  radstand(46)
+        COMMON/HYDROCARB/Qextirst(73,55),w0irst(73,55),
+     &  girst(73,55),Qextsolst(73,38),w0solst(73,38),gsolst(73,38),
+     &  radstand(73)
 
         COMMON/SOLARBLK/AMU0,SRFALB,OMG0A(NSOL,ND-1),
      &  ASYA(NSOL,ND-1),TAUAER(NSOL),SIGERT(NSOL),FMA(NSOL),PF(ND),
