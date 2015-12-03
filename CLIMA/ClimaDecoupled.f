@@ -612,13 +612,37 @@ c       print *,'j =',j,'  fi(1,j)=',fi(1,j)
        END IF
 
       else
+
         DO J=1,ND
          CALL SATRAT(T(J),PSAT)
          FSATURATION(J) = (PSAT/P(J))*RELHUM(P(J))
+!         print *, fsaturation(j), P(j), j
+!         print *, 'psat', psat
+!         print *, 'relhum(P(J))', relhum(p(j))
+!         print *, 'fsaturation(J)', fsaturation(j)
+!         print *, 'psat/p(j)', psat/p(j)
+!         print *, 'p(j)', p(j)
+ !        print *, 'T(j)', T(J)
+ !        print *, '---'
 C-KK   The following line was modified to finish filling H2O grid. 
-         IF (J .GE. JCOLD) FI(1,J)=FSATURATION(J)
-        END DO
+         END DO
+ 
+       print *, 'FI(1, jcold) = ', FI(1, jcold)
+
+       !trying to make JCOLD more sensible - giada
+       JCOLD = -1
+       DO j =1, ND
+          IF ((JCOLD .EQ. -1).and.(FSATURATION(J).LT.1)) THEN 
+             JCOLD = J
+          end if
+       end do
+       
+       print *, 'JCOLD is ', JCOLD
+       DO J=1, ND 
+          IF (J .GE. JCOLD) FI(1,J)=FSATURATION(J)
+       END DO
        FI(1,JCOLD)=(3.*FI(1,JCOLD+1)+FI(1,JCOLD)+3.*FI(1,JCOLD-1))/7.
+
 c
 c jkf 6/26/08 Change H2O initialization in the stratosphere
        do j=1,jcold
@@ -633,7 +657,7 @@ c       if (imw.eq.2) FI(1,J) = 4.e-6
       FI(2,J) = FCO2
       IF(IUP.EQ.1) FI(2,J)=FCO2V(J)
    2  FI(3,J) = FCH4
-c
+cc
 c jfk 6/27/08
       do j=1,nd
       fsave(j) = fi(1,j)
