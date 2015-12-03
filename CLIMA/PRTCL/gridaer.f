@@ -7,6 +7,8 @@
         COMMON/ALTBLOK/DALT(ND-1),RADIUS(ND-1),PARTICLES(ND),RAER(ND),
      2    ALT(ND)
 
+C     in this case NZ = 100 is appropriate since the hcaer files have 100 layers
+
       IF (IHAZE.eq.0) THEN
       print *, 'reading in no haze'
       OPEN(unit=101,file="CLIMA/IO/hcaer_nohaze.out")
