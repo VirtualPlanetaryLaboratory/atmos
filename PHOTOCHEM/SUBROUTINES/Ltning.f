@@ -26,8 +26,7 @@ C     EQUILIBRIUM CONSTANTS AT 3500 K
       AK3 = 5.3                 ! = pH20/pH2/sqrt(pO2) bars
       AK4 = 0.22                ! = pO/sqrt(pO2)
 
-
-
+   
 c      Pbar = P0/1.013E6   !converting from pascals to bars
       Pbar = P0/1.013   !converting from pascals to bars
       
@@ -35,21 +34,28 @@ c      Pbar = P0/1.013E6   !converting from pascals to bars
        FCO = USOL(LCO,1) 
        PH2O = USOL(LH2O,1) * Pbar
        PH2 = USOL(LH2,1) * Pbar   ! I am having problems here if PH2 gets too big
+
+       PCH4 = USOL(LCH4,1) * Pbar
       else 
        FCO=UINERT(LCO-Loff,1)
        PH2O = UINERT(LH2O-Loff,1) * Pbar
        PH2 = UINERT(LH2-Loff,1) * Pbar   
       endif
-      
-      FN2 = 1. - FO2 - FCO2 - FCO - FAR    ! EWS - now includes Argon
+     
+     
+      FH2O = PH2O /PBAR
+      FN2 = 1. - FO2 - FCO2 - FCO - FAR - FH2O - FCH4   ! EWS - now includes Argon
+
       PN2 = FN2*Pbar
       PO2 = FO2*Pbar
       PCO2 = FCO2*Pbar
       PCO = FCO * Pbar
-
+      
       O2T = PO2 + PCO2 + 0.5*(PH2O + PCO)
       H2T = PH2 + PH2O
       CT = PCO2 + PCO
+
+    
 
       ALPHA = AK2*SQRT(O2T)
       BETA = AK3*SQRT(O2T)
@@ -58,20 +64,30 @@ c      Pbar = P0/1.013E6   !converting from pascals to bars
       C = 0.5*H2T/O2T
 
 C     INITIAL GUESS FOR XO2 AT 3500 K
-      X = 0.1 + 0.9*PO2/O2T + 0.2*PCO2/O2T
-
+      X = 0.1 + 0.9*PO2/O2T + 0.2*PCO2/O2T ! this initial guess seems to be causing trouble sometimes 
+      X_orig = X
+ 
 C
 C     NEWTON STEP
-      DO 1 N=1,20
-      NS = N
-      XS = X
-      X2 = SQRT(X)
-      FX = X + A*X2 - B/(1.+ALPHA*X2) - C/(1.+BETA*X2) + 2.*B + C - 1. 
+      DO 1 N=1,20     
+ 400  NS = N
+      XS = X                        
+      X2 = SQRT(X)            
+      FX = X + A*X2 - B/(1.+ALPHA*X2) - C/(1.+BETA*X2) + 2.*B + C - 1.            
        ! ^^^ C18) in JFK thesis
       FPX = 1. + (A + ALPHA*B/(1.+ALPHA*X2)**2 + BETA*C/(1.+BETA*X2)
-     2  **2)/(2.*X2)
-      X = X - FX/FPX
+     2  **2)/(2.*X2) 
+      X = X - FX/FPX  !GNA - bad initial guess for X (if X too big) is making this occasionally go negative for me, which make PO2 negative, which wrecks havoc in the sqrt(PN2*PO2) below...
+      IF(X.LT.0) THEN  
+         X = X_orig * 0.95 !decrease initial guess slightly until small enough
+         X_orig = X
+         print *, 'fixing x in ltning.f. new x = ', x
+         print *, 'old x = ', x/0.95
+         GOTO 400 
+      ENDIF
+   
       ERR = ABS((X-XS)/X)
+     
       IF(ERR.LT.1.E-5) GO TO 2
    1  CONTINUE
    2  PO2 = X*O2T
@@ -106,6 +122,7 @@ C   EQUAL TO PRONO
       ZAPCO2 = ZAPNO*PCO2/PNO
       ZAPH2O = ZAPNO*PH2O/PNO
 
+     
 
 c      print *, ZAPNO, ZAPO2,ZAPCO,ZAPH2,ZAPO,ZAPCO,ZAPH2O
 c      stop
