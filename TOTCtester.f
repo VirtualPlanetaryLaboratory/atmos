@@ -554,6 +554,8 @@ C - other model parameters read in from input_photochem.dat
       IF(IDEBUG.eq.1) print *, "NEWSPEC =",NEWSPEC
       READ(231,*)AA, monsize
       IF(IDEBUG.eq.1) print *, "MONSIZE =",monsize
+      READ(231,*)AA, ZY
+      IF(IDEBUG.eq.1) print *, "ZY =",ZY
  555  format(3/)
       close(231)
 
@@ -919,6 +921,7 @@ C uses Kopparapu et al 2012 scalings for earth-equivalent distance
       ENDIF
 
 
+
 C
       IF (IRESET.eq.1) CALL RESET
 C Defines mixing ratio values for modern earth; don't need next section that pulls ancient earth mixing ratios from in.dist
@@ -977,7 +980,7 @@ c read in formatted input data file
       ENDIF
 
 
-
+ 
         fmtstr='(  E17.8)'
         write(fmtstr(2:3),'(I2)')NP*3
 
@@ -1082,7 +1085,7 @@ C     NSTEPS = NUMBER OF TIME STEPS TO RUN (IF TSTOP IS NOT REACHED)
 C     FO2 = ground level O2 mixing ratio used in heritage calculations
 
       LTIMES = 0
-      ZY = 50.
+C      ZY = 50. why was this ever hardcoded? :(  In input_photochem.dat now
       FO2 = USOL(LO2,1)  ! fill up a heritage constant, eventually this should be purged.
 
 
@@ -1143,7 +1146,9 @@ c      enddo
 
       if (PLANET .EQ. 'EARTH') then
        PRONO = PRONO/1.  ! current column integrated NO production rate on Earth
-                        ! divide by 1000 turns off ltning
+
+ 
+                      ! divide by 1000 turns off ltning
 c       PRONO = PRONO/1.e6 ! ATACAMA
       else if (PLANET .EQ. 'MARS') then
        PRONO = PRONO/1.E9 ! divide by 1e9 turns off lightning for dry mars
@@ -1203,14 +1208,14 @@ c      TSTOP = 1.E14    !for runs that are unstable...
 
 
       TSTOP = 1.E17    !as it was...
-      NSTEPS = 10000
+      NSTEPS = 100000
 C      ICOUPLE = 1      ! for standalone mode this should probably be the default
 
 
 C ***** write OUT INITIAL DATA *****
       CALL OUTPUT(0,NSTEPS,0.D0,jtrop, vdep,USOLORIG,USETD, frak)
 
-
+ 
 C
 C ***** STORE CONSTANT JACOBIAN COEFFICIENTS *****
 c-mc      DZ2 = DZ*DZ
@@ -1308,7 +1313,7 @@ c interior grid points   ?fixed 8-13-05
         enddo
       endif  !end molecular diffusion for H and H2 loop
 
-
+ 
 
       do I=1,nz
 c         write(10, 1210) Z(I),DU(1,i),DU(LH,i),DU(LH2,i),DL(1,i),
@@ -1345,7 +1350,7 @@ C ***** START THE TIME-STEPPING LOOP *****
       IF (N.GT.1 .AND. TIME.LT.1.E2) goto 18  !skip PHOTO    !do photo on first time step, not again until 100 seconds
 
 
-
+    
 ! store mixing ratio of all species that take place in photolysis reactions
 ! these are the absorbers which block solar radiation
 ! If S8 occurs in the gas phase, we use Andy Youngs method to calculate S8 photorates which requires care
@@ -1379,6 +1384,7 @@ c            print *, k,photoreac(k),ISPEC(INT(photoreac(k))),lpolyscount
        enddo
       enddo
 
+
 c      print *, 'stopping in main'
 c      stop
 
@@ -1399,14 +1405,22 @@ corig       CO2(I) = FCO2
        CO2(I) = absorbers(JCO2,I)
       enddo
 
+
+
       IDO = 0
       IF (NN.EQ.NSTEPS) IDO = 1
       CALL PHOTO(ZY,AGL,LTIMES,ISEASON,IZYO2,IO2,INO,IDO,timega,frak,
      &      msun,monsize)
+  
       CALL RAINOUT(JTROP,NRAIN,USETD)  !ok
 
-      CALL AERCON
 
+
+   
+      CALL AERCON
+ 
+
+      
 c      print *, photoreac
 c      stop
 
@@ -1430,6 +1444,8 @@ c Using variables for the particle indeces to kill warnings. We should
 c eventually migrate this to the read-in. But that will require more
 c testing, or someone to figure out how to do that in Mark's input
 c framework. -Shawn D-G
+
+
       if(USETD.EQ.0) then
         NPSO4 = LSO4AER - NQ + NP
         NPS8 = LS8AER - NQ + NP
@@ -1458,6 +1474,8 @@ c framework. -Shawn D-G
         NPHC2 = LHCAER2 - NQ
       endif
 
+ 
+ 
 c estimate CO2 photolysis above the top of the grid and return CO + O to the upper grid point
 c NOTE: this behavior is turned on and off by setting MBOUND=2 in species.dat
 
@@ -1498,6 +1516,8 @@ C  PHOTOLYSIS RATES FORMATTED I/O AND PRINTOUT
        ENDIF
       enddo
 
+
+
  883  format(9(1PE9.2,2X))
  884  format(/5X,'Z',6X,8A11)
  885  FORMAT(//1X,'PHOTOLYSIS RATES')
@@ -1505,8 +1525,11 @@ C  PHOTOLYSIS RATES FORMATTED I/O AND PRINTOUT
       endif !end photorates printout
 
  18   continue   !start here if we are skipping PHOTO
+
+
 C
       CALL SEDMNT(FSULF,USETD,frak,HCDENS, monsize)
+
 
       if (USETD.EQ.0) then   !particles in main loop
 
@@ -1538,7 +1561,6 @@ c     &         USOL(LS8AER,J),CONVER(J,2)
       enddo
       enddo
 
-
 C
 C   COMPUTE ADVECTION TERMS FOR PARTICLES  ! jim is using centered differences.
 c   this makes sense for the inner points from the differential equation,
@@ -1563,6 +1585,7 @@ c   it may be that I should instead change flux estimates to use the "2"
 
 
       endif
+
 
 
 
@@ -1596,13 +1619,17 @@ c-mc  NOTE - DJAC is in band storage form.  see sgbfa header for details.
 c-mACK expand me...
 
 C
+            
+
+
 C   COMPUTE CHEMISTRY TERMS AT ALL GRID POINTS
       IDO = 0
       if ((NN/NPR)*NPR.eq.NN) IDO = 1  !computes TP, TL
       IF (NN.EQ.NSTEPS) IDO = 1
+     
 
       CALL DOCHEM(FVAL,IDO,JTROP,iIN,iSL,USETD)      !IDO=1 happens on last step- computes total production and loss...
-
+ 
       DO 9 I=1,NQ
       DO 9 J=1,NZ
       K = I + (J-1)*NQ
@@ -1635,6 +1662,7 @@ c     R(J) = EPSJ * ABS(USOL(I,J))   !as it was
 c      R(J) = EPSJ * USOL(I,J)
 c  11  USOL(I,J) = USAVE(I,J) + R(J)
 c      CALL DOCHEM(FV,0,JTROP,iIN,iSL,USETD)
+
 
 C
       DO 12 M=1,NQ
@@ -1757,6 +1785,8 @@ C   CONSTANT UPWARD FLUX
       endif
  30   continue
 
+
+
 C   HOLD H2O AND S8 CONSTANT BELOW ZTROP
 c   why am I doing this for S8??
 c  turn it off for S8
@@ -1776,6 +1806,8 @@ c        IF (I.EQ.2) L = LS8
         DJAC(KL,K-NQ) = 0.
   33    continue
   34  CONTINUE
+
+
 
 C distributed (volcanic) sources
 
@@ -1966,7 +1998,7 @@ c
         ENDIF
 26    CONTINUE
 
-
+ 
 
 C
 C   RESET TROPOSPHERIC H2O TO ITS ORIGINAL VALUES, IN CASE IT CHANGED.
@@ -2072,6 +2104,8 @@ c           USOL(i,j)=max(USOL(i,j),smallest)
 
 
       if(USETD.EQ.1) then
+
+
 
 *********TRIDIAG STARTS HERE
 
@@ -2234,6 +2268,8 @@ c   what follows needs work -
   43  SR(I) = SR(I) + RAINGC(I,J)*USOL(I,J)*DEN(J)*DZ(J)
       PHIDEP(I) = VDEP(I)*USOL(I,1)*DEN(1)
   42  TLOSS(I) = SR(I) + PHIDEP(I)
+
+
 c nb that vdep for particles is defined to include wfall when particles are in the main loop
 
       if(USETD.EQ.1) then
@@ -2346,7 +2382,8 @@ c$$$         print *, (USOLPREV(K,1)-USOL(K,1),K=1,NQ)
 c$$$         stop
 c$$$      ENDIF
 
-
+      !NAN HAPPENING SOMEWHERE BELOW HERE...MUST BE IN OUTPUT.F
+  
 
 C
       NS = N/NPR    !NPR=PRN set above to 50 - i.e. write out every 50 steps
@@ -2355,13 +2392,14 @@ C
       IF (SN-NS .LT. 1.E-3) THEN
         CALL OUTPUT(NN,NSTEPS,TIME,jtrop, vdep,USOLORIG,USETD,frak)
       ENDIF
+          !NAN HAPPENING SOMEWHERE ABOVE HERE...MUST BE IN OUTPUT.F
 
-
+ 
       write(23, 374) n, TIME, USOL(LO2,1), USOL(LH2,1), USOL(LCO,1),
      $ USOL(LCH4,1)!, USOL(LS8aer,1)   !tri-diag (could fix if I wanted...)
  374  format (1x, I6, 1P6E13.4)
 
-
+   
 
 c-mc writing out full number densities at each timestep
 !this eventually should be an option as it is a large output file (1MB per 50 steps)
@@ -2391,10 +2429,12 @@ c         write(43,114), (USOL(K,I)*DEN(I),K=1,NQ)
         enddo
       endif
 
+         
+
 c 114  format(100(1pe10.3))   !ACK hardcoded NQ - update if NQ>100
  115  format(I5, 3(1pe14.6))
 
-
+    
       IF (INFO.NE.0) STOP
       IF (NN.EQ.NSTEPS) then
          finaln=NN
@@ -2405,11 +2445,13 @@ c 114  format(100(1pe10.3))   !ACK hardcoded NQ - update if NQ>100
         finaln=NN+1
         NN = NSTEPS - 1
       endif
-
+          
+    
    1  CONTINUE
 C ***** END THE TIME-STEPPING LOOP *****
-C
+   
   22  CONTINUE   ! successful completion
+
 
 C write out formatted CONTINUE
 C-PK Write to file used for spectrum (VPL-SMART)
@@ -2460,6 +2502,7 @@ C-PK Write to file used for spectrum (VPL-SMART)
 C write out formatted out.dist file
 c this new format works automatically even if NQ changes
 
+ 
       IROW = 10  !num columns in .dist file
       LR = NQ/IROW + 1
       RL = FLOAT(NQ)/IROW + 1

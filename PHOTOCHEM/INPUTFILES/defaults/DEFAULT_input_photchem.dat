@@ -15,6 +15,7 @@ HCDENS=    0.63
 ICOUPLE=   1
 NEWSPEC =  0
 monsize=   0
+ZY=	   50.
 
 C ***** SET MODEL PARAMETERS *****
 C     AGL = DIURNAL AVERAGING FACTOR FOR PHOTORATES
@@ -39,3 +40,4 @@ C          = 1  use Fractal scattering for hydrocarbon particles
 C     HCDENS = 0.63 g/cm^3 (Archean hydrocarbon density - Trainer et al 2006)
 C            = 0.8 g/cm^3 (titan tholins - Trainer et al 2006)
 C 	     = 1.0 g/cm^3 (old suspicious default value)
+C     ZY      = solar zenith angle

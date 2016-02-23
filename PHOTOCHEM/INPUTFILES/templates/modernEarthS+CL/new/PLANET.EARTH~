@@ -1,0 +1,10 @@
+980.7 = G, Gravity - Earth=980.7, Mars=373.0
+1.00 = FSCALE, Solar Flux Scaling - Earth=1.0, Mars=0.43
+0.250 = ALB, Surface Albedo - Earth=0.25, Mars=0.215
+1.1E6 = ZTROP, Height of the tropopause - typically Earth=11km, Mars=15km
+
+
+-below here are not read in.  They are from Shawn's Planet.earth file but are handled differently here.
+
+11    = JTROP, Grid layer marking the tropopause height, depends on ZTROP and DELZ
+1.0E5 = DELZ, Height of each atm layer - Earth=1.0E5, Mars=2.0E5 (cm)
