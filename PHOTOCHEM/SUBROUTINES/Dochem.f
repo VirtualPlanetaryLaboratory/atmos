@@ -1,4 +1,4 @@
-      SUBROUTINE DOCHEM(FVAL,N,JTROP,NSHORT,USETD)
+      SUBROUTINE DOCHEM(FVAL,N,JTROP,NINERT,NSHORT,USETD)
       INCLUDE 'PHOTOCHEM/INPUTFILES/parameters.inc'
       implicit real*8(A-H,O-Z)
       real*8 mass
@@ -29,6 +29,8 @@ C   SPECIES CAN BE DONE IN ANY ORDER.
 
 
 
+
+
 !compute number densities for long-lived and particle species 
 !these are re-computed below...
       do I=1,NQ1
@@ -45,6 +47,7 @@ c         if(j.eq.1)print *, i, ISPEC(I),' particle densities'
        enddo
       enddo  
 
+ 
 ! compute densities for INERT species in ISOTOPE code
       if (ISOTOPE.EQ.1) then
          do I=NQ1+NSHORT+1, NSP-2   !loop over INERT species
@@ -55,18 +58,30 @@ c            print *, i, ISPEC(I),' inert densities'
          enddo   
       endif
 
+     
 !do the last 4 inert species that are the same in both codes
       do J=1,NZ
 
-       if(ISPEC(NSP-1).eq.'CO2') D(LCO2,J) = FCO2 * DEN(J) !if CO2 is inert, place above N2 in list (hardcoded position for CO2/N2 (NSP-1/NSP)
+ 
+
+        if(ISPEC(NSP-1).eq.'CO2') D(LCO2,J) = FCO2 * DEN(J) !if CO2 is inert, place above N2 in list (hardcoded position for CO2/N2 (NSP-1/NSP)
+
+!        if(ISOTOPE.EQ.0) D(NSP,J) = (1. - USOL(LO2,J) - FCO2) * DEN(J)  ! N2 -defined as the "rest" of the density - wrong as it ignores Argon, CO, etc.
+
+ !       if(ISOTOPE.EQ.1) D(NSP,J)=(1.-UINERT(LO2-Loff,J)-FCO2) * DEN(J) ! N2 -defined as the "rest" of the density - wrong as it ignores Argon
+
        if(ISOTOPE.EQ.0) D(NSP,J) = (1. - USOL(LO2,J) - FCO2 - FAR 
-     2  - FCO)* DEN(J)    ! N2 -defined as the "rest" of the density - EWS - now includes Argon and CO. 
-       if(ISOTOPE.EQ.1) D(NSP,J)=(1.-UINERT(LO2-Loff,J)-FCO2 - FAR 
-     2  - FCO) * DEN(J)  ! N2 -defined as the "rest" of the density - EWS - now includes argon, CO
-       D(NSP1,J) = 1.                             ! HV has density of 1 for photorate calculations
+     2  - FCO)* DEN(J)    ! N2 -defined as the "rest" of the density - wrong as it ignores Argon, CO, etc.
+
+      if(ISOTOPE.EQ.1) D(NSP,J)=(1.-UINERT(LO2-Loff,J)-FCO2 - FAR 
+     2  - FCO) * DEN(J)  ! N2 -defined as the "rest" of the density - wrong as it ignores Argon
+     
+
+       D(NSP1,J) = 1.           ! HV has density of 1 for photorate calculations
        D(NSP2,J) = DEN(J)                         ! M - background density for three body reactions
       enddo
 
+    
       
       if (N.GE.0) then  !normal operation mode (-1 just fills up D and SL for first timestep)
 C
@@ -83,6 +98,7 @@ c         print *, I,ISPEC(I),' short-lived'
       DO 3 J=1,NZ
    3  D(I,J) = XP(J)/XL(J)
 
+ 
 
 C   SOLVE QUADRATIC FOR S4, if S4 is in the SL lived loop
 c equation is production=loss, which turns into a quadratic equation in S4 density
@@ -122,6 +138,7 @@ c        enddo
        enddo
 
       endif
+   
 
 C
 C ***** LONG-LIVED SPECIES CHEMISTRY *****
@@ -146,7 +163,7 @@ c      print *, usol(i,j)
 c      IF (ISPEC(I).EQ.'H2SO4') print *, J,XL(J),RAINGC(I,J),XP(j),XLJ
       ENDDO
       ENDDO
-
+   
 
       if(USETD.EQ.1) then
 C ***** TRIDIAGONAL SPECIES  *****
@@ -178,7 +195,7 @@ c         if (ISPEC(I).EQ.'SO4AER') YL(I,J) = YL(I,J) + RAINGC(LH2SO4,J)
 
       endif
 
-
+  
       if (PLANET .EQ. 'EARTH') then 
        CONFAC = 1.6E-5          !condensation factor
       else if (PLANET .EQ. 'MARS') then
@@ -195,19 +212,22 @@ C   PRODUCTION OF NO AND O2
       if (ISOTOPE.EQ.0) then   !skip the next little bit for the ISOTOPE code as all this stuff is inert...
       changeL = 1        !mc temp var for testing lightning changes versus OLD JFK method
                          !changeL=1 uses new code, changeL=0 uses old code
-
+      
       JT1 = JTROP + 1          ! same as NH1
+  
       DO 5 J=1,JTROP
         FVAL(LH2O,J) = 0.
         YP(LH2O,J) = 0.
         YL(LH2O,J) = 0.
+      
+      
         SCALE = RAIN(J)/RAIN(1)
-
+ 
         ZAP = ZAPNO * SCALE
         FVAL(LNO,J) = FVAL(LNO,J) + ZAP/DEN(J)  
         YP(LNO,J) = YP(LNO,J) + ZAP
 
-
+       
         if (changeL.eq.1) then
 c-mc 4/28/06      making NO requires subtracting 1/2 O2   (1/2 N2 + 1/2 O2 <-> NO)
         FVAL(LO2,J) = FVAL(LO2,J) - 0.5*ZAP/DEN(J)
@@ -222,7 +242,7 @@ c-mc  "un-commenting" these for test versus JFK's original code.  in the else st
         YP(LO2,J) = YP(LO2,J) + ZAP
         endif
         
-
+  
 
 
         if (changeL.eq.1) then
@@ -264,6 +284,7 @@ c-end 3-20-06 addition
    5  CONTINUE
 
 
+
 ! ACK - this may be part of the reason the time-dependent code is having trouble
 C
 C   H2O CONDENSATION IN THE STRATOSPHERE
@@ -296,7 +317,7 @@ C   H2SO4 CONDENSATION
        LLA=LSXO4AER
       endif
 
-
+  
       DO 14 J=1,NZ
       CONSO4(J) = CONFAC * (USOL(LL,J) - H2SO4S(J))
 
@@ -331,7 +352,7 @@ C   S8 CONDENSATION (this is needed if we every want to deal with 'hot air' - s8
        LLA=LSXS7AER
       endif
 
-
+ 
       CONFC2 = 1.E-2   !whats this?  CONFAC = 1.6E-5   whatever that is
 
       DO  J=1,NZ  !(fixes an error in our earlier codes where S8 didn't condense in the troposphere)
@@ -358,7 +379,7 @@ c       print *, j, USOL(LL,J),S8S(J),(USOL(LL,J) - S8S(J))
       endif  !end S8 skip loop
 
       endif  !end normal operation loop (i.e. if IDO = 0 or 1)
-
+    
 
 c      stop
 
@@ -433,6 +454,7 @@ c cm^3/mol/s * (mol/cm^3)^2 ->  mol/cm^3/s (i.e. rate units)
   12  RAT(L) = RAT(L) + REACRAT(L,J)*DZ(J)  
 c      mol/cm^3/s * cm ->  mol/cm^2/s (i.e. RAT is in height integrated flux units)
 
+  
       DO 8 I=1,NQ1
       XLG(I) = YL(I,1)
       DO 8 J=1,NZ
