@@ -11,7 +11,7 @@ c - it is starting from one of the more up-to-date branches of Mark's code, but 
 c- at some point go through and clean up all comments
 c
 c
-c - this code contains the variable grid size changes used to compute the suite of models for the whiff paper.
+c - this code contains the variable grid e changes used to compute the suite of models for the whiff paper.
 c - this code could/should be modified to use a variable grid size at some point to make it faster
 c - all common blocks abstracted to DATA/INCLUDE
 
@@ -509,6 +509,8 @@ c not creating this file for whiff testing, but needs to be in real td versions.
 
        open(62, file='PHOTOCHEM/out.flow',status='UNKNOWN') !lower boundary fluxes (not including rainout)
        open(63, file='PHOTOCHEM/out.od',status='UNKNOWN')   !haze optical depths
+       open(73, file='PHOTOCHEM/out.rp',status='UNKNOWN')   !haze toa and sur rpar
+ 
 
 C - This file gives the input needed for SMART - radiative transfer code
 
@@ -552,8 +554,8 @@ C - other model parameters read in from input_photochem.dat
       IF(IDEBUG.eq.1) print *, "ICOUPLE =",ICOUPLE
       READ(231,*)AA, NEWSPEC
       IF(IDEBUG.eq.1) print *, "NEWSPEC =",NEWSPEC
-      READ(231,*)AA, monsize
-      IF(IDEBUG.eq.1) print *, "MONSIZE =",monsize
+      READ(231,*)AA, ihztype
+      IF(IDEBUG.eq.1) print *, "IHZTYPE =",ihztype
       READ(231,*)AA, ZY
       IF(IDEBUG.eq.1) print *, "ZY =",ZY
  555  format(3/)
@@ -1021,15 +1023,15 @@ C added by giada
  909  FORMAT(1X, F4.2, 7X, F8.3, 5X, F18.16, 5X, I2, 5X, I2, 
      &     9X, I4, 6X, F4.2)
  908  FORMAT(1X, 'timega', 5X, 'P0', 10X, 'frak', 18X, 'msun', 4X, 
-     &   'monsize', 6X, 'NZ', 6X, 'FSCALE')
+     &   'ihztype', 6X, 'NZ', 6X, 'FSCALE')
       print *, frak
       print *, P0
       print *, msun
-      print *, monsize
+      print *, ihztype
       print *, NZ     
       print *, FSCALE
       WRITE(999,908)
-      WRITE(999,909) timega, P0, frak, msun, monsize, NZ, FSCALE
+      WRITE(999,909) timega, P0, frak, msun, ihztype, NZ, FSCALE
 
 C
 C
@@ -1349,7 +1351,7 @@ C ***** START THE TIME-STEPPING LOOP *****
       IF (SM-MS.GT.0.01) goto 18   ! skip PHOTO
       IF (N.GT.1 .AND. TIME.LT.1.E2) goto 18  !skip PHOTO    !do photo on first time step, not again until 100 seconds
 
-
+      
     
 ! store mixing ratio of all species that take place in photolysis reactions
 ! these are the absorbers which block solar radiation
@@ -1410,7 +1412,7 @@ corig       CO2(I) = FCO2
       IDO = 0
       IF (NN.EQ.NSTEPS) IDO = 1
       CALL PHOTO(ZY,AGL,LTIMES,ISEASON,IZYO2,IO2,INO,IDO,timega,frak,
-     &      msun,monsize)
+     &      msun,ihztype)
   
       CALL RAINOUT(JTROP,NRAIN,USETD)  !ok
 
@@ -1528,7 +1530,7 @@ C  PHOTOLYSIS RATES FORMATTED I/O AND PRINTOUT
 
 
 C
-      CALL SEDMNT(FSULF,USETD,frak,HCDENS, monsize)
+      CALL SEDMNT(FSULF,USETD,frak,HCDENS,ihztype)
 
 
       if (USETD.EQ.0) then   !particles in main loop
@@ -1542,7 +1544,7 @@ C
             if (JJ.eq.4)  nparti = LHCAER2
 
 
-            AERSOL(J,JJ) = USOL(nparti,J)*DEN(J)/CONVER(J,JJ)
+            AERSOL(J,JJ) = USOL(nparti,J)*DEN(J)/(CONVER(J,JJ))
 
 
 c O2 CODE CHANGES
@@ -2224,16 +2226,17 @@ c      IF(EMAX.LT.0.01)  DT = 3.0*DTSAVE
 c      IF(EMAX.LT.0.003) DT = 4.0*DTSAVE
 c      IF(EMAX.LT.0.001) DT = 5.*DTSAVE
 
+!was using these before
 c-mc      these are even stricter...
-      IF(EMAX.LT.0.15)  DT = 1.1*DTSAVE
-      IF(EMAX.LT.0.07)  DT = 1.2*DTSAVE
-      IF(EMAX.LT.0.01)  DT = 1.4*DTSAVE
-      IF(EMAX.LT.0.008)  DT = 2.0*DTSAVE
-      IF(EMAX.LT.0.004)  DT = 3.0*DTSAVE
-      IF(EMAX.LT.0.001) DT = 4.0*DTSAVE
-      IF(EMAX.LT.0.0005) DT = 5.*DTSAVE
+       IF(EMAX.LT.0.15)  DT = 1.1*DTSAVE
+       IF(EMAX.LT.0.07)  DT = 1.2*DTSAVE
+       IF(EMAX.LT.0.01)  DT = 1.4*DTSAVE
+       IF(EMAX.LT.0.008)  DT = 2.0*DTSAVE
+       IF(EMAX.LT.0.004)  DT = 3.0*DTSAVE
+       IF(EMAX.LT.0.001) DT = 4.0*DTSAVE
+       IF(EMAX.LT.0.0005) DT = 5.*DTSAVE
 
-
+!testing changing to these
 c-mc      these are even stricter...
 c      IF(EMAX.LT.0.015)  DT = 1.1*DTSAVE
 c      IF(EMAX.LT.0.007)  DT = 1.2*DTSAVE
@@ -2241,7 +2244,7 @@ c      IF(EMAX.LT.0.001)  DT = 1.4*DTSAVE
 c      IF(EMAX.LT.0.0008)  DT = 2.0*DTSAVE
 c      IF(EMAX.LT.0.0004)  DT = 3.0*DTSAVE
 c      IF(EMAX.LT.0.0001) DT = 4.0*DTSAVE
-c      IF(EMAX.LT.0.00005) DT = 5.*DTSAVE
+c     IF(EMAX.LT.0.00005) DT = 5.*DTSAVE
 
 
       DTINV = 1./DT
@@ -2429,7 +2432,7 @@ c         write(43,114), (USOL(K,I)*DEN(I),K=1,NQ)
         enddo
       endif
 
-         
+      print *, RPAR(1,3),RPAR(NZ,3)   
 
 c 114  format(100(1pe10.3))   !ACK hardcoded NQ - update if NQ>100
  115  format(I5, 3(1pe14.6))
@@ -2544,6 +2547,8 @@ C
          write(71,fmtstr) (AERSOL(i,j),j=1,NP),(WFALL(i,j),j=1,NP),
      $                  (RPAR(i,j),j=1,NP)           ! print aerosols into another file .aersol
         enddo
+
+        
 
         fmtstr='(  E17.8)'
         write(fmtstr(2:3),'(I2)')NP

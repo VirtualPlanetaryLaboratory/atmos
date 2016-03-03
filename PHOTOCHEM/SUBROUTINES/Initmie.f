@@ -1,4 +1,4 @@
-      SUBROUTINE INITMIE(nw,wl,frak,monsize)
+      SUBROUTINE INITMIE(nw,wl,frak,ihztype)
       INCLUDE 'PHOTOCHEM/INPUTFILES/parameters.inc'
       implicit real*8(A-H,O-Z)
 
@@ -48,7 +48,7 @@ C-AP **********************************************************
 
 C-AP ***********************************************************
 
-      print *, 'monsize is: ', monsize
+      print *, 'ihztype is: ', ihztype
 C************SPHERICAL***************************************** 
       if (frak.eq.0) then  !using spherical sized arrays (MIE)
          DO k=1,51
@@ -177,26 +177,34 @@ C************SPHERICAL*****************************************
 
 C-GA fractal files read in from different folders compared to
 C-   spherical particles
-         if (monsize.eq.0.) then 
+         if (ihztype.eq.0.) then 
             root = 'PHOTOCHEM/DATA/MIE/f0/fractopts'
-            print *,'using monsize 0: 0.05 um particles'
+            print *,'using ihztype 0: 0.05 um particles (Khare)'
        
-         else if (monsize.eq.1.) then 
+         else if (ihztype.eq.1.) then 
             root = 'PHOTOCHEM/DATA/MIE/f1/fractopts'
-            print *,'using monsize 1: 0.01 um particles'
+            print *,'using ihztype 1: 0.01 um particles (Khare)'
             
-         else if (monsize.eq.2.) then 
+         else if (ihztype.eq.2.) then 
             root = 'PHOTOCHEM/DATA/MIE/f2/fractopts'
-            print *,'using monsize 2: 0.02 um particles'
+            print *,'using ihztype 2: 0.02 um particles (Khare)'
             
-         else if (monsize.eq.3.) then 
+         else if (ihztype.eq.3.) then 
             root = 'PHOTOCHEM/DATA/MIE/f3/fractopts'
-            print *,'using monsize 3: 0.07 um particles'
+            print *,'using ihztype 3: 0.07 um particles (Khare)'
             
-         else if (monsize.eq.4.) then 
+         else if (ihztype.eq.4.) then 
             root = 'PHOTOCHEM/DATA/MIE/f4/fractopts'
-            print *,'using monsize 4: 0.10 um particles'
-         end if
+            print *,'using ihztype 4: 0.10 um particles (Khare)'
+       
+        else if (ihztype.eq.5.) then 
+            root = 'PHOTOCHEM/DATA/MIE/f5/fractopts'
+            print *,'ihztype 5: 0.05 um particles (Khare+Mahjoub+Tran)'
+    
+        else if (ihztype.eq.6.) then 
+            root = 'PHOTOCHEM/DATA/MIE/f6/fractopts'
+            print *,'ihztype 6: 0.05 um (Khare shifted to Hasenkopf)'
+        end if
          
         
       filenames=['0.001um.txt','0.002um.txt','0.003um.txt','0.004um.txt'
@@ -283,8 +291,8 @@ C-GA we don't need to to the 'extend' thing for the fractals...
       ENDIF
 
       do k=1,nw
-         W0HC(k,j)=yg1(k)
-         QEXTHC(k,j)=yg2(k)
+         W0HC(k,j)=yg1(k) 
+         QEXTHC(k,j)=yg2(k) 
          GHC(k,j)=yg3(k)
 
       enddo
