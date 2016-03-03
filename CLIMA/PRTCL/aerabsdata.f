@@ -1,5 +1,5 @@
 
-        SUBROUTINE AERABSDATA(frak, monsize)        
+        SUBROUTINE AERABSDATA(frak, ihztype)        
         DIMENSION wavirst(55), wavsolst(38)
         CHARACTER :: DIRINOUT*8,DIRDATA*10
         COMMON/DIR/DIRINOUT,DIRDATA
@@ -27,37 +27,50 @@ C  radius of particles is given in cm
      &  9.E-4, 1.E-3/
 
 
-        print *, 'monsize is: ', monsize
+        print *, 'ihztype is: ', ihztype
         IF (frak.eq.1) THEN
-         if (monsize.eq.0) then 
+         if (ihztype.eq.0) then 
          OPEN(UNIT=40,FILE= DIRDATA//'/irtotalfract.DAT')
          OPEN(UNIT=41,FILE= DIRDATA//'/soltotalfract.DAT')
-         print *, 'doing fractal particles monsize 0.05um'
+         print *, 'doing fractal particles ihztype 0.05um (Khare)'
          endif
 
-         if (monsize.eq.1) then 
+         if (ihztype.eq.1) then 
          OPEN(UNIT=40,FILE= DIRDATA//'/irtotalfract1.DAT')
          OPEN(UNIT=41,FILE= DIRDATA//'/soltotalfract1.DAT')
-         print *, 'doing fractal particles monsize 0.01um'
+         print *, 'doing fractal particles ihztype 0.01um (Khare)'
          endif
 
-         if (monsize.eq.2) then 
+         if (ihztype.eq.2) then 
          OPEN(UNIT=40,FILE= DIRDATA//'/irtotalfract2.DAT')
          OPEN(UNIT=41,FILE= DIRDATA//'/soltotalfract2.DAT')
-         print *, 'doing fractal particles monsize 0.02um'
+         print *, 'doing fractal particles ihztype 0.02um (Khare)'
          endif
 
-         if (monsize.eq.3) then 
+         if (ihztype.eq.3) then 
          OPEN(UNIT=40,FILE= DIRDATA//'/irtotalfract3.DAT')
          OPEN(UNIT=41,FILE= DIRDATA//'/soltotalfract3.DAT')
-         print *, 'doing fractal particles monsize 0.07um'
+         print *, 'doing fractal particles ihztype 0.07um (Khare)'
          endif
 
-         if (monsize.eq.4) then 
+         if (ihztype.eq.4) then 
          OPEN(UNIT=40,FILE= DIRDATA//'/irtotalfract4.DAT')
          OPEN(UNIT=41,FILE= DIRDATA//'/soltotalfract4.DAT')
-         print *, 'doing fractal particles monsize 0.1um'
+         print *, 'doing fractal particles monsize 0.1um (Khare)'
          endif
+
+         if (ihztype.eq.5) then 
+         OPEN(UNIT=40,FILE= DIRDATA//'/irtotalfract_kmt.DAT')
+         OPEN(UNIT=41,FILE= DIRDATA//'/soltotalfract_kmt.DAT')
+         print *, 'doing fractal 0.5um Khare+Mahjoub+Tran'
+         endif
+
+         if (ihztype.eq.6) then 
+         OPEN(UNIT=40,FILE= DIRDATA//'/irtotalfract_kh.DAT')
+         OPEN(UNIT=41,FILE= DIRDATA//'/soltotalfract_kh.DAT')
+         print *, 'doing fractal particles Khare+Hasenkopf'
+         endif
+
 
         ELSE
          OPEN(UNIT=40,FILE= DIRDATA//'/irtotal.DAT')

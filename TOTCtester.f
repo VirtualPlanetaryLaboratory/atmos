@@ -1144,7 +1144,7 @@ c      enddo
       CALL RATES
       CALL DIFCO(FO2)  !computes diffusion coefficents (K*N) and binary diffusion coefficents for H and H2
       CALL PHOTSATRAT(JTROP,H2O)
-      CALL DOCHEM(FVAL,-1,JTROP,iIN,iSL,USETD)      !IDO=-1, fill up SL for accurate calculation on first timestep
+      CALL DOCHEM(FVAL,-1,JTROP,iSL,USETD)      !IDO=-1, fill up SL for accurate calculation on first timestep
 
       if (PLANET .EQ. 'EARTH') then
        PRONO = PRONO/1.  ! current column integrated NO production rate on Earth
@@ -1630,7 +1630,7 @@ C   COMPUTE CHEMISTRY TERMS AT ALL GRID POINTS
       IF (NN.EQ.NSTEPS) IDO = 1
      
 
-      CALL DOCHEM(FVAL,IDO,JTROP,iIN,iSL,USETD)      !IDO=1 happens on last step- computes total production and loss...
+      CALL DOCHEM(FVAL,IDO,JTROP,iSL,USETD)      !IDO=1 happens on last step- computes total production and loss...
  
       DO 9 I=1,NQ
       DO 9 J=1,NZ
@@ -1653,7 +1653,7 @@ c     R(J) = EPSJ * ABS(USOL(I,J))           ! as it was - USOL should be positi
       IF(R(J).LT.1.e-100) R(J) = 1.e-100 ! PERTURB DEBUG !!!
       !!! Above ensures no USOL(I,J) falls below double precision limit !!!
   11  USOL(I,J) = USAVE(I,J) + R(J)          ! Add perturbing quantity to mixing ratio
-      CALL DOCHEM(FV,0,JTROP,iIN,iSL,USETD)  ! Call the photochemistry routine
+      CALL DOCHEM(FV,0,JTROP,iSL,USETD)  ! Call the photochemistry routine
 c                                           ! FV has dimension (NQ,NZ) and holds gas densities
 c end new code from eddie
 
@@ -1663,7 +1663,7 @@ c      DO 11 J=1,NZ
 c     R(J) = EPSJ * ABS(USOL(I,J))   !as it was
 c      R(J) = EPSJ * USOL(I,J)
 c  11  USOL(I,J) = USAVE(I,J) + R(J)
-c      CALL DOCHEM(FV,0,JTROP,iIN,iSL,USETD)
+c      CALL DOCHEM(FV,0,JTROP,iSL,USETD)
 
 
 C
@@ -2432,7 +2432,7 @@ c         write(43,114), (USOL(K,I)*DEN(I),K=1,NQ)
         enddo
       endif
 
-      print *, RPAR(1,3),RPAR(NZ,3)   
+c      print *, RPAR(1,3),RPAR(NZ,3)   
 
 c 114  format(100(1pe10.3))   !ACK hardcoded NQ - update if NQ>100
  115  format(I5, 3(1pe14.6))

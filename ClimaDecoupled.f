@@ -417,7 +417,7 @@ c*******Changed for now*********
       READ(1,*) AA, IMETETH     ! IMETETH (flag 0 or 1)
       READ(1,*) AA, nga
       READ(1,*) AA, IHAZE       ! IHAZE (flag 0 or 1)
-      READ(1,*) AA, monsize
+      READ(1,*) AA, ihztype
       READ(1,*) AA, icealbedo
       READ(1,*) AA, INVERSE
       READ(1,*) AA, FRAK        !can get a fractal haze without being coupled now
@@ -441,12 +441,12 @@ c*******Changed for now*********
  107  FORMAT(1X, F4.2, 7X, F8.3, 5X, F18.16, 5X, I2, 5X, I2, 
      &     9X, I4, 6X, F4.2)
       READ(999,*)
-      READ(999,107) timega, P0ground, frak, msun, monsize, nzp, fscale
+      READ(999,107) timega, P0ground, frak, msun, ihztype, nzp, fscale
       print *, timega
       print *, P0ground
       print *, frak
       print *, msun
-      print *, monsize
+      print *, ihztype
       print *, nzp
       print *, fscale
       IF (msun.eq.13) STARR = "Sun"
@@ -817,7 +817,7 @@ c        ENDDO
        close(113)
   
 c Aerosol calculation (commented when not used)
-      CALL AERABSDATA(FRAK, monsize)
+      CALL AERABSDATA(FRAK, ihztype)
       CALL GRIDAER(ICOUPLE, IHAZE)
       CALL INTERPAR1(RAER)
 C***********************************************************
