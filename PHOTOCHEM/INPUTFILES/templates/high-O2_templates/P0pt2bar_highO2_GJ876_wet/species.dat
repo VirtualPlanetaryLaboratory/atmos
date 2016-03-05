@@ -16,7 +16,7 @@
 *
 *   LONG-LIVED O H C S N CL LBOUND  VDEP0   FIXEDMR SGFLUX    DISTH MBOUND SMFLUX  VEFF0  
 O          LL  1 0 0 0 0 0    0     0.      0.      0.        0.      0      0.      0.        !Shawn: might have to try 1 by 1 if doesn't work
-O2         LL  2 0 0 0 0 0    1     0.      9.5E-01 0.        0.      0      0.      0.        !If LBOUND for O2 were set to 3, plug in to 2.42e12 
+O2         LL  2 0 0 0 0 0    1     0.      9.2E-01 0.        0.      0      0.      0.        !If LBOUND for O2 were set to 3, plug in to 2.42e12 
 H2O        LL  1 2 0 0 0 0    0     0.      0.      0.        0.      0      0.      0.        !what O2 concentrations do you get? DISH=10
 H          LL  0 1 0 0 0 0    0     1.0E+00 0.      0.        0.      0      0.      0.        !if that doesn't work change to 2 and use same flux
 OH         LL  1 1 0 0 0 0    0     0.      0.      0.        0.      0      0.      0.        !volcanic outgases of Earth but in O2

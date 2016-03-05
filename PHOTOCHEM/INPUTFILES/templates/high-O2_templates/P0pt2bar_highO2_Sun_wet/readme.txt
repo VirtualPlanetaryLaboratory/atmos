@@ -1,4 +1,4 @@
-Running the photochemical model for a high-O2 (95% O2) Earth with the Sun remaining as the host star.
+Running the photochemical model for a high-O2 (93% O2) Earth with the Sun remaining as the host star.
 
 The surface pressure is P0=0.2 bars. Assumptions is the steady-state atmosphere described in Wordsworth & Pierrehumbert 2014,
 where a low abundances of a non-condensible gas has removed the cold trap and allowed O2 to build up (after H2O photolysis and escape of H)
@@ -18,3 +18,8 @@ Oxidized species have a 0 deposition velocity.
 in.dist close to convergence.
 
 -EWS - updated 09/18/2015 (eschwiet@uw.edu)
+
+03/04/2016: Updated in.dist to correct for earlier code error - EWS (eschwiet@uw.edu)
+NOTE: The o2 mixing ratio had to be changed to 93% in species.dat to allow model convergence at P0=0.2bar.
+
+
