@@ -20,4 +20,6 @@ in.dist close to convergence.
 -EWS - updated 09/18/2015 (eschwiet@uw.edu)
 
 03/04/2016: Updated in.dist to correct for earlier code error - EWS (eschwiet@uw.edu)
-NOTE: The o2 mixing ratio had to be changed to 93% in species.dat to allow model convergence at P0=0.2bar.
+NOTE: The o2 mixing ratio had to be changed to 92% in species.dat to allow model convergence at P0=0.2bar.
+03/14/2016: Updated species.dat, parameters.inc, and in.dist to correct for NR (no significant effect),
+            and redox calc error from Tri-diag species. 

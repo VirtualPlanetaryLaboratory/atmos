@@ -1,6 +1,6 @@
-      PARAMETER(NZ=200, NQ=37, NP=2, NQ1=NQ+2)   !particles in TRI_DIAG
+      PARAMETER(NZ=200, NQ=39, NP=2, NQ1=NQ)   !particles in TRI_DIAG
       PARAMETER(NEQ=NQ*NZ,LDA=3*NQ+1)
-      PARAMETER(NR=231, NSP=50, NSP1=NSP+1, NSP2=NSP+2, NMAX=65)
+      PARAMETER(NR=232, NSP=50, NSP1=NSP+1, NSP2=NSP+2, NMAX=65)
       PARAMETER(kw=250,kj=39)    !kw = maximum number of wl intervals, kj=number of photolysis reactions
       PARAMETER(ks=26) ! ks= # of photo. species
       PARAMETER(NAQ=10) !number of aqueous phase species

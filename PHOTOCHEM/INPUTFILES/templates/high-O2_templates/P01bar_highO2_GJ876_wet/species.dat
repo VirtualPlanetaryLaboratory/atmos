@@ -52,11 +52,11 @@ N          LL  0 0 0 0 1 0    0     0.      0.      0.        0.      2      -1.
 NO3        LL  3 0 0 0 1 0    0     0.      0.      0.        0.      0      0.      0.        
 N2O        LL  1 0 0 0 2 0    1     0.      0.      0.        0.      0      0.      0.        
 HO2NO2     LL  4 1 0 0 1 0    0     0.      0.      0.        0.      0      0.      0.        
-N2O5       LL  5 0 0 0 2 0    0     0.      0.      0.        0.      0      0.      0.        
+N2O5       LL  5 0 0 0 2 0    0     0.      0.      0.        0.      0      0.      0. 
+SO4AER     LL  4 2 0 1 0 0    0     1.0E-02 0.      0.        0.      0      0.      0.            !turbulent depostion velocity for particles (hardcoded for td)
+S8AER      LL  0 0 0 8 0 0    0     1.0E-02 0.      0.        0.      0      0.      0.            !turbulent depostion velocity for particles            
 * NQ should be the number above
 *   TRIDIAGONAL SOLVER
-SO4AER     TD  4 0 0 1 0 0    0     ???
-S8AER      TD  0 0 0 8 0 0    0     ???
 *NQ1 should be the number directly above
 *   SHORT-LIVED SPECIES
 HNO2       SL  2 1 0 0 1 0
