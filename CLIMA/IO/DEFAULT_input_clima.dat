@@ -9,7 +9,7 @@ RSURF=     0.8
 ZY=	   60.     
 DTAU0=     0.5
 ZCON=      20
-P0=        1.e-4
+P0=        7.e-6
 PGO=       1.
 G=	   980.         !Gravity (Mars=373., Earth=980., Gliese581d=1744.0, assuming 5.6 earth masses) 
 FAC=       4.0
@@ -31,7 +31,7 @@ IHAZE=     1
 monsize=   0
 icealbedo= 0
 INVERSE=   0    
-
+FRAK=      1    
 
 *******************************************************
 **   VARIABLE INPUT PARAMETERS
