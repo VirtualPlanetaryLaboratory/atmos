@@ -61,7 +61,10 @@ C     8)  X(8)  =  SO3=
 C     9)  X(9)  =  CH2OHSO3-
 C    10)  X(10) =  OH-
 C
-C   FIRST DEFINE RELEVANT CONSTANTS
+C   FIRST DEFINE RELEVANT CONSTANTS\
+
+
+
       EPS = 1.E-7         !Shawn has this as 1e-4
       INEWT = 20
       GAM15 = 8.64E+05/2.0
@@ -70,7 +73,10 @@ C   FIRST DEFINE RELEVANT CONSTANTS
       WL = 1.0
       R = 1.36E-22
       NH = JTROP  !height index of troposphere is called NH in this subroutine...
+    
       NH1 = NH + 1
+
+
 
 c      if(ISOTOPE.EQ.0) then
 C
@@ -78,6 +84,8 @@ C   MODIFY TEMPERATURE PROFILE TO DO AQUEOUS CHEMISTRY
       T_triple = 273.15
       DO 7 I=1,NH
    7  TAQ(I) = max(T(I),T_triple)
+
+ 
 C
 C   CALCULATE NORMAL HENRY'S LAW COEFFICIENTS (PHYSICAL DISSOLUTION ONLY)
 c   lets play guess the units.  looks like mol/liter/atm 
@@ -86,6 +94,7 @@ c   lets play guess the units.  looks like mol/liter/atm
       do I=1,NH
        tfac=(1./TAQ(I) - 1./298.)
        HCO2(I) = 3.5E-2 * EXP(2400.*tfac) ! updated
+      
        
       do J=1,NQ
        if(ISPEC(J).EQ.'O')   H(J,I) = 0.
@@ -170,6 +179,8 @@ c-mc should go through the henry table and look for chlorine as well as hazy spe
       enddo
       enddo
 
+C       print *, 'rain 3'
+
 C
 C   CALCULATE EQUILIBRIUM CONSTANTS FOR AQUEOUS PHASE REACTIONS
       DO 3 I=1,NH
@@ -186,7 +197,7 @@ C   8)  CH2(OH)2  +  HSO3-  =  H2O  +  CH2OHSO3-
 C   9)   H2O     =  H+  +  OH-
       R9(I) = 1.E-14 * EXP(-6716.*(1./TAQ(I) - 1./298.))
    3  CONTINUE
-
+      
 C
       DO 21 J=1,NQ
       DO 21 I=1,NZ
@@ -196,13 +207,14 @@ C
 C   NOW ESTIMATE INITIAL CONCENTRATIONS AT GRID STEP 1 ON THE
 C     FIRST CALL
 
-        ALPHARAIN = WL * 1.E-9 * 6.02E23/DEN(1)
-        CO2aq = FCO2*DEN(1)*HCO2(1)*R*TAQ(1)
+        ALPHARAIN = WL * 1.E-9 * 6.02E23/DEN(1)  
+        CO2aq = FCO2*DEN(1)*HCO2(1)*R*TAQ(1)      
         HPLUS = SQRT(R4(1)*CO2aq)
         X(LHCO3_) = R4(1)*CO2aq/HPLUS      !5
         X(LCO3_2) = R6(1)*X(LHCO3_)/HPLUS  !6
         X(LOH_) = R9(1)/HPLUS              !10
-C
+C      print *, 'rain 4'
+        
         if (ISOTOPE.EQ.0) then
            SO2g = USOL(LSO2,1)
            SO2aq = H(LSO2,1)*SO2g
@@ -316,6 +328,7 @@ C
         CALL SGESL(DJAC,NAQ,NAQ,IPVT,F,0)
       ENDIF
 C
+
       LTEST = 0
       DO 22 J=1,NAQ
       X(J) = X(J) - F(J)
@@ -346,6 +359,7 @@ C
          L1=LSXO2
          L2=LH2SX
       endif   
+  
 
       HEFF(L1) = (X(LSO2aq) + X(LHSO3_) + X(LSO3_2)
      1  + X(LH2COSO3)) / X(LSO2g)
@@ -438,11 +452,11 @@ c   what is the 2.4e-6 constant?
         RAIN(I) = 2.4E-6*EXP((6.-ZKM)/2.42)
         IF(ZKM.LT.6.) RAIN(I) = 2.4E-6
    2  CONTINUE
+ 
       DO 6 I=NH1,NZ
    6  RAIN(I) = 0.
-C
-
 
       NRAIN = NRAIN + 1
+
       RETURN
       END

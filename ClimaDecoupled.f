@@ -459,6 +459,8 @@ c*******Changed for now*********
       IF (msun.eq.18) STARR = "B5050" !K2V
       IF (msun.eq.19) STARR = "B4070" !F2V
       IF (msun.eq.76) STARR = "B5034" !GJ876
+      IF (msun.eq.20) STARR = "B5026" !M8V
+      IF (msun.eq.21) STARR = "B5030" !M5V
       
          age = 4.7
          time = age-timega

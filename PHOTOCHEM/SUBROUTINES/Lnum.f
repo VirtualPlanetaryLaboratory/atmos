@@ -163,5 +163,8 @@
       if(species.eq.'CH3C2H  ') LCH3C2H=iSP                
       if(species.eq.'HCAER   ') LHCAER=iSP
       if(species.eq.'HCAER2  ') LHCAER2=iSP
+      if(species.eq.'NH3     ') LNH3=isp
+      if(species.eq.'NH2     ') LNH2=isp
+      if(species.eq.'N2H4    ') LN2H4=isp
       RETURN
       END

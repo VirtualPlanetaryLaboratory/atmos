@@ -961,6 +961,30 @@ c 1.33432e+14 in photons/cm2/s
           print *, 'using GJ 876 Spectrum - Giddyup and Ride on Cowboy!'
       ENDIF
 
+      IF (msun .EQ. 77) THEN
+         n = 26035
+         print *, "MSUN IS 76 - scaled to F star!"
+         call sleep(1)
+         nhead = 0
+         ierr = 0
+         OPEN(UNIT=kin,
+     &    file='PHOTOCHEM/DATA/FLUX/gj876_77_units.txt',
+     &                STATUS='old')
+          print *, 'using GJ 876 Spectrum - Giddyup and Ride on Cowboy!'
+      ENDIF
+
+      IF (msun .EQ. 78) THEN
+         n = 26035
+         print *, "MSUN IS 76 - scaled to AD Leo!"
+         call sleep(1)
+         nhead = 0
+         ierr = 0
+         OPEN(UNIT=kin,
+     &    file='PHOTOCHEM/DATA/FLUX/gj876_78_units.txt',
+     &                STATUS='old')
+          print *, 'using GJ 876 Spectrum - Giddyup and Ride on Cowboy!'
+      ENDIF
+
 
       IF (msun .EQ. 16) THEN
          n = 26035
@@ -970,6 +994,18 @@ c 1.33432e+14 in photons/cm2/s
          ierr = 0
          OPEN(UNIT=kin,
      &    file='PHOTOCHEM/DATA/FLUX/adleo_dat_units.txt',
+     &                STATUS='old')
+          print *, 'Suzanne Hawley would be proud of you!'
+      ENDIF
+
+      IF (msun .EQ. 20) THEN
+         n = 26035
+         print *, "MSUN IS 20 (AD Leo w/ UV flux scaled to GJ 876)!"
+         call sleep(1)
+         nhead = 0
+         ierr = 0
+         OPEN(UNIT=kin,
+     &    file='PHOTOCHEM/DATA/FLUX/adleo_20_units.txt',
      &                STATUS='old')
           print *, 'Suzanne Hawley would be proud of you!'
       ENDIF
@@ -1010,6 +1046,32 @@ c 1.33432e+14 in photons/cm2/s
      &                STATUS='old')
           print *, 'An F star a day keeps the doctor away'
       ENDIF
+
+      IF (msun .EQ. 20) THEN
+         n = 26150
+         print *, "MSUN IS 20 (M8V)!"
+         call sleep(1)
+         nhead = 0
+         ierr = 0
+         OPEN(UNIT=kin,
+     &    file='PHOTOCHEM/DATA/FLUX/M8_active_photogrid.txt',
+     &                STATUS='old')
+          print *, 'Here is an M8 dwarf!'
+      ENDIF
+
+
+      IF (msun .EQ. 21) THEN
+         n = 26035
+         print *, "MSUN IS 21 (M5V)!"
+         call sleep(1)
+         nhead = 0
+         ierr = 0
+         OPEN(UNIT=kin,
+     &    file='PHOTOCHEM/DATA/FLUX/M5V_units.txt',
+     &                STATUS='old')
+          print *, 'M5V star!'
+      ENDIF
+
 
 
         ! Do same unit conversions as found in msun=13 option - Eddie

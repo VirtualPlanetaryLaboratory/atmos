@@ -72,7 +72,7 @@ c-mc the below are rate constants which don't fit in the 2BODY or 3BODY category
        A(J,I) = 9.46E-34*EXP(480./T(I))*DEN(I)  ! NIST 05 low Temp in N2.  Its 2x bigger in H2 or O2
       endif
 
-!   CO + OH -> CO2 + H (also CS + HS -> CS2 + H)  !SORG
+!   O + OH -> CO2 + H (also CS + HS -> CS2 + H)  !SORG
       if ((CHEMJ(1,J).EQ.'CO'.AND.CHEMJ(2,J).EQ.'OH') .OR.
      $    (CHEMJ(1,J).EQ.'CS'.AND.CHEMJ(2,J).EQ.'HS') .OR.
      $    (CHEMJ(1,J).EQ.'CSX'.AND.CHEMJ(2,J).EQ.'HS') .OR.
@@ -86,11 +86,12 @@ c-mc the below are rate constants which don't fit in the 2BODY or 3BODY category
        A(J,I) = 2.2E-33*EXP(-1780./T(I))*DEN(I)  ! I use NIST 05 for 257-277 K
       endif
 
+!gna - updated according to d-g 2011
 !   H + CO + M -> HCO + M (also H + CS + M -> HCS + M) !sorg
       if ((CHEMJ(1,J).EQ.'H'.AND.CHEMJ(2,J).EQ.'CO') .OR.
      $    (CHEMJ(1,J).EQ.'H'.AND.CHEMJ(2,J).EQ.'CS') .OR.
      $    (CHEMJ(1,J).EQ.'H'.AND.CHEMJ(2,J).EQ.'CSX')) THEN
-       A(J,I) = 1.4E-34*EXP(-100./T(I))*DEN(I)  ! I use NIST 05 for 333-1000 K, theory
+       A(J,I) = 2.0E-33*EXP(-850./T(I))*DEN(I)  ! I use NIST 05 for 333-1000 K, theory
       endif
 
 !   H2CO + H -> H2 + HCO
@@ -100,7 +101,7 @@ c-mc the below are rate constants which don't fit in the 2BODY or 3BODY category
 
 !   H + H + M -> H2 + M
       if (CHEMJ(1,J).EQ.'H'.AND.CHEMJ(2,J).EQ.'H') THEN
-       A(J,I) = 9.5E-33*(298./T(I))**1.33 * DEN(I)  ! in N2 77<T<298 !Walkauskas & Kaufman 1975 (NIST)
+       A(J,I) = 8.85E-33*(T(I)/287)**(-0.6) * DEN(I)  !gna Baluch 1994
       endif
 
 !   H + OH + M -> H2O + M
@@ -152,13 +153,13 @@ c       A(J,I) = 1.25E-32                   !NIST 2005
 
 !   C2H6 + O  ->  C2H5 + OH
       if (CHEMJ(1,J).EQ.'C2H6'.AND.CHEMJ(2,J).EQ.'O') THEN
-       A(J,I) = 8.54E-12*(T(I)/298.)**1.5 *EXP(-2900./T(I))   ! NIST 05
+       A(J,I) = 8.54E-12*(T(I)/300.)**1.5 *EXP(-2920./T(I))   ! NIST 05
       endif
 
 !   SO + O -> SO2
       if ((CHEMJ(1,J).EQ.'SO'.AND.CHEMJ(2,J).EQ.'O') .OR.
      $    (CHEMJ(1,J).EQ.'SXO'.AND.CHEMJ(2,J).EQ.'O') ) THEN
-       A(J,I) = 5.1E-31 * DEN(I)         ! NIST 2005
+       A(J,I) = 6.0E-31 * DEN(I)         ! NIST 2005 updated from D-G 2011 gna
 
 !ISOHACK - just for testing...
        if (ISOTOPE.EQ.1) then
@@ -179,7 +180,7 @@ c         if (ISOS.EQ.34) EPSILON=0.980 ! 20 permil
 c      A(J,I) = 1.2e-29 * DEN(I)   ! in H2S, but its much 1e4 slower in Ar
 c       A(J,I) = min(5.E-11, 3* A(JOO_O2,I))      ! reported rate is 3X larger for S+S in Ar than for O+O in Ar
 
-       A(J,I) = min(5.E-11, 3*  9.46E-34*EXP(480./T(I))*DEN(I))
+       A(J,I) = 1.87E-33 * EXP(-206/T(I))*DEN(I) !updated from D-G 2011 gna
        IF (CHEMJ(1,J).EQ.'SX') A(J,I)=A(J,I)*2    !doubling rate constant for "isotopic twin" reactions (Pavlov 02)
       endif
 
@@ -227,6 +228,10 @@ c          print *, A(J,I),J
 c  I'm guessing that S + CO goes at about the same rate as O + CO
 c  with the same activation energy and a 3X bigger A factor
 c-mc but yet factor of 1 out from, so this is the same as o+co
+
+       !gna - DG 2011 has:
+       !A(J,I) = 6.5E-33*EXP(-2180./T(I))*DEN(I)  ! assumed same as (CO+O)
+       
       endif
 
 !    OCS + S + M -> OCS2 + M   ! NIST 8.3e-33*Den in Ar
@@ -429,25 +434,32 @@ c get back to orig - save an in.dist - then try to lower this.
           if (CHEMJ(3,J).EQ.'CS'.AND.CHEMJ(4,J).EQ.'SXS') factor=2/3.
 
        ! Woiki et al 1995
-       A(J,I) = factor*1.9E-14 * EXP(-580./T(I)) * (T(I)/298.)**3.97 
+       A(J,I) = factor*1.9E-14 * EXP(-580./T(I)) * (T(I)/300.)**3.97 
       endif
 
 !   C2H6S + H ->  CH3SH + CH3  !SORG
-!   C2H6S + H ->  H2 + C2H4 + HS !HC   Theory. Zhang et al. [2005]. Produces C2H5S, which then can split into C2H4 + HS
+
       if ((CHEMJ(1,J).EQ.'C2H6S'.AND.CHEMJ(2,J).EQ.'H'.AND. !3 needed because there is another C2H6S + H  2 body reaction in the table
      $    CHEMJ(3,J).EQ.'CH3SH').OR. (CHEMJ(1,J).EQ.'C2H6SX'.AND.
-     $    CHEMJ(2,J).EQ.'H'.AND.CHEMJ(3,J).EQ.'CH3SXH') .or.
-     $   (CHEMJ(1,J).EQ.'C2H6S'.AND.CHEMJ(2,J).EQ.'H'.AND.
-     $    CHEMJ(3,J).EQ.'H2').or.(CHEMJ(1,J).EQ.'C2H6SX'.AND.
-     $    CHEMJ(2,J).EQ.'H'.AND.CHEMJ(3,J).EQ.'H2')  ) THEN
+     $    CHEMJ(2,J).EQ.'H'.AND.CHEMJ(3,J).EQ.'CH3SXH')) THEN
+   
 
 !gna - possible mistake here: in D.-G. et al 2011  C2H6S + H ->  H2 + C2H4 + HS is listed with different reaction rate coefficients
 !  8.34E-12    -2212.     1.6
 ! can't parse the Zhang paper so not sure what is correct.
-       A(J,I) = 4.81E-12 * EXP(-1100./T(I)) * (T(I)/298.)**1.70    ! theory - Zhang et al. 2005
+       A(J,I) = 4.81E-12 * EXP(-1100./T(I)) * (T(I)/300.)**1.70    ! theory - Zhang et al. 2005
       endif
 
-!gna
+!this used to be same as  C2H6S + H ->  CH3SH + CH3  !SORG but that is not what shawn has in 2011 paper table
+!   C2H6S + H ->  H2 + C2H4 + HS !HC   Theory. Zhang et al. [2005]. Produces C2H5S, which then can split into C2H4 + HS
+          if((CHEMJ(1,J).EQ.'C2H6S'.AND.CHEMJ(2,J).EQ.'H'.AND.
+     $    CHEMJ(3,J).EQ.'H2').or.(CHEMJ(1,J).EQ.'C2H6SX'.AND.
+     $    CHEMJ(2,J).EQ.'H'.AND.CHEMJ(3,J).EQ.'H2'))THEN
+             A(J,I) = 8.34E-12 * EXP(-2212./T(I)) * (T(I)/300.)**1.60 ! theory - Zhang et al. 2005
+          endif
+
+
+!gna (this was missing from sorg reactions.rx too so had to add it)
 !C2H6S + O -> CH3 + CH3 + SO
 !CH3SH + O -> CH3 + HSO
 !in reactions list as "WEIRD" but wasn't here...
@@ -467,7 +479,7 @@ c get back to orig - save an in.dist - then try to lower this.
       endif
 
 !gna
-!C2H6S + OH -> CH21 + CH3S + H2O
+!C2H6S + OH -> CH21 + CH3S + CS2O
 !in reactions list as "WEIRD" but wasn't here...
       if ((CHEMJ(1,J).EQ.'C2H6S'.AND.CHEMJ(2,J).EQ.'OH'.AND. 
      $    CHEMJ(3,J).EQ.'CH21') )THEN
@@ -476,6 +488,14 @@ c get back to orig - save an in.dist - then try to lower this.
 
 !gna
 !C2H6S2 + OH -> CH3 + CH3SH + S
+!in reactions list as "WEIRD" but wasn't here...
+      if ((CHEMJ(1,J).EQ.'C2H6S2'.AND.CHEMJ(2,J).EQ.'OH'.AND. 
+     $    CHEMJ(3,J).EQ.'CH3') )THEN
+      A(J,I) = 6.00E-11 * EXP(400./T(I)) * (T(I)/298.)**1.2    ! Sander 2006
+      endif
+
+!gna
+!C2H6S + O --> CH3 + Ch3 + SO
 !in reactions list as "WEIRD" but wasn't here...
       if ((CHEMJ(1,J).EQ.'C2H6S2'.AND.CHEMJ(2,J).EQ.'OH'.AND. 
      $    CHEMJ(3,J).EQ.'CH3') )THEN
@@ -539,15 +559,40 @@ c get back to orig - save an in.dist - then try to lower this.
       A(J,I) =  1.5E-13*(1.+0.6*DEN(I))   ! assumed samed as k(CO+OH)
       endif
 
+!gna
+!CH3SH + OH --> CH3S + H2O
+!in reactions list as "WEIRD" but wasn't here...
+      if ((CHEMJ(1,J).EQ.'CH3SH'.AND.CHEMJ(2,J).EQ.'OH'.AND. 
+     $    CHEMJ(3,J).EQ.'CH3S') )THEN
+      A(J,I) = 9.90E-12 * EXP(360/T(I)) * (T(I)/298.)**1.07    ! Sander 2006
+      endif
 
 
+!gna
+!HCO + M --> H + CO + M 
+!in reactions list as "WEIRD" but wasn't here...
+      if ((CHEMJ(1,J).EQ.'HCO'.AND.CHEMJ(2,J).EQ.'M'.AND. 
+     $    CHEMJ(3,J).EQ.'H') )THEN
+      A(J,I) = 6.0E-11 * EXP(-7721/T(I)) * DEN(I)   !Krasnoperov et al 2004
+      endif
+
+!gna
+!HNO + M --> NO + H + M
+!in reactions list as "WEIRD" but wasn't here...
+      if ((CHEMJ(1,J).EQ.'HNO'.AND.CHEMJ(2,J).EQ.'M'.AND. 
+     $    CHEMJ(3,J).EQ.'NO') )THEN
+       A(J,I) = 1.04E-6 * EXP(28618/T(I))*(T(I)/298.)**(-1.61)*DEN(I) !Tsang 1986
+      endif
+
+
+!gna -- ordering was wrong of CHEMJ indices compared to reactions.rx for sorg template 
 
 !   CH3S + HCS ->CS + CH3SH !SORG
-      if ((CHEMJ(1,J).EQ.'HCS'.AND.CHEMJ(2,J).EQ.'CH3S').OR.
+      if ((CHEMJ(2,J).EQ.'HCS'.AND.CHEMJ(1,J).EQ.'CH3S').OR.
      $    (CHEMJ(1,J).EQ.'HCSX'.AND.CHEMJ(2,J).EQ.'CH3S').OR.
      $    (CHEMJ(1,J).EQ.'HCS'.AND.CHEMJ(2,J).EQ.'CH3SX')) THEN
 
-         A(J,I) = 1.18E-12*EXP(-910./T(I))*(T(I)/298.)**0.65  !Liu et al. 2006 (via NIST)
+         A(J,I) = 1.18E-12*EXP(-910./T(I))*(T(I)/300.)**0.65  !Liu et al. 2006 (via NIST)
 
          if (CHEMJ(1,J).EQ.'HCSX'.OR.CHEMJ(2,J).EQ.'CH3SX')
      $      A(J,I)=A(J,I)/2.   !halving of isotopic rate due to multiple channels
@@ -583,6 +628,11 @@ c get back to orig - save an in.dist - then try to lower this.
       B0 = 1.26E-18 * EXP(-721./T(I)) / T(I)**3.1
       BI = 3.E-10
       A(J,I) = B0*BI*DEN(I)/(B0*DEN(I) + BI)
+
+      !gna - shawn has diff:
+      !B0 = 2.64E-26 * EXP(-721./T(I)) / (T(I)/300.)**3.1
+      !BI = 3.E-10
+      !A(J,I) = B0*BI*DEN(I)/(B0*DEN(I) + BI)    
       endif
 
 !  CH23 + CO -> CH2CO
@@ -601,7 +651,7 @@ c get back to orig - save an in.dist - then try to lower this.
 !  C2H2 + H -> C2H3
       if (CHEMJ(1,J).EQ.'C2H2'.AND.CHEMJ(2,J).EQ.'H') THEN
       B0 = 2.6E-31
-      BI = 3.8E-11 * EXP(-1374./T(I))
+      BI = 3.8E-11 * EXP(-1374./T(I)) !gna shawn has 8.3E-11 in paper 
       A(J,I) = B0*BI*DEN(I)/(B0*DEN(I) + BI)
       endif
 
@@ -639,7 +689,7 @@ c get back to orig - save an in.dist - then try to lower this.
       A(J,I) = B0*BI*DEN(I)/(B0*DEN(I) + BI)
       endif
 
-!  C2H5 + CH3 -> C3H8
+!  C2H5 + CH3 -> C3H8 !gna shawn has diff
       if (CHEMJ(1,J).EQ.'C2H5'.AND.CHEMJ(2,J).EQ.'CH3') THEN
       B0 = 2.519E-16 / T(I)**2.458
       BI = 8.12E-10 / T(I)**0.5
@@ -648,7 +698,7 @@ c get back to orig - save an in.dist - then try to lower this.
 
 !  C3H8 + O -> C3H7 + OH
       if (CHEMJ(1,J).EQ.'C3H8'.AND.CHEMJ(2,J).EQ.'O') THEN
-      A(J,I)=1.6E-11 * EXP(-2900./T(I)) + 2.2E-11 * EXP(-2250./T(I))
+      A(J,I)=1.6E-11 * EXP(-2900./T(I)) + 2.2E-11 * EXP(-2200./T(I))
       endif
 
 ! C2H3 + CH3 -> C3H6

@@ -81,7 +81,7 @@ C
       if(ISOTOPE.EQ.0) write(14, 107) TP(LS8AER),TL(LS8AER)
 c      if(ISOTOPE.EQ.1) write(14, 107) TP(LSXS7AER),TL(LSXS7AER)  !ISO-UNHACK 
  
-
+  
      
  107  format(/5X,'TP =',1PE10.3,2X,'TL =',E10.3)
 C
@@ -612,8 +612,8 @@ C   COMPUTE CONSERVATION OF SULFUR
 
       if(ISOTOPE.EQ.0) then 
       SO4LOS = TLOSS(LH2SO4) + TLOSS(LSO4AER)   ! these are redundant when taking accounts
-      S8LOS = 8.*(TLOSS(LS8) + TLOSS(LS8AER))   !TLOSS is rainout+deposition
-    !      S8LOS = 8.*TLOSS(LS8AER)   !TLOSS is rainout+deposition
+corig      S8LOS = 8.*(TLOSS(LS8) + TLOSS(LS8AER))   !TLOSS is rainout+deposition
+      S8LOS = 8.*TLOSS(LS8AER)   !TLOSS is rainout+deposition
 !are the above still correct and/or relevant?
       endif
 
@@ -624,7 +624,7 @@ C   COMPUTE CONSERVATION OF SULFUR
      2  2X,'S prod =',E13.6,2X,'SO4LOS =',E13.6,2X,'8 S8LOSS =',
      3  E13.6,2X, 'sulrain =',E10.3,3x,'Difference =',E10.3)
 
-
+      
 C compute net model redox
 
       oxid_in_new=0.0
@@ -635,60 +635,35 @@ C compute net model redox
       oxy_rain_new=0.0
 
       do i=1,NQ1
-         print *, ISPEC(I),redoxstate(I)
          if (redoxstate(I) .GT. 0.) then
-            
-            !print *, ISPEC(I),FLOW(I)
+            print 888, ISPEC(I),redoxstate(I)
+c            print 889, ISPEC(I),FLOW(I)
             oxid_in_new=oxid_in_new + FLOW(I)*redoxstate(I)
             oxid_out_new=oxid_out_new + FUP(I)*redoxstate(I)
-            !print *, 'fup', fup(i)
             oxy_rain_new=oxy_rain_new + SR(I)*redoxstate(I)
-           ! print *,'oxy i, ispec, sr',  i, ispec(i), sr(i)
-            !print *, i , ispec(i), oxid_out_new
          else if (redoxstate(I) .LT. 0) then
-            !print 888, ISPEC(I),redoxstate(I)         
+c            print 888, ISPEC(I),redoxstate(I)         
             red_in_new=red_in_new+ FLOW(I)*redoxstate(I)*(-1.0)
             red_out_new=red_out_new + FUP(I)*redoxstate(I)*(-1.0)
             red_rain_new=red_rain_new + SR(I)*redoxstate(I)*(-1.0)
-           !  print *,'red i, ispec, sr',  i, ispec(i), sr(i)
          endif
+
       enddo
  888  format (A8,2X,F5.1)
 c 889  format (A8,2X,1PE10.3)
 
-      
-!distributed fluxes 
+      if(ISOTOPE.EQ.0) then 
+!what's left from Kevin's original scheme? (these are species that are potentially distributed+vdep
+
       oxid_in_new=oxid_in_new + 2.0*distflux(LO2)  
 
       red_in_new=red_in_new + distflux(LCO) + distflux(LH2) + 
      $   3.*distflux(LH2S)! +1.5*distflux(LHCL)    !ACK
-      
-      oxid_rain_new = oxid_out_new
-      red_rain_new = red_rain_new 
-      
+      endif !end isoskip
+
+     
 !SO2 has redoxstate of 0, so is not included in the redox computation...
 !seems like I could fold these into the redox computation given that redoxstate for SO2 should be 0 (check)
-
-      !particle test
-!      do JJ=1,NP
-!         aero = 0
-!            if (JJ.eq.1)  nparti = LSO4AER
-!            if (JJ.eq.2)  nparti = LS8AER
-!            if (JJ.eq.3)  nparti = LHCAER
-!            if (JJ.eq.4)  nparti = LHCAER2
-!          do J=1, NZ
-!           aero = aero + aersol(J,JJ)*conver(J,JJ)*
-!     $     redoxstate(nparti)
-!         enddo
-!          if(JJ.gt.1)  red_out_new = red_out_new + aero*(-1.0)
-!          if(JJ.gt.1)  print *, 'jj gt 1'
-!          if(JJ.eq.1)  oxid_out_new = oxid_out_new + aero
-!          if(JJ.eq.1)  print *, 'jj eq 1'
-!          print *, jj, 'jj, aero ', aero, redoxstate(nparti)
-!      enddo
-
-
-   
 
 
 
@@ -698,10 +673,12 @@ c 889  format (A8,2X,1PE10.3)
       redox_new = red_in_new - red_out_new -oxid_in_new + oxid_out_new
      $  -red_Rain_new + oxy_rain_new
 
+
       write(14, 679) oxid_in_new,oxid_out_new,red_in_new,red_out_new,
      $  red_RAIN_new,oxy_rain_new, redox_new
       write(19, 679) oxid_in_new,oxid_out_new,red_in_new,red_out_new,
      $  red_RAIN_new,oxy_rain_new, redox_new
+
 
 
       print 667 ,redox_new, redox_new/oxid_in_new   !mc - for ease in debugging lightning print to screen
@@ -733,6 +710,7 @@ c 680  format(2(1PE10.2,1X) ,13(E10.3,1X))
      2  2X,'oxid_out =',E13.6,2X,'red_in =',E13.6,2X,'red_out =',
      2  E13.6,2X,'red_RAIN =',E10.3,2X,'oxy_rain =',E10.3,
      3  3X, 'redox =',E10.3)
+!GNA : why this line below commented?
 !      red_out = 0.5*F_esc_H + F_esc_H2 + FUP(LCO)                         ! red leaving through upper boundary (I'm assuming KZ recomputed this to check F_esc_H versus FUP(LH2)?)
 !      redox = red_in - red_out -oxid_in + oxid_out -red_Rain + oxy_rain
  !     write(14, 679) oxid_in,oxid_out,red_in,red_out, red_RAIN,
@@ -748,7 +726,7 @@ c last and most terse
 
   973 format(1x,1P23E10.2)
 
-
+     
 
 ! including  Tropopause O2 mixing ratio, min Tropospheric O2 mixing ratio
 ! also want to include height of maximum flux of S8, then J_SO2_MIF at 
@@ -820,7 +798,6 @@ c-mc - three lines below should be cut - perhaps usable for JSO2
 
 
       if (S8los.gt.1e4) then       !if there is a decent amount of S8 deposition
-
          do i=1,NZ
 
             If (YP(LS8AER,I).gt.1e-6) then !test only in regions where S8 is produced
@@ -845,7 +822,9 @@ c-mc - three lines below should be cut - perhaps usable for JSO2
       endif
 
  998  continue
+ 
      
+
       write(21,975) usol(LO2,1), usol(LH2,1), usol(LCO,1),usol(LCH4,1),
      1  FLOW(LO2), FLOW(LCH4), FLOW(LH2), FLOW(LCO), distflux(LSO2),          
      2  FLOW(LH2S), FUP(LH2), FUP(LH), TLOSS(LH2CO), TLOSS(LH2O2),
@@ -860,7 +839,7 @@ c-mc - three lines below should be cut - perhaps usable for JSO2
  975  format(46(1PE10.3,1X))
 
       endif  !ending an isotope skip loop
-
+      
       write(14, 179)
  179  format(/1X,'INTEGRATED REACTION RATES'/)
       write(14, 191)

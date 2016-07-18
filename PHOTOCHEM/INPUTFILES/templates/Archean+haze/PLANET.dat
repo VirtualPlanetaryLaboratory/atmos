@@ -26,6 +26,8 @@ choices for msun (these numbers are from photgrid.f)
       msun = 18    !K2V
       msun = 19    !F2V
       msun = 76    !GJ876
+      msun = 20    !M8V
+      msun = 21    !M5V
 
 
 

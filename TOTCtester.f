@@ -709,6 +709,7 @@ C Reading the altitude, temperature, and water profiles from the climate code
 
 C ***** READ THE CHEMISTRY DATA CARDS *****
 corig      read (9,200) CHEMJ
+      print *, 'this is nr', NR
       read (9,200) CHEMJ
 corig 200  FORMAT(10X,A8,2X,A8,2X,A8,2X,A8,2X,A8)
  200  FORMAT(A8,2X,A8,2X,A8,2X,A8,2X,A8)
@@ -739,12 +740,14 @@ C ***** REPLACE HOLLERITH LABELS WITH SPECIES NUMBERS IN JCHEM *****
       DO 5 M=1,5
       IF(CHEMJ(M,J).EQ.' ') GO TO 5
       DO 6 I=1,NSP2
+       print *, CHEMJ(M,J),ISPEC(I)
       IF(CHEMJ(M,J).NE.ISPEC(I)) GO TO 6
       JCHEM(M,J) = I
       GO TO 5
    6  CONTINUE
       IERR = J
       print *, ISPEC
+      print *, 'ispec(i)', ISPEC(i)
       print *, (CHEMJ(L,J),L=1,5)
       GOTO 25     ! quit; error in reactions
    5  CONTINUE
@@ -919,6 +922,9 @@ C uses Kopparapu et al 2012 scalings for earth-equivalent distance
          IF (msun.eq.18) FSCALE = FSCALE * 0.950
          IF (msun.eq.19) FSCALE = FSCALE * 1.110
          IF (msun.eq.76) FSCALE = FSCALE * 0.866
+         IF (msun.eq.21) FSCALE = FSCALE * 0.920
+         IF (msun.eq.20) FSCALE = FSCALE * 0.911
+         
          print *, 'fscale is ', fscale
       ENDIF
 
@@ -1210,7 +1216,7 @@ c      TSTOP = 1.E14    !for runs that are unstable...
 
 
       TSTOP = 1.E17    !as it was...
-      NSTEPS = 100000
+      NSTEPS = 10000
 C      ICOUPLE = 1      ! for standalone mode this should probably be the default
 
 
