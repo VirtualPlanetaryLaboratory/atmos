@@ -580,7 +580,7 @@ C - READ IN SPECIES NAMES, ATOMIC NUMBERS, AND BOUNDARY CONDITIONS
          if (scan(species,'*').LT.1) then    !ignore comments in species.dat file
             iSP=iSP+1
             ISPEC(iSP)=species
-            print *, iSP, species
+         !   print *, iSP, species
             call LNUM(ISPEC(isP),iSP)  !this loads the "Lnumbers" for ease of use later in the code
 
               backspace 4  !return to previous line in species.dat file
@@ -609,7 +609,7 @@ C - READ IN SPECIES NAMES, ATOMIC NUMBERS, AND BOUNDARY CONDITIONS
                   endif
                   read(4,210) LBC, XX,YY,ZZ,XXX,LG,YYY,ZZZ !read in boundary conditions
                endif
-               print *, LBC
+            !   print *, LBC
                LBOUND(iLL)=LBC
                VDEP0(iLL)=XX
                FIXEDMR(iLL)=YY
@@ -709,7 +709,7 @@ C Reading the altitude, temperature, and water profiles from the climate code
 
 C ***** READ THE CHEMISTRY DATA CARDS *****
 corig      read (9,200) CHEMJ
-      print *, 'this is nr', NR
+ !     print *, 'this is nr', NR
       read (9,200) CHEMJ
 corig 200  FORMAT(10X,A8,2X,A8,2X,A8,2X,A8,2X,A8)
  200  FORMAT(A8,2X,A8,2X,A8,2X,A8,2X,A8)
@@ -740,7 +740,7 @@ C ***** REPLACE HOLLERITH LABELS WITH SPECIES NUMBERS IN JCHEM *****
       DO 5 M=1,5
       IF(CHEMJ(M,J).EQ.' ') GO TO 5
       DO 6 I=1,NSP2
-       print *, CHEMJ(M,J),ISPEC(I)
+  !     print *, CHEMJ(M,J),ISPEC(I)
       IF(CHEMJ(M,J).NE.ISPEC(I)) GO TO 6
       JCHEM(M,J) = I
       GO TO 5
