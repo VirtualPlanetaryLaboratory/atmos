@@ -1024,7 +1024,7 @@ c 1.33432e+14 in photons/cm2/s
 
 
       IF (msun .EQ. 18) THEN
-         n = 26035
+         n = 26034
          print *, "MSUN IS 18 (K2V)!"
          call sleep(1)
          nhead = 0
