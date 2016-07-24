@@ -8,7 +8,7 @@
 
       INCLUDE 'CLIMA/INCLUDE/header.inc'
       PARAMETER(NSOL=38)
-      DIMENSION SOLINT(NSOL), s(296) ! For 292 stars
+      DIMENSION SOLINT(NSOL), s(297) ! For 292 stars
       CHARACTER(5) :: STARR*5
       real :: s, TOTAL 
 
@@ -16,7 +16,7 @@
 
 !      read(10,*)  Removed labels so no need to skip line 
         do I =1,NSOL
-          read(10,*)a,WL1,WL2,(s(k), k=1,296)
+          read(10,*)a,WL1,WL2,(s(k), k=1,297)
 c          print *, read n,WL1,WL2,(s(k), k=1,296)
           IF (STARR== "Sun") THEN
              SOLINT(I)=s(1)
@@ -1094,6 +1094,9 @@ c             print *, SOLINT(I)
       ELSE IF (STARR =="C5072") THEN
              SOLINT(I)=s(292)
 !             print *, SOLINT(I)
+      ELSE IF (STARR =="M5V") THEN
+             SOLINT(I)=s(297)
+             print *, SOLINT(I)
 
       ENDIF
 

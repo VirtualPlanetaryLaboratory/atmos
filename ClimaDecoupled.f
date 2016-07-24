@@ -293,8 +293,11 @@ C  INPUT FILES
       OPEN (unit=21,file= DIRDATA//'/BIG_DATAFILE.DAT',status='old')
       OPEN(unit=66, file = DIRINOUT//'/weight_factors.txt')
 c      OPEN(unit=10, file=DIRDATA//'/GJ581_1AU.dat',status='old')
+c      OPEN(unit=10, 
+c     .        file=DIRDATA//'/STELLAR_SPECTRA_new.pdat',status='old')
       OPEN(unit=10, 
-     .        file=DIRDATA//'/STELLAR_SPECTRA_new.pdat',status='old')
+     .        file=DIRDATA//'/STELLAR_SPECTRA_update.pdat',status='old')
+!EWS - new stellar spectra updated
       OPEN(unit=30, file=DIRDATA//'/FinalCIAcoeffs2.dat', status='old') 
 c      OPEN(unit=30, file=DIRDATA//'/FinalCIAcoeffs.dat', status='old') 
 c      OPEN(unit=89, file=DIRINOUT//'/TPRIND.dat')   !write tau sums experiment
@@ -460,7 +463,8 @@ c*******Changed for now*********
       IF (msun.eq.19) STARR = "B4070" !F2V
       IF (msun.eq.76) STARR = "B5034" !GJ876
       IF (msun.eq.20) STARR = "B5026" !M8V
-      IF (msun.eq.21) STARR = "B5030" !M5V
+!      IF (msun.eq.21) STARR = "B5030" !M5V
+      IF (msun.eq.21) STARR = "M5V" !EWS - testing this implementation 
       
          age = 4.7
          time = age-timega
