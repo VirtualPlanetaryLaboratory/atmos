@@ -977,11 +977,9 @@ c read in formatted input data file
 !gna - we need to make it so that T = T_new
       IF(ICOUPLE.EQ.1) THEN
          DO I=1, NZ
-            IF(T_new(I).gt.100) THEN !gna - avoid some crazy unconverged clima solutions that make photo not converge -- better ideas to check for this?
-               IF(T_new(I).lt.400) THEN
+
                T(I) = T_new(I)
-               ENDIF
-            ENDIF
+
          END DO
          print *, 'T0 is'
          print *, T(1)
