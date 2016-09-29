@@ -1,6 +1,6 @@
 *** Set parameters for the high CO2/CH4 photochemical model ***
 * Write the number after the 11th space
-*2345678901Here      
+*2345678901Here
 
 AGL=       0.5
 ISEASON=   1
@@ -15,6 +15,7 @@ HCDENS=    0.63
 ICOUPLE=   0
 NEWSPEC=   1
 monsize=   0
+ZY=        50.
 
 C ***** SET MODEL PARAMETERS *****
 C     AGL = DIURNAL AVERAGING FACTOR FOR PHOTORATES
@@ -47,3 +48,4 @@ C      	      = 1 for 0.01 um monomers for fractal particles
 C	      = 2 for 0.02 um monomers for fractal particles
 C	      = 3 for 0.07 um monomers for fractal particles
 C	      = 4 for 0.10 um monomers for fractal particles
+C     ZY      = solar zenith angle
