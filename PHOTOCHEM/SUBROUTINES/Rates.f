@@ -8,7 +8,7 @@
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/ISOBLOK.inc'
       real*8 k0,kinf
 
-c-mc rate constant units are cm^3/mol/s
+!-mc rate constant units are cm^3/mol/s
 
       if (ISOTOPE.EQ.1) then
        ! chemical reaction file
@@ -18,26 +18,42 @@ c-mc rate constant units are cm^3/mol/s
        open(9, file='PHOTOCHEM/INPUTFILES/reactions.rx',status='OLD')
       endif
 
+!FIRST LINE OF YOUR REACTIONS.RX FILE MUST BE FOR HEADER INFORMAITON
+!skips first line of reactions.rx
+      read(9,*)
+667   FORMAT(70X,E9.3,2X,E10.3,2X,E10.3,2X,E9.3,2X,E9.3,2X,E9.3,2X,
+     $      E10.3,2X,E10.3,2X,E9.3,2X,E9.3) !two, three, & capture rate reaction rates
+!     668   FORMAT(58X,E9.2,3X,E9.2,2X,2F5.2)   This is an old format statement for three body reaction rates
+!     but due to the new format now based on KIDA, we can format two body, three body and capture rate theory all the same way
 
- 667   FORMAT(58X,E9.2,3X,F8.2)            !for two body reaction rates
- 668   FORMAT(58X,E9.2,3X,E9.2,2X,2F5.2)   !for three body reaction rates
 
        do J=1,NR
-C READ IN TWO BODY REACTION RATES
+! Read in two body reaction rates
           if (REACTYPE(J) .EQ. '2BODY') then
            !read in Arhenius and Temperature factor (note TFAC contains the negative sign. not standard practice)
-           read (9,667) ARH, TFAC         
+           read (9,667) alpha_0,beta_0,gamma_0,f_0,g_0
 
 
           do i=1,nz
-            A(J,I) = ARH * EXP (TFAC/T(I))   !two body reaction rates
+            A(J,I) = alpha_0 * EXP (-1.*beta_0/T(I))   !two body reaction rates
+          enddo
+
+! Read in 2BCRT reaction rates
+          else if (REACTYPE(J) .EQ. '2BCRT') then
+           !read in Arhenius and Temperature factor (note TFAC contains the negative sign. not standard practice)
+           read (9,667) alpha_0,beta_0,gamma_0,f_0,g_0
+
+
+           do i=1,nz
+             A(J,I) = alpha_0 * EXP (beta_0/T(I))
            enddo
 
-C READ IN THREE BODY REACTION RATES
+! Read in three body reaction rates
           else if (REACTYPE(J) .EQ. '3BODY') then
-             read(9,668) B,C,D,E          !read in K0, Kinf, T0exp, Tinfexp
-                                          !A(J,I) = TBDY(K0,KINF,T0exp,Tinfexp,T,DEN)
-c             print *, J, B,C,D,E
+             read(9,667) alpha_0,beta_0,gamma_0,f_0,g_0,alpha_inf,
+     $      beta_inf,gamma_inf,f_inf,g_inf
+
+
              if (PLANET .EQ. 'MARS') then
                 B=B*2.5      !multiply low density rate by 2.5 to account for CO2 rather than N2 as background gas (Nair, 94)
              endif
@@ -231,7 +247,7 @@ c-mc but yet factor of 1 out from, so this is the same as o+co
 
        !gna - DG 2011 has:
        !A(J,I) = 6.5E-33*EXP(-2180./T(I))*DEN(I)  ! assumed same as (CO+O)
-       
+
       endif
 
 !    OCS + S + M -> OCS2 + M   ! NIST 8.3e-33*Den in Ar
@@ -434,7 +450,7 @@ c get back to orig - save an in.dist - then try to lower this.
           if (CHEMJ(3,J).EQ.'CS'.AND.CHEMJ(4,J).EQ.'SXS') factor=2/3.
 
        ! Woiki et al 1995
-       A(J,I) = factor*1.9E-14 * EXP(-580./T(I)) * (T(I)/300.)**3.97 
+       A(J,I) = factor*1.9E-14 * EXP(-580./T(I)) * (T(I)/300.)**3.97
       endif
 
 !   C2H6S + H ->  CH3SH + CH3  !SORG
@@ -442,7 +458,7 @@ c get back to orig - save an in.dist - then try to lower this.
       if ((CHEMJ(1,J).EQ.'C2H6S'.AND.CHEMJ(2,J).EQ.'H'.AND. !3 needed because there is another C2H6S + H  2 body reaction in the table
      $    CHEMJ(3,J).EQ.'CH3SH').OR. (CHEMJ(1,J).EQ.'C2H6SX'.AND.
      $    CHEMJ(2,J).EQ.'H'.AND.CHEMJ(3,J).EQ.'CH3SXH')) THEN
-   
+
 
 !gna - possible mistake here: in D.-G. et al 2011  C2H6S + H ->  H2 + C2H4 + HS is listed with different reaction rate coefficients
 !  8.34E-12    -2212.     1.6
@@ -463,8 +479,8 @@ c get back to orig - save an in.dist - then try to lower this.
 !C2H6S + O -> CH3 + CH3 + SO
 !CH3SH + O -> CH3 + HSO
 !in reactions list as "WEIRD" but wasn't here...
-      if ((CHEMJ(1,J).EQ.'C2H6S'.AND.CHEMJ(2,J).EQ.'O'.AND. 
-     $    CHEMJ(3,J).EQ.'CH3') .OR. 
+      if ((CHEMJ(1,J).EQ.'C2H6S'.AND.CHEMJ(2,J).EQ.'O'.AND.
+     $    CHEMJ(3,J).EQ.'CH3') .OR.
      $   (CHEMJ(1,J).EQ.'C2H6SH'.AND.CHEMJ(2,J).EQ.'O'.AND.
      $    CHEMJ(3,J).EQ.'CH3') )THEN
       A(J,I) = 1.30E-11 * EXP(-410./T(I)) * (T(I)/298.)**1.1    ! Sander 2006
@@ -481,7 +497,7 @@ c get back to orig - save an in.dist - then try to lower this.
 !gna
 !C2H6S + OH -> CH21 + CH3S + CS2O
 !in reactions list as "WEIRD" but wasn't here...
-      if ((CHEMJ(1,J).EQ.'C2H6S'.AND.CHEMJ(2,J).EQ.'OH'.AND. 
+      if ((CHEMJ(1,J).EQ.'C2H6S'.AND.CHEMJ(2,J).EQ.'OH'.AND.
      $    CHEMJ(3,J).EQ.'CH21') )THEN
       A(J,I) = 1.10E-11 * EXP(400./T(I)) * (T(I)/298.)**1.1    ! Sander 2006
       endif
@@ -489,7 +505,7 @@ c get back to orig - save an in.dist - then try to lower this.
 !gna
 !C2H6S2 + OH -> CH3 + CH3SH + S
 !in reactions list as "WEIRD" but wasn't here...
-      if ((CHEMJ(1,J).EQ.'C2H6S2'.AND.CHEMJ(2,J).EQ.'OH'.AND. 
+      if ((CHEMJ(1,J).EQ.'C2H6S2'.AND.CHEMJ(2,J).EQ.'OH'.AND.
      $    CHEMJ(3,J).EQ.'CH3') )THEN
       A(J,I) = 6.00E-11 * EXP(400./T(I)) * (T(I)/298.)**1.2    ! Sander 2006
       endif
@@ -497,7 +513,7 @@ c get back to orig - save an in.dist - then try to lower this.
 !gna
 !C2H6S + O --> CH3 + Ch3 + SO
 !in reactions list as "WEIRD" but wasn't here...
-      if ((CHEMJ(1,J).EQ.'C2H6S2'.AND.CHEMJ(2,J).EQ.'OH'.AND. 
+      if ((CHEMJ(1,J).EQ.'C2H6S2'.AND.CHEMJ(2,J).EQ.'OH'.AND.
      $    CHEMJ(3,J).EQ.'CH3') )THEN
       A(J,I) = 6.00E-11 * EXP(400./T(I)) * (T(I)/298.)**1.2    ! Sander 2006
       endif
@@ -505,7 +521,7 @@ c get back to orig - save an in.dist - then try to lower this.
 !gna
 !CH3 + OH -> CH3O + H
 !in reactions list as "WEIRD" but wasn't here...
-      if ((CHEMJ(1,J).EQ.'CH3'.AND.CHEMJ(2,J).EQ.'OH'.AND. 
+      if ((CHEMJ(1,J).EQ.'CH3'.AND.CHEMJ(2,J).EQ.'OH'.AND.
      $    CHEMJ(3,J).EQ.'CH3O') )THEN
       A(J,I) = 9.3E-11 * EXP(-1606/T(I)) * (T(I)/298.)**1.    ! Jasper 2007
       endif
@@ -513,7 +529,7 @@ c get back to orig - save an in.dist - then try to lower this.
 !gna
 !CH3 + HNO -> CH4 + NO
 !in reactions list as "WEIRD" but wasn't here...
-      if ((CHEMJ(1,J).EQ.'CH3'.AND.CHEMJ(2,J).EQ.'HNO'.AND. 
+      if ((CHEMJ(1,J).EQ.'CH3'.AND.CHEMJ(2,J).EQ.'HNO'.AND.
      $    CHEMJ(3,J).EQ.'CH4') )THEN
       A(J,I) = 1.85E-11 * EXP(-176/T(I)) * (T(I)/298.)**0.6    ! Choi and Lin 2005
       endif
@@ -522,7 +538,7 @@ c get back to orig - save an in.dist - then try to lower this.
 !gna
 !H2S + H -> H2 + HS
 !in reactions list as "WEIRD" but wasn't here...
-      if ((CHEMJ(1,J).EQ.'H2S'.AND.CHEMJ(2,J).EQ.'H'.AND. 
+      if ((CHEMJ(1,J).EQ.'H2S'.AND.CHEMJ(2,J).EQ.'H'.AND.
      $    CHEMJ(3,J).EQ.'H2') )THEN
       A(J,I) = 3.66E-12 * EXP(-455/T(I)) * (T(I)/298.)**1.94    ! Choi and Lin 2005
       endif
@@ -530,7 +546,7 @@ c get back to orig - save an in.dist - then try to lower this.
 !gna
 !SO + HCO -> HSO + CO
 !in reactions list as "WEIRD" but wasn't here...
-      if ((CHEMJ(1,J).EQ.'SO'.AND.CHEMJ(2,J).EQ.'HCO'.AND. 
+      if ((CHEMJ(1,J).EQ.'SO'.AND.CHEMJ(2,J).EQ.'HCO'.AND.
      $    CHEMJ(3,J).EQ.'HSO') )THEN
       A(J,I) = 5.6E-12 *  * (T(I)/298.)**0.4    ! Kasting 1990
       endif
@@ -538,7 +554,7 @@ c get back to orig - save an in.dist - then try to lower this.
 !gna
 !NH2 + H -> NH3
 !in reactions list as "WEIRD" but wasn't here...
-      if ((CHEMJ(1,J).EQ.'NH2'.AND.CHEMJ(2,J).EQ.'H'.AND. 
+      if ((CHEMJ(1,J).EQ.'NH2'.AND.CHEMJ(2,J).EQ.'H'.AND.
      $    CHEMJ(3,J).EQ.'NH3') )THEN
       A(J,I) = (6.E-30*DEN(I))/(1.+3.E-20*DEN(I))    ! Gordon 1971
       endif
@@ -546,7 +562,7 @@ c get back to orig - save an in.dist - then try to lower this.
 !gna
 !NH + H -> NH2
 !in reactions list as "WEIRD" but wasn't here...
-      if ((CHEMJ(1,J).EQ.'NH'.AND.CHEMJ(2,J).EQ.'H'.AND. 
+      if ((CHEMJ(1,J).EQ.'NH'.AND.CHEMJ(2,J).EQ.'H'.AND.
      $    CHEMJ(3,J).EQ.'NH2') )THEN
       A(J,I) =  (6.E-30*DEN(I))/(1.+3.E-20*DEN(I))   ! Kasting 1982
       endif
@@ -554,7 +570,7 @@ c get back to orig - save an in.dist - then try to lower this.
 !gna
 !CS + HS -> CS2 + H
 !in reactions list as "WEIRD" but wasn't here...
-      if ((CHEMJ(1,J).EQ.'CS'.AND.CHEMJ(2,J).EQ.'CS'.AND. 
+      if ((CHEMJ(1,J).EQ.'CS'.AND.CHEMJ(2,J).EQ.'CS'.AND.
      $    CHEMJ(3,J).EQ.'CS2') )THEN
       A(J,I) =  1.5E-13*(1.+0.6*DEN(I))   ! assumed samed as k(CO+OH)
       endif
@@ -562,16 +578,16 @@ c get back to orig - save an in.dist - then try to lower this.
 !gna
 !CH3SH + OH --> CH3S + H2O
 !in reactions list as "WEIRD" but wasn't here...
-      if ((CHEMJ(1,J).EQ.'CH3SH'.AND.CHEMJ(2,J).EQ.'OH'.AND. 
+      if ((CHEMJ(1,J).EQ.'CH3SH'.AND.CHEMJ(2,J).EQ.'OH'.AND.
      $    CHEMJ(3,J).EQ.'CH3S') )THEN
       A(J,I) = 9.90E-12 * EXP(360/T(I)) * (T(I)/298.)**1.07    ! Sander 2006
       endif
 
 
 !gna
-!HCO + M --> H + CO + M 
+!HCO + M --> H + CO + M
 !in reactions list as "WEIRD" but wasn't here...
-      if ((CHEMJ(1,J).EQ.'HCO'.AND.CHEMJ(2,J).EQ.'M'.AND. 
+      if ((CHEMJ(1,J).EQ.'HCO'.AND.CHEMJ(2,J).EQ.'M'.AND.
      $    CHEMJ(3,J).EQ.'H') )THEN
       A(J,I) = 6.0E-11 * EXP(-7721/T(I)) * DEN(I)   !Krasnoperov et al 2004
       endif
@@ -579,13 +595,13 @@ c get back to orig - save an in.dist - then try to lower this.
 !gna
 !HNO + M --> NO + H + M
 !in reactions list as "WEIRD" but wasn't here...
-      if ((CHEMJ(1,J).EQ.'HNO'.AND.CHEMJ(2,J).EQ.'M'.AND. 
+      if ((CHEMJ(1,J).EQ.'HNO'.AND.CHEMJ(2,J).EQ.'M'.AND.
      $    CHEMJ(3,J).EQ.'NO') )THEN
        A(J,I) = 1.04E-6 * EXP(28618/T(I))*(T(I)/298.)**(-1.61)*DEN(I) !Tsang 1986
       endif
 
 
-!gna -- ordering was wrong of CHEMJ indices compared to reactions.rx for sorg template 
+!gna -- ordering was wrong of CHEMJ indices compared to reactions.rx for sorg template
 
 !   CH3S + HCS ->CS + CH3SH !SORG
       if ((CHEMJ(2,J).EQ.'HCS'.AND.CHEMJ(1,J).EQ.'CH3S').OR.
@@ -632,7 +648,7 @@ c get back to orig - save an in.dist - then try to lower this.
       !gna - shawn has diff:
       !B0 = 2.64E-26 * EXP(-721./T(I)) / (T(I)/300.)**3.1
       !BI = 3.E-10
-      !A(J,I) = B0*BI*DEN(I)/(B0*DEN(I) + BI)    
+      !A(J,I) = B0*BI*DEN(I)/(B0*DEN(I) + BI)
       endif
 
 !  CH23 + CO -> CH2CO
@@ -651,7 +667,7 @@ c get back to orig - save an in.dist - then try to lower this.
 !  C2H2 + H -> C2H3
       if (CHEMJ(1,J).EQ.'C2H2'.AND.CHEMJ(2,J).EQ.'H') THEN
       B0 = 2.6E-31
-      BI = 3.8E-11 * EXP(-1374./T(I)) !gna shawn has 8.3E-11 in paper 
+      BI = 3.8E-11 * EXP(-1374./T(I)) !gna shawn has 8.3E-11 in paper
       A(J,I) = B0*BI*DEN(I)/(B0*DEN(I) + BI)
       endif
 
