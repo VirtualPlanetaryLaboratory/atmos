@@ -54,6 +54,7 @@ LINPATH = PHOTOCHEM/LINPACK
 QUADPATH = PHOTOCHEM/QUADPACK
 GRID = Photgrid
 RATES = Rates
+RATESWASP12B = Rateswasp12b
 RAIN = Rainout
 AQUO = Aqueous
 PHOT = Photo
@@ -102,6 +103,7 @@ SPLINE = Spline
 OBPATH = $(OBJ)/$(MAIN).o \
 	$(OBJ)/$(GRID).o \
 	$(OBJ)/$(RATES).o \
+	$(OBJ)/$(RATESWASP12B).o \
 	$(OBJ)/$(RAIN).o \
 	$(OBJ)/$(AQUO).o \
 	$(OBJ)/$(PHOT).o \
@@ -195,6 +197,11 @@ $(OBJ)/$(RATES).o : 	$(SUBPATH)/$(RATES).f $(INC)/parameters.inc \
 			$(BLOK)/PHOTABLOK.inc $(BLOK)/RBLOK.inc
 	$(FC) $(FCFLAG) -c $(SUBPATH)/$(RATES).f
 	mv $(RATES).o $(OBJ)
+	
+$(OBJ)/$(RATESWASP12B).o : 	$(SUBPATH)/$(RATESWASP12B).f $(INC)/parameters.inc \
+			$(BLOK)/PHOTABLOK.inc $(BLOK)/RBLOK.inc
+	$(FC) $(FCFLAG) -c $(SUBPATH)/$(RATESWASP12B).f
+	mv $(RATESWASP12B).o $(OBJ)
 
 $(OBJ)/$(RAIN).o : 	$(SUBPATH)/$(RAIN).f $(INC)/parameters.inc \
                         $(BLOK)/PHOTABLOK.inc $(BLOK)/BBLOK.inc \
