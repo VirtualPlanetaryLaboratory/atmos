@@ -16,6 +16,7 @@
       if(species.eq.'CO      ') LCO=iSP
       if(species.eq.'HCO     ') LHCO=iSP
       if(species.eq.'H2CO    ') LH2CO=iSP
+      if(species.eq.'H2COH   ') LH2COH=iSP                                
       if(species.eq.'CH4     ') LCH4=iSP
       if(species.eq.'CH3     ') LCH3=iSP
       if(species.eq.'C2H6    ') LC2H6=iSP
@@ -160,9 +161,10 @@
       if(species.eq.'CH2CCH2 ') LCH2CCH2=iSP                
       if(species.eq.'C3H3    ') LC3H3=iSP                
       if(species.eq.'C3H2    ') LC3H2=iSP                
-      if(species.eq.'CH3C2H  ') LCH3C2H=iSP                
+      if(species.eq.'CH3C2H  ') LCH3C2H=iSP
       if(species.eq.'HCAER   ') LHCAER=iSP
       if(species.eq.'HCAER2  ') LHCAER2=iSP
+      if(species.eq.'HE      ') LHE=iSP
       if(species.eq.'NH3     ') LNH3=isp
       if(species.eq.'NH2     ') LNH2=isp
       if(species.eq.'N2H4    ') LN2H4=isp
