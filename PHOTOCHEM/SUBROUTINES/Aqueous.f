@@ -21,19 +21,25 @@ C     8)  CH2(OH)2  +  HSO3-  =  H2O  +  CH2OHSO3-
 C     9)   H2O     =  H+  +  OH-
 C    10)  (H2CO)g + ALPHARAIN*[CH2(OH)2  +  CH2OHSO3-]  =  (H2CO)go
 
+      IF (NAQ.GT.0) THEN
       HPLUS = X(LHCO3_) + X(LHSO3_) + X(LH2COSO3) 
      1  + X(LOH_) + 2.*(X(LCO3_2) + X(LSO3_2) + SO4_2)
-      F(1) = X(LSO2g) - SO2g0 + ALPHARAIN*( X(LSO2aq) 
-     1  + X(LHSO3_) + X(LSO3_2) + X(LH2COSO3) )
-      F(2) = X(LSO2aq) - HSO2*X(LSO2g)
-      F(3) = X(LH2COaq) - HH2CO*X(LH2COg)
-      F(4) = X(LHCO3_)*HPLUS - R4(I)*CO2aq
-      F(5) = X(LHSO3_)*HPLUS - R5(I)*X(LSO2aq)
-      F(6) = X(LCO3_2)*HPLUS - R6(I)*X(LHCO3_)
-      F(7) = X(LSO3_2)*HPLUS - R7(I)*X(LHSO3_)
-      F(8) = X(LH2COSO3) - R8(I)*X(LH2COaq)*X(LHSO3_)
-      F(9) = X(LOH_)*HPLUS - R9(I)
-      F(10) = X(LH2COg) - H2COg0 + ALPHARAIN*(X(LH2COaq)+X(LH2COSO3))
+       DO K=1,NAQ
+        F(K) = 0.0
+        IF (K.EQ.1) F(K) = X(LSO2g) - SO2g0 + ALPHARAIN*( X(LSO2aq) 
+     1    + X(LHSO3_) + X(LSO3_2) + X(LH2COSO3) )
+        IF (K.EQ.2) F(K) = X(LSO2aq) - HSO2*X(LSO2g)
+        IF (K.EQ.3) F(K) = X(LH2COaq) - HH2CO*X(LH2COg)
+        IF (K.EQ.4) F(K) = X(LHCO3_)*HPLUS - R4(I)*CO2aq
+        IF (K.EQ.5) F(K) = X(LHSO3_)*HPLUS - R5(I)*X(LSO2aq)
+        IF (K.EQ.6) F(K) = X(LCO3_2)*HPLUS - R6(I)*X(LHCO3_)
+        IF (K.EQ.7) F(K) = X(LSO3_2)*HPLUS - R7(I)*X(LHSO3_)
+        IF (K.EQ.8) F(K) = X(LH2COSO3) - R8(I)*X(LH2COaq)*X(LHSO3_)
+        IF (K.EQ.9) F(K) = X(LOH_)*HPLUS - R9(I)
+        IF (K.EQ.10) F(K) = X(LH2COg) - H2COg0 
+     1    + ALPHARAIN*(X(LH2COaq)+X(LH2COSO3))
+       ENDDO
 C
+      ENDIF
       RETURN
       END
