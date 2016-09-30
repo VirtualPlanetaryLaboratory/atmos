@@ -8,7 +8,7 @@
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/ISOBLOK.inc'
       real*8 k0,kinf
 
-!-mc rate constant units are cm^3/mol/s
+c-mc rate constant units are cm^3/mol/s
 
       if (ISOTOPE.EQ.1) then
        ! chemical reaction file
@@ -18,42 +18,66 @@
        open(9, file='PHOTOCHEM/INPUTFILES/reactions.rx',status='OLD')
       endif
 
-!FIRST LINE OF YOUR REACTIONS.RX FILE MUST BE FOR HEADER INFORMAITON
-!skips first line of reactions.rx
-      read(9,*)
-667   FORMAT(70X,E9.3,2X,E10.3,2X,E10.3,2X,E9.3,2X,E9.3,2X,E9.3,2X,
-     $      E10.3,2X,E10.3,2X,E9.3,2X,E9.3) !two, three, & capture rate reaction rates
-!     668   FORMAT(58X,E9.2,3X,E9.2,2X,2F5.2)   This is an old format statement for three body reaction rates
-!     but due to the new format now based on KIDA, we can format two body, three body and capture rate theory all the same way
+667   FORMAT(58X,E9.2,3X,F8.2)            !for two body reaction rates
+668   FORMAT(58X,E9.2,3X,E9.2,2X,2F5.2)   !for three body reaction rates
 
+669   FORMAT(70X,E9.3,2X,E10.3,2X,E10.3,2X,E9.3,2X,E9.3,2X,E9.3,2X,
+     $      E10.3,2X,E10.3,2X,E9.3,2X,E9.3) !two, three, & capture rate reaction rates
+
+      KIDA = 0
 
        do J=1,NR
-! Read in two body reaction rates
+             if (kida.eq.1) then
+                   read(9,*)
+           ! Read in two body reaction rates
+                     if (REACTYPE(J) .EQ. '2BODY') then
+           !read in Arhenius and Temperature factor (note TFAC contains the negative sign. not standard practice)
+                      read (9,669) alpha_0,beta_0,gamma_0,f_0,g_0
+
+
+                     do i=1,nz
+                      A(J,I) = alpha_0 * EXP (-1.*beta_0/T(I))   !two body reaction rates
+                     enddo
+
+           ! Read in 2BCRT reaction rates
+                     else if (REACTYPE(J) .EQ. '2BCRT') then
+           !read in Arhenius and Temperature factor (note TFAC contains the negative sign. not standard practice)
+                      read (9,669) alpha_0,beta_0,gamma_0,f_0,g_0
+
+
+                     do i=1,nz
+                      A(J,I) = alpha_0 * EXP (beta_0/T(I))
+                     enddo
+
+           ! Read in three body reaction rates
+                   else if (REACTYPE(J) .EQ. '3BODY') then
+                    read(9,669) alpha_0,beta_0,gamma_0,f_0,g_0,alpha_inf,
+     $        beta_inf,gamma_inf,f_inf,g_inf
+
+
+                  if (PLANET .EQ. 'MARS') then
+                     B=B*2.5      !multiply low density rate by 2.5 to account for CO2 rather than N2 as background gas (Nair, 94)
+                  endif
+                   do i=1,nz
+                   A(J,I)= TBDY(B,C,D,E,T(I),DEN(I))  !computed three body reaction rate
+                  enddo
+                     end if
+             else
+C READ IN TWO BODY REACTION RATES
           if (REACTYPE(J) .EQ. '2BODY') then
            !read in Arhenius and Temperature factor (note TFAC contains the negative sign. not standard practice)
-           read (9,667) alpha_0,beta_0,gamma_0,f_0,g_0
+           read (9,667) ARH, TFAC
 
 
           do i=1,nz
-            A(J,I) = alpha_0 * EXP (-1.*beta_0/T(I))   !two body reaction rates
-          enddo
-
-! Read in 2BCRT reaction rates
-          else if (REACTYPE(J) .EQ. '2BCRT') then
-           !read in Arhenius and Temperature factor (note TFAC contains the negative sign. not standard practice)
-           read (9,667) alpha_0,beta_0,gamma_0,f_0,g_0
-
-
-           do i=1,nz
-             A(J,I) = alpha_0 * EXP (beta_0/T(I))
+            A(J,I) = ARH * EXP (TFAC/T(I))   !two body reaction rates
            enddo
 
-! Read in three body reaction rates
+C READ IN THREE BODY REACTION RATES
           else if (REACTYPE(J) .EQ. '3BODY') then
-             read(9,667) alpha_0,beta_0,gamma_0,f_0,g_0,alpha_inf,
-     $      beta_inf,gamma_inf,f_inf,g_inf
-
-
+             read(9,668) B,C,D,E          !read in K0, Kinf, T0exp, Tinfexp
+                                          !A(J,I) = TBDY(K0,KINF,T0exp,Tinfexp,T,DEN)
+c             print *, J, B,C,D,E
              if (PLANET .EQ. 'MARS') then
                 B=B*2.5      !multiply low density rate by 2.5 to account for CO2 rather than N2 as background gas (Nair, 94)
              endif
@@ -823,8 +847,8 @@ c      print *, (A(284,I),I=1,NZ)
          else
              read(9,*) !do nothing with PHOTO...
           endif
-       enddo
-
+       end if
+       end do
        close(9)
 
       RETURN
