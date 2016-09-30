@@ -1336,7 +1336,7 @@ C
       KL = KD + NQ
 C
 C   write OUT RESULTS EVERY NPR TIME STEPS
-      NPR = 50
+      NPR = 1000 
       PRN = NPR
 
 C   DO PHOTORATES EVERY MP TIME STEPS
@@ -1421,8 +1421,6 @@ corig       CO2(I) = FCO2
       CALL RAINOUT(JTROP,NRAIN,USETD)  !ok
 
 
-
-   
       CALL AERCON
  
 
@@ -2253,8 +2251,8 @@ c     IF(EMAX.LT.0.00005) DT = 5.*DTSAVE
 
       DTINV = 1./DT
       ZMAX = Z(JS)
-      print 373, n, TIME, DT,EMAX,ISPEC(IS),ZMAX, USOL(is,js),
-     $ USOL(LO2,1), USOL(LCH4,1), USOL(LH2,1), USOL(LCO,1)
+C      print 373, n, TIME, DT,EMAX,ISPEC(IS),ZMAX, USOL(is,js),
+C     $ USOL(LO2,1), USOL(LCH4,1), USOL(LH2,1), USOL(LCO,1)
  373  format (1x, I6, 1P3E12.3,2x,A8,1P1E12.3,4x,1P5E12.3)
 C
       IF (SM-MS.GT.0.01) GOTO 317 ! skip oxidation state and sulfur budget
@@ -2265,7 +2263,14 @@ C
       write(14, 100) N,EMAX,ISPEC(IS),ZMAX,UMAX,RMAX,DT,TIME
  100  FORMAT(1X,'N =',I4,2X,'EMAX =',1PE9.2,' FOR ',A8,
      2  'AT Z =',E9.2,1X,'U =',E9.2,1X,'RHS =',E9.2,
-     3  2X,'DT =',E9.2,2X,'TIME =',E9.2)
+     3     2X,'DT =',E9.2,2X,'TIME =',E9.2)
+C     print to terminal
+      print 100, N,EMAX,ISPEC(IS),ZMAX,UMAX,RMAX,DT,TIME
+
+
+C     print this information to the terminal
+        
+      
 C
 C   COMPUTE ATMOSPHERIC OXIDATION STATE
 c   what follows needs work -
