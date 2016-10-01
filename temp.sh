@@ -1,6 +1,6 @@
 #!/bin/bash
 
-temp_path='PHOTOCHEM/INPUTFILES/templates/'
+temp_path='PHOTOCHEM/INPUTFILES/TEMPLATES/'
 
 clear
 echo "This script imports a PHOTOCHEM template from a template file."
