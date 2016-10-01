@@ -14,6 +14,10 @@ PHOTOCHEM/OBJECTFILES/*
 CLIMA/OBJECT_CLIMA/*
 PHOTOCHEM/*out*
 PHOTOCHEM/OBJECT_PHOT/*
+PHOTOCHEM/profile.pt
+photochem_smart/atm/tag.atm
+PHOTOCHEM/INPUTFILES/parametersREGULAR.inc
+COUPLE/time_frak_photo.out
 
 # Hitran linelists should never be added (they are big!) #
 ############
