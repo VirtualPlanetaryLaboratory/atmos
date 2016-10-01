@@ -18,6 +18,9 @@ PHOTOCHEM/profile.pt
 photochem_smart/atm/tag.atm
 PHOTOCHEM/INPUTFILES/parametersREGULAR.inc
 COUPLE/time_frak_photo.out
+COUPLE/mixing_ratios.dat
+photochem_smart/atm/tag.atm
+photochem_smart/photchem/photfile.pt
 
 # Hitran linelists should never be added (they are big!) #
 ############
