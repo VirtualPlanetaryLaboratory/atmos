@@ -5,15 +5,18 @@ c I am attempting to abtract this so we can have an Earth/Mars switch
 c I should also think about adding extra abstraction for the humidty stuff
 c
 c - this code is undergoing active development for chlorine speciesS
-c - as such it is not really the best code to be used as a base for TOTC, but such it is.
-c - it is starting from one of the more up-to-date branches of Mark's code, but doesn't have any time-dependent gear stuff in it
+c - as such it is not really the best code to be used as a base for TOTC,
+c - but such it is.
+c - it is starting from one of the more up-to-date branches of Mark's code,
+c - but doesn't have any time-dependent gear stuff in it
 
 c- at some point go through and clean up all comments
 c
 c
-c - this code contains the variable grid e changes used to compute the suite of models for the whiff paper.
-c - this code could/should be modified to use a variable grid size at some point to make it faster
-c - all common blocks abstracted to DATA/INCLUDE
+c - this code contains the variable grid e changes used to compute
+c - the suite of models for the whiff paper.
+c - this code could/should be modified to use a variable grid size at some point
+c - to make it faster all common blocks abstracted to DATA/INCLUDE
 
 c - re-introducing the tridiagonal...
 c - and attempting to take it away...
@@ -27,12 +30,14 @@ c-mc
 c this code has iterated jacobian and batch multipliers
 c-072406 - has 195K CO2 cross-section ! turned off for photo development
 
-c-mc 080206 - iterated jacobion, new co2 x-section are turned off, TSTOP is 1e16
-c-mc 112107 - iterated jacobians back in play for reruns of kevin's models for the whiff paper
+c-mc 080206 - iterated jacobion, new co2 x-section are turned off,TSTOP is 1e16
+c-mc 112107 - iterated jacobians back in play for reruns of kevin's models for
+c-            the whiff paper
 c-mc 111308 - iterated jacbians off for chlorine testing...
 c-mc 010609 - iterated jacobians back on during chlorine testing...
 
-c-mc  THIS VERSION OF THE CODE WILL BE TIME-INDEPENDENT (i.e. P,T,zenith angle remain constant) (or maybe not...)
+c-mc  THIS VERSION OF THE CODE WILL BE TIME-INDEPENDENT
+c-    (i.e. P,T,zenith angle remain constant) (or maybe not...)
 
 c-mc things to research at some point
 c CO photolysis
@@ -51,14 +56,16 @@ c  this version uses N, O3, and HNO3 as long-lived
 c  it does not use CO2 as long-lived.  there problems be.
 
 c  I need to do some CO expts for MC and DC.
-c  but for giggles I am doing an experiment wiht big O2 and CH4 fluxes to see what happens
-c  this is hard to do if one uses O2 flux; it works better by setting the O2 mixing ratio
+c  but for giggles I am doing an experiment wiht big O2 and CH4 fluxes
+c  to see what happens
+c  this is hard to do if one uses O2 flux; it works better by setting
+c  the O2 mixing ratio
 
 c   some observations
-c      1. problems with NOx at the upper boundary often means a problem with H escape
-c          NOx problems often resolve themselves with patience...
-c      2.  getting lost often means a problem with H escape
-c      3.  problems with S also means that there is a problem with redox balance.
+c      1. problems with NOx at the upper boundary often means a problem with
+c         H escape; NOx problems often resolve themselves with patience...
+c      2. getting lost often means a problem with H escape
+c      3. problems with S also means that there is a problem with redox balance.
 
 
 c  update 6-23-05 inserts molecular diffusion of H
@@ -69,20 +76,22 @@ c
 c   the more general equation would include the molecular diffusive flux
 c         \phi = b*f*({1/over H_A}-{1/over H}) - b*df/dz
 c
-c     [ w_1 - w_2 = {b_{12}\over n} \left( (1/n_1)(dn_1/dz) - (1/n_2)(dn_2/dz) - (1/f)(df/dz) \right)  ]
-c  (I've not been careful. here f=n_1/n_2 <<1, so n=n_2.  I should look this up for the
-c    general case)
+c    [ w_1 - w_2 = {b_{12}\over n} \left( (1/n_1)(dn_1/dz) - (1/n_2)(dn_2/dz)
+c                  - (1/f)(df/dz) \right)  ]
+c  (I've not been careful. here f=n_1/n_2 <<1, so n=n_2.
+c     I should look this up for the general case)
 c
-c    where H would be the scale height in vacuum of the species corresponding to f
-c     and H_A is the scale height of the atmosphere.
+c     where H would be the scale height in vacuum of the species corresponding
+c     to f and H_A is the scale height of the atmosphere.
 
 c         \phi = b*f*({1/over H_A}-{1/over H}) - (b+KN)*df/dz
 c          N df/dt = P - LNf - d\phi/dz - f*dN/dt
-c    I have not done the work to allow for N to change with time  - so let dN/dt=0
+c  I have not done the work to allow for N to change with time - so let dN/dt=0
 c
 c    From this point hence one must be careful
 c
-C         df/dt  =  P/N - L*f + (1/N)*d/dz[(K*N+b)*(df/dz)] + (b/N)*d/dz({1/over H}-{1/over H_A})f
+C         df/dt  =  P/N - L*f + (1/N)*d/dz[(K*N+b)*(df/dz)]
+c                   + (b/N)*d/dz({1/over H}-{1/over H_A})f
 c
 c    the finite difference form is
 c
@@ -99,8 +108,8 @@ c       ADD(j) = -ADU(j) - ADL(j)
 
 c  at the lower boundary
 c
-C     df(0)/dt  =  P(0)/N(0) + DU(0)*(f(1)-f(0))  + ADU(0)*(f(1)+f(0)) + FLUX(0)/N(0)/dz
-c
+C     df(0)/dt  =  P(0)/N(0) + DU(0)*(f(1)-f(0))  + ADU(0)*(f(1)+f(0))
+c                 + FLUX(0)/N(0)/dz
 c     where
 c        DU(0) = [KN(0.5) + b(0.5)]/[N(0)*dz*dz]
 c       ADU(0) = +b(0.5)/[2N(0)*dz] *({1/over H} - {1/over H_A})
@@ -115,16 +124,17 @@ c        djac(1) = - DU(0)  - ADU(0)   (off diagonal)
 c
 c     in constant mixing ratio - i've left the chemistry out...
 c        djac(0) = 1/dt  + DU(0)  - ADU(0)
-c        djac(1) =  0.0   (off diagonal - is this correct??  - it may not be, but it should not matter given that it can't change f)
+c        djac(1) =  0.0   (off diagonal - is this correct??
+c       - it may not be, but it should not matter given that it can't change f)
 c
-c  at the upper boundary
 c
-C     df(nz)/dt  =  P(nz)/N(nz) + DL(nz)*(f(nz)-f(nz-1))  + ADL(nz)*(f(nz)+f(nz-1)) - FLUX(nz)/N(nz)/dz
-c
+c     at the upper boundary:
+C     df(nz)/dt  =  P(nz)/N(nz) + DL(nz)*(f(nz)-f(nz-1))
+c                   + ADL(nz)*(f(nz)+f(nz-1)) - FLUX(nz)/N(nz)/dz
 c     where
 c        DL(nz) = [KN(nz-0.5) + b(nz-0.5)]/[N(nz)*dz*dz]
 c       ADL(nz) = +b(nz-0.5)/[2N(nz)*dz] *({1/over H} - {1/over H_A})
-
+c
 c     in constant flux
 c        djac(nz) = chemistry(nz) + 1/dt  + DL(nz)  - ADL(nz)
 c        djac(nz-1) = - DL(nz)  - ADL(nz)   (off diagonal)
@@ -140,20 +150,21 @@ c
 c
 
 c  - what Jim did was to set the gradient of the H, H2 mixing ratios
-c   to zero at the top (no flux upper boundary).  This does a better job with the chemistry.
+c   to zero at the top (no flux upper boundary).
+c   This does a better job with the chemistry.
 c   i've left this intact for ch4co2.for
 c
-
-c  4-25-05  jfk suggests distributing SO2 source over the troposphere
+c
+c- 4-25-05  jfk suggests distributing SO2 source over the troposphere
 c           this way i can use a surface BC
 c    This was implemented successfully
-
+c
 c  4-27-05  FIXED the accounting errors with fluxes.
 c  the tridiagonal was not being included in the accounting
 c  I wasn't sure how to do this save by putting S8aer into long lived species
 c  This has now been done.  Fluxes are now under control.
-c  redox balance and S conservation are both enforced.  Fundamentally nothing has really
-c   changed, but it has the advantage of being done right.
+c  redox balance and S conservation are both enforced. Fundamentally
+c  nothing has really changed, but it has the advantage of being done right.
 
 c  checked reactions 4/11/05
 c  HSO is problematic - very few known reactions.
@@ -177,20 +188,20 @@ c     SO3     CO   -> CO2     SO2             1.00E-19
 c
 c  to add OCS, I'd want these (taken from hncos.f)
 c  I'd also want to find out if S + CO can go...
-c     H       OCS     CO      HS              9.10E-12  0.00   1940.0   0.0      0.0
-c     HS      CO      OCS     H               5.95E-14  1.12   8330.0   0.0      0.0
-c     O       OCS     CO      SO              7.83E-11  0.00   2620.0   0.0      0.0
-c     O       OCS     S       CO2             8.33E-11  0.0   5.53E+03  0.0      0.0
-c     OCS     S       CO      S2              1.00E-10  0.0   4.56E+03  0.0      0.0
-c     OCS     OH      CO2     HS              1.10E-13  0.0   1.20E+03  0.0      0.0
-c     S       HCO     OCS     H               6.00E-11  0.0     0.0     0.0      0.0
+c     H       OCS     CO      HS         9.10E-12  0.00   1940.0   0.0      0.0
+c     HS      CO      OCS     H          5.95E-14  1.12   8330.0   0.0      0.0
+c     O       OCS     CO      SO         7.83E-11  0.00   2620.0   0.0      0.0
+c     O       OCS     S       CO2        8.33E-11  0.0   5.53E+03  0.0      0.0
+c     OCS     S       CO      S2         1.00E-10  0.0   4.56E+03  0.0      0.0
+c     OCS     OH      CO2     HS         1.10E-13  0.0   1.20E+03  0.0      0.0
+c     S       HCO     OCS     H          6.00E-11  0.0     0.0     0.0      0.0
 c     OCS     HV      CO      S
 c and...
-c     S        CO     OCS                     1.70E-33  0.0   1.51E+03  1.0      0.0
+c     S        CO     OCS                1.70E-33  0.0   1.51E+03  1.0      0.0
 c  I'm guessing that S + CO goes at the same rate as O + CO
 
 c  the current version has the fictional
-c     SO3     CO      CO2     SO2             1.00E-16  0.0     0.0     0.0      0.0
+c     SO3     CO      CO2     SO2        1.00E-16  0.0     0.0     0.0      0.0
 
 
 C         THIS PROGRAM DIFFERS FROM PRIMS2 BY EXPLICITLY INCLUDING VAPOR
@@ -198,12 +209,6 @@ C     PHASE S8.  IT WAS USED TO GENERATE THE RESULTS FOR THE UV SCREEN
 C     PAPER AT 2 BARS OF CO2.
 
 c-mc the above needs to be exorcised...
-
-
-
-
-
-
 
 C         THIS PROGRAM IS DESIGNED FOR EXTREMELY LOW (PRE-PHOTOSYNTHETIC
 C     O2 LEVELS.  THE PHOTOLYSIS OF O2 IN THE SCHUMANN-RUNGE BANDS CAN
@@ -292,32 +297,40 @@ C     (1) TBDY   -  COMPUTES 3-BODY REACTION RATES
 C     (2) E1     - EXPONENTIAL INTEGRAL OF ORDER ONE
 
 c - some of Kevin's notes on possible reactions
-c - keeping around for the time when more research is done on the chemical species
+c-keeping around for the time when more research is done on the chemical species
+C    9.6e-12. HSO2 is not a species in this system - it reacts quickly with O2
+C     ) HSO + NO2 -> NO + HSO2
+C    this has measured but very slow reaction
+c     )  H + SO2 + M -> HSO2 + M
+C    3e-13 measured HO2 as product.  not a clear situation;
+c         - my temptation is to assign OH, H rates measured at high T
+c     ) HSO2 + O2 -> HO2 + SO2
+c        RATE: 3e-12
+c     ) HSO2 + H -> H2 + SO2
+c        RATE: 8e-12
+c     ) HSO2 + OH -> H2O + SO2
+C        JPL has this!  but what do you do with it??
+c     ) HS + NO + M -> HSNO + M
+C        NIST 2e-12*exp(-1000/T)
+c     ) HCO + HNO  -> H2CO + NO
 C
-C       )  HSO + NO2 -> NO + HSO2   ! 9.6e-12.  HSO2 is not a species in this system - it reacts quickly with O2
-c       )  H + SO2 + M -> HSO2 + M  !  this has measured but very slow reaction
-c       )  HSO2 + O2 -> HO2 + SO2   ! 3e-13 measured HO2 as product.  not a clear situation;
-c                                     my temptation is to assign OH, H rates measured at high T
-c       )  HSO2 + H -> H2 + SO2     ! 3e-12
-c       )  HSO2 + OH -> H2O + SO2   ! 8e-12
-c       )  HS + NO + M -> HSNO + M   ! JPL has this!  but what do you do with it??
-c       )  HCO + HNO  -> H2CO + NO   ! NIST 2e-12*exp(-1000/T)
-C       )  CH3 + OH + M ->  CH3OH + M  ! NIST - v. fast: 2.5e-27*(298/T)^-3.8, 1.5e-10 limit
-C       )  CH3 + OH  ->  H2O + CH2    ! NIST 1.2e-10 *exp(-1400/T)
-C       )  CH3 + OH  ->  HCOH + H2    ! NIST 9e-11 *exp(-1500/T)
-C       )  CH3 + OH  ->  H2COH + H    ! NIST 1.3e-11
-c       )  S2  + H  + M ->  HS2 + M
-c       )  S2  + OH  ->               ! SO +OH -> H + SO2 8.6e-11
-c       )  S3  + OH  ->
-c       )  S3  + O  ->  SO + S2
-c       )  S3  + H  + M ->  HS3 + M
-c       )  S4  + OH  ->
-c       )  S4  + O  -> SO + S3
-c       )  S4  + H  + M -> HS4 + M
-c       )  HS2 + OH -> H2O + S2
-c       )  HS2 + O  -> OH + S2
-c       )  HS2 + H  -> H2 + S2
-c       )  HS2 + S  -> H + S3
+C        NIST - v. fast: 2.5e-27*(298/T)^-3.8, 1.5e-10 limit
+C     )  CH3 + OH + M ->  CH3OH + M
+C     )  CH3 + OH  ->  H2O + CH2    ! NIST 1.2e-10 *exp(-1400/T)
+C     )  CH3 + OH  ->  HCOH + H2    ! NIST 9e-11 *exp(-1500/T)
+C     )  CH3 + OH  ->  H2COH + H    ! NIST 1.3e-11
+c     )  S2  + H  + M ->  HS2 + M
+c     )  S2  + OH  ->               ! SO +OH -> H + SO2 8.6e-11
+c     )  S3  + OH  ->
+c     )  S3  + O  ->  SO + S2
+c     )  S3  + H  + M ->  HS3 + M
+c     )  S4  + OH  ->
+c     )  S4  + O  -> SO + S3
+c     )  S4  + H  + M -> HS4 + M
+c     )  HS2 + OH -> H2O + S2
+c     )  HS2 + O  -> OH + S2
+c     )  HS2 + H  -> H2 + S2
+c     )  HS2 + S  -> H + S3
 c  etc.
 C
 C        THIS PROGRAM DOES THE CHEMISTRY AUTOMATICALLY.
@@ -374,10 +387,11 @@ C
       dimension USOLORIG(NQ,NZ)
       dimension alt_new(NZ), T_new(NZ), water(NZ)
       dimension alt_dontuse(NZ), T_dontuse(NZ), water_fix(NZ)
-!c-mc  USOLSAVE added for convergence testing 4/29/06, removed from code on 2/28/07
-!c-mc  going to keep declaration here and reserve it in case I ever bring back the
-!c-mc  the convergence-testing code, which is r37:36 in the /td branch
-c-mc  USOLPREV(NQ,NZ) added for second order reverse Euler calculations
+Cc-mc USOLSAVE added for convergence testing 4/29/06,
+Cc-mc removed from code on 2/28/07
+Cc-mc going to keep declaration here and reserve it in case I ever bring back
+Cc-mc the convergence-testing code, which is r37:36 in the /td branch
+Cc-mc USOLPREV(NQ,NZ) added for second order reverse Euler calculations
       DIMENSION DPU(NZ,NP),DPL(NZ,NP)
       DIMENSION TA(NZ),TB(NZ),TC(NZ),TY(NZ)
       dimension PRES_bar(NZ)
@@ -394,13 +408,19 @@ c      dimension atomsN(NSP2),atomsCL(NSP2),atomsS(NSP2)
 
 
 C ISOHACK
-c first one is for standard model
-      parameter(NISO=15,NQI=NQ+NISO,NPISO=0,NISOSL=7)  !ISOHACK  - OK this is being hardcoded to also include the HCAER species with the particles
-c this is for biogenic sulfur...
-c      parameter(NISO=19,NQI=NQ+NISO,NPISO=0,NISOSL=7)  !ISOHACK  - OK this is being hardcoded to also include the HCAER species with the particles
+c  The first one is for standard model
+C ISOHACK- This is being hardcoded to also include
+C          -the HCAER species with the particles
+      parameter(NISO=15,NQI=NQ+NISO,NPISO=0,NISOSL=7)
+c This is for biogenic sulfur
+C This is hardcoded to include the HCAER species with the particles
+c      parameter(NISO=19,NQI=NQ+NISO,NPISO=0,NISOSL=7)
 
-      parameter(NPN=NISO+NPISO+NISOSL)           !number of sulfur species in the model  !ISOHACK
-c      dimension USOLISO(NSP-NPN-2,NZ)  !OK - this was used in the initial testing of the ISOTOPE code (where S* = S)
+
+C number of sulfur species in the model  !ISOHACK
+      parameter(NPN=NISO+NPISO+NISOSL)
+C OK - this was used in the initial testing of the ISOTOPE code (where S* = S)
+c      dimension USOLISO(NSP-NPN-2,NZ)
       dimension USOLISO(NSP,NZ)
 
 c for sgbco testing (to get at Jacobian condition number)
@@ -412,7 +432,8 @@ c      real*8 WORK(neq)
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/BBLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/CBLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/DBLOK.inc'
-      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/EBLOK.inc'   !can go away when MSCAT does
+C     !can go away when MSCAT does WARNING DO WE NEED THIS COMMENT
+      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/EBLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/FBLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/GBLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/JBLOK.inc'
@@ -429,6 +450,7 @@ c      real*8 WORK(neq)
 
 
 C   CONSTANTS FOR 1ST EXPONENTIAL INTEGRAL  !can go away when MSCAT does
+C                       -WARNING do we need can go away comment?
       DATA AI/.99999193, -.24991055, .05519968, -.00976004,
      2  .00107857, -.57721566/
       DATA BI/8.5733287401, 18.0590169730, 8.6347608925,
@@ -437,80 +459,112 @@ C   CONSTANTS FOR 1ST EXPONENTIAL INTEGRAL  !can go away when MSCAT does
      2  3.9584969228/
       DATA NUML,NUMP/NSP*0,NSP*0/
 
-      ISOTOPE=0   !Isotope flag
-      ISOS=32     !use 32S (i.e. the dominant isotope)
+C    !Isotope flag Below
+      ISOTOPE=0
+C    !use 32S (i.e. the dominant isotope)
+      ISOS=32
 
 c OPEN FILES
 
 
-
-      open(2, file='PHOTOCHEM/DATA/aerosol.table',status='OLD') !,form='UNFORMATTED')
+C      ,form='UNFORMATTED')
+      open(2, file='PHOTOCHEM/DATA/aerosol.table',status='OLD')
       open(3, file='PHOTOCHEM/DATA/photo.dat',status='OLD')
       open(4, file='PHOTOCHEM/INPUTFILES/species.dat',status='OLD')
       !planet parameters (G, FSCALE, ALB,ZTROP,etc)
       open(7, file='PHOTOCHEM/INPUTFILES/PLANET.dat',status='OLD')
+C      Model Parameters (AGL, IO2,INO, LGRID, etc)
       open(231, file='PHOTOCHEM/INPUTFILES/input_photchem.dat',
-     &          status='OLD')       !model parameters (AGL, IO2,INO, LGRID, etc)
-      ! reaction file
+     &          status='OLD')
+C      REACTION FILE
       open(9, file='PHOTOCHEM/INPUTFILES/reactions.rx',status='OLD')
-      open(14, file='PHOTOCHEM/out.out',status='UNKNOWN')    ! output
-      open(17, file='PHOTOCHEM/in.dist',status='OLD')         ! formatted input
-      open(18, file='PHOTOCHEM/out.dist',status='UNKNOWN')    ! formatted output
-      open(19, file='PHOTOCHEM/out.terse',status='UNKNOWN')    ! terse output
-      open(67, file='PHOTOCHEM/profile.pt',status='UNKNOWN')   !mixing ratios
-      open(68, file='PHOTOCHEM/hcaer.out',status='UNKNOWN')   !hydrocarbons
-      open(69, file='PHOTOCHEM/hcaer2.out',status='UNKNOWN')   !other hydrocarbons
-      open(21, file='PHOTOCHEM/out.trs',status='UNKNOWN')    ! very terse output
-      open(23, file='PHOTOCHEM/out.time',status='UNKNOWN')    ! time output
-      open(24, file='PHOTOCHEM/out.tim',status='UNKNOWN')    ! time output
+C      CODE OUTPUT
+      open(14, file='PHOTOCHEM/out.out',status='UNKNOWN')
+C      FORMATTED INPUT
+      open(17, file='PHOTOCHEM/in.dist',status='OLD')
+C      FORMATTED OUTPUT
+      open(18, file='PHOTOCHEM/out.dist',status='UNKNOWN')
+C      TERSE OUTPUT
+      open(19, file='PHOTOCHEM/out.terse',status='UNKNOWN')
+C      PARTIAL OUTPUT OF MIXING RATIOS
+      open(67, file='PHOTOCHEM/profile.pt',status='UNKNOWN')
+C      HYDROCARBONS
+      open(68, file='PHOTOCHEM/hcaer.out',status='UNKNOWN')
+C      OTHER HYDROCARBONS
+      open(69, file='PHOTOCHEM/hcaer2.out',status='UNKNOWN')
+C      VERY TERSE OUTPUT
+      open(21, file='PHOTOCHEM/out.trs',status='UNKNOWN')
+C      TIME OUTPUTS
+      open(23, file='PHOTOCHEM/out.time',status='UNKNOWN')
+      open(24, file='PHOTOCHEM/out.tim',status='UNKNOWN')
+C-AVB  Final Output for P, T, Z and mixingratios
+      open(255, file='PHOTOCHEM/PTZ_MixingOut.dat')
 
-c The next four files are used only when this model is coupled with the climate model (ICOUPLE=1)
-      open(90, file='COUPLE/hcaer.photoout.out',status='UNKNOWN')   !hcaer for clima - GNA
+c The next four files are used only when this model is coupled
+C           with the climate model (ICOUPLE=1)
+C   To be used as input for the climate model (coupling)
+      open(90, file='COUPLE/hcaer.photoout.out',status='UNKNOWN')
       open(84, file='COUPLE/fromPhoto2Clima.dat',
-     &         status='OLD')          ! To be used as input for the climate model (coupling)
+     &         status='OLD')
       open(116, file='COUPLE/fromClima2Photo.dat')
       open(117, file='COUPLE/mixing_ratios.dat')
       open(118, file='COUPLE/fromClima2Photo_works.dat')
 
 c-mc
-      open(25, file='PHOTOCHEM/out.redox',status='UNKNOWN')    ! redox output - eventually combine into out.trs
-      open(26, file='PHOTOCHEM/out.converge',status='UNKNOWN')  ! temporary output file for looking at convergence
-                                                     ! in the reverse Euler iteration
-      open(27, file='PHOTOCHEM/out.so2',status='UNKNOWN')      !printing out relevant SO2 photolysis pieces
-                                               !between 190-220 as MIF signature
-      open(28, file='PHOTOCHEM/out.rates',status='UNKNOWN')  !reaction rates,reactions,species,densities,rate constants
-
-
-      open(29, file='PHOTOCHEM/out.xsec',status='UNKNOWN')  !cross sections
-      open(30, file='PHOTOCHEM/out.gridz',status='UNKNOWN')  !height grid
-      open(31, file='PHOTOCHEM/out.gridw',status='UNKNOWN')  !wavelength grid
+C     redox output - eventually combine into out.trs
+      open(25, file='PHOTOCHEM/out.redox',status='UNKNOWN')
+C     Temporary output file for looking at convergence
+C         in the reverse Euler iteration
+      open(26, file='PHOTOCHEM/out.converge',status='UNKNOWN')
+C     Printing out relevant SO2 photolysis pieces
+C           between 190-220 as MIF signature
+      open(27, file='PHOTOCHEM/out.so2',status='UNKNOWN')
+C     Reaction rates,reactions,species,densities,rate constants
+      open(28, file='PHOTOCHEM/out.rates',status='UNKNOWN')
+C     FOLLOWING ARE CROSS SECTIONS, HEIGHT GRID, WAVELENGTH GRID:
+      open(29, file='PHOTOCHEM/out.xsec',status='UNKNOWN')
+      open(30, file='PHOTOCHEM/out.gridz',status='UNKNOWN')
+      open(31, file='PHOTOCHEM/out.gridw',status='UNKNOWN')
 
 c-mc  unit 33 reserved for wavelength grids...
 
       open(41, file='PHOTOCHEM/out.rad',status='UNKNOWN')
-      open(42, file='PHOTOCHEM/out.finalden',status='UNKNOWN') !this file should contain TATLTUAE
-      open(43, file='PHOTOCHEM/out.densities',status='UNKNOWN') !number densities at each timestep
-c not creating this file for whiff testing, but needs to be in real td versions...
-      open(44, file='PHOTOCHEM/out.prod',status='UNKNOWN') !total production and loss at steady state
-      open(45, file='PHOTOCHEM/out.flux',status='UNKNOWN') !fluxes
-      open(48, file='PHOTOCHEM/out.tau',status='UNKNOWN') !tau=1 (at final step)
-      open(49, file='PHOTOCHEM/out.params',status='UNKNOWN') !some model params
-      open(50, file='PHOTOCHEM/out.error',status='UNKNOWN') !NGE and L2 norm between start and finish
-      open(51, file='PHOTOCHEM/out.cl',status='UNKNOWN') !TP/FLOW for chlorine species,nitrate, adn sulfate
+C     File below should contain TATLTUAE
+      open(42, file='PHOTOCHEM/out.finalden',status='UNKNOWN')
+C     Number densities at each timestep
+      open(43, file='PHOTOCHEM/out.densities',status='UNKNOWN')
+C     Total production and loss at steady state
+      open(44, file='PHOTOCHEM/out.prod',status='UNKNOWN')
+C     Fluxes
+      open(45, file='PHOTOCHEM/out.flux',status='UNKNOWN')
+C     tau=1 (at final step) in out.tau
+      open(48, file='PHOTOCHEM/out.tau',status='UNKNOWN')
+C      Some model parameters
+      open(49, file='PHOTOCHEM/out.params',status='UNKNOWN')
+C      NGE and L2 are normally between start and finish
+      open(50, file='PHOTOCHEM/out.error',status='UNKNOWN')
+C      TP/FLOW for chlorine species,nitrate, adn sulfate
+      open(51, file='PHOTOCHEM/out.cl',status='UNKNOWN')
 
+C     Formatted output - ISOHACK - for ISO model.
+      open(52, file='PHOTOCHEM/ISOin.dist',status='UNKNOWN')
+C     Formatted output - ISOHACK - for ISO model.
+      open(53, file='PHOTOCHEM/ISOinert.dist',status='UNKNOWN')
 
-      open(52, file='PHOTOCHEM/ISOin.dist',status='UNKNOWN')    ! formatted output - ISOHACK - for ISO model...
-      open(53, file='PHOTOCHEM/ISOinert.dist',status='UNKNOWN')    ! formatted output - ISOHACK - for ISO model...
-
-      open(58, file='PHOTOCHEM/out.O2prates',status='UNKNOWN')  !for testing O2 prates with various grid sizes
-      open(59, file='PHOTOCHEM/out.raingc',status='UNKNOWN')  !rainggc out !ISOHACK
+C     For testing O2 prates with various grid sizes
+      open(58, file='PHOTOCHEM/out.O2prates',status='UNKNOWN')
+C        rainggc out - ISOHACK
+      open(59, file='PHOTOCHEM/out.raingc',status='UNKNOWN')
 
 !c-mc 60 and 61 are opened below after LGRID is read in
 
-       open(62, file='PHOTOCHEM/out.flow',status='UNKNOWN') !lower boundary fluxes (not including rainout)
-       open(63, file='PHOTOCHEM/out.od',status='UNKNOWN')   !haze optical depths
-       open(73, file='PHOTOCHEM/out.rp',status='UNKNOWN')   !haze toa and sur rpar
- 
+C      lower boundary fluxes (not including rainout)
+       open(62, file='PHOTOCHEM/out.flow',status='UNKNOWN')
+C      Haze optical depths
+       open(63, file='PHOTOCHEM/out.od',status='UNKNOWN')
+C      Haze TOA and sur rpar
+       open(73, file='PHOTOCHEM/out.rp',status='UNKNOWN')
+
 
 C - This file gives the input needed for SMART - radiative transfer code
 
@@ -561,77 +615,98 @@ C - other model parameters read in from input_photochem.dat
  555  format(3/)
       close(231)
 
+C     NO photolysis rates output
       if (LGRID.EQ.0) open(60, file='PHOTOCHEM/out.NOprates',
-     &                         status='UNKNOWN')  !NO photolysis rates output
+     &                         status='UNKNOWN')
+C    Wavelength specific SO2 photorates on HR grid
       if (LGRID.EQ.1) open(61, file='PHOTOCHEM/out.so2HR',
-     &                         status='UNKNOWN') !wavelength specific so2 photorates on HR grid
+     &                         status='UNKNOWN')
 
 C - READ IN SPECIES NAMES, ATOMIC NUMBERS, AND BOUNDARY CONDITIONS
 
-      iLL=0   !counter for long lived species
-      iSL=0   !counter for short lived species
-      iTD=0   ! counter for tridiagonal species
-      iIN=0   !counter for inert species
-      iSP=0   !counter for number of lines in species.dat file
-      iprint = 0                !just so the species.dat statements just print once
+C   counter for long lived species
+      iLL=0
+C   counter for short lived species
+      iSL=0
+C   counter for tridiagonal species
+      iTD=0
+C   counter for inert species
+      iIN=0
+C   counter for number of lines in species.dat file
+      iSP=0
+C   So the species.dat statements print only once
+      iprint = 0
 
-      do while (I.LT.300)  !ACK this will crash if species.dat is longer than 300 lines.
+C     ACK this will crash if species.dat is longer than 300 lines.
+C     Ignore comments in species.dat file
+      do while (I.LT.300)
          read (4,203, end=96) SPECIES,SPECTYPE
-         if (scan(species,'*').LT.1) then    !ignore comments in species.dat file
+         if (scan(species,'*').LT.1) then
             iSP=iSP+1
             ISPEC(iSP)=species
          !   print *, iSP, species
-            call LNUM(ISPEC(isP),iSP)  !this loads the "Lnumbers" for ease of use later in the code
-
-              backspace 4  !return to previous line in species.dat file
-              read(4,207) LA,LB,LC,LD,LE,LF   !read in atmoic number data - NOTE: don't ever use LH,LN,LO,LS as placeholders as these mean something.
+C         This loads the "Lnumbers" for ease of use later in the code
+            call LNUM(ISPEC(isP),iSP)
+C             Return to previous line in species.dat file
+              backspace 4
+C  read in atmoic number data - NOTICE: don't ever use LH,LN,LO,LS as
+C               -placeholders as these mean something
+              read(4,207) LA,LB,LC,LD,LE,LF
 
             if (SPECTYPE.EQ.'LL') then
                iLL=iLL+1
-               backspace 4  !return to previous line in species.dat file
+C             Return to previous line in species.dat file
+               backspace 4
 
 
-
-               if (NEWSPEC.eq.1) then !new species.dat formatting
+C              New species.dat formatting BELOW
+               if (NEWSPEC.eq.1) then
                   if (iprint.eq.0) then
                      print *, 'species.dat should have new formatting'
                      print *, "for VDEP and FIXEDMR (E8.2)"
                      iprint = 1
                   endif
-                  read(4,208) LBC, XX,YY,ZZ,XXX,LG,YYY,ZZZ !read in boundary conditions
+C                 Reads in boundary conditions
+                  read(4,208) LBC, XX,YY,ZZ,XXX,LG,YYY,ZZZ
                endif
-
-               if (NEWSPEC.eq.0) then !old species.dat formatting
+C                Old species.dat formatting
+               if (NEWSPEC.eq.0) then
                    if (iprint.eq.0) then
                      print *, 'species.dat should have old formatting'
                      print *, "for VDEP and FIXEDMR (E7.2)"
                      iprint = 1
                   endif
-                  read(4,210) LBC, XX,YY,ZZ,XXX,LG,YYY,ZZZ !read in boundary conditions
+C                Reads in boundary conditions
+                  read(4,210) LBC, XX,YY,ZZ,XXX,LG,YYY,ZZZ
                endif
             !   print *, LBC
                LBOUND(iLL)=LBC
                VDEP0(iLL)=XX
                FIXEDMR(iLL)=YY
                if (LBOUND(iLL).eq.3) then
-                distflux(iLL)=ZZ !distributed flux
+C             distributed flux
+                distflux(iLL)=ZZ
                else
-                  SGFLUX(iLL)=ZZ  !lower boundary flux
+C             lower boundary flux
+                  SGFLUX(iLL)=ZZ
                endif
                distheight(iLL)=XXX
                MBOUND(iLL)=LG
                SMFLUX(iLL)=YYY
                VEFF0(iLL)=ZZZ
-
-               if (species.EQ.'CO2') FCO2=YY !hardcoding woohoo! CO2 only works as fixed mixing ratio. This could be handled better...
+C      CO2 only works as fixed mixing ratio. This could be handled better.
+               if (species.EQ.'CO2') FCO2=YY
 
             endif
 
             if (SPECTYPE.EQ.'IN') then
                iIN=iIN+1
-               backspace 4  !return to previous line in species.dat file
-               read(4,209) XX  !read in fixed mixing ratios
-               if (species.EQ.'CO2') FCO2=XX   !hardcoding woohoo!  !need to do N2 as well
+C              Returns to previous line in species.dat file
+               backspace 4
+C              Reads in fixed mixing ratios
+               read(4,209) XX
+C            Hardcoding woohoo! need to do N2 as well WARNING
+               if (species.EQ.'CO2') FCO2=XX
             endif
 
             if (SPECTYPE.EQ.'TD')iTD=iTD+1
@@ -650,27 +725,33 @@ C - READ IN SPECIES NAMES, ATOMIC NUMBERS, AND BOUNDARY CONDITIONS
          I=I+1
       enddo
 
-
- 203  FORMAT(A8,3X,A2)  !for species name and type
- 207  format(15X,6(I1,1X))      !for elemental counts
-! 208  format(30X,I1,5X,4(E7.1,1X),I1,6X,2(E7.1,1X))  !for boundary conditions (original)
- 208  format(30X,I1,5X,2(E8.2,1X),E9.3,1X,E7.1,1X,I1,6X,2(E7.1,1X))  !for boundary conditions
- 210  format(30X,I1,5X,2(E7.1,1X),E9.3,1X,E7.1,1X,I1,6X,2(E7.1,1X)) !for boundary conditions
-c 208  format(30X,I1,5X,2(E8.1),E9.3,1X,E7.1,1X,I1,6X,2(E7.1,1X))  !for boundary conditions
- 209  format(30X,E7.1) !for INERT species boundary conditions
+C     format for species name and type
+ 203  FORMAT(A8,3X,A2)
+C     format for elemental counts
+ 207  format(15X,6(I1,1X))
+C   FOLLOWING FORMATS BELOW ARE FOR BOUNDARY CONDITIONS
+      !Original boundary conditions
+C 208  format(30X,I1,5X,4(E7.1,1X),I1,6X,2(E7.1,1X))
+ 208  format(30X,I1,5X,2(E8.2,1X),E9.3,1X,E7.1,1X,I1,6X,2(E7.1,1X))
+ 210  format(30X,I1,5X,2(E7.1,1X),E9.3,1X,E7.1,1X,I1,6X,2(E7.1,1X))
+c 208  format(30X,I1,5X,2(E8.1),E9.3,1X,E7.1,1X,I1,6X,2(E7.1,1X))
+C     Format for INERT species boundary conditions
+ 209  format(30X,E7.1)
 
  96   CONTINUE
 
 c      stop
+
+C so far, the only use of mass in Difco,where it is summed over NQ,
+C           -so it would be OK to go higher
+C           Below are molecular weights (NQ1)
       mass=atomsO*16.+atomsH*1.+atomsC*12.+atomsS*32.+atomsN*14.
-     $  + atomsCL*34. !molecular weights (NQ1)
-!so far, the only use of mass in Difco,where it is summed over NQ, so would be OK to go higher
+     $  + atomsCL*34.
 
-
+C     !we are setting CLO as 'neutral"
+C     !redoxstate goes from 1-NQ1 in Output
       redoxstate = atomsO*1.0 + atomsH*(-0.5) + atomsS*(-2.) +
      $  atomsCL*(-1.0) + atomsC*(-2)  !N=0
-!we are setting CLO as 'neutral"
-!redoxstate goes from 1-NQ1 in Output
 
 c      print *, redoxstate
 c      print *, fixedmr
@@ -721,16 +802,18 @@ corig 200  FORMAT(10X,A8,2X,A8,2X,A8,2X,A8,2X,A8)
 
 
 
-c-mc this is bad code.  there is probably some way to do this with the read in above
-c-mc or even if necessary, some way to redo the read without closing and opening the file again
-c-mc whatever
+c-mc this is bad code. there is probably some way to do this
+c-mc    -with the read in above
+c-mc or even if necessary, some way to redo the read without
+c-mc closing and opening the file again     WARNING
       close(9)
       ! chemical reaction file
-      open(9, file='PHOTOCHEM/INPUTFILES/reactions.rx',status='OLD') 
+      open(9, file='PHOTOCHEM/INPUTFILES/reactions.rx',status='OLD')
       read(9,204) REACTYPE
  204  FORMAT(48X,A5)
 
-      close(9)  !close this because Rates.f and Initphoto.f will re-open it later.
+C    close this because Rates.f and Initphoto.f will re-open it later.
+      close(9)
 
 
 
@@ -749,21 +832,31 @@ C ***** REPLACE HOLLERITH LABELS WITH SPECIES NUMBERS IN JCHEM *****
       print *, ISPEC
       print *, 'ispec(i)', ISPEC(i)
       print *, (CHEMJ(L,J),L=1,5)
-      GOTO 25     ! quit; error in reactions
+      ! quit; error in reactions
+      GOTO 25
    5  CONTINUE
 C
 
 C ***** FILL UP CHEMICAL PRODUCTION AND LOSS MATRICES *****
       DO 7 M=1,2
-      N = 3-M          !so N=2, then 1
+C   !so N=2, then 1
+      N = 3-M
       DO 7 J=1,NR
-      I = JCHEM(M,J)   !so I = JCHEM(1,NR) then JCEHM(2,NR)
-      IF(I.LT.1.OR.I.GT.NSP) GO TO 7    !skips 0 (i.e. nothing) and NSP1 (HV)
-      NUML(I) = NUML(I) + 1             !counter of how many reactions species I is involved with
-      IF(NUML(I).GT.NMAX) GOTO 20    ! quit; too many reactions  (seems unnecesary, but whatever)
+C   !so I = JCHEM(1,NR) then JCEHM(2,NR)
+      I = JCHEM(M,J)
+C   !skips 0 (i.e. nothing) and NSP1 (HV)
+      IF(I.LT.1.OR.I.GT.NSP) GO TO 7
+C   !counter for how many reactions species I is involved with
+      NUML(I) = NUML(I) + 1
+C   !quit; too many reactions  (seems unnecesary, but whatever)
+      IF(NUML(I).GT.NMAX) GOTO 20
       K = NUML(I)
-      ILOSS(1,I,K) = J               !ILOSS(1,species in pos 1, species reac#) then ILOSS(1,spec in pos 2, reac#)= global reaction #
-      ILOSS(2,I,K) = JCHEM(N,J)      !ILOSS(1,species in pos 1, species reac#) then ILOSS(1,spec in pos 2, reac#)= other species
+C   !ILOSS(1,species in pos 1, species reac#)
+C     -then ILOSS(1,spec in pos 2, reac#)= global reaction #
+      ILOSS(1,I,K) = J
+C   !ILOSS(1,species in pos 1, species reac#)
+C     -then ILOSS(1,spec in pos 2, reac#)= other species
+      ILOSS(2,I,K) = JCHEM(N,J)
    7  CONTINUE
 C
       DO 8 M=3,5
@@ -787,11 +880,13 @@ c-mc check mass balance of chemical reactions
       rhNcount=0
       rhCLcount=0
 
-      numprod=3    !assume 3 products unless..
+C     !assume 3 products unless..
+      numprod=3
       if (JCHEM(5,i).EQ.0) numprod=2
       if (JCHEM(4,i).EQ.0) numprod=1
 
-      do j=0,numprod-1   !this loop counts up the mass on the right hand side of the .rx
+C   This loop counts up the mass on the right hand side of the .rx
+      do j=0,numprod-1
          rhOcount=rhOcount+atomsO(JCHEM(3+j,i))
          rhHcount=rhHcount+atomsH(JCHEM(3+j,i))
          rhCcount=rhCcount+atomsC(JCHEM(3+j,i))
@@ -824,14 +919,16 @@ c
 c this next little bit creates:
 c photoreac(kj) - an array of species numbers for each photolysis reaction.
 c                 used in absorbers/columndepth computations
-c photospec(ks) - the unique photolysis reaction numbers (i.e. unique elements of photoreac)
+c photospec(ks) - the unique photolysis reaction numbers
+C                 (i.e. unique elements of photoreac)
 c                 used in Initphoto.f to fill up sq, the cross section vector
 c photonums(kj) - the reaction number of each photolysis reaction
 c                 used in Photo.f to fill up the A vector of rates
 
 
+C A vector of length nr with 1's in the location where photolysis reactions are
        testvec=INDEX(REACTYPE,'PHOTO')
-       !a vector of length nr with 1's in the location where photolysis reactions are
+
 
 
         jcount=1
@@ -839,14 +936,16 @@ c                 used in Photo.f to fill up the A vector of rates
         juniq=1
        do i=1,nr
         if (testvec(i).eq.1.) then
-           photoreac(jrcount)=JCHEM(1,i)   !capture the species number of each photo reaction
-           photonums(jrcount)=i             !capture the reaction number of each photoreaction
+C    Captures the species number of each photo reaction
+           photoreac(jrcount)=JCHEM(1,i)
+C    Captures the reaction number of each photoreaction
+           photonums(jrcount)=i
 
 c           print *, jrcount,i,JCHEM(1,i),(CHEMJ(m,i),m=1,5)
 
            jrcount=jrcount+1
 
-           !capture the unique photolysis species in photospec
+C    Captures the unique photolysis species in photospec
            if (juniq.eq.1) then
               photospec(juniq)=JCHEM(1,i)
               juniq=juniq+1
@@ -897,7 +996,8 @@ C - SOME CHECKS TO MAKE SURE THE INPUT FILES JIVE WITH PARAMATERS.INC
       endif
 
 
-c-mc the below could be made into a nice printout in the out.out file if someone felt like it.
+c-mc the below could be made into a nice printout in the out.out file
+c     WARNING was this dealt with
 c       print *, SUM(INDEX(REACTYPE,'PHOTO'))
 c       print *, SUM(INDEX(REACTYPE,'2BODY'))
 c       print *, SUM(INDEX(REACTYPE,'3BODY'))
@@ -924,7 +1024,7 @@ C uses Kopparapu et al 2012 scalings for earth-equivalent distance
          IF (msun.eq.76) FSCALE = FSCALE * 0.866
          IF (msun.eq.21) FSCALE = FSCALE * 0.920
          IF (msun.eq.20) FSCALE = FSCALE * 0.911
-         
+
          print *, 'fscale is ', fscale
       ENDIF
 
@@ -932,19 +1032,24 @@ C uses Kopparapu et al 2012 scalings for earth-equivalent distance
 
 C
       IF (IRESET.eq.1) CALL RESET
-C Defines mixing ratio values for modern earth; don't need next section that pulls ancient earth mixing ratios from in.dist
+C Defines mixing ratio values for modern earth; don't need next section that
+C       pulls ancient earth mixing ratios from in.dist
 
       IF (IRESET.eq.0) then
 C ***** READ THE INPUT DATAFILE *****
 
 c read in formatted input data file
 
-
-      IROW = 10  !num columns in .dist file
-      LR = NQ/IROW + 1      !NQ=80  -> 9
-      RL = FLOAT(NQ)/IROW + 1  !9
-      DIF = RL - LR  !0
-      IF (DIF.LT.0.001) LR = LR - 1  !so LR=8
+C    num columns in .dist file
+      IROW = 10
+C     NQ=80  -> 9 for below
+      LR = NQ/IROW + 1
+C     RL is equal to 9
+      RL = FLOAT(NQ)/IROW + 1
+C    DIF = 0
+      DIF = RL - LR
+C    LR is equal to 8
+      IF (DIF.LT.0.001) LR = LR - 1
 
       DO L=1,LR
        K1 = 1 + (L-1)*IROW
@@ -953,40 +1058,45 @@ c read in formatted input data file
         read(17, 880) ((USOL(k,i),K=K1,K2),i=1,nz)
        ELSE
           K2 = NQ
-          if (K2-K1 .EQ. 9) then   !this only occurs if NQ is a multiple of 10
+C       this only occurs if NQ is a multiple of 10
+C         if not, code needs to generate a dynamic format statement WARNING?
+          if (K2-K1 .EQ. 9) then
             read(17, 880) ((USOL(k,i),K=K1,K2),i=1,nz)
-          else  !if not, need to generate a dynamic format statement
+          else
            fmtstr='(  E17.8)'
-           write(fmtstr(2:3),'(I1)')K2-K1+1   !OK for one character as this should always be <10
+C           OK for one character as this should always be <10
+           write(fmtstr(2:3),'(I1)')K2-K1+1
            read(17, fmtstr) ((USOL(k,i),K=K1,K2),i=1,nz)
           endif
        ENDIF
       enddo
 
-      !EWS - there was an error in this loop fixed 8/12/2015
+C   EWS - there was an error in this loop fixed 8/12/2015
       DO K=1,LR
          DO I=1,NZ
-           IF(USOL(K,I).lt.1.e-30) USOL(K,I)=1.e-30  !EWS - fixed an error here where USOL=1.e-30 instead of USOL(K,I)=1.e-30
+C   EWS - fixed an error here where USOL=1.e-30 instead of USOL(K,I)=1.e-30
+           IF(USOL(K,I).lt.1.e-30) USOL(K,I)=1.e-30
          END DO
       END DO
 
-      read(17,881) (T(i),EDD(i),DEN(i),O3(i), SL(LCO2,i),i=1,nz) !this final one is CO2 number density
-!SL(NSP-1) will be the density of the final short-lived species if CO2 is removed from the list.  I dont THINK it will matter now that I call DOCHEM with the -1 before starting....
+C   This final one is CO2 number density
+      read(17,881) (T(i),EDD(i),DEN(i),O3(i), SL(LCO2,i),i=1,nz)
+C-SL(NSP-1) will be the density of the final short-lived species
+C if CO2 is removed from the list. I dont THINK it will matter now
+C that I call DOCHEM with the -1 before starting.... WARNING
 ! Changed NSP-1 to LCO2 to avoid hard coding
 
-!gna - we need to make it so that T = T_new
+C gna - we need to make it so that T = T_new
       IF(ICOUPLE.EQ.1) THEN
          DO I=1, NZ
-
                T(I) = T_new(I)
-
          END DO
          print *, 'T0 is'
          print *, T(1)
       ENDIF
 
 
- 
+
         fmtstr='(  E17.8)'
         write(fmtstr(2:3),'(I2)')NP*3
 
@@ -1015,7 +1125,7 @@ c read in formatted input data file
       enddo
 c
 c finish setting boundary conditions:
-!sgflux, vdep, smflux, and distributed fluxes are already set
+C sgflux, vdep, smflux, and distributed fluxes are already set
         do i=1,nq
          if (LBOUND(i).EQ.1) USOL(i,1)=fixedmr(i)
         enddo
@@ -1024,15 +1134,15 @@ c finish setting boundary conditions:
 
 C added by giada
       OPEN(unit=999, file='COUPLE/time_frak_photo.out')
- 909  FORMAT(1X, F4.2, 7X, F8.3, 5X, F18.16, 5X, I2, 5X, I2, 
+ 909  FORMAT(1X, F4.2, 7X, F8.3, 5X, F18.16, 5X, I2, 5X, I2,
      &     9X, I4, 6X, F4.2)
- 908  FORMAT(1X, 'timega', 5X, 'P0', 10X, 'frak', 18X, 'msun', 4X, 
+ 908  FORMAT(1X, 'timega', 5X, 'P0', 10X, 'frak', 18X, 'msun', 4X,
      &   'ihztype', 6X, 'NZ', 6X, 'FSCALE')
       print *, frak
       print *, P0
       print *, msun
       print *, ihztype
-      print *, NZ     
+      print *, NZ
       print *, FSCALE
       WRITE(999,908)
       WRITE(999,909) timega, P0, frak, msun, ihztype, NZ, FSCALE
@@ -1041,7 +1151,7 @@ C
 C
 c-mc
 c-mc  this block reads in a parameter file which, for the moment, is just
-c-mc  a multulplier for the o2 or ch4 concentration
+c-mc  a multulplier for the O2 or CH4 concentration
 c-mc
 
        open(10, file='PHOTOCHEM/INPUTFILES/params.dat',status='OLD')
@@ -1054,8 +1164,9 @@ c          print *, i, ISPEC(i)
 c       enddo
 c       stop
 
-c make any changes
-       poop3 = 1./1.!*10.**1.94 ! use this to diddle pressure  (from KZ mars code)
+c make any changes WARNING
+C     -use this to change pressure (from KZ mars code)
+       poop3 = 1./1.!*10.**1.94
 
 c       print *,USOL(LO2,1),2**ch4mult,2.0**ch4mult,
 c     $       USOL(LO2,1)/(2.0**ch4mult)
@@ -1068,6 +1179,7 @@ c        stop
 
       do I=1,NZ
 c-mc fix this stuff when all done (or maybe think of a better way to perturb)
+C       WARNING ABOVE
 
 !commenting these out for the HCL run
 
@@ -1092,36 +1204,50 @@ C     FO2 = ground level O2 mixing ratio used in heritage calculations
 
       LTIMES = 0
 C      ZY = 50. why was this ever hardcoded? :(  In input_photochem.dat now
-      FO2 = USOL(LO2,1)  ! fill up a heritage constant, eventually this should be purged.
+C   fill up a heritage constant, eventually this should be purged. WARNING
+      FO2 = USOL(LO2,1)
 
 
-      CALL PHOTGRID  !sets up vertical grid
+C  CALL below sets up vertical grid
+      CALL PHOTGRID
 
-      JTROP=minloc(Z,1, Z .ge. ztrop)-1 !height index for the tropopause (-1 given the staggered grid)
-                                        !the 1 in the second postion tells minloc to return a scalar
+C   height index for the tropopause (-1 given the staggered grid)
+C      the 1 in the second postion tells minloc to return a scalar
+      JTROP=minloc(Z,1, Z .ge. ztrop)-1
+
 
 
 c       print *, 'enter surface T'
 c       read(*,'(F3.0)') TINC
 c       print *, TINC
 
-c diddle Tempterature
+C    Swtich Around Tempterature
       do i=1,NZ
        if (i.le. JTROP) then
           zkm=Z(i)/1.e5
-c         T(i) = 273. - 6.5*i - 0.25*i*i  ! in Jim's original model
-c         T(i) = 288. - 6.5*i - 0.25*i*i  ! what we are used for the sulfur paper
-c         T(i) = 293. - 6.5*i - 0.25*i*i  ! what we are using for now - 286K at 0.5 km. - i dont think this was the intended effect
+C        in Jim's original model BELOW WARNING
+c         T(i) = 273. - 6.5*i - 0.25*i*i
+C        what we are used for the sulfur paper
+c         T(i) = 288. - 6.5*i - 0.25*i*i
+C        what we are using for now - 286K at 0.5 km.
+C             - i dont think this was the intended effect
+c         T(i) = 293. - 6.5*i - 0.25*i*i
 
-c         T(i) = 290. - 6.5*zkm - 0.25*zkm**2  !this somewhat mimics what's above - where T was computed on a 1km grid that didn't match up directly with the Z grid at 0.5,1.5, etc.
+C This somewhat mimics what's above - where T was computed on a 1km grid that
+C      didn't match up directly with the Z grid at 0.5,1.5, etc.
+c         T(i) = 290. - 6.5*zkm - 0.25*zkm**2
 
+C     testing a return to cold Archean
+c          T(i) = Tinc - 6.5*zkm - 0.25*zkm**2
+C     testing a return to cold Archean
+c          print *, 289 - 6.5*zkm - 0.25*zkm**2
 
-c          T(i) = Tinc - 6.5*zkm - 0.25*zkm**2   !testing a return to cold Archean
-c          print *, 289 - 6.5*zkm - 0.25*zkm**2   !testing a return to cold Archean
-
-c         T(i) = 293. - 6.5*zkm - 0.25*zkm**2  !this somewhat mimics what's above - where T was computed on a 1km grid that didn't match up directly with the Z grid at 0.5,1.5, etc.
-c         print *,zkm, T(i)  !ok, this is close to the T profile that we were using in the NZ=80 case
-!         T(i) = 290. - 6.5*i - 0.25*i*i  ! TD test - uncommenting for now
+C   this somewhat mimics what's above - where T was computed on a 1km grid that
+C          didn't match up directly with the Z grid at 0.5,1.5, etc.
+c         T(i) = 293. - 6.5*zkm - 0.25*zkm**2
+C   ok, this is close to the T profile that we were using in the NZ=80 case
+c         print *,zkm, T(i)
+C         T(i) = 290. - 6.5*i - 0.25*i*i  ! TD test - uncommenting for now
 
 c        T(i) = 233. - 6.2*i - 0.25*i*i  ! cold earth ???
 c        T(i) = 260. - 7.0*i !- 0.25*i*i  ! cold earth ???
@@ -1146,29 +1272,39 @@ c      enddo
 
       CALL DENSTY(FO2,poop3)
       CALL RATES
-      CALL DIFCO(FO2)  !computes diffusion coefficents (K*N) and binary diffusion coefficents for H and H2
+C    computes diffusion coefficents (K*N) and binary
+C          diffusion coefficents for H and H2
+      CALL DIFCO(FO2)
       CALL PHOTSATRAT(JTROP,H2O)
-      CALL DOCHEM(FVAL,-1,JTROP,iSL,USETD)      !IDO=-1, fill up SL for accurate calculation on first timestep
+C    IDO=-1, fill up SL for accurate calculation on first timestep
+      CALL DOCHEM(FVAL,-1,JTROP,iSL,USETD)
 
       if (PLANET .EQ. 'EARTH') then
-       PRONO = PRONO/1.  ! current column integrated NO production rate on Earth
+C    current column integrated NO production rate on Earth
+       PRONO = PRONO/1.
 
- 
-                      ! divide by 1000 turns off ltning
+
+C                   ! divide by 1000 turns off ltning
 c       PRONO = PRONO/1.e6 ! ATACAMA
       else if (PLANET .EQ. 'MARS') then
-       PRONO = PRONO/1.E9 ! divide by 1e9 turns off lightning for dry mars
+C      !divide by 1e9 turns off lightning for dry mars
+       PRONO = PRONO/1.E9
       endif
 
-      if (mbound(LH2) .gt. 0) then  !i.e if constant mr or constant flux UBC
+C    !i.e if constant mr or constant flux UBC
+      if (mbound(LH2) .gt. 0) then
         do i=1,nz
-            bHN2(i) = 0.0   ! don't use molecular diffusion
+C        !don't use molecular diffusion
+            bHN2(i) = 0.0
             bH2N2(i) = 0.0
-c           bXN2(i) = 0.0   ! don't use molecular diffusion
+C           !don't use molecular diffusion
+c           bXN2(i) = 0.0
         enddo
-      else !  use effusion velocity formulation of diffusion limited flux
+      else
+C      !use effusion velocity formulation of diffusion limited flux
         Veff(LH) = 1.0*bhN2(nz)/DEN(NZ)
-     $     *(1./Hscale(nz) - 1./scale_H(LH,nz))   ! diff lim flux
+C      !diff lim flux
+     $     *(1./Hscale(nz) - 1./scale_H(LH,nz))
         Veff(LH2) = 1.0*bH2N2(nz)/DEN(NZ)
      $     *(1./Hscale(nz) - 1./scale_H(LH2,nz))
       endif
@@ -1176,14 +1312,16 @@ c           bXN2(i) = 0.0   ! don't use molecular diffusion
 !gna - added coupling stuff for water here (just below tropopause)
       do J=1,JTROP
        IF(ICOUPLE.eq.0) THEN
-       USOL(LH2O,J) = H2O(J)   !sets H2O to relative humidity in troposphere
+C     !sets H2O to relative humidity in troposphere
+       USOL(LH2O,J) = H2O(J)
        ELSE
-       USOL(LH2O,J) = water(J)  !set to h2o from clima if coupling on
+C     !set to h2o from clima if coupling on
+       USOL(LH2O,J) = water(J)
        ENDIF
       enddo
 
-       !it's having mega problems for low h2o profiles for cold surface environments
-       !here is a fix for now
+C  it's having mega problems for low h2o profiles for cold surface environments
+C      here is a fix for now  WARNING
        IF(T(1).lt.260) THEN
           print *, 'scaling water'
 
@@ -1200,28 +1338,34 @@ c           bXN2(i) = 0.0   ! don't use molecular diffusion
 
 
       IF (PLANET .eq. 'EARTH') CALL LTNING(FO2)
-      CALL AERTAB   !makes table of vapor pressures for H2O and H2SO4
+C     !makes table of vapor pressures for H2O and H2SO4
+      CALL AERTAB
       NZ1 = NZ - 1
       HA = HSCALE(NZ)
-      NRAIN = 0   ! count of calls to rainout
-c orig      DT = 1.E-15   !why the hell is Kevin starting at the Planck time?
+C     The count of calls to rainout
+      NRAIN = 0
+C     why the hell is Kevin starting at the Planck time? WARNING
+c orig      DT = 1.E-15
       DT = 1.E-6
       DTINV = 1./DT
       TIME = 0.
 
-c      NSTEPS = 681     !...
-c      TSTOP = 1.E14    !for runs that are unstable...
+c      NSTEPS = 681
+C    for runs that are unstable...
+c      TSTOP = 1.E14
 
 
-      TSTOP = 1.E17    !as it was...
+      TSTOP = 1.E17
+C     AVB changed to 1 for Earth+CL debugging
       NSTEPS = 10000
-C      ICOUPLE = 1      ! for standalone mode this should probably be the default
+C     for standalone mode this should probably be the default
+C      ICOUPLE = 1
 
 
 C ***** write OUT INITIAL DATA *****
       CALL OUTPUT(0,NSTEPS,0.D0,jtrop, vdep,USOLORIG,USETD, frak)
 
- 
+
 C
 C ***** STORE CONSTANT JACOBIAN COEFFICIENTS *****
 c-mc      DZ2 = DZ*DZ
@@ -1237,7 +1381,8 @@ c-mc      DZ2 = DZ*DZ
          enddo
       enddo
 
-      do i=1,nq   ! first order molecular diffusion terms
+C  First order molecular diffusion terms below
+      do i=1,nq
         do j=1,nz
            ADU(i,j) = 0.0
            ADL(i,j) = 0.0
@@ -1278,7 +1423,8 @@ c     enddo
 c  for H and H2
 c  lower boundary condition
 
-      if (mbound(LH2).eq.0) then   ! diff limited flux implemented as effusion velocity
+C  diff limited flux implemented as effusion velocity
+      if (mbound(LH2).eq.0) then
         DU(LH,1) = DU(LH,1) + bHN2(1)/Den(1)/DZ(1)**2
         ADU(LH,1) = bHN2(1)/Den(1)/DZ(1)/2.*
      6      (1./scale_H(LH,1)-1./H_atm(1))
@@ -1292,13 +1438,13 @@ c upper boundary condition
         DL(LH2,NZ) = DL(LH2,NZ) + bH2N2(nz1)/Den(nz)/DZ(NZ)**2
         ADL(LH2,NZ) = -bH2N2(nz1)/Den(nz)/DZ(NZ)/2.*
      6      (1./scale_H(LH2,nz1)-1./H_atm(nz1))
-c  unused...
+c  unused.
         DD(LH,1) = DU(LH,1)
         ADD(LH,1) = -ADU(LH,1)
         DD(LH2,1) = DU(LH2,1)
         ADD(LH2,1) = -ADU(LH2,1)
 
-c interior grid points   ?fixed 8-13-05
+c interior grid points   fixed 8-13-05
         do j=2,nz1
             DU(LH,j) = DU(LH,j) + bHN2(j)/Den(j)/DZ(j)**2
             ADU(LH,j) = bHN2(j)/Den(j)/DZ(j)/2.*
@@ -1317,9 +1463,10 @@ c interior grid points   ?fixed 8-13-05
             DD(LH2,j) = DU(LH2,j) + DL(LH2,j)
             ADD(LH2,j) = -ADU(LH2,j) - ADL(LH2,j)
         enddo
-      endif  !end molecular diffusion for H and H2 loop
+C     end molecular diffusion for H and H2 loop
+      endif
 
- 
+
 
       do I=1,nz
 c         write(10, 1210) Z(I),DU(1,i),DU(LH,i),DU(LH2,i),DL(1,i),
@@ -1336,50 +1483,63 @@ C
       KL = KD + NQ
 C
 C   write OUT RESULTS EVERY NPR TIME STEPS
-      NPR = 1000 
+      NPR = 500
       PRN = NPR
 
 C   DO PHOTORATES EVERY MP TIME STEPS
       NPHOT = 0
-      MP = 1        !integer since starts with M
-      PM = MP       !float since starts with P
+C    integer since starts with M
+      MP = 1
+C    float since starts with P
+      PM = MP
       NN = 0
 C
 C ***** START THE TIME-STEPPING LOOP *****
-      DO 1 N=1,NSTEPS     !calculation is stopped if it hasn't converged by NSTEPS...
+C   calculation is stopped if it hasn't converged by NSTEPS
+      DO 1 N=1,NSTEPS
       TIME = TIME + DT
-      NN = NN + 1                  !counter for number of timesteps
-      MS = (N-1)/MP                !both integers, so answer is modular (0 for N=1-3 , 1 for N=4-6, etc.)
-      SM = (N-1)/PM                !SM=0,1/3,2/3,1,4/3,5/3,2......
+C   counter for number of timesteps
+      NN = NN + 1
+C   both are integers, so answer is modular(0 for N=1-3 , 1 for N=4-6, etc.)
+      MS = (N-1)/MP
+C   SM=0,1/3,2/3,1,4/3,5/3,2......
+      SM = (N-1)/PM
       IF (NN.EQ.NSTEPS) SM = MS
-      IF (SM-MS.GT.0.01) goto 18   ! skip PHOTO
-      IF (N.GT.1 .AND. TIME.LT.1.E2) goto 18  !skip PHOTO    !do photo on first time step, not again until 100 seconds
+C   To skip PHOTO
+      IF (SM-MS.GT.0.01) goto 18
+C   Doing photo on first time step, not again until 100 seconds
+      IF (N.GT.1 .AND. TIME.LT.1.E2) goto 18
 
-      
-    
-! store mixing ratio of all species that take place in photolysis reactions
-! these are the absorbers which block solar radiation
-! If S8 occurs in the gas phase, we use Andy Youngs method to calculate S8 photorates which requires care
+
+
+C store mixing ratio of all species that take place in photolysis reactions
+C these are the absorbers which block solar radiation
+C If S8 occurs in the gas phase, we use Andy Youngs method to calculate S8
+C  photorates which requires care
 
          lpolyscount=1
       do k=1,kj
 
        do i=1,nz
 
-          if (photoreac(k).gt.nq) then  !this gets any SL/IN species that have photorates
+C     this gets any SL/IN species that have photorates
+          if (photoreac(k).gt.nq) then
 
              absorbers(k,i)=ABS(SL(INT(photoreac(k)),i))/DEN(I)
 
 c           if (i.eq.1) print *, k,photoreac(k),ISPEC(INT(photoreac(k))),
 c     $       absorbers(k,i)
 
-           else if (ISPEC(INT(photoreac(k))).eq.'S8      ') then    !quasi-hardcoded S8 behavior
+C     quasi-hardcoded S8 behavior WARNING
+           else if (ISPEC(INT(photoreac(k))).eq.'S8      ') then
 
               absorbers(k,i)=ABS(USOL(INT(photoreac(k)),i))
-              if (lpolyscount .eq. 2) absorbers(k,i)=0.0 !S8R doesn't really exist
-              !S8L doesn't really either, but this is how we are rolling for now...
-              !we are filling up absorbers for S8R and S8, but S8 doesn't have a cross section
-              !so only S8R is actually absorbing photons here in the RT scheme.
+              if (lpolyscount .eq. 2) absorbers(k,i)=0.0
+C           S8R doesn't really exist
+C           S8L doesn't really either, but this is how we are rolling for now...
+C           we are filling up absorbers for S8R and S8, but S8 doesn't
+C           have a cross section
+C           so only S8R is actually absorbing photons here in the RT scheme.
               if (i.eq.nz) then
 c            print *, k,photoreac(k),ISPEC(INT(photoreac(k))),lpolyscount
                  lpolyscount=lpolyscount+1
@@ -1394,20 +1554,22 @@ c            print *, k,photoreac(k),ISPEC(INT(photoreac(k))),lpolyscount
 c      print *, 'stopping in main'
 c      stop
 
-!fill up some heritage vectors rather than try to extract them from the code...
-! I am assuming here that the code will always have these species in it so no if's are needed
+C Fill up some heritage vectors rather than try to extract them from the code
+C I am assuming here that the code will always have these species
+C  in it so no if's are needed
 
        JH2O=minloc(photoreac,1,ISPEC(INT(photoreac)).eq.'H2O    ')
        JO2_O1D=minloc(photoreac,1,ISPEC(INT(photoreac)).eq.'O2    ')
        JO3_O1D=minloc(photoreac,1,ISPEC(INT(photoreac)).eq.'O3    ')
+C    Finds the first entry in photoreac for the given speices
        JCO2=minloc(photoreac,1,ISPEC(INT(photoreac)).eq.'CO2    ')
-!the above finds the first entry in photoreac for the given speices
+
 
       do I=1,NZ
        H2O(I) = absorbers(JH2O,I)
        O2(I) =  absorbers(JO2_O1D,I)
        O3(I) = absorbers(JO3_O1D,I)
-corig       CO2(I) = FCO2
+C orig       CO2(I) = FCO2
        CO2(I) = absorbers(JCO2,I)
       enddo
 
@@ -1417,14 +1579,16 @@ corig       CO2(I) = FCO2
       IF (NN.EQ.NSTEPS) IDO = 1
       CALL PHOTO(ZY,AGL,LTIMES,ISEASON,IZYO2,IO2,INO,IDO,timega,frak,
      &      msun,ihztype)
-  
+
       CALL RAINOUT(JTROP,NRAIN,USETD)  !ok
 
 
-      CALL AERCON
- 
 
-      
+
+      CALL AERCON
+
+
+
 c      print *, photoreac
 c      stop
 
@@ -1436,7 +1600,7 @@ c      stop
 
 C
 C   TIME-DEPENDENT BOUNDARY CONDITIONS
-C     (NOTE THAT THE INCLUSION OF
+C     (NOTICE THAT THE INCLUSION OF
 C     A FALL VELOCITY FOR PARTICLES IS MATHEMATICALLY EQUIVALENT TO
 C     INCREASING THE DEPOSITION VELOCITY AT THE SURFACE.  AT THE TOP
 C     BOUNDARY, ZERO FLUX IS ACHIEVED BY SETTING THE EFFUSION VELO-
@@ -1447,7 +1611,7 @@ C -Mark C
 c Using variables for the particle indeces to kill warnings. We should
 c eventually migrate this to the read-in. But that will require more
 c testing, or someone to figure out how to do that in Mark's input
-c framework. -Shawn D-G
+c framework. -Shawn D-G       WARNING
 
 
       if(USETD.EQ.0) then
@@ -1478,12 +1642,13 @@ c framework. -Shawn D-G
         NPHC2 = LHCAER2 - NQ
       endif
 
- 
- 
-c estimate CO2 photolysis above the top of the grid and return CO + O to the upper grid point
+
+
+c estimate CO2 photolysis above the top of the grid
+C     and return CO + O to the upper grid point
 c NOTE: this behavior is turned on and off by setting MBOUND=2 in species.dat
 
-c (now above)     JCO2=minloc(photoreac,1,ISPEC(INT(photoreac)).eq.'CO2    ')
+c (now above)   JCO2=minloc(photoreac,1,ISPEC(INT(photoreac)).eq.'CO2    ')
       JCO2_O1D = JCO2+1
       VCO2 = (prates(JCO2,NZ) + prates(JCO2_O1D,NZ)) * HA
       SMFLUX(LO) = - VCO2*CO2(NZ)*DEN(NZ)
@@ -1495,7 +1660,8 @@ c (now above)     JCO2=minloc(photoreac,1,ISPEC(INT(photoreac)).eq.'CO2    ')
 
 C  PHOTOLYSIS RATES FORMATTED I/O AND PRINTOUT
 
-      IROW = 8  !num columns of photorates
+C  Number of columns of photorates
+      IROW = 8
       LR = KJ/IROW + 1
       RL = FLOAT(KJ)/IROW + 1
       DIF = RL - LR
@@ -1511,11 +1677,13 @@ C  PHOTOLYSIS RATES FORMATTED I/O AND PRINTOUT
        ELSE
           K2 = kj
            fmtstr="(/5X,'Z',6X,  A11)"
-           write(fmtstr(13:14),'(I1)')K2-K1+1   !OK for one character as this should always be <10
+C       OK for one character as this should always be <10
+           write(fmtstr(13:14),'(I1)')K2-K1+1
            write(14, fmtstr) (photolabel(K),K=K1,K2)
 
            fmtstr2='(  (1PE9.2,2X))'
-           write(fmtstr2(2:3),'(I2)')K2-K1+2   !+2 here so it writes the Z a well
+C       +2 is here so that it writes the Z a well
+           write(fmtstr2(2:3),'(I2)')K2-K1+2
            write(14, fmtstr2) (Z(I),(prates(k,i),K=K1,K2),i=1,nz,3)
        ENDIF
       enddo
@@ -1526,16 +1694,18 @@ C  PHOTOLYSIS RATES FORMATTED I/O AND PRINTOUT
  884  format(/5X,'Z',6X,8A11)
  885  FORMAT(//1X,'PHOTOLYSIS RATES')
 
-      endif !end photorates printout
+C   end photorates printout
+      endif
 
- 18   continue   !start here if we are skipping PHOTO
+C   start here if we are skipping PHOTO
+ 18   continue
 
 
 C
       CALL SEDMNT(FSULF,USETD,frak,HCDENS,ihztype)
 
-
-      if (USETD.EQ.0) then   !particles in main loop
+C    particles in main loop
+      if (USETD.EQ.0) then
 
       do J=1,NZ
       do JJ=1, NP
@@ -1554,14 +1724,16 @@ c gna: the way it's done below, you have to COMMENT OUT these lines to remove
 c particles from the code.  Aaak!  The lines above are maybe not perfect
 c but better than commenting out stuff when the input files change...
 
-c      AERSOL(J,2) = USOL(LS8AER,J)*DEN(J)/CONVER(J,2)     !ACK hardcoded particle numbers
-c      AERSOL(J,3) = USOL(LHCAER,J)*DEN(J)/CONVER(J,3)     !ACK hardcoded particle numbers
-c      AERSOL(J,4) = USOL(LHCAER2,J)*DEN(J)/CONVER(J,4)     !ACK hardcoded particle numbers
+C-ACK Hardcoded particle numbers below
+c      AERSOL(J,2) = USOL(LS8AER,J)*DEN(J)/CONVER(J,2)
+c      AERSOL(J,3) = USOL(LHCAER,J)*DEN(J)/CONVER(J,3)
+c      AERSOL(J,4) = USOL(LHCAER2,J)*DEN(J)/CONVER(J,4)
 c      print *, AERSOL(J,1),AERSOL(J,2),USOL(LSO4AER,J),CONVER(J,1),
 c     &         USOL(LS8AER,J),CONVER(J,2)
 
-!conver is the number of molecules/particle, so that main calcuations are done in molecule space
-      !molecules/cm3 *#particles/molecule - > AERSOL [# particles/cm3]
+C   conver is the number of molecules/particle, so that main calcuations
+C     are done in molecule space
+C      molecules/cm3 *#particles/molecule - > AERSOL [# particles/cm3]
       enddo
       enddo
 
@@ -1578,8 +1750,8 @@ c   it may be that I should instead change flux estimates to use the "2"
       DO 38 I=2,NZ1
       DPU(I,J) = WFALL(I+1,J)*DEN(I+1)/DEN(I)/(2.*DZ(I))
   38  DPL(I,J) = WFALL(I-1,J)*DEN(I-1)/DEN(I)/(2.*DZ(I))
-
-      else  !particles in tri-diag
+C   particles in tri-diag
+      else
 
       do J=1,NZ
        do k=1,NP
@@ -1596,15 +1768,19 @@ c   it may be that I should instead change flux estimates to use the "2"
 
 C ***** SET UP THE JACOBIAN MATRIX AND RIGHT-HAND SIDE *****
 
-c-mc gonna start here and try no to mess anything up - point is to feedback the solution on itself
-c-mc first go is to try to just repeat a few times - if this works, then set up a check for convergence
+c-mc gonna start here and try no to mess anything up - point is to
+c-mc feedback the solution on itself
+c-mc first go is to try to just repeat a few times - if this works,
+c-mc then set up a check for convergence
 
 c-mc OK seems to work.  4 iterations seems to provide a converged solution.
-c-mc test 1  - check the solution with 4 iterations against that of feeding back the code 4 times...
+c-mc test 1  - check the solution with 4 iterations against that of
+c-mc feeding back the code 4 times...
 c-mc  this test looks good - see 'changetesting' sheet in ~/keff/redox.xls
-c-mc next up is to save some intermediate output to see how much things are changing in subsquent iterations
-c-mc  I should try to identify an epsilon that satisfies a similar global condition to that of just repeating
-c-mc the loop four times...
+c-mc next up is to save some intermediate output to see how much things are
+c-mc changing in subsquent iterations
+c-mc  I should try to identify an epsilon that satisfies a similar global
+c-mc condition to that of just repeating the loop four times...
 
 c-MC - turning off iterated jacobians for chlorine testing
 c-MC turning back on.../off
@@ -1620,43 +1796,55 @@ c-MC turning back on.../off
 C
 C     (DJAC IS EQUAL TO (1/DT)*I - J, WHERE J IS THE JACOBIAN MATRIX)
 c-mc  NOTE - DJAC is in band storage form.  see sgbfa header for details.
-c-mACK expand me...
+c-mACK expand me... WARNING
 
 C
-            
+
 
 
 C   COMPUTE CHEMISTRY TERMS AT ALL GRID POINTS
       IDO = 0
-      if ((NN/NPR)*NPR.eq.NN) IDO = 1  !computes TP, TL
+C   computes TP, TL
+      if ((NN/NPR)*NPR.eq.NN) IDO = 1
       IF (NN.EQ.NSTEPS) IDO = 1
-     
 
-      CALL DOCHEM(FVAL,IDO,JTROP,iSL,USETD)      !IDO=1 happens on last step- computes total production and loss...
- 
+C   IDO=1 happens on last step- computes total production and loss.
+      CALL DOCHEM(FVAL,IDO,JTROP,iSL,USETD)
+
       DO 9 I=1,NQ
       DO 9 J=1,NZ
       K = I + (J-1)*NQ
       RHS(K) = FVAL(I,J)
       if (ITERATE.eq.1) USAVEOLD(I,J) = USOL(I,J)
-!mc testing 4/29/06  used to revert if timestep is too big.
-!mc and also for USOLPREV once the timestep succeedes
-   9  USAVE(I,J) = USOL(I,J)       !original code  - used as part of the reverse euler solver
+C-mc testing 4/29/06  used to revert if timestep is too big.
+C-mc and also for USOLPREV once the timestep succeedes
+C  original code  - used as part of the reverse euler solver
+   9  USAVE(I,J) = USOL(I,J)
 
 C
 
 
-c new code from eddie
-      DO 3 I=1,NQ                            ! Loop through all chemical species
-      DO 11 J=1,NZ                           ! Loop through all vertical atmospheric layers
-c     R(J) = EPSJ * ABS(USOL(I,J))           ! as it was - USOL should be positive here anyway, can probably remove this (Eddie)
-      R(J) = EPSJ * USOL(I,J)                ! R(J) is value to perturb USOL(I,J) by in Jacobian calculation, EPSJ much less than 1
-      !!! This is my debug in other version of code - Eddie !!!
-      IF(R(J).LT.1.e-100) R(J) = 1.e-100 ! PERTURB DEBUG !!!
-      !!! Above ensures no USOL(I,J) falls below double precision limit !!!
-  11  USOL(I,J) = USAVE(I,J) + R(J)          ! Add perturbing quantity to mixing ratio
-      CALL DOCHEM(FV,0,JTROP,iSL,USETD)  ! Call the photochemistry routine
-c                                           ! FV has dimension (NQ,NZ) and holds gas densities
+C     NEW CODE FROM EDDIE
+C   Loop through all chemical species
+      DO 3 I=1,NQ
+C   Loop through all vertical atmospheric layers
+      DO 11 J=1,NZ
+C   as it was - USOL should be positive here anyway,
+C       can probably remove this (Eddie)
+c     R(J) = EPSJ * ABS(USOL(I,J))
+C   R(J) is value to perturb USOL(I,J) by in Jacobian calculation,
+C       EPSJ much less than 1
+      R(J) = EPSJ * USOL(I,J)
+C   This is my debug in other version of code - Eddie !!!  WARNING
+C           ! PERTURB DEBUG !!!
+C   Below ensures no USOL(I,J) falls below double precision limit !!!
+      IF(R(J).LT.1.e-100) R(J) = 1.e-100
+c   Add perturbing quantity to mixing ratio
+  11  USOL(I,J) = USAVE(I,J) + R(J)
+C   Call the photochemistry routine
+C      FV has dimension (NQ,NZ) and holds gas densities
+      CALL DOCHEM(FV,0,JTROP,iSL,USETD)
+c
 c end new code from eddie
 
 c old code
@@ -1673,7 +1861,8 @@ C
       MM = M - I + KD
       DO 12 J=1,NZ
       K = I + (J-1)*NQ
-  12  DJAC(MM,K) = (FVAL(M,J) - FV(M,J))/R(J)      !-J since its orig - perturbed
+C  -J since its orig - perturbed
+  12  DJAC(MM,K) = (FVAL(M,J) - FV(M,J))/R(J)
 C
 
 
@@ -1697,14 +1886,18 @@ C   COMPUTE TRANSPORT TERMS AT INTERIOR GRID POINTS
   13  CONTINUE
 C
 
-c-mc  ok, I need to verify that this is adding in -J in all DJAC calls (check signs above?)
-c-mc ok - Jacobian for transport diagonals is: J~Chem-DD. We want -J and have already
-c-mc filled with -CHEM, so adding DD is appropriate. DTINV is the extra term in the main diagonal
-c-mc J_upper=DU and J_lower=DL, so DJAC (which is -J)  uses -DU and -DL respectivly
+c-mc ok, I need to verify that this is adding in -J in all DJAC calls
+c-mc (check signs above?)     WARNING?
+c-mc ok - Jacobian for transport diagonals is:
+c-mc J~Chem-DD. We want -J and have already
+c-mc filled with -CHEM, so adding DD is appropriate.
+c-mc DTINV is the extra term in the main diagonal
+c-mc J_upper=DU and J_lower=DL, so DJAC (which is -J)
+c-mc uses -DU and -DL respectivly
 
 
       if(USETD.EQ.0) then  !particles in main loop
-!ack - these need to be abstracted...
+C ack - these need to be abstracted... WARNING
 C   ADD ADVECTION TERMS FOR PARTICLES
 
       do L=1,NP
@@ -1726,7 +1919,8 @@ C
 C ***** LOWER BOUNDARY CONDITIONS *****
       DO 15 K=1,NQ
       U(K) = USOL(K,1)
-      LB = LBOUND(K)   !ok as long as we don't model atmospheric Boron
+C   OK as long as we don't model atmospheric Boron (WARNING?)
+      LB = LBOUND(K)
 
       if (LB.eq.0 .OR. LB.eq.3) then
 C       CONSTANT DEPOSITION VELOCITY/SPECIES WITH DISTRIBUTED FLUXES
@@ -1734,7 +1928,7 @@ C       CONSTANT DEPOSITION VELOCITY/SPECIES WITH DISTRIBUTED FLUXES
      2   + ADU(k,1)*(USOL(K,2) + U(K)) - VDEP(K)*U(K)/DZ(1)
         DJAC(KD,K) = DJAC(KD,K) +DTINV +DU(k,1) -ADU(k,1) +VDEP(K)/DZ(1)
         DJAC(KU,K+NQ) = - DU(k,1) - ADU(k,1)
-c  is this right for particles??
+c  is this right for particles?? WARNING
 
       else if (LB .eq. 1) then
 C       CONSTANT MIXING RATIO
@@ -1772,7 +1966,7 @@ C       CONSTANT EFFUSION VELOCITY
      2  + VEFF(I)/DZ(NZ)
         DJAC(KL,K-NQ) = - DL(i,NZ) -ADL(i,NZ)
       else if (MB.eq. 1) then
-c       constant mixing ratio at the top. not debugged
+c       Constant mixing ratio at the top. not debugged WARNING
         RHS(K) = 0.
         do M=1,NQ
           MM = KD + K - M
@@ -1792,9 +1986,10 @@ C   CONSTANT UPWARD FLUX
 
 
 C   HOLD H2O AND S8 CONSTANT BELOW ZTROP
-c   why am I doing this for S8??
+c   why am I doing this for S8?? WARNING
 c  turn it off for S8
-      DO 34 I=1,1   ! Jim apparently was prepared to do this for many species
+C  Jim apparently was prepared to do this for many species
+      DO 34 I=1,1
         L = LH2O
 c        IF (I.EQ.2) L = LS8
         DO 33 J=1,JTROP
@@ -1817,15 +2012,19 @@ C distributed (volcanic) sources
 
       do i=1,nq
        if (LBOUND(i).eq.3) then
-        disth=distheight(i)*1.e5  !convert to cm
-        jdisth=minloc(Z,1, Z .ge. disth)-1 !height index (-1 given the staggered grid)
-                          !the 1 in the second postion tells minloc to return a scalar
+C     convert to cm
+        disth=distheight(i)*1.e5
+C     height index (-1 given the staggered grid)
+C     the 1 in the second postion tells minloc to return a scalar
+        jdisth=minloc(Z,1, Z .ge. disth)-1
+
 
         ZTOP=Z(jdisth)-Z(1)
         ZTOP1=Z(jdisth)+0.5*DZ(jdistH)
 c        print *, ISPEC(i),distH,jdistH,ZTOP,ZTOP1
 
-        do j=2,jdisth !distribute from second level to distheight
+C     distribute from second level to distheight
+        do j=2,jdisth
           K = i + (J-1)*NQ
           rhs(k) = rhs(k) + 2.*distflux(i)*(ZTOP1-Z(j))/(Den(j)*ZTOP**2)
         enddo
@@ -1833,7 +2032,8 @@ c        print *, ISPEC(i),distH,jdistH,ZTOP,ZTOP1
       enddo
 
 
-C below is Kevin's test of a distributed sink.  Keeping in case this is ever desired
+C below is Kevin's test of a distributed sink.
+C Keeping in case this is ever desired
 
 C distribute H2SO4 sink uniformly between 0 and 20 km
 c   I don't know how to keep track of the fluxes
@@ -1847,18 +2047,19 @@ c        enddo
 
 
 
+C testing device to toggle 1st and 2nd order time stepping
+      revEu2=0
 
-      revEu2=0    !testing device to toggle 1st and 2nd order time stepping
-
-
-      if (N .gt. 1 .and. revEu2 .eq.1) then   !do 2nd order (first step always 1st order R.E.)
+C Do 2nd order (first step always 1st order R.E.)
+      if (N .gt. 1 .and. revEu2 .eq.1) then
 
 c-mc first attempt at second order euler
 c  [1/DT*I - a*J]*X = 1/DT*[b*f_{n} - c*f_{n-1} - ?fn] + e*d/dt{f_n}
 c
 c where a=2/3, b=4/3, c=1/3, d=?,e=2/3, X=f_{n+1} - f_{n}
 
-c DJAC has alread been computed as 1/DT*I - J  , and d/dt(f_{n}) has been computed as RHS
+c DJAC has alread been computed as 1/DT*I - J,
+C  and d/dt(f_{n}) has been computed as RHS
 
 
       do j=1,lda
@@ -1867,10 +2068,12 @@ c DJAC has alread been computed as 1/DT*I - J  , and d/dt(f_{n}) has been comput
         enddo
       enddo
 
-c-mc could make this shorter by not multiply the upper NQ rows of djac (which are 0 by definition)
+c-mc could make this shorter by not multiplying the upper NQ rows
+c-mc of djac (which are 0 by definition) WARNING
 
 c renormalize DTINV
-c the previous loop took the main diagonal(which is row KD in band form) to 2/3*1/DT - 2/3J
+c the previous loop took the main diagonal
+C (which is row KD in band form) to 2/3*1/DT - 2/3J
 c so the following returns us to 1/DT - 2/3J
 
       do i=1,nq
@@ -1884,15 +2087,16 @@ c so the following returns us to 1/DT - 2/3J
          RHS(K) = 2.0/3.0*RHS(K)
       enddo
 
-c RHS(K) where K=1,NEQ where NEQ=NQ*NZ, so need to make sure the right usol/height combination is being added at each step:
+c RHS(K) where K=1,NEQ where NEQ=NQ*NZ, so need to make sure the right
+C   usol/height combination is being added at each step:
       do I=1,NQ
        do J=1,NZ
         K = I + (J-1)*NQ
         RHS(K) = RHS(K) +  DTINV*1.0/3.0*(USOL(I,J)-USOLPREV(I,J))
        enddo
       enddo
-
-      endif    !end 2nd order reverse Euler correction loop
+C  End 2nd order reverse Euler correction loop
+      endif
 
 
 
@@ -1924,14 +2128,15 @@ c-mc DJAC is now upper triangular...
 c-mc  after this point, RHS changes to solution vector for DJAC*X = RHS
 c-mc  i.e. "RHS" = X = f_{n+1} - f_{n}, so that f_{n+1} = f{n} + RHS
 
-      J15=minloc(Z,1, Z/1.e5 .ge. 15)-1 !height index (-1 given the staggered grid)
-      J25=minloc(Z,1, Z/1.e5 .ge. 25)-1 !height index (-1 given the staggered grid)
-      J70=minloc(Z,1, Z/1.e5 .ge. 70)-1 !height index (-1 given the staggered grid)
-      J50=minloc(Z,1, Z/1.e5 .ge. 50)-1 !height index (-1 given the staggered grid)
+C   Height Index (-1 given the staggered grid) Below
+      J15=minloc(Z,1, Z/1.e5 .ge. 15)-1
+      J25=minloc(Z,1, Z/1.e5 .ge. 25)-1
+      J70=minloc(Z,1, Z/1.e5 .ge. 70)-1
+      J50=minloc(Z,1, Z/1.e5 .ge. 50)-1
 
 C
 C   COMPUTE NEW CONCENTRATIONS (IGNORE ERRORS IN SEVERAL SPECIES
-C     THAT VIRTUALLY DISAPPEAR UP HIGH)
+C    THAT VIRTUALLY DISAPPEAR UP HIGH)
       EMAX = 0.
       DO 26 I=1,NQ
       DO 26 J=1,NZ
@@ -1944,19 +2149,22 @@ c        ELSEIF (I.EQ.LS4 .AND. USOL(I,J).LT.1.E-20) THEN
 c          USOL(I,J) = USOL(I,J) + RHS(K)
 c        ELSEIF (I.EQ.LS8 .AND. USOL(I,J).LT.1.E-20) THEN
 c          USOL(I,J) = USOL(I,J) + RHS(K)
-corig        ELSEIF(I.EQ.LSO4AER .AND. J.GT.J25) THEN  ! 50, this often causes problems causes the program to fail at 49.5 km!
-c        IF (I.EQ.LSO4AER .AND. J.GT.J25) THEN  ! 50, this often causes problems causes the program to fail at 49.5 km!
+c    50, this often causes problems causes the program to fail at 49.5 km!
+c-orig        ELSEIF(I.EQ.LSO4AER .AND. J.GT.J25) THEN
+c        IF (I.EQ.LSO4AER .AND. J.GT.J25) THEN
 
-!ACK - should return to this now that particles condensation is fixed up (ISOHACK AS well)
+!ACK - should return to this now that
+C      particles condensation is fixed up (ISOHACK AS well)
 
-        IF (I.EQ.LSO4AER.AND. J.GT.J25) THEN  ! a less drastic measure
+c      A less drastic measure
+        IF (I.EQ.LSO4AER.AND. J.GT.J25) THEN
           USOL(I,J) = USOL(I,J) + RHS(K)
-        ELSEIF(I.EQ.LS8AER.AND. J.GT.J25) THEN  ! !!!
+        ELSEIF(I.EQ.LS8AER.AND. J.GT.J25) THEN
           USOL(I,J) = USOL(I,J) + RHS(K)
-        ELSEIF(I.EQ.LHCAER.AND. J.GT.J25) THEN  ! !!!
+        ELSEIF(I.EQ.LHCAER.AND. J.GT.J25) THEN
 c        ELSEIF(I.EQ.LHCAER) THEN  ! !!!
           USOL(I,J) = USOL(I,J) + RHS(K)
-        ELSEIF(I.EQ.LHCAER2.AND. J.GT.J25) THEN  ! !!!
+        ELSEIF(I.EQ.LHCAER2.AND. J.GT.J25) THEN
 c        ELSEIF(I.EQ.LHCAER2) THEN  ! !!!
           USOL(I,J) = USOL(I,J) + RHS(K)
 
@@ -1969,11 +2177,12 @@ c  anyway, I'll set it to say 35 km
 c
 c   more generally I want to ignore errors in anything with
 c   mixing ratios less than say 1e-20
-c       ELSEIF(I.EQ.LNO .AND. J.GT.70) THEN  ! 50, this causes the program to fail at 49.5 km!
+c    50, this causes the program to fail at 49.5 km!
+c       ELSEIF(I.EQ.LNO .AND. J.GT.70) THEN
 c         USOL(I,J) = USOL(I,J) + RHS(K)
-c       ELSEIF(I.EQ.LNO2 .AND. J.GT.70) THEN  ! 50, this causes the program to fail at 49.5 km!
+c       ELSEIF(I.EQ.LNO2 .AND. J.GT.70) THEN
 c         USOL(I,J) = USOL(I,J) + RHS(K)
-c       ELSEIF(I.EQ.LHNO .AND. J.GT.70) THEN  ! 50, this causes the program to fail at 49.5 km!
+c       ELSEIF(I.EQ.LHNO .AND. J.GT.70) THEN
 c         USOL(I,J) = USOL(I,J) + RHS(K)
 
         ELSEIF(I.EQ.LS4) THEN
@@ -1992,9 +2201,11 @@ c
           EMAX = max(EMAX,EREL)
           IF(EREL.LT.EMAX) THEN
             USOL(I,J) = USOL(I,J) + RHS(K)
-          ELSE            !store info on species with largest error
+C       store info on species with largest error
+          ELSE
             IS = I
-            JS = J        !mc -this label is OK, because S will never have a photolysis reaction
+C       mc -this label is OK, because S will never have a photolysis reaction
+            JS = J
             UMAX = USOL(I,J)
             RMAX = RHS(K)
             USOL(I,J) = USOL(I,J) + RHS(K)
@@ -2002,7 +2213,7 @@ c
         ENDIF
 26    CONTINUE
 
- 
+
 
 C
 C   RESET TROPOSPHERIC H2O TO ITS ORIGINAL VALUES, IN CASE IT CHANGED.
@@ -2011,7 +2222,7 @@ C     TENDENCY TO GO NEGATIVE NEAR THE UPPER BOUNDARY, SO MAKE SURE
 C     IT DOESN'T STAY THAT WAY.)
 c-mc I don't get this. If the code works right, it shouldn't change.
 c-mc and conversly if the code doesn't work right, it should be fixed...
-c-mc test this at some point down the road
+c-mc test this at some point down the road WARNING
 
       DO 4 J=1,JTROP
         USOL(LH2O,J) = H2O(J)
@@ -2025,13 +2236,13 @@ c          print *,Z(j), USOL(LSO4AER,j),USOL(LS8AER,j)
 c         USOL(i,j)=abs(USOL(i,j))
 c       enddo
 c      enddo
-      !temp
+C      temp
 
 
       if (USETD.EQ.0) then
-!diddle main loop particles
+C switch around main loop particles
 c 1.e-38 is the smallest number for single precision. We should upgrade
-c this to double precision at some point. -Shawn D-G
+c this to double precision at some point. -Shawn D-G  WARNING
       smallest = 1.e-38
       lcountso4=0
       lcounts8=0
@@ -2095,7 +2306,8 @@ c this to double precision at some point. -Shawn D-G
       endif
       enddo
 
-      endif ! end particle diddlation
+C end particle switching
+      endif
 
 
       !test
@@ -2114,17 +2326,21 @@ c           USOL(i,j)=max(USOL(i,j),smallest)
 *********TRIDIAG STARTS HERE
 
 C ***** SOLVE FOR S8 AND SO4 PARTICLES USING A TRIDIAGONAL INVERSION *****
-c-mc I haven't done the work to port the hc aerosols to the tri-diag.  this would need to be done if desired.
+c-mc I haven't done the work to port the hc aerosols to the tri-diag.
+C-mc this would need to be done if desired.
 
       DO 58 L=1,NP
-      I = NQ + L   !tridiag particles must appear right after LL species in species.dat
-      IF(I.EQ.LSO4AER) MZ = minloc(Z,1, Z/1.e5 .ge. 50)-1 !height index (-1 given the staggered grid)
-      IF(I.EQ.LS8AER) MZ = minloc(Z,1, Z/1.e5 .ge. 40)-1 !height index (-1 given the staggered grid)
-      IF(I.EQ.LHCAER) MZ = minloc(Z,1, Z/1.e5 .ge. 70)-1 !height index (-1 given the staggered grid)
-      IF(I.EQ.LHCAER2) MZ = minloc(Z,1, Z/1.e5 .ge. 70)-1 !height index (-1 given the staggered grid)
-      !at some point check/abstract these 40/50km assumptions - this could be easily shunted to the species.dat file...
-
-c      IF(I.EQ.LSO4AER) MZ = minloc(Z,1, Z/1.e5 .ge. 79.5)-1 !height index (-1 given the staggered grid)
+C tridiag particles must appear right after LL species in species.dat
+      I = NQ + L
+C     Below is height index (-1 given the staggered grid)
+      IF(I.EQ.LSO4AER) MZ = minloc(Z,1, Z/1.e5 .ge. 50)-1
+      IF(I.EQ.LS8AER) MZ = minloc(Z,1, Z/1.e5 .ge. 40)-1
+      IF(I.EQ.LHCAER) MZ = minloc(Z,1, Z/1.e5 .ge. 70)-1
+      IF(I.EQ.LHCAER2) MZ = minloc(Z,1, Z/1.e5 .ge. 70)-1
+C    at some point check/abstract these 40/50km assumptions
+C      -this could be easily shunted to the species.dat file. WARNING
+C      height index (-1 given the staggered grid)
+c      IF(I.EQ.LSO4AER) MZ = minloc(Z,1, Z/1.e5 .ge. 79.5)-1
 
       MZ1 = MZ - 1
       MZP1 = MZ + 1
@@ -2165,9 +2381,9 @@ C
   45  TC(J) = - DU(I,J) - DPU(J,L)
 C
 
-
-! why are there no dl*PARTICLES() in here?  all the other dl's are multiplied by USOL.
-!just on RHS...
+C why are there no dl*PARTICLES() in here?  WARNING
+C all the other dl's are multiplied by USOL.
+C just on RHS...
 
       vturb=0.01
 c      vturb=0.000005
@@ -2177,9 +2393,12 @@ C
 C   BOUNDARY CONDITIONS
       TA(MZ) = - DL(I,MZ) + DPL(MZ,L)
       TB(MZ) = TB(MZ) + DL(I,MZ) + 0.5*WFALL(MZ,L)/DZ(MZ)
-c      TB(1) = TB(1) + DU(I,1) + (0. - 0.5*WFALL(1,L))/DZ(1) !orig from Jim's code, as it was..
-c      TB(1) = TB(1) + DU(I,1) + (vturb - 0.5*WFALL(1,L))/DZ(1) !orig from Jim's code, as it was..
-      TB(1) = TB(1) + DU(I,1) - (vturb+0.5*WFALL(1,L))/DZ(1) !testing...
+C    Orig from Jim's code, as it was.
+c      TB(1) = TB(1) + DU(I,1) + (0. - 0.5*WFALL(1,L))/DZ(1)
+C    Orig from Jim's code, as it was.
+c      TB(1) = TB(1) + DU(I,1) + (vturb - 0.5*WFALL(1,L))/DZ(1)
+C    Testing Below
+      TB(1) = TB(1) + DU(I,1) - (vturb+0.5*WFALL(1,L))/DZ(1)
 !0.01 is turbulent deposition velocity (see Pavlov 02 appendix)
       TC(1) = - DU(I,1) - DPU(1,L)
 C
@@ -2201,25 +2420,30 @@ C   FILL UP UPPER PORTION WITH APPROXIMATE ANALYTIC SOLUTION
 
       do J=MZP1,NZ
         PARTICLES(J,L)=PARTICLES(J-1,L) * EXP(-WFALL(J,L)*DZ(J)/EDD(J))
-        PARTICLES(J,L) = MAX(PARTICLES(J,L),smallest)   !needed?
+C   needed?  WARNING
+        PARTICLES(J,L) = MAX(PARTICLES(J,L),smallest)
       enddo
 
 
 
    58 CONTINUE
 C
-      endif  !end tri-diag loop
-*****END TRIDIAG
 
- 73   continue           !continue doing newton steps (4 seems to work best)
-                         !someday I should see if this is justified
-                         !(r37:36 in /td branch has first attempt at convergence checking)
+      endif
+*****END TRIDIAG
+C continue doing newton steps (4 seems to work best)
+C someday I should see if this is justified
+C (r37:36 in /td branch has first attempt at convergence checking) WARNING
+ 73   continue
+
+
+
 
 
 
 C   AUTOMATIC TIME STEP CONTROL
       DTSAVE = DT
-c-mc      these are the ones that kevin originally used...
+c-mc these are the ones that kevin originally used...
 c      IF(EMAX.LT.0.2)  DT = 1.1*DTSAVE
 c      IF(EMAX.LT.0.1)  DT = 1.2*DTSAVE
 c      IF(EMAX.LT.0.04)  DT = 1.4*DTSAVE
@@ -2228,7 +2452,6 @@ c      IF(EMAX.LT.0.01)  DT = 3.0*DTSAVE
 c      IF(EMAX.LT.0.003) DT = 4.0*DTSAVE
 c      IF(EMAX.LT.0.001) DT = 5.*DTSAVE
 
-!was using these before
 c-mc      these are even stricter...
        IF(EMAX.LT.0.15)  DT = 1.1*DTSAVE
        IF(EMAX.LT.0.07)  DT = 1.2*DTSAVE
@@ -2238,7 +2461,7 @@ c-mc      these are even stricter...
        IF(EMAX.LT.0.001) DT = 4.0*DTSAVE
        IF(EMAX.LT.0.0005) DT = 5.*DTSAVE
 
-!testing changing to these
+Ctesting changing to these
 c-mc      these are even stricter...
 c      IF(EMAX.LT.0.015)  DT = 1.1*DTSAVE
 c      IF(EMAX.LT.0.007)  DT = 1.2*DTSAVE
@@ -2251,29 +2474,23 @@ c     IF(EMAX.LT.0.00005) DT = 5.*DTSAVE
 
       DTINV = 1./DT
       ZMAX = Z(JS)
-C      print 373, n, TIME, DT,EMAX,ISPEC(IS),ZMAX, USOL(is,js),
-C     $ USOL(LO2,1), USOL(LCH4,1), USOL(LH2,1), USOL(LCO,1)
+      print 373, n, TIME, DT,EMAX,ISPEC(IS),ZMAX, USOL(is,js),
+     $ USOL(LO2,1), USOL(LCH4,1), USOL(LH2,1), USOL(LCO,1)
  373  format (1x, I6, 1P3E12.3,2x,A8,1P1E12.3,4x,1P5E12.3)
 C
-      IF (SM-MS.GT.0.01) GOTO 317 ! skip oxidation state and sulfur budget
+C   skip oxidation state and sulfur budget
+      IF (SM-MS.GT.0.01) GOTO 317
 
-!following section run every three timesteps and printed to out.out
-!oxidation state stuff commented out for now.
+C following section run every three timesteps and printed to out.out
+C Oxidation state stuff commented out for now.
 
       write(14, 100) N,EMAX,ISPEC(IS),ZMAX,UMAX,RMAX,DT,TIME
  100  FORMAT(1X,'N =',I4,2X,'EMAX =',1PE9.2,' FOR ',A8,
      2  'AT Z =',E9.2,1X,'U =',E9.2,1X,'RHS =',E9.2,
-     3     2X,'DT =',E9.2,2X,'TIME =',E9.2)
-C     print to terminal
-      print 100, N,EMAX,ISPEC(IS),ZMAX,UMAX,RMAX,DT,TIME
-
-
-C     print this information to the terminal
-        
-      
+     3  2X,'DT =',E9.2,2X,'TIME =',E9.2)
 C
 C   COMPUTE ATMOSPHERIC OXIDATION STATE
-c   what follows needs work -
+c   what follows needs work - WARINING
       DO 42 I=1,NQ
       SR(I) = 0.
       DO 43 J=1,JTROP
@@ -2282,42 +2499,49 @@ c   what follows needs work -
   42  TLOSS(I) = SR(I) + PHIDEP(I)
 
 
-c nb that vdep for particles is defined to include wfall when particles are in the main loop
+c nb that vdep for particles is defined to include wfall
+C    when particles are in the main loop
 
       if(USETD.EQ.1) then
-!this mimics the code Jim has, but is more general.
-!I don't think I ever got this working 100% correctly to where I could balance the sulfur budget when using the tri-diag
+C This mimics the code Jim has, but is more general.
+C I don't think I ever got this working 100% correctly to where
+C  I could balance the sulfur budget when using the tri-diag WARNGING
 
-!THIS STILL NEEDS WORK
-
-        do i=NQ+1,NQ1 !need to fill up rainout and depostion vectors for the triadiagonal species to make the budgets work out.
+CTHIS STILL NEEDS WORK
+C need to fill up rainout and depostion vectors for
+C the triadiagonal species to make the budgets work out.
+        do i=NQ+1,NQ1
           SR(I)=0.
             do j=1,JTROP
-              !ACK - all particles raining out like H2SO4 !ISOHACK
+C      ACK - all particles raining out like H2SO4 !ISOHACK
               SR(I) = SR(I)+ RAINGC(LH2SO4,J)*PARTICLES(J,i-nq)
      $                *DEN(J)*DZ(J)
             enddo
-
-            PHIDEP(I)=(WFALL(1,i-nq)+vturb)* PARTICLES(1,i-nq)*DEN(1)  !ACK - hardcoded turbulent diffusion velocity !ISOHACK - will need to change in ISO
+C-ACK hardcoded turbulent diffusion velocity
+C-ISOHACK - will need to change in ISO
+            PHIDEP(I)=(WFALL(1,i-nq)+vturb)* PARTICLES(1,i-nq)*DEN(1)
             TLOSS(I) = SR(I) + PHIDEP(I)
-c       print *, ISPEC(I),SR(I),PHIDEP(I),SR(I)+PHIDEP(I)  !in general SR>>PHIDEP for particles,by about 100X
+C     in general SR>>PHIDEP for particles,by about 100X
+c       print *, ISPEC(I),SR(I),PHIDEP(I),SR(I)+PHIDEP(I)
         enddo
 
 c      stop
-      endif  !end tri-diag budgeting loop
+C  End of the tri-diag budgeting loop
+      endif
 
 C
-c the following is obsolete I hope
+c the following is obsolete I hope WARNING
 c      PHIESC = 2.5E13 * (0.5*USOL(LH,NZ) + USOL(LH2,NZ))
 c    2  + USOL(LH2O,NZ) + 2.*USOL(LCH4,NZ) + 3.*USOL(LC2H6,NZ))
 C
 
 
-C - MC check the below with respect to the new boundary conditions.  Are some SGFLUXes that are not activly used in the code being counted here?
+C - MC check the below with respect to the new boundary conditions.
+C  Are some SGFLUXes that are not activly used in the code being counted here?
 
 c - these could be done better in the manner of the redox computation
 c - also how will these do if the L number doesn't exist, or if the sl/ll thing.
-!tloss runs from 1-nq1 so cant have any SL's in here...
+Ctloss runs from 1-nq1 so cant have any SL's in here...
 
 c      H2PROD = SGFLUX(LH2) + SGFLUX(LCO) + 4.*SGFLUX(LCH4) + 3.*
 c     2  SGFLUX(LH2S) + 2.*TLOSS(LO2) + 0.5*TLOSS(LOH) + 1.5*TLOSS(LHO2)
@@ -2336,7 +2560,10 @@ c     6  + 7.*TLOSS(LC2H6) + 3.5*TLOSS(LCH3)
 c  this looks ok provided that these terms are propoerly computed
 C
 
-c - note that these aren't really used for anything.  I am tempted to kill to allow for greater ease in switching SL and LL.  If I want to have a redox printout at every time step, I should find a way to make these generic like I did with redox in Output.
+c - note that these aren't really used for anything.
+C  I am tempted to kill to allow for greater ease in switching SL and LL.
+C  If I want to have a redox printout at every time step,
+C  I should find a way to make these generic like I did with redox in Output.
 
 
 c-mc  the following is obsolete I hope
@@ -2353,7 +2580,8 @@ C
 c      SFLUX = SGFLUX(LH2S) + SGFLUX(LSO2)    !check me at some point...
 
 c-mc these sloss/slossP/sgflux printouts are meaningless now.
-c-mc should think about what (if anything) would be actually useful here to print out on every timestep
+c-mc should think about what (if anything) would be actually useful
+C-MC here to print out on every timestep WARNING
 
 
 c      write(14,101)H2PROD,H2LOSS,SGFLUX(LSO2),SLOSS,SLOSSP,TLOSS(LS8AER)
@@ -2372,7 +2600,8 @@ C   RETRY TIME STEP IF EMAX EXCEEDS 25 PERCENT
           USOL(I,J) = USAVEOLD(I,J)
          enddo
         enddo
-      ELSE  !valid timestep, so update USOLPREV vector
+C   valid timestep, so update USOLPREV vector
+      ELSE
        do i=1,nq
         do j=1,nz
          USOLPREV(I,J)=USAVEOLD(I,J)
@@ -2394,27 +2623,31 @@ c$$$         print *, (USOLPREV(K,1)-USOL(K,1),K=1,NQ)
 c$$$         stop
 c$$$      ENDIF
 
-      !NAN HAPPENING SOMEWHERE BELOW HERE...MUST BE IN OUTPUT.F
-  
+C     NAN HAPPENING SOMEWHERE BELOW HERE...MUST BE IN OUTPUT.F
+
 
 C
-      NS = N/NPR    !NPR=PRN set above to 50 - i.e. write out every 50 steps
+C
+C NPR=PRN set above to 50 - i.e. write out every 50 steps
+      NS = N/NPR
       SN = N/PRN
       IF(NN.EQ.NSTEPS) SN = NS
       IF (SN-NS .LT. 1.E-3) THEN
         CALL OUTPUT(NN,NSTEPS,TIME,jtrop, vdep,USOLORIG,USETD,frak)
       ENDIF
-          !NAN HAPPENING SOMEWHERE ABOVE HERE...MUST BE IN OUTPUT.F
+C    NAN HAPPENING SOMEWHERE ABOVE HERE...MUST BE IN OUTPUT.F WARNING
 
- 
+
       write(23, 374) n, TIME, USOL(LO2,1), USOL(LH2,1), USOL(LCO,1),
-     $ USOL(LCH4,1)!, USOL(LS8aer,1)   !tri-diag (could fix if I wanted...)
+C   tri-diag (could fix if I wanted...) WARNING
+     $ USOL(LCH4,1)!, USOL(LS8aer,1)
  374  format (1x, I6, 1P6E13.4)
 
-   
+
 
 c-mc writing out full number densities at each timestep
-!this eventually should be an option as it is a large output file (1MB per 50 steps)
+C this eventually should be an option as it is
+C a large output file (1MB per 50 steps)
 
 
       if (tfac.eq.0.5) then
@@ -2436,17 +2669,19 @@ c-mc writing out full number densities at each timestep
       if (SN-NS .lt. 1.e-3) then
        write(43,115) N,TIME,DT,EMAX
         do I=1,nz
-c not needed in whiff testing         write(43,114), (USOL(K,I)*DEN(I),K=1,NQ)
+c Not needed in whiff testing   WARNING
+C         write(43,114), (USOL(K,I)*DEN(I),K=1,NQ)
 c         write(43,114), (USOL(K,I)*DEN(I),K=1,NQ)
         enddo
       endif
 
-c      print *, RPAR(1,3),RPAR(NZ,3)   
+c      print *, RPAR(1,3),RPAR(NZ,3)
 
-c 114  format(100(1pe10.3))   !ACK hardcoded NQ - update if NQ>100
+C ACK hardcoded NQ - update if NQ>100
+c 114  format(100(1pe10.3))
  115  format(I5, 3(1pe14.6))
 
-    
+
       IF (INFO.NE.0) STOP
       IF (NN.EQ.NSTEPS) then
          finaln=NN
@@ -2457,12 +2692,13 @@ c 114  format(100(1pe10.3))   !ACK hardcoded NQ - update if NQ>100
         finaln=NN+1
         NN = NSTEPS - 1
       endif
-          
-    
+
+
    1  CONTINUE
 C ***** END THE TIME-STEPPING LOOP *****
-   
-  22  CONTINUE   ! successful completion
+
+C Successful completion
+  22  CONTINUE
 
 
 C write out formatted CONTINUE
@@ -2514,8 +2750,8 @@ C-PK Write to file used for spectrum (VPL-SMART)
 C write out formatted out.dist file
 c this new format works automatically even if NQ changes
 
- 
-      IROW = 10  !num columns in .dist file
+C   Number columns in .dist file
+      IROW = 10
       LR = NQ/IROW + 1
       RL = FLOAT(NQ)/IROW + 1
       DIF = RL - LR
@@ -2527,15 +2763,19 @@ C
        K2 = K1 + IROW - 1
        IF (L.lt.LR) then
         write(18, 880) ((USOL(k,i),K=K1,K2),i=1,nz)
-        write(70, 880) ((USOL(k,i),K=K1,K2),i=1,nz)    ! print USOLS into another file .chem
+C    Print USOLS into another file .chem
+        write(70, 880) ((USOL(k,i),K=K1,K2),i=1,nz)
        ELSE
           K2 = NQ
-          if (K2-K1 .EQ. 9) then   !this only occurs if NQ is a multiple of 10
+C    this only occurs if NQ is a multiple of 10
+          if (K2-K1 .EQ. 9) then
             write(18, 880) ((USOL(k,i),K=K1,K2),i=1,nz)
             write(70, 880) ((USOL(k,i),K=K1,K2),i=1,nz)
-          else  !if not, need to generate a dynamic format statement
+C    if not, need to generate a dynamic format statement
+          else
            fmtstr='(  E17.8)'
-           write(fmtstr(2:3),'(I1)')K2-K1+1   !OK for one character as this should always be <10
+C    OK for one character as this should always be <10
+           write(fmtstr(2:3),'(I1)')K2-K1+1
            write(18, fmtstr) ((USOL(k,i),K=K1,K2),i=1,nz)
            write(70, fmtstr) ((USOL(k,i),K=K1,K2),i=1,nz)
           endif
@@ -2544,9 +2784,10 @@ C
 
  880  format(10E17.8)
  881  format(5E17.8)
-
-        write (18,881) (T(i),EDD(i),DEN(i),O3(i), SL(NSP-1,i),i=1,nz) !this final one is CO2 number density
-        write (66,881) (T(i),EDD(i),DEN(i),O3(i), SL(NSP-1,i),i=1,nz) !print into another file .strctr
+C     Final one is CO2 number density
+        write (18,881) (T(i),EDD(i),DEN(i),O3(i), SL(NSP-1,i),i=1,nz)
+C     Print into another file .strctr
+        write (66,881) (T(i),EDD(i),DEN(i),O3(i), SL(NSP-1,i),i=1,nz)
 
         fmtstr='(  E17.8)'
         write(fmtstr(2:3),'(I2)')NP*3
@@ -2554,18 +2795,21 @@ C
          write(18,fmtstr) (AERSOL(i,j),j=1,NP),(WFALL(i,j),j=1,NP),
      $                  (RPAR(i,j),j=1,NP)
          write(71,fmtstr) (AERSOL(i,j),j=1,NP),(WFALL(i,j),j=1,NP),
-     $                  (RPAR(i,j),j=1,NP)           ! print aerosols into another file .aersol
+C      Print aerosols into another file .aersol
+     $                  (RPAR(i,j),j=1,NP)
         enddo
 
-        
+
 
         fmtstr='(  E17.8)'
         write(fmtstr(2:3),'(I2)')NP
 
       if(USETD.EQ.1) then
       do i=1,nz
-       write(18,fmtstr)  (PARTICLES(i,j),j=1,np)  !ordering is that in species.dat
-       write(72,fmtstr)  (PARTICLES(i,j),j=1,np)  !print tridag into another file .tridag
+C   Ordering is that in species.dat
+       write(18,fmtstr)  (PARTICLES(i,j),j=1,np)
+C   Print tridag into another file .tridag
+       write(72,fmtstr)  (PARTICLES(i,j),j=1,np)
       enddo
       endif
 
@@ -2581,29 +2825,36 @@ C - ISOHACK!
 C
 
       DO L=1,LR
-       K1 = 1 + (L-1)*IROW +NQ-NISO-2   !requires isotopic species to be at the end of species.dat list
-       !this needs to be re-written to just grab 'S' species or something
-       !right now it works if the all the S are at the end AND two hydrocarbon particles are in the last two spots
+C   Requires isotopic species to be at the end of species.dat list
+       K1 = 1 + (L-1)*IROW +NQ-NISO-2
+C   this needs to be re-written to just grab 'S' species or something
+C   right now it works if the all the S are at the end AND
+C   two hydrocarbon particles are in the last two spots  WARNING
        K2 = K1 + IROW - 1
 c       print *, k1,k2, ISPEC(k1),ISPEC(k2)
        IF (L.lt.LR) then
         write(52, 880) ((USOL(k,i),K=K1,K2),i=1,nz)
        ELSE
-          K2 = NQ-2       !temp hack - this needs to be re-written somehow
+C   temp hack - this needs to be re-written somehow WARNING
+          K2 = NQ-2
 c       print *, 'final k2',k2,ISPEC(k2)
-          if (K2-K1 .EQ. 9) then   !this only occurs if NQ is a multiple of 10
+C   this only occurs if NQ is a multiple of 10
+          if (K2-K1 .EQ. 9) then
             write(52, 880) ((USOL(k,i),K=K1,K2),i=1,nz)
-          else  !if not, need to generate a dynamic format statement
+C   if not, need to generate a dynamic format statement
+          else
            fmtstr='(  E17.8)'
-           write(fmtstr(2:3),'(I1)')K2-K1+1   !OK for one character as this should always be <10
+C   OK for one character as this should always be <10
+           write(fmtstr(2:3),'(I1)')K2-K1+1
            write(52, fmtstr) ((USOL(k,i),K=K1,K2),i=1,nz)
           endif
        ENDIF
       enddo
 
-
-        write (52,881) (T(i),EDD(i),DEN(i),O3(i), SL(NSP-1,i),i=1,nz) !this final one is CO2 number density
-!the final one is not the CO2 numberdensity in the case of CO2 in the main loop - CHECK the read in here.
+C this final one is CO2 number density
+        write (52,881) (T(i),EDD(i),DEN(i),O3(i), SL(NSP-1,i),i=1,nz)
+C the final one is not the CO2 numberdensity in the case of CO2 in
+C the main loop CHECK the read in here. WARNING
 
         fmtstr='(  E17.8)'
         write(fmtstr(2:3),'(I2)')NP*3
@@ -2622,12 +2873,13 @@ c       print *, 'final k2',k2,ISPEC(k2)
 
 
 C - write out file with all the inert species...
-!the commented version was for the TESTING code where (S*=S)
+C  the commented version was for the TESTING code where (S*=S)
 c$$$      fac=1.0
 c$$$      do i=1,nsp
 c$$$       do j=1,nz
 c$$$         if (i.le.NQ) then
-c$$$           skip= index(ISPEC(i),'S') !used in testing ISOTOPE script (where S*=S)
+C   used in testing ISOTOPE script (where S*=S)
+c$$$           skip= index(ISPEC(i),'S')
 c$$$           if (skip.ge.1) then
 c$$$             if(j.eq.1)print *, 'tempL skipping ISO inert loop',ISPEC(i)
 c$$$           else
@@ -2635,7 +2887,8 @@ c$$$              if(j.eq.1)print *, 'loading',i,ISPEC(I)
 c$$$            USOLISO(i,j)=USOL(i,j) !load up major species
 c$$$           endif
 c$$$         endif
-c$$$c         if (i.gt.NQ .and. i.le.NQ1) USOLISO(i,j)=PARTICLES(j,i-NQ) ! load up particles   (skipped in ISOTOPE testing mode)
+C    load up particles   (skipped in ISOTOPE testing mode)
+c$$$c         if (i.gt.NQ .and. i.le.NQ1) USOLISO(i,j)=PARTICLES(j,i-NQ)
 c$$$         if (i.gt.NQ1 .and. i.le.NSP-2) then
 c$$$            ind=i-NISO-NP                            !temp
 c$$$            if(i.eq.NQ1+1)idex=ind
@@ -2659,27 +2912,32 @@ c$$$      enddo
       fac=1.0
       do i=1,nsp
        do j=1,nz
-         if (i.gt.NQ .and. i.le.NQ1) then  !if there are tri-diagonal species  (causes a gfortran warning about loop over nothing...)
-          USOLISO(i,j)=PARTICLES(j,i-NQ) ! load up particles   (skipped in ISOTOPE testing mode)
+C  if there are tri-diagonal species
+C       (causes a gfortran warning about loop over nothing...) WARNING
+         if (i.gt.NQ .and. i.le.NQ1) then
+C   load up particles   (skipped in ISOTOPE testing mode)
+          USOLISO(i,j)=PARTICLES(j,i-NQ)
          else
           USOLISO(i,j)= SL(i,j)/den(j)
          endif
 c         if(j.eq.1) print *, ISPEC(i),USOLISO(i,j)
        enddo
       enddo
-!the above should load mixing ratios of all species,particles, and short-lived species (in the order of species.dat) into USOLISO
+C The above should load mixing ratios of all species,particles,
+C  and short-lived species (in the order of species.dat) into USOLISO
 
 
 
-!original versions
+C original versions
 c      NXXX=NSP-NPN-2
 c      print *, NXXX,NSP,NPN
-!full up version
+C full up version
 c      NXXX=NSP-2
-      NXXX=NSP   !also send CO2 and N2
+C also send CO2 and N2
+      NXXX=NSP
 
-
-      IROW = 10  !num columns in .dist file
+C  num columns in .dist file
+      IROW = 10
       LR = (NXXX)/IROW + 1
       RL = FLOAT(NXXX)/IROW + 1
       DIF = RL - LR
@@ -2693,21 +2951,25 @@ C
         write(53, 880) ((USOLISO(k,i),K=K1,K2),i=1,nz)
        ELSE
           K2 = NXXX
-          if (K2-K1 .EQ. 9) then   !this only occurs if NQ is a multiple of 10
+C     this only occurs if NQ is a multiple of 10
+          if (K2-K1 .EQ. 9) then
             write(53, 880) ((USOLISO(k,i),K=K1,K2),i=1,nz)
-          else  !if not, need to generate a dynamic format statement
+C      if not, need to generate a dynamic format statement
+          else
            fmtstr='(  E17.8)'
-           write(fmtstr(2:3),'(I1)')K2-K1+1   !OK for one character as this should always be <10
+C       OK for one character as this should always be <10
+           write(fmtstr(2:3),'(I1)')K2-K1+1
            write(53, fmtstr) ((USOLISO(k,i),K=K1,K2),i=1,nz)
           endif
        ENDIF
       enddo
 
-!end ISO HACK
+C End ISO HACK
 
-c new abstracted photorates printout
+c New abstracted photorates printout
 
-      IROW = 8  !num columns of photorates
+C Number columns of photorates
+      IROW = 8
       LR = KJ/IROW + 1
       RL = FLOAT(KJ)/IROW + 1
       DIF = RL - LR
@@ -2727,13 +2989,15 @@ c new abstracted photorates printout
            write(14, fmtstr) (photolabel(K),K=K1,K2)
 
            fmtstr2='(  (1PE9.2,2X))'
-           write(fmtstr2(2:3),'(I2)')K2-K1+2   !+2 here so it writes the Z as well
+C       +2 here so it writes the Z as well
+           write(fmtstr2(2:3),'(I2)')K2-K1+2
            write(14, fmtstr2) (Z(I),(prates(k,i),K=K1,K2),i=1,nz,3)
        ENDIF
       enddo
 
        fmtstr="(  A12)"
-       write(fmtstr(2:3),'(I2)')kj    !format for photorate labels, with extra space !will crash if kj>99
+C  format for photorate labels, with extra space will crash if kj>99
+       write(fmtstr(2:3),'(I2)')kj
 
 
 c-mc  write out important parameters:
@@ -2746,8 +3010,8 @@ c-mc write out photorates at all heights in the .so2 file
        JSO2=minloc(photoreac,1,ISPEC(INT(photoreac)).eq.'SO2    ')
        JO2=minloc(photoreac,1,ISPEC(INT(photoreac)).eq.'O2     ')+1
 
-! note this is for the O2 + Hv -> O + O reaction,which is the second O2 reaction
-! JH2O and JCO2 defined above...
+C note this is for the O2 + Hv -> O + O reaction,which is the second O2 reaction
+C JH2O and JCO2 defined above...
       write(27,299) (Z(I),prates(JSO2,I),prates(JO2,I),prates(JH2O,I),
      $     prates(JCO2,I),I=1,NZ)
  299  FORMAT(5(1PE9.2,2x))
@@ -2755,18 +3019,21 @@ c-mc
 
 c-mc write out all photorates at all heights in the .rates file
       string='(  (1PE9.2,2X))'
-      write(string(2:3),'(I2)')KJ+1   !ack - hardcoded kj+1 here. will break if kj>99
+C   ack - hardcoded kj+1 here. will break if kj>99
+      write(string(2:3),'(I2)')KJ+1
 
-!the above is a way to dynamically create a format string at runtime.replaces:  599  FORMAT(55(1PE9.2,2x))
+C The above is a way to dynamically create a format string at runtime.
+C   replaces:  599  FORMAT(55(1PE9.2,2x))
        write(28,string) (Z(I),(prates(J,I),J=1,KJ),I=1,NZ)
 c-mc
 
-! write out O2 photolysis rates, for testing the S-R bands using various methods
+C Write out O2 photolysis rates, for testing the S-R bands using various methods
        do i=1,nz
-       write(58,*) Z(I),prates(JO2-1,I),prates(JO2,I) !ack - hardcoded O1D rate number (OK as long as O+O follows O+O1D, which is OK)
+C ack - hardcoded O1D rate number (OK as long as O+O follows O+O1D, which is OK)
+       write(58,*) Z(I),prates(JO2-1,I),prates(JO2,I)
        enddo
 
-! print out rainout rates
+C print out rainout rates
        do i=1,nq
            write(59, *) (RAINGC(i,j),j=1,jtrop)
        enddo
@@ -2774,7 +3041,8 @@ c-mc
 
        JNO=minloc(photoreac,1,ISPEC(INT(photoreac)).eq.'NO    ')
 
-       if(LGRID.EQ.0) write(60,*) (prates(JNO,I),I=1,NZ)  !if using old grid, write out NOprates so they can be used for new grid
+C  If using old grid, write out NOprates so they can be used for new grid
+       if(LGRID.EQ.0) write(60,*) (prates(JNO,I),I=1,NZ)
 
 c      do i=1,nsp
 c         print *, i, ISPEC(i)
@@ -2791,21 +3059,32 @@ C Transfer results to the climate model (COUPLING)
 C Transfer O3 and H2O
          WRITE(84,254) Z(I),PRESS(I),USOL(LO3,I),USOL(LH2O,I),
      &                 max(USOL(LCH4,I),1.e-60),SL(LCO2,I)/DEN(I),
-     &                 max(USOL(LC2H6,I),1.e-60) !EWS debug to prevent floating point errors
+C  EWS debug to prevent floating point errors WARNING
+     &                 max(USOL(LC2H6,I),1.e-60)
   254    FORMAT(1PE9.3,6(E10.2))
   255   CONTINUE
         close(84)
 c       endif
 
-         IF (IRESET.eq.0) FAR=1.000E-02     ! Because argon is not normally calculated in photochem
-         FCH4=max(USOL(LCH4,1),1.e-60) !EWS - debug to prevent floating point errors
-         FC2H6=max(USOL(LC2H6,1),1.e-60) !EWS - debug to prevent floating point errors
+C      Because argon is not normally calculated in photochem
+         IF (IRESET.eq.0) FAR=1.000E-02
+C-EWS  debug to prevent floating point errors
+         FCH4=max(USOL(LCH4,1),1.e-60)
+C-EWS  debug to prevent floating point errors
+         FC2H6=max(USOL(LC2H6,1),1.e-60)
          FCO2=SL(LCO2,1)/DEN(1)
-         FN2=SL(LN2,1)/DEN(1) + FCO2 !EWS - note that CLIMA/mixing_ratios.dat treats the condensible (CO2) and non-consibles mixing ratios differently
-         FO2=USOL(LO2,1)             !      e.g., if the atmosphere is 99% N2 and 1% CO2, then the CO2 fraction is 0.01 and N2 should be set to 1,
-         FH2=USOL(LH2,1)             !      because it is 100% of noncondensibles. In practice, N2 should be = (1 - [everything but CO2]). 
-c                                    !      But in other parts of photochem, N2 is of the total, not excluding CO2, so we only change it here. 9/8/2015
-         FNO2=USOL(LNO2,1)/1.0E60 !gna - clima can't currently cope with NO2 and having it is screwing it up
+C-EWS Note that CLIMA/mixing_ratios.dat treats the condensible (CO2) and
+C     non-consibles mixing ratios differently  FN2=SL(LN2,1)/DEN(1) + FCO2
+C     e.g., if the atmosphere is 99% N2 and 1% CO2, then the CO2 fraction is
+C     0.01 and N2 should be set to 1, because it is 100% of noncondensibles.
+C     In practice, N2 should be = (1 - [everything but CO2]).
+         FO2=USOL(LO2,1)
+         FH2=USOL(LH2,1)
+C     But in other parts of photochem, N2 is of the total,
+C     not excluding CO2, so we only change it here. 9/8/2015
+C-gna clima can't currently cope with NO2 and having it is screwing it up
+C WARNING
+         FNO2=USOL(LNO2,1)/1.0E60
          JCOLD=JTROP
 
          WRITE(117,102) FAR, FCH4, FC2H6, FCO2,
@@ -2816,7 +3095,8 @@ c                                    !      But in other parts of photochem, N2 
      &          1PE10.3,10x,'!Hydrogen'/,1PE10.3,10x,
      &          '!Nitrogen Dioxide'/,I3,17x,'!Tropopause layer')
 
-C MOVING HIGHER UP Reading in the temperature and water profiles from the climate code
+C MOVING HIGHER UP Reading in the temperature and water profiles
+C from the climate code
 C
 C      IF (ICOUPLE.eq.1) then
 C        print *, 'alt_new, T_new, water'
@@ -2840,11 +3120,13 @@ C 351  FORMAT (1PE10.3, 1PE12.3, 1PE12.3)
 
 
         STOP
-  20  CONTINUE   ! error in reactions
+C    error in reactions
+  20  CONTINUE
         PRINT 300,I
  300    FORMAT(//1X,'NMAX EXCEEDED FOR SPECIES ',I3)
         STOP
-  25  CONTINUE   ! error in reactions
+C    error in reactions
+  25  CONTINUE
         PRINT 301,IERR
  301    FORMAT(//1X,'ERROR IN REACTION ',I3)
         STOP
