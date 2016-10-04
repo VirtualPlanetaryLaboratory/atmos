@@ -1311,6 +1311,9 @@ C    !i.e if constant mr or constant flux UBC
 C        !don't use molecular diffusion
             bHN2(i) = 0.0
             bH2N2(i) = 0.0
+            do j=1,NSP
+              bX1X2(j,i) = 0.0 !Generalized form for giant atmospheres
+            enddo
 C           !don't use molecular diffusion
 c           bXN2(i) = 0.0
         enddo
@@ -1319,8 +1322,10 @@ C      !use effusion velocity formulation of diffusion limited flux
         Veff(LH) = 1.0*bhN2(nz)/DEN(NZ)
 C      !diff lim flux
      $     *(1./Hscale(nz) - 1./scale_H(LH,nz))
+        if(PLANET.EQ.'WASP12B')Veff(LH) = 0.0
         Veff(LH2) = 1.0*bH2N2(nz)/DEN(NZ)
      $     *(1./Hscale(nz) - 1./scale_H(LH2,nz))
+        if(PLANET.EQ.'WASP12B')Veff(LH2) = 0.0
       endif
 
 !gna - added coupling stuff for water here (just below tropopause)
