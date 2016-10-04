@@ -707,6 +707,7 @@ C              Returns to previous line in species.dat file
 C              Reads in fixed mixing ratios
                read(4,209) XX
 C            Hardcoding woohoo! need to do N2 as well WARNING
+               if (species.EQ.'HE') FHE=XX 
                if (species.EQ.'CO2') FCO2=XX
             endif
 
