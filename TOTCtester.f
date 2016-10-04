@@ -650,9 +650,9 @@ C         This loads the "Lnumbers" for ease of use later in the code
             call LNUM(ISPEC(isP),iSP)
 C             Return to previous line in species.dat file
               backspace 4
-C  read in atmoic number data - NOTICE: don't ever use LH,LN,LO,LS as
-C               -placeholders as these mean something
-              read(4,207) LA,LB,LC,LD,LE,LF
+C  read in atmoic number data,NEVER use LC,LH,LN,LO,LS as placeholders
+C  as they mean something else... 
+              read(4,207) LA,LB,LD,LE,LF,LM
 
             if (SPECTYPE.EQ.'LL') then
                iLL=iLL+1
@@ -717,10 +717,10 @@ C            Hardcoding woohoo! need to do N2 as well WARNING
 
                atomsO(iLL+iTD+iSL+iIN)=LA
                atomsH(iLL+iTD+iSL+iIN)=LB
-               atomsC(iLL+iTD+iSL+iIN)=LC
-               atomsS(iLL+iTD+iSL+iIN)=LD
-               atomsN(iLL+iTD+iSL+iIN)=LE
-               atomsCL(iLL+iTD+iSL+iIN)=LF
+               atomsC(iLL+iTD+iSL+iIN)=LD
+               atomsS(iLL+iTD+iSL+iIN)=LE
+               atomsN(iLL+iTD+iSL+iIN)=LF
+               atomsCL(iLL+iTD+iSL+iIN)=LM
 
          endif
          I=I+1
