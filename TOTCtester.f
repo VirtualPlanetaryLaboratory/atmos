@@ -705,7 +705,8 @@ C      CO2 only works as fixed mixing ratio. This could be handled better.
 C              Returns to previous line in species.dat file
                backspace 4
 C              Reads in fixed mixing ratios
-               read(4,209) XX
+               if (species.NE.'HE') read(4,209) XX   !read in fixed mixing ratios
+               if (species.EQ.'HE') read(4,212) XX !read in fixed mixing ratios
 C            Hardcoding woohoo! need to do N2 as well WARNING
                if (species.EQ.'HE') FHE=XX 
                if (species.EQ.'CO2') FCO2=XX
@@ -739,7 +740,7 @@ C 208  format(30X,I1,5X,4(E7.1,1X),I1,6X,2(E7.1,1X))
 c 208  format(30X,I1,5X,2(E8.1),E9.3,1X,E7.1,1X,I1,6X,2(E7.1,1X))
 C     Format for INERT species boundary conditions
  209  format(30X,E7.1)
-
+ 212  format(30X,F7.5) !for INERT species boundary conditions
  96   CONTINUE
 
 c      stop
