@@ -1031,6 +1031,7 @@ C uses Kopparapu et al 2012 scalings for earth-equivalent distance
          IF (msun.eq.76) FSCALE = FSCALE * 0.866
          IF (msun.eq.21) FSCALE = FSCALE * 0.920
          IF (msun.eq.20) FSCALE = FSCALE * 0.911
+         IF (msun.eq.22) FSCALE = FSCALE * 1890.40
 
          print *, 'fscale is ', fscale
       ENDIF
