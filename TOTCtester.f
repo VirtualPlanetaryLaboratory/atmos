@@ -1580,7 +1580,7 @@ C  in it so no if's are needed
        JH2O=minloc(photoreac,1,ISPEC(INT(photoreac)).eq.'H2O    ')
        JO2_O1D=minloc(photoreac,1,ISPEC(INT(photoreac)).eq.'O2    ')
        JO3_O1D=minloc(photoreac,1,ISPEC(INT(photoreac)).eq.'O3    ')
-C    Finds the first entry in photoreac for the given speices
+C    Finds the first entry in photoreac for the given species
        JCO2=minloc(photoreac,1,ISPEC(INT(photoreac)).eq.'CO2    ')
 
 
@@ -1599,7 +1599,7 @@ C orig       CO2(I) = FCO2
       CALL PHOTO(ZY,AGL,LTIMES,ISEASON,IZYO2,IO2,INO,IDO,timega,frak,
      &      msun,ihztype)
 
-      CALL RAINOUT(JTROP,NRAIN,USETD)  !ok
+      IF (NAQ.GT.0) CALL RAINOUT(JTROP,NRAIN,USETD)  !ok
 
 
 
