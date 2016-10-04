@@ -95,41 +95,45 @@ C   2452, 1976)
 
 !gna - this is the correction for forward scattering: delta eddington approximation
 
+      IF (NP.GT.O) THEN !REMOVE THE PARTICLE STUFF, YET AGAIN....
 C   Particle 1 is sulfate, 2 is S8, 3 is HCAER
-      W0P(1) = 1.
-      W0P(2) = 0.5
-      !ACK hardcoded grid
-      IF (WAV .GT. 3500.) W0P(2) = 1.    
+       DO K=1,NP
+        W0P(K) = 0.0
+        IF (K.LT.3) W0P(K) = 1.
+        IF (K.EQ.2.AND.WAV.LE.3500.) W0P(K) = 0.5 !ACK hardcoded grid
+ !      print*, 'K,W0P=', K,W0P
+       ENDDO    
 !here, Kevin uses a formula to compute WOPS and QEXT (fom G0=0.8 and WOP)
 
-      DO  J=1,NP
-      DO  I=1,NZ
-      N = NZP1 - I
+      		DO  J=1,NP
+      		DO  I=1,NZ
+      			N = NZP1 - I
 C-MC Here, we are including correct value of Qext and W0P for hydrocarbons
-      IF (J .GE. 3) THEN 
+      			IF (J .GE. 3) THEN 
        !hardcoded for HCAER and HCAER2  
-       QEXT(J) = QEXTT(LL,I,J)     
-       W0P(J) = W0T(LL,I,J)                          
-      ELSE
+       				QEXT(J) = QEXTT(LL,I,J)     
+       				W0P(J) = W0T(LL,I,J)                          
+      			ELSE
        !for sulfate and S8 : valid for large particles only, but this is status quo for now...
-       QEXT(J)=2.   
+       				QEXT(J)=2.   
        !W0P set above
        !for sulfate and S8, set assymetry factor to GP=0.8 (alt and wl independent)
-       GFT(LL,I,J)= 0.8     
-      ENDIF
+       				GFT(LL,I,J)= 0.8     
+      			ENDIF
 
-      TAUP1 = QEXT(J)*PI*RPAR(I,J)*RPAR(I,J)*AERSOL(I,J)*DZ(I)
+      		 TAUP1 = QEXT(J)*PI*RPAR(I,J)*RPAR(I,J)*AERSOL(I,J)*DZ(I)
       !particle extinction for each particle at each height
       !not used, but might as well keep  
-      TAU_PART(J,I)=TAUP1  
+             TAU_PART(J,I)=TAUP1  
       !particle scattering for each particle at each height
-      TAUSCAT_PART(J,I)=W0P(J)*TAUP1  
+      		 TAUSCAT_PART(J,I)=W0P(J)*TAUP1  
       !TAUSP contains total particle scattering at each height
-      TAUSP(N) = TAUSP(N) + TAUSCAT_PART(J,I)   
+      		 TAUSP(N) = TAUSP(N) + TAUSCAT_PART(J,I)   
       !TAUP contains total particle extinction at each height 
-      TAUP(N) = TAUP(N) + TAUP1  
-      enddo
-      enddo
+      		 TAUP(N) = TAUP(N) + TAUP1  
+      		ENDDO
+      		ENDDO
+      ENDIF
 
 C   Calculate W0 and G by averaging over Rayleigh and Mie scatterers.  
 C   (scattering due to gases vs. particles)
@@ -145,13 +149,17 @@ C   Avoid letting W0 equal exactly 1.
       I= NZP1 - N  
 
       GPnew=0.0
+      IF (NP.GT.O) THEN !REMOVE THE PARTICLE STUFF, YET AGAIN....
       do k=1,np
       !asymmetry factors weighted by particle scattering/total scattering
       GPnew=GPnew + GFT(LL,I,K)*TAUSCAT_PART(K,I)/(TAUSP(N) + TAUSG(N)) 
       enddo  
  
       !dont let assymetry factor get larger than 1
-      GT(N)=amin1(Gpnew,0.999)  
+      	GT(N) = amin1(Gpnew,0.99999)
+      ELSE
+      	GT(N) = 0.0   
+      ENDIF 
 
       enddo
 
@@ -175,6 +183,7 @@ C
       GAM1(N) = SQ3*(2. - W0(N)*(1.+GT(N)))/2.
       GAM2(N) = SQ3*W0(N)*(1.-GT(N))/2.
       GAM3(N) = (1. - SQ3*GT(N)*U0)/2.
+      IF(NP.EQ.0)GAM3(N) = (1. - SQ3*U0)/2.
       GAM4(N) = 1. - GAM3(N)
 
       ALAM(N) = SQRT(GAM1(N)*GAM1(N) - GAM2(N)*GAM2(N))
