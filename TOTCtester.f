@@ -1093,7 +1093,7 @@ C   This final one is CO2 number density
 C-SL(NSP-1) will be the density of the final short-lived species
 C if CO2 is removed from the list. I dont THINK it will matter now
 C that I call DOCHEM with the -1 before starting.... WARNING
-! Changed NSP-1 to LCO2 to avoid hard coding
+! Use LCO2 instead of NSP-1 if CO2 specifically is desired...
 
 C gna - we need to make it so that T = T_new
       IF(ICOUPLE.EQ.1) THEN
@@ -2803,10 +2803,10 @@ C    OK for one character as this should always be <10
 
  880  format(10E17.8)
  881  format(5E17.8)
-C     Final one is CO2 number density
-        write (18,881) (T(i),EDD(i),DEN(i),O3(i), SL(NSP-1,i),i=1,nz)
+C     (NSP - 1), indicates (inert) CO2 density for terrestrial planets ONLY
+        write (18,881) (T(i),EDD(i),DEN(i),O3(i), SL(LCO2,i),i=1,nz)
 C     Print into another file .strctr
-        write (66,881) (T(i),EDD(i),DEN(i),O3(i), SL(NSP-1,i),i=1,nz)
+        write (66,881) (T(i),EDD(i),DEN(i),O3(i), SL(LCO2,i),i=1,nz)
 
         fmtstr='(  E17.8)'
         write(fmtstr(2:3),'(I2)')NP*3
@@ -2871,9 +2871,8 @@ C   OK for one character as this should always be <10
       enddo
 
 C this final one is CO2 number density
-        write (52,881) (T(i),EDD(i),DEN(i),O3(i), SL(NSP-1,i),i=1,nz)
-C the final one is not the CO2 numberdensity in the case of CO2 in
-C the main loop CHECK the read in here. WARNING
+        write (52,881) (T(i),EDD(i),DEN(i),O3(i), SL(LCO2,i),i=1,nz)
+C  WARNING (NSP-1) hardcoding to LCO2 is only valid for terrestrial cases.
 
         fmtstr='(  E17.8)'
         write(fmtstr(2:3),'(I2)')NP*3
