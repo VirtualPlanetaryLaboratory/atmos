@@ -737,6 +737,8 @@ C   FOLLOWING FORMATS BELOW ARE FOR BOUNDARY CONDITIONS
 C 208  format(30X,I1,5X,4(E7.1,1X),I1,6X,2(E7.1,1X))
  208  format(30X,I1,5X,2(E8.2,1X),E9.3,1X,E7.1,1X,I1,6X,2(E7.1,1X))
  210  format(30X,I1,5X,2(E7.1,1X),E9.3,1X,E7.1,1X,I1,6X,2(E7.1,1X))
+ 211  format(30X,I1,5X,E8.2,1X,E11.2,1X,E9.3,1X,E7.1,1X,I1,6X,2E8.1)
+C  Above - 211 - added as boundary conditions for Hot Jupiters
 c 208  format(30X,I1,5X,2(E8.1),E9.3,1X,E7.1,1X,I1,6X,2(E7.1,1X))
 C     Format for INERT species boundary conditions
  209  format(30X,E7.1)
