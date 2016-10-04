@@ -445,6 +445,7 @@ C     !can go away when MSCAT does WARNING DO WE NEED THIS COMMENT
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/LTBLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/AERBLK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/SULBLK.inc'
+      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/SATBLK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/ISOBLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/comPRESS1.inc'
@@ -1283,7 +1284,12 @@ c      enddo
 C    computes diffusion coefficents (K*N) and binary
 C          diffusion coefficents for H and H2
       CALL DIFCO(FO2)
-      CALL PHOTSATRAT(JTROP,H2O)
+      IF(PLANET.NE.'WASP12B')CALL PHOTSATRAT(JTROP,H2O)
+      IF(PLANET.EQ.'WASP12B')THEN
+      	DO I=1,NZ
+      		P(I)=PRESS(I)
+      	ENDDO
+      ENDIF
 C    IDO=-1, fill up SL for accurate calculation on first timestep
       CALL DOCHEM(FVAL,-1,JTROP,iSL,USETD)
 
