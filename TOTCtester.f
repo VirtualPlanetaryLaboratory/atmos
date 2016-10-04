@@ -396,6 +396,7 @@ Cc-mc USOLPREV(NQ,NZ) added for second order reverse Euler calculations
       DIMENSION TA(NZ),TB(NZ),TC(NZ),TY(NZ)
       dimension PRES_bar(NZ)
 
+      integer rhOcount, rhHcount, rhCcount, rhScount, rhNcount, rhCLcount
 c      dimension atomsO(NSP2),atomsH(NSP2),atomsC(NSP2)
 c      dimension atomsN(NSP2),atomsCL(NSP2),atomsS(NSP2)
 
