@@ -3097,7 +3097,8 @@ C     e.g., if the atmosphere is 99% N2 and 1% CO2, then the CO2 fraction is
 C     0.01 and N2 should be set to 1, because it is 100% of noncondensibles.
 C     In practice, N2 should be = (1 - [everything but CO2]).
          FO2=USOL(LO2,1)
-         FH2=USOL(LH2,1)
+         IF(PLANET.NE.'WASP12B')FH2=USOL(LH2,1)
+C     Since H2 is major for giant planets, we do (1 - everything) for them.
 C     But in other parts of photochem, N2 is of the total,
 C     not excluding CO2, so we only change it here. 9/8/2015
 C-gna clima can't currently cope with NO2 and having it is screwing it up
@@ -3129,13 +3130,7 @@ C      endif
 C 351  FORMAT (1PE10.3, 1PE12.3, 1PE12.3)
 
 
-
-
-
-
-
-
-
+      print*,"TOTCTESTER.F completed..."
 
         STOP
 C    error in reactions
