@@ -44,6 +44,16 @@ c       bXN2(i) = 4.0D18*(TAV/200.)**0.75
         bHN2(i) = 2.7E19*(TAV/200.)**0.75   ! correct for N2
         bH2N2(i) = 1.4E19*(TAV/200.)**0.75  ! correct for N2
 c       bXN2(i) = 4.0D18*(TAV/200.)**0.75
+      else if (PLANET .EQ. 'WASP12B') then 
+! assuming the "air" composition here is whatever went to the WT (H2 + HE)
+! The general form for b here is from DI = b/n expression in Kopparapu et al. 2012 work
+! (b has a A*T^(n) form for terrestrial gases in Chapter 5. 
+! A and n are not presently established for giant planets...
+       do j=1,NQ
+      	bX1X2(j,i) = 1.52E18*(1./mass(j) + 1./WT)**0.5*(TAV**0.5)
+       enddo 
+! Note: Only works properly if diffusion expressions are updated in 
+! TOTCtester and output.f for this scenario as well      
       endif   
 
 
@@ -67,6 +77,10 @@ c     bXN2(nz) = 4.0D18*(T(nz)/200.)**0.75
         bHN2(i) = 2.7E19*(TAV/200.)**0.75   ! correct for N2
         bH2N2(i) = 1.4E19*(TAV/200.)**0.75  ! correct for N2
 c       bXN2(i) = 4.0D18*(TAV/200.)**0.75
+      else if (PLANET .EQ. 'WASP12B') then !see notes from previous loop on this
+       do j=1,NQ
+      	bX1X2(j,nz) = 1.52E18*(1./mass(j) + 1./WT)**0.5*(T(nz)**0.5)
+       enddo       
       endif    
 
 
