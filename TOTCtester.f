@@ -1006,6 +1006,8 @@ c     WARNING was this dealt with
 c       print *, SUM(INDEX(REACTYPE,'PHOTO'))
 c       print *, SUM(INDEX(REACTYPE,'2BODY'))
 c       print *, SUM(INDEX(REACTYPE,'3BODY'))
+c       print *, SUM(INDEX(REACTYPE,'2BACK'))
+c       print *, SUM(INDEX(REACTYPE,'3BACK'))
 c       print *, SUM(INDEX(REACTYPE,'WEIRD'))
 c       print *, NR
 
