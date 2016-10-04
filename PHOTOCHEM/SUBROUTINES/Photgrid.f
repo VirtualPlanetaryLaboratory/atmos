@@ -3,10 +3,12 @@
       implicit real*8(A-H,O-Z)
       character*8 PLANET
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PHOTABLOK.inc'
+      real *8 skip
 C ***** SET UP THE VERTICAL GRID ZS *****
 c-mc for now, since we are invoking constant dz, we can choose dzgrid based on NZ
       !!! Modified below so that all possible NZs have a corresponding dzgrid - Eddie !!!
       if (NZ .le. 100) dzgrid = 1.0e5
+      if (NZ .le. 100.AND.PLANET.EQ.'WASP12B') dzgrid = 1.2949E+07
       if (NZ .gt. 100 .and. NZ .lt. 300) dzgrid = 0.5e5
       if (NZ .ge. 300 .and. NZ .le. 640) dzgrid = 0.25e5
       if (NZ .gt. 640 .and. NZ .lt. 800) dzgrid = 0.125e5
