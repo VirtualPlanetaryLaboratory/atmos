@@ -158,7 +158,7 @@ c-mc the following two sections require debugging before use...
         JO2_O1D=minloc(photoreac,1,ISPEC(INT(photoreac)).eq.'O2     ')
         JO3_O1D=minloc(photoreac,1,ISPEC(INT(photoreac)).eq.'O3     ')
         JNO=minloc(photoreac,1,ISPEC(INT(photoreac)).eq.'NO     ')
-
+c-mab  print*,'JNO',JNO !debugging for templates w/o NO photolysis
 
       CALL XS('O2      ',nw,wavl,wav,T,DEN,JO2_O1D,sq,columndepth,zy,
      $         IO2)
@@ -181,7 +181,7 @@ C    REPEAT THIS SECTION ONLY IF SOLAR ZENITH ANGLE OR O2 VARIES WITH TIME
 
        JO2_O1D=minloc(photoreac,1,ISPEC(INT(photoreac)).eq.'O2     ')
        JNO=minloc(photoreac,1,ISPEC(INT(photoreac)).eq.'NO     ')
-
+c-mab  print*,'JNO',JNO !debugging for templates w/o NO photolysis
       CALL XS('O2      ',nw,wavl,wav,T,DEN,JO2_O1D,sq,columndepth,zy,
      $        IO2)
 
@@ -204,6 +204,7 @@ c - consider some IF's here, but this would also entail changing the output file
 
       if (INO.LE.2) then  !used if INO=0 or INO=1 - on JPL grid only... !actually for now using in high res too...
        JNO=minloc(photoreac,1,ISPEC(INT(photoreac)).eq.'NO     ')
+c-mab  print*,'JNO',JNO !debugging for templates w/o NO photolysis
       endif
 
 !return to this sulfur stuff in a bit....
@@ -399,6 +400,7 @@ c             endif
 ! this returns the Source function S to this code
 
        FLX = FLUX(L)*AGL*ALP*FSCALE
+C       print*,'wavelength, flx',wavl(L),FLX
       !AGL is diurnal averaging factor, ALP is 1 if out of the SR band or IO2.NE.1
       ! or is the exponential sum coeffiecent if in the SR band and IO2.EQ.1
       ! FLUX is already corrected based on solar age (timeGa set in INPUTFILES/PLANET.dat)
@@ -426,8 +428,9 @@ c save wavelength dependence of SO2 photolysis and optical depth
       if (INO.LE.1) then
 C   NO PREDISSOCIATION IN THE D00 (1910 A) AND D10 (1830 A) BANDS
       if (wavl(L).LE.2500.0 .AND. wavl(L).GE.1754.) then
-       NOL = LLNO(Lold)         !      DATA LLNO/3*0, 2*2, 3*0, 2*1, 25*0/
-       IF (NOL .NE. 0) THEN         ! else bail out of loop over K (GOTO 19)
+c -mab: JNO = 0 when there is no NO photolysis in template (e.g. hjs).
+       IF(JNO.NE.0)NOL = LLNO(Lold)!DATA LLNO/3*0, 2*2, 3*0, 2*1, 25*0/
+       IF (NOL .NE. 0) THEN         !else bail out of loop over K (GOTO 19)
 
          IF (INO .EQ. 1) THEN
 C             old (cieslik and nicolet) method with intensities updated to
