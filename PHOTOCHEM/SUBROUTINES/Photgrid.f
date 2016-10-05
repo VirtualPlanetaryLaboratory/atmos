@@ -953,7 +953,8 @@ c 1.33432e+14 in photons/cm2/s
 !-------wavelength = nm; flux = mW/m2/nm; they have the equivalent flux at 1 AU-------!
 !-------such that you can keep the planets at 1 AU and have the correct flux----------!
 
-      IF (msun .GT. 15) THEN 
+      IF (msun .GT. 15.AND.msun.NE.22) THEN
+c-mab: Recall msun = 22 is using Kevin's grid. We don't need the conversions below.. 
                        
       IF (msun .EQ. 76) THEN
          n = 26035
@@ -1118,8 +1119,58 @@ c 1.33432e+14 in photons/cm2/s
 
 
       ENDIF  !msun != 13
+!c-mab msun = 22 added below for the GOV spectra used in wasp12b Hot Jupiter run...
+      IF (msun .EQ. 22) THEN
 
+         nhead = 2
+         ierr = 0
 
+         n = 118
+
+         OPEN(UNIT=kin,
+     &    file='PHOTOCHEM/DATA/FLUX/totalwasp12_G0V_forAtmos.dat',
+     &                STATUS='old')
+       
+         print *, 'Using Ravis GOV spectrum for WASP12b'
+c-mab: Ravis wasp12b star fluxes are already converted to photons/cm^2/s, distance unsure
+c-mab: to convert from ergs to photons to create above file wc was used not wl
+c-mab: is over grid identical to zanhle.grid, so gridding done with LGRID = 0 earlier
+                  
+         DO i = 1, nhead
+            READ(kin,*)
+         ENDDO
+
+         DO i = 1, nw
+            READ(kin,*) x1(i), skip, y1(i)  
+c-mab: wavl,wavu,flux given  
+c-mab: flux is already earth-equivalent in photons/s/cm^2/bin       
+            if (y1(i).lt.0.0) y1(i)=0.0  !ignore negative fluxes...
+         ENDDO
+         
+             CLOSE (kin)
+                     
+      CALL addpnt(x1,y1,kdata,n,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n,               zero,zero)
+      CALL addpnt(x1,y1,kdata,n,x1(n)*(1.+deltax),zero)
+      CALL addpnt(x1,y1,kdata,n,            biggest,zero)
+      CALL inter3(nw+1,wl,yg1,n,x1,y1,0)   
+!inter3 doesn't have any error checking at the moment
+      !inter3 is bins to bins. 
+
+         IF (ierr .NE. 0) THEN
+            WRITE(*,*) ierr,'  Something wrong in readflux.f'
+            STOP
+         ENDIF         
+
+         DO iw = 1, nw
+               f(iw) = yg1(iw)
+         ENDDO
+c         do i=1,nw
+c         print *, wl(i),x1(i),y1(i),f(i)
+c         enddo
+c         stop
+
+      ENDIF
       
 *_______________________________________________________________________
 
