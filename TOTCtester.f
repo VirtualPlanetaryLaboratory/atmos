@@ -3130,6 +3130,14 @@ C      close(116)
 C      endif
 C 351  FORMAT (1PE10.3, 1PE12.3, 1PE12.3)
 
+c-mab Uncomment below if need to see all the photolysis rates 
+c-mab (This is pure for debugging - mab)
+C	   print*,"Printing all photolysis prates for debugging..."
+C	   print*,(photolabel(j),j=1,kj)
+C       do i=1,nz
+C          print*,(prates(j,i),j=1,kj)
+C       enddo
+C       print*,'Done printing prates...'
 
       print*,"TOTCTESTER.F completed..."
 
