@@ -98,7 +98,10 @@ C M. Claire  060802  Integrating into Kevin's code
 *     mopt = 2    Isaksen's grid
 *     mopt = 3    combined Kockarts/Isaksen grid + Lyman-Alpha
 *     mopt = 4    user-defined
-*     mopt = 5    grid from Kevin's code (Allen Grid for S-R + old JPL grid)
+*     mopt = 5    (Notes below)
+! grid from Kevin's code,used in Zahnle.flx/.grid
+! (This is also Allen Grid for S-R + old JPL grid)
+C-mab The present stellar flux files for Hot Jupiters also use this grid.
 *     mopt = 6    grid from Jim's climate code  (entirly a hack right now for interpolative purposes)
 *     mopt = 7    Jim's old grid, but high resolution from 175-220
 
@@ -399,6 +402,7 @@ c     wl(nw) = 743.6
 
  5    CONTINUE 
 c-mc read in Kevin's grid here
+c-mab Presently, only grid option for hot Jup stellar fluxes.
       nw = 118
        OPEN(kin, file='PHOTOCHEM/DATA/GRIDS/zahnle.grid',status='old')
 
