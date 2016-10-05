@@ -413,7 +413,9 @@ c      SUBROUTINE XS_HNO3(nw,wl,wc,tlev,airlev,jn,sq)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
       CHARACTER*11 photolabel,plab
+      CHARACTER*8 ISPEC
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
+      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/DBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
@@ -509,6 +511,14 @@ c note different behavior in addpnt below than above
       OPEN(UNIT=kin,
      &  file='PHOTOCHEM/DATA/XSECTIONS/HNO3/HNO3_zahnle.abs',
      &  STATUS='old')
+     
+      HJtest=0 !HOT JUPITER TEST
+      do i=1,nsp
+C         print*,i,ISPEC(i)
+         if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
+      enddo 
+
+C         print*,"HJtest",HJtest
 
       DO i = 1, 3
          READ(kin,*)
@@ -523,7 +533,11 @@ c note different behavior in addpnt below than above
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      IF (HJtest.eq.1) THEN
+      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      ELSE
+      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      ENDIF  
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_HNO3***'
@@ -585,7 +599,9 @@ c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reacti
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
       CHARACTER*11 photolabel
+      CHARACTER*8 ISPEC
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
+      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/DBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn,jdum,ISOS
@@ -671,6 +687,14 @@ c option 2) from Kevin no qy
       OPEN(UNIT=kin,
      &  file='PHOTOCHEM/DATA/XSECTIONS/HO2/HO2_zahnle.abs',
      &  STATUS='old')
+     
+      HJtest=0 !HOT JUPITER TEST
+      do i=1,nsp
+C         print*,i,ISPEC(i)
+         if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
+      enddo 
+
+C         print*,"HJtest",HJtest
 
       DO i = 1, 2
          READ(kin,*)
@@ -685,7 +709,11 @@ c option 2) from Kevin no qy
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)
+      IF (HJtest.eq.1) THEN
+      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      ELSE
+      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      ENDIF 
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_HO2***'
@@ -737,7 +765,9 @@ c      SUBROUTINE XS_NO2(nw,wl,wc,tlev,airlev,jn,sq)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
       CHARACTER*11 photolabel,plab
+      CHARACTER*8 ISPEC
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
+      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/DBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
@@ -879,6 +909,14 @@ C     ENDIF
       OPEN(UNIT=kin,
      &  file='PHOTOCHEM/DATA/XSECTIONS/NO2/NO2_zahnle.abs',
      &  STATUS='old')
+     
+      HJtest=0 !HOT JUPITER TEST
+      do i=1,nsp
+C         print*,i,ISPEC(i)
+         if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
+      enddo 
+
+C         print*,"HJtest",HJtest
 
       DO i = 1, 2
          READ(kin,*)
@@ -893,7 +931,11 @@ C     ENDIF
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)
+      IF (HJtest.eq.1) THEN
+      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      ELSE
+      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      ENDIF 
      
 
       IF (ierr .NE. 0) THEN
@@ -978,7 +1020,11 @@ C
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)
+      IF (HJtest.eq.1) THEN
+      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      ELSE
+      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      ENDIF 
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' Something wrong in XS_NO2'
@@ -1154,6 +1200,14 @@ C         print*,"HJtest",HJtest
       OPEN(UNIT=kin,
      &  file='PHOTOCHEM/DATA/XSECTIONS/H2O2/H2O2_zahnle.abs',
      &  STATUS='old')
+     
+      HJtest=0 !HOT JUPITER TEST
+      do i=1,nsp
+C         print*,i,ISPEC(i)
+         if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
+      enddo 
+
+C         print*,"HJtest",HJtest
 
       DO i = 1, 2
          READ(kin,*)
@@ -1219,7 +1273,9 @@ c      SUBROUTINE XS_OCS(nw,wl,wc,tlev,airlev,jn,sq,ISOS)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
       CHARACTER*11 photolabel
+      CHARACTER*8 ISPEC
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
+      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/DBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn,ISOS
@@ -1257,6 +1313,14 @@ c     1)Kevin's photo.dat data
       OPEN(UNIT=kin,
      &  file='PHOTOCHEM/DATA/XSECTIONS/OCS/OCS_zahnle.abs',
      &  STATUS='old')
+     
+      HJtest=0 !HOT JUPITER TEST
+      do i=1,nsp
+C         print*,i,ISPEC(i)
+         if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
+      enddo 
+
+C         print*,"HJtest",HJtest
 
       DO i = 1, 2
          READ(kin,*)
@@ -1271,7 +1335,11 @@ c     1)Kevin's photo.dat data
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      IF (HJtest.eq.1) THEN
+      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      ELSE
+      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      ENDIF 
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_OCS***'
@@ -1321,7 +1389,9 @@ c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reacti
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
       CHARACTER*11 photolabel
+      CHARACTER*8 ISPEC
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
+      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/DBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn,ISOS
@@ -1357,6 +1427,14 @@ c     1)Kevin's photo.dat data
       OPEN(UNIT=kin,
      &  file='PHOTOCHEM/DATA/XSECTIONS/SO3/SO3_zahnle.abs',
      &  STATUS='old')
+     
+      HJtest=0 !HOT JUPITER TEST
+      do i=1,nsp
+C         print*,i,ISPEC(i)
+         if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
+      enddo 
+
+C         print*,"HJtest",HJtest
 
       DO i = 1, 2
          READ(kin,*)
@@ -1371,7 +1449,11 @@ c     1)Kevin's photo.dat data
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)
+      IF (HJtest.eq.1) THEN
+      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      ELSE
+      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      ENDIF 
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_SO3***'
@@ -1427,7 +1509,9 @@ c      SUBROUTINE XS_S2(nw,wl,wc,tlev,airlev,jn,sq,ISOS,jdum)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
       CHARACTER*11 photolabel
+      CHARACTER*8 ISPEC
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
+      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/DBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn,ISOS
@@ -1463,6 +1547,14 @@ c     1)Kevin's photo.dat data
       OPEN(UNIT=kin,
      &  file='PHOTOCHEM/DATA/XSECTIONS/S2/S2_zahnle.abs',
      &  STATUS='old')
+     
+      HJtest=0 !HOT JUPITER TEST
+      do i=1,nsp
+C         print*,i,ISPEC(i)
+         if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
+      enddo 
+
+C         print*,"HJtest",HJtest
 
       DO i = 1, 2
          READ(kin,*)
@@ -1477,7 +1569,11 @@ c     1)Kevin's photo.dat data
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)
+      IF (HJtest.eq.1) THEN
+      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      ELSE
+      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      ENDIF 
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_S2***'
@@ -1567,7 +1663,9 @@ c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reacti
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
       CHARACTER*11 photolabel
+      CHARACTER*8 ISPEC
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
+      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/DBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn,ISOS
@@ -1606,6 +1704,14 @@ c     1)Kevin's photo.dat data
       OPEN(UNIT=kin,
      &  file='PHOTOCHEM/DATA/XSECTIONS/S8/S8L_zahnle.abs',
      &  STATUS='old')
+     
+      HJtest=0 !HOT JUPITER TEST
+      do i=1,nsp
+C         print*,i,ISPEC(i)
+         if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
+      enddo 
+
+C         print*,"HJtest",HJtest
 
       DO i = 1, 2
          READ(kin,*)
@@ -1621,7 +1727,11 @@ c     1)Kevin's photo.dat data
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr) 
+      IF (HJtest.eq.1) THEN
+      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      ELSE
+      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      ENDIF 
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_S8***'
@@ -1632,6 +1742,14 @@ c     1)Kevin's photo.dat data
       OPEN(UNIT=kin,
      &  file='PHOTOCHEM/DATA/XSECTIONS/S8/S8R_zahnle.abs',
      &  STATUS='old')
+     
+      HJtest=0 !HOT JUPITER TEST
+      do i=1,nsp
+C         print*,i,ISPEC(i)
+         if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
+      enddo 
+
+C         print*,"HJtest",HJtest
 
       DO i = 1, 2
          READ(kin,*)
@@ -1649,7 +1767,11 @@ c     1)Kevin's photo.dat data
       CALL addpnt(x2,y2,kdata,n1,               zero,zero)
       CALL addpnt(x2,y2,kdata,n1,x2(n1)*(1.+deltax),zero)
       CALL addpnt(x2,y2,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg2,n1,x2,y2,ierr)
+      IF (HJtest.eq.1) THEN
+      	CALL inter3(nw+1,wl,yg2,n1,x2,y2,ierr)   
+      ELSE
+      	CALL inter2(nw+1,wl,yg2,n1,x2,y2,ierr)   
+      ENDIF 
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_S8***'
@@ -1718,7 +1840,9 @@ c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reacti
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
       CHARACTER*11 photolabel
+      CHARACTER*8 ISPEC
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
+      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/DBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn,ISOS
@@ -1755,6 +1879,14 @@ c     2)MPI data, high res from 160-260 (not there is some temperature dependenc
       OPEN(UNIT=kin,
      &  file='PHOTOCHEM/DATA/XSECTIONS/H2S/H2S_zahnle.abs',
      &  STATUS='old')
+     
+      HJtest=0 !HOT JUPITER TEST
+      do i=1,nsp
+C         print*,i,ISPEC(i)
+         if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
+      enddo 
+
+C         print*,"HJtest",HJtest
 
       DO i = 1, 2
          READ(kin,*)
@@ -1769,7 +1901,11 @@ c     2)MPI data, high res from 160-260 (not there is some temperature dependenc
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)
+      IF (HJtest.eq.1) THEN
+      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      ELSE
+      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      ENDIF 
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_H2S***'
@@ -2075,6 +2211,7 @@ C         print*,i,ISPEC(i)
          if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
       enddo 
 C         print*,"HJtest",HJtest
+      
       if (option.eq.2) then
 
       OPEN(UNIT=kin,
@@ -2149,7 +2286,9 @@ c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reacti
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
       CHARACTER*11 photolabel
+      CHARACTER*8 ISPEC
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
+      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/DBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn,ISOS
@@ -2185,6 +2324,14 @@ c     1)Kevin's photo.dat data
       OPEN(UNIT=kin,
      &  file='PHOTOCHEM/DATA/XSECTIONS/SO/SO_zahnle.abs',
      &  STATUS='old')
+     
+      HJtest=0 !HOT JUPITER TEST
+      do i=1,nsp
+C         print*,i,ISPEC(i)
+         if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
+      enddo 
+
+C         print*,"HJtest",HJtest
 
       DO i = 1, 2
          READ(kin,*)
@@ -2199,7 +2346,11 @@ c     1)Kevin's photo.dat data
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)
+      IF (HJtest.eq.1) THEN
+      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      ELSE
+      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      ENDIF 
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_SO***'
@@ -2288,14 +2439,16 @@ c options
 c     1)Kevin's photo.dat data
 c     2)MC temp-dependent merge to zahnle grid (should re-evaluate)
         !this data is for 195K - in the final run should be t-dependent
+
+
       HJtest=0 !HOT JUPITER TEST
       do i=1,nsp
 C         print*,i,ISPEC(i)
          if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
       enddo 
 C         print*,"HJtest",HJtest
-      option=1
 
+      option=1
 
       if (option.eq.1) then  !Kevin's data
 
@@ -2320,7 +2473,8 @@ C         print*,"HJtest",HJtest
       	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)
       ELSE
       	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)         
-      ENDIF 
+      ENDIF
+      
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_CO2***'
          STOP
@@ -2347,7 +2501,7 @@ C         print*,"HJtest",HJtest
       	CALL inter3(nw+1,wl,yg2,n1,x2,y2,ierr)
       ELSE
       	CALL inter2(nw+1,wl,yg2,n1,x2,y2,ierr)   
-      ENDIF  
+      ENDIF
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_CO2D***'
@@ -2480,6 +2634,7 @@ C         print*,i,ISPEC(i)
          if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
       enddo 
 C         print*,"HJtest",HJtest
+
       option=1
 
       if (option.eq.1) then  !Kevin's data
@@ -2532,6 +2687,7 @@ c Quantum yields:  from Kevin's photo.dat file
       ELSE
        CALL inter2(nw+1,wl,yg2,n2,x2,y2,ierr)
       ENDIF
+
 !yg2 is quantum yield for HCO
 
 
@@ -2549,6 +2705,7 @@ c Quantum yields:  from Kevin's photo.dat file
       ELSE
        CALL inter2(nw+1,wl,yg3,n3,x3,y3,ierr)      
       ENDIF
+
 !yg3 is quantum yield for H2
 
       IF (ierr .NE. 0) THEN
@@ -2601,7 +2758,9 @@ c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reacti
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
       CHARACTER*11 photolabel
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PHOTABLOK.inc'
+      CHARACTER*8 ISPEC
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
+      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/DBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn,ISOS
@@ -2652,6 +2811,13 @@ c- I am going to hack in the reading of the high resolution data below.  This wi
 
 
       option=1 
+      
+      HJtest=0 !HOT JUPITER TEST
+      do i=1,nsp
+C         print*,i,ISPEC(i)
+         if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
+      enddo 
+C         print*,"HJtest",HJtest
 
       if (option.eq.1) then  !Kevin's data
 
@@ -2679,7 +2845,11 @@ c- note these are overwritten by higher resolution data below if LGRID=1
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)
+      IF (HJtest.eq.1) THEN
+      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      ELSE
+      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      ENDIF 
 !yg1 is SO + O cross section * quantum yield
 
       IF (ierr .NE. 0) THEN
@@ -2935,7 +3105,9 @@ c      SUBROUTINE XS_O3(nw,wl,wc,tlev,airlev,jn,sq)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
       CHARACTER*11 photolabel
+      CHARACTER*8 ISPEC
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
+      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/DBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn!,jdum
@@ -2999,6 +3171,12 @@ c$$$         print *, wl(i),yg1(i)
 c$$$      enddo
 c$$$      stop
 
+      HJtest=0 !HOT JUPITER TEST
+      do i=1,nsp
+C         print*,i,ISPEC(i)
+         if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
+      enddo 
+C         print*,"HJtest",HJtest
 
       OPEN(UNIT=kin,
      &  file='PHOTOCHEM/DATA/XSECTIONS/O3/O3_zahnle.abs',
@@ -3020,7 +3198,11 @@ c$$$      stop
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)
+      IF (HJtest.eq.1) THEN
+      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      ELSE
+      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      ENDIF 
 
 !yg1 is "ozone 1" from photo.dat, i.e. SO31 in Kevin's code
 
@@ -3150,7 +3332,9 @@ c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reacti
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
       CHARACTER*11 photolabel
+      CHARACTER*8 ISPEC
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
+      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/DBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
@@ -3187,6 +3371,13 @@ c     2)JPL-06 recomendation (more or less the same as above, but over wider gri
       OPEN(UNIT=kin,
      &  file='PHOTOCHEM/DATA/XSECTIONS/HCL/HCL_zahnle.abs',
      &  STATUS='old')
+     
+      HJtest=0 !HOT JUPITER TEST
+      do i=1,nsp
+C         print*,i,ISPEC(i)
+         if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
+      enddo 
+C         print*,"HJtest",HJtest
 
       DO i = 1, 2
          READ(kin,*)
@@ -3201,7 +3392,11 @@ c     2)JPL-06 recomendation (more or less the same as above, but over wider gri
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)
+      IF (HJtest.eq.1) THEN
+      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      ELSE
+      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      ENDIF 
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_HCL***'
@@ -3301,7 +3496,7 @@ c      SUBROUTINE XS_O2(nw,wl,wc,tlev,airlev,jn,sq,columndepth,zy,IO2)
       CHARACTER*11 photolabel
       CHARACTER*8 ISPEC
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
-      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/DBLOK.inc'
+      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/DBLOK.inc'      
       SAVE/PBLOK/
 * input
       INTEGER jn,nw
@@ -3380,6 +3575,11 @@ c - eventually, i should enforce this somewhere in the main code.
          READ(kin,*) x2(i), y2(i)
       ENDDO
       CLOSE (kin)
+      
+C      DO i = 1, n1
+C         print*,'x2(i),wl(i),y2(i),yg2(i)',x2(i),wl(i),y2(i),yg2(i)
+C      ENDDO
+      
       HJtest=0 !HOT JUPITER TEST
       do i=1,nsp
 C         print*,i,ISPEC(i)
@@ -3387,6 +3587,7 @@ C         print*,i,ISPEC(i)
       enddo 
 
 C         print*,"HJtest",HJtest
+
       CALL addpnt(x2,y2,kdata,n1,x2(1)*(1.-deltax),zero)  
       CALL addpnt(x2,y2,kdata,n1,               zero,zero)
       CALL addpnt(x2,y2,kdata,n1,x2(n1)*(1.+deltax),zero)
@@ -3395,7 +3596,10 @@ C         print*,"HJtest",HJtest
       	CALL inter3(nw+1,wl,yg2,n1,x2,y2,ierr)   
       ELSE
       	CALL inter2(nw+1,wl,yg2,n1,x2,y2,ierr)   
-      ENDIF  
+      ENDIF
+C      DO i = 1, n1
+C         print*,'x2(i),wl(i),y2(i),yg2(i)',x2(i),wl(i),y2(i),yg2(i)
+C      ENDDO
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_O2***'
@@ -3415,6 +3619,10 @@ C         print*,"HJtest",HJtest
       ENDDO
       CLOSE (kin)
 
+C      DO i = 1, n1
+C         print*,'x1(i),wl(i),y1(i),yg1(i)',x1(i),wl(i),y1(i),yg1(i)
+C      ENDDO  
+      
       CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
@@ -3423,7 +3631,11 @@ C         print*,"HJtest",HJtest
       	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)   
       ELSE
       	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
-      ENDIF 
+      ENDIF
+            
+C      DO i = 1, n1
+C         print*,'x1(i),wl(i),y1(i),yg1(i)',x1(i),wl(i),y1(i),yg1(i)
+C      ENDDO    
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_O2***'
@@ -3547,16 +3759,29 @@ c           stop    !uncomment this and pritn CL() statement above to investigat
 !note especially the L-10 in the SRO2 vector which works because kevin's
 !original shortwave grid has 10 elements
 
+C      DO i = 1, 10
+C       print*,'(After Stuff) x2,wl,y2,yg2',x2(i),wl(i),y2(i),yg2(i)
+C      ENDDO
+C      DO i = 1, 34
+C       print*,'(After Stuff) x1,wl,y1,yg1',x1(i),wl(i),y1(i),yg1(i)
+C      ENDDO
 
       do L=1,nw
        do i=1,nz
         sq(jn,i,L) = yg2(L)      !for O1D ...
-        sq(jn+1,I,L)=yg1(L)        !for O2
+C           if(i.eq.1)print*,"L,jn,sq(jn,1,L)",L,jn,sq(jn,i,L)
+        
+        if (HJtest.EQ.1.) then
+         sq(jn+1,I,L)=0.0 
+        else
+         sq(jn+1,I,L)=yg1(L)        !for O2
 
          if (wl(L) .GE. 1754. .AND. wl(L) .LE. 2041.) then   
             sq(jn+1,I,L)=sq(jn+1,I,L) + SRO2(I,L-10) !add in Schuman-Runge correction  
 c            sq(j+1,I,L)=sq(j+1,I,L) + SRO2(I,L) !add in Schuman-Runge correction  
-         endif   
+         endif
+        endif
+C           if(i.eq.1)print*,"L,jn+1,sq(jn+1,1,L)",L,jn+1,sq(jn+1,i,L)
        enddo
       enddo 
 
@@ -3723,7 +3948,7 @@ c options
 c     1)Kevin's photo.dat data
 
       option=1
-
+      
       HJtest=0 !HOT JUPITER TEST
       do i=1,nsp
 C         print*,i,ISPEC(i)
@@ -3731,6 +3956,7 @@ C         print*,i,ISPEC(i)
       enddo 
 
 C         print*,"HJtest",HJtest
+
       if (option.eq.1) then  !Kevin's data
       OPEN(UNIT=kin,
      &  file='PHOTOCHEM/DATA/XSECTIONS/CH4/CH4_zahnle.abs',
@@ -3786,11 +4012,11 @@ C            print*,'HJtest,qy,qy2,qy3',HJtest,qy,qy2,qy3
             print *, 'new CH4 reactions in non-hc code not tested'
             print *, 'so test me when you see this. in XS_CH4'
            endif   
-
          else  !first reaction dominates everywhere but Ly a
           qy=1.0
           qy2=0.0
           qy3=0.0
+            !print*,'HCtest,qy,qy2,qy3',HCtest,qy,qy2,qy3
          endif   
 
 c         do i=1,nw
@@ -3892,6 +4118,14 @@ c     1)Kevin's photo.dat data
       OPEN(UNIT=kin,
      &  file='PHOTOCHEM/DATA/XSECTIONS/C2H6/C2H6_zahnle.abs',
      &  STATUS='old')
+     
+      HJtest=0 !HOT JUPITER TEST
+      do i=1,nsp
+C         print*,i,ISPEC(i)
+         if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
+      enddo 
+
+C         print*,"HJtest",HJtest
 
       DO i = 1, 2
          READ(kin,*)
@@ -3906,7 +4140,11 @@ c     1)Kevin's photo.dat data
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)  
+      IF (HJtest.eq.1) THEN
+      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      ELSE
+      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      ENDIF  
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_C2H6***'
