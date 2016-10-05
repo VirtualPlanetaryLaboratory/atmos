@@ -652,7 +652,7 @@ C         This loads the "Lnumbers" for ease of use later in the code
 C             Return to previous line in species.dat file
               backspace 4
 C  read in atmoic number data,NEVER use LC,LH,LN,LO,LS as placeholders
-C  as they mean something else... 
+C  as they mean something else...
               read(4,207) LA,LB,LD,LE,LF,LM
 
             if (SPECTYPE.EQ.'LL') then
@@ -709,7 +709,7 @@ C              Reads in fixed mixing ratios
                if (species.NE.'HE') read(4,209) XX   !read in fixed mixing ratios
                if (species.EQ.'HE') read(4,212) XX !read in fixed mixing ratios
 C            Hardcoding woohoo! need to do N2 as well WARNING
-               if (species.EQ.'HE') FHE=XX 
+               if (species.EQ.'HE') FHE=XX
                if (species.EQ.'CO2') FCO2=XX
             endif
 
@@ -3091,8 +3091,9 @@ C-EWS  debug to prevent floating point errors
 C-EWS  debug to prevent floating point errors
          FC2H6=max(USOL(LC2H6,1),1.e-60)
          FCO2=SL(LCO2,1)/DEN(1)
+         FN2=SL(LN2,1)/DEN(1) + FCO2
 C-EWS Note that CLIMA/mixing_ratios.dat treats the condensible (CO2) and
-C     non-consibles mixing ratios differently  FN2=SL(LN2,1)/DEN(1) + FCO2
+C     non-consibles mixing ratios differently  
 C     e.g., if the atmosphere is 99% N2 and 1% CO2, then the CO2 fraction is
 C     0.01 and N2 should be set to 1, because it is 100% of noncondensibles.
 C     In practice, N2 should be = (1 - [everything but CO2]).
