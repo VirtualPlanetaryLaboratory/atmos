@@ -8,6 +8,7 @@
 c      real*8 temp(kj) !EWS - not used
       character*8 REACTYPE,PLANET,CHEMJ,ISPEC
       CHARACTER*20 fmtstr
+      CHARACTER*11 photolabel, AA
       DIMENSION D0(2)
       dimension LLNO(35)
 
@@ -28,7 +29,7 @@ c      real*8 temp(kj) !EWS - not used
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/NBLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/ISOBLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/MBLOK.inc'
-
+      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
 
       dimension columndepth(KJ,NZ)
 c      dimension PLOG(NZ) !EWS - not used
@@ -276,7 +277,12 @@ c      if (J.EQ.1)print *,QEXTT(I,J),W0T(I,J)
       enddo
       endif
 
-
+C       do j=1,NSP
+C       	do i=1,nz
+C            print*,"j,i,ISPEC(j),SL(j,i)/DEN(i),SL(j,i),DEN(i)",
+C     .      j,i,ISPEC(j),SL(j,i)/DEN(i),SL(j,i),DEN(i)
+C        enddo
+C       enddo
 C ***** ***** ***** START WAVELENGTH LOOP   ***** ***** *****
       do 19 L=1,nw
 
@@ -344,6 +350,9 @@ c              if (Z(i)/1e5.eq.107.5) print *, ispec(j)
                endif
               endif
 
+C            if(i.eq.1.OR.i.eq.100)print*,
+C     .      "j,i,ncomp,icomp,SL,volmix",
+C     .      j,i,ncomp(i),icomp(ncomp(i),i),SL(j,i),volmix(ncomp(i),i)
 c              if (ncomp(i).eq.3) then
 c                 print *, WAVL(L),Z(I)/1e5,ISPEC(J),ncomp(i)
 c                 print *,ncomp
@@ -401,6 +410,10 @@ c compute photlysis rates for each reaction at each height (summed over waveleng
       do j=1,kj
        do i=1,nz
           prates(j,i) = prates(j,i) + FLX*sq(j,i,L)*S(i)
+C      IF(J.EQ.10) THEN
+C      IF(I.EQ.1)print*,"J,wav,Reaction No.",J,L,wav(L),photonums(j)
+C      print*,'L,I,prates,FLX,sq,S',L,I,prates(j,i),FLX,sq(j,i,L),S(i) !!!PRINT ADD !!!
+C      ENDIF 
        enddo
       enddo
 
