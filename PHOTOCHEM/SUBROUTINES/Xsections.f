@@ -2443,7 +2443,9 @@ c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reacti
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
       CHARACTER*11 photolabel
+      CHARACTER*8 ISPEC
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
+      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/DBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
@@ -2472,6 +2474,12 @@ c      REAL*8 qy !EWS - not used
 c options
 c     1)Kevin's photo.dat data
 
+      HJtest=0 !HOT JUPITER TEST
+      do i=1,nsp
+C         print*,i,ISPEC(i)
+         if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
+      enddo 
+C         print*,"HJtest",HJtest
       option=1
 
       if (option.eq.1) then  !Kevin's data
@@ -2499,7 +2507,11 @@ c pointer
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)
+      IF (HJtest.eq.1) THEN
+      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)
+      ELSE
+      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)
+      ENDIF
 
 !yg1 is H2CO cross section
 
@@ -2515,7 +2527,11 @@ c Quantum yields:  from Kevin's photo.dat file
       CALL addpnt(x2,y2,kdata,n2,               zero,zero)
       CALL addpnt(x2,y2,kdata,n2,x2(n2)*(1.+deltax),zero)
       CALL addpnt(x2,y2,kdata,n2,            biggest,zero)
-      CALL inter2(nw+1,wl,yg2,n2,x2,y2,ierr)
+      IF (HJtest.eq.1) THEN
+       CALL inter3(nw+1,wl,yg2,n2,x2,y2,ierr)
+      ELSE
+       CALL inter2(nw+1,wl,yg2,n2,x2,y2,ierr)
+      ENDIF
 !yg2 is quantum yield for HCO
 
 
@@ -2528,8 +2544,11 @@ c Quantum yields:  from Kevin's photo.dat file
       CALL addpnt(x3,y3,kdata,n3,               zero,zero)
       CALL addpnt(x3,y3,kdata,n3,x3(n3)*(1.+deltax),zero)
       CALL addpnt(x3,y3,kdata,n3,            biggest,zero)
-      CALL inter2(nw+1,wl,yg3,n3,x3,y3,ierr)   
-
+      IF (HJtest.eq.1) THEN
+       CALL inter3(nw+1,wl,yg3,n3,x3,y3,ierr)
+      ELSE
+       CALL inter2(nw+1,wl,yg3,n3,x3,y3,ierr)      
+      ENDIF
 !yg3 is quantum yield for H2
 
       IF (ierr .NE. 0) THEN
