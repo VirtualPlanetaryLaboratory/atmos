@@ -3724,7 +3724,13 @@ c     1)Kevin's photo.dat data
 
       option=1
 
+      HJtest=0 !HOT JUPITER TEST
+      do i=1,nsp
+C         print*,i,ISPEC(i)
+         if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
+      enddo 
 
+C         print*,"HJtest",HJtest
       if (option.eq.1) then  !Kevin's data
       OPEN(UNIT=kin,
      &  file='PHOTOCHEM/DATA/XSECTIONS/CH4/CH4_zahnle.abs',
@@ -3743,7 +3749,11 @@ c     1)Kevin's photo.dat data
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)
+      IF (HJtest.eq.1) THEN
+      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      ELSE
+      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      ENDIF
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_CH4***'
@@ -3764,6 +3774,12 @@ c Quantum yields and reactions depend on wavelength and presence of hydrocarbons
             qy=0.24
             qy2=0.25
             qy3=0.51
+C            print*,'HCtest,qy,qy2,qy3',HCtest,qy,qy2,qy3
+           elseif (HJtest.eq.1) then  !three branches in hydrocarbon code
+            qy=0.24
+            qy2=0.51
+            qy3=0.25
+C            print*,'HJtest,qy,qy2,qy3',HJtest,qy,qy2,qy3
            else  !splitting 50/50 between reac 1 and 2 in non-hc code
             qy=0.5
             qy2=0.5
@@ -3787,7 +3803,7 @@ c         stop
          DO i = 1, nz
               sq(jn,i,iw) = yg1(iw)*qy
               sq(jn+1,i,iw) = yg1(iw)*qy2
-          if (Hctest.eq.1) sq(jn+2,i,iw) = yg1(iw)*qy3
+          if (HCtest.eq.1.or.HJtest.eq.1) sq(jn+2,i,iw) = yg1(iw)*qy3
          ENDDO
       ENDDO
       endif  !end option 1
@@ -3800,7 +3816,7 @@ c      print *, jn, photolabel
       photolabel(jn)='PCH4_CH3'
       jn=jn+1
 
-      if (HCtest.eq.1) then
+      if (HCtest.eq.1.or.HJtest.eq.1) then
       photolabel(jn)='PCH4_3CH2'
       jn=jn+1
       endif
