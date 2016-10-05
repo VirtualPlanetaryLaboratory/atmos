@@ -2256,7 +2256,9 @@ c      SUBROUTINE XS_CO2(nw,wl,wc,tlev,airlev,jn,sq)
       REAL*8 deltax,biggest,zero
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
       CHARACTER*11 photolabel
+      CHARACTER*8 ISPEC
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
+      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/DBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
@@ -2286,8 +2288,12 @@ c options
 c     1)Kevin's photo.dat data
 c     2)MC temp-dependent merge to zahnle grid (should re-evaluate)
         !this data is for 195K - in the final run should be t-dependent
-
-
+      HJtest=0 !HOT JUPITER TEST
+      do i=1,nsp
+C         print*,i,ISPEC(i)
+         if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
+      enddo 
+C         print*,"HJtest",HJtest
       option=1
 
 
@@ -2310,8 +2316,11 @@ c     2)MC temp-dependent merge to zahnle grid (should re-evaluate)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
-
+      IF (HJtest.eq.1) THEN
+      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)
+      ELSE
+      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)         
+      ENDIF 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_CO2***'
          STOP
@@ -2334,7 +2343,11 @@ c     2)MC temp-dependent merge to zahnle grid (should re-evaluate)
       CALL addpnt(x2,y2,kdata,n1,               zero,zero)
       CALL addpnt(x2,y2,kdata,n1,x2(n1)*(1.+deltax),zero)
       CALL addpnt(x2,y2,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg2,n1,x2,y2,ierr)   
+      IF (HJtest.eq.1) THEN
+      	CALL inter3(nw+1,wl,yg2,n1,x2,y2,ierr)
+      ELSE
+      	CALL inter2(nw+1,wl,yg2,n1,x2,y2,ierr)   
+      ENDIF  
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_CO2D***'
