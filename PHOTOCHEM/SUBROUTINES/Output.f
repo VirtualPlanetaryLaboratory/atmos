@@ -110,22 +110,34 @@ C
      2  E10.3,2X,'S2 =',E10.3,2X,'S4 =',E10.3,2X,'S8 =',E10.3)
       endif
 
-      DO 11 J=1,2  !ack hardcoding to retain Kevin's original scheme  
-         !where tauaer 2 and 3 were both for elemental sulfur
-         !this should be integrated/updated below
-      TAUAER(J) = 0.
-      DO 11 I=1,NZ
-      R = RPAR(I,J)           !this should be the extinction efficiency at some wavelength - presumably visible? why 0.6?
-  11  TAUAER(J) = TAUAER(J) + 0.6*3.14159*R*R*AERSOL(I,J)*DZ(I)
-C
+      
+      IF (NP.GT.0) THEN !mab FOR THE FIRST TWO PARTICLES (ASSUMED SULPHATE AND S8 IN HARDCODING ORDER)
+       DO J=1,NP
+!ack hardcoding to retain Kevin's original scheme  
+!where tauaer 2 and 3 were both for elemental sulfur
+!this should be integrated/updated below -> mab just did that below (after defining TAUAER with NP+1 above)
+        IF (J.NE.3) TAUAER(J) = 0. 
+c-mab: hardcoding, designed to keep tauaer 3 value from previous J = 2 step
 corig      TAUAER(NP+1) = 0.   
-      TAUAER(NP) = 0.   
-      DO 14 I=1,NZ
-      R = RPAR(I,2)                 !so 1.2 is somehow Qext of S8 in the UV? - don't we have these all as 2?
-  14  TAUAER(NP) = TAUAER(NP) + 1.2*3.14159*R*R*AERSOL(I,2)*DZ(I)
-      write(14, 153) TAUAER
- 153  format(/1X,'SCALED AEROSOL EXTINCTION OPTICAL DEPTHS',/5X,            !ACK hardcoded to 2 particles + S8UV
+        DO I=1,NZ
+         R = RPAR(I,J)           
+!this should be the extinction efficiency at some wavelength - presumably visible? why 0.6?
+!c-mab reconfigured this loop cause there was a bug previously...
+         IF (J.LT.3) TAUAER(J) = TAUAER(J) + 0.6*3.14159*R*R*AERSOL(I,J)*DZ(I) !S8 VIS (0.6)
+         IF (J.EQ.2) TAUAER(J+1) = TAUAER(J+1) +  !c-mab Hold S8(UV) in tauaer3
+     2     1.2*3.14159*R*R*AERSOL(I,J)*DZ(I)
+!so 1.2 is somehow Qext of S8 in the UV? - don't we have these all as 2?
+         IF (J.EQ.3) TAUAER(J) = TAUAER(J) 
+!c-mab Double check to make sure tauaer3 doesn't get re-written by 0.0 or something
+        ENDDO
+       ENDDO
+        write(14, 153) (TAUAER(J),J=1,3) 
+!ACK hardcoded to 2 particles + S8UV (mab note: S8UV held in next, i.e. 3rd level for now)
+c-mab: Note if TAUAER is used for addition particles, increment J by 1, i.e. particle 3 would go to J=4
+ 153    format(/1X,'SCALED AEROSOL EXTINCTION OPTICAL DEPTHS',/5X,            
      2  'SULFATE =',1PE10.3,5X,'S8(VIS) =',E10.3,5X,'S8(UV) =',E10.3)
+C
+      ENDIF
 
 
 !mc perhaps need to abstract the above with better wavelength behavior.
