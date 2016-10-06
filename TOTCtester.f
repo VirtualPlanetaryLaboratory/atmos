@@ -13,7 +13,7 @@ c - but doesn't have any time-dependent gear stuff in it
 c- at some point go through and clean up all comments
 c
 c
-c - this code contains the variable grid e changes used to compute
+c - this code contains the variable grid size changes used to compute
 c - the suite of models for the whiff paper.
 c - this code could/should be modified to use a variable grid size at some point
 c - to make it faster all common blocks abstracted to DATA/INCLUDE
@@ -733,6 +733,8 @@ C     format for species name and type
  203  FORMAT(A8,3X,A2)
 C     format for elemental counts
  207  format(15X,6(I1,1X))
+ 206  format(15X,6(I2,1X))
+C-mab     format for two-column elemental count
 C   FOLLOWING FORMATS BELOW ARE FOR BOUNDARY CONDITIONS
       !Original boundary conditions
 C 208  format(30X,I1,5X,4(E7.1,1X),I1,6X,2(E7.1,1X))
@@ -3130,14 +3132,6 @@ C      close(116)
 C      endif
 C 351  FORMAT (1PE10.3, 1PE12.3, 1PE12.3)
 
-c-mab Uncomment below if need to see all the photolysis rates 
-c-mab (This is pure for debugging - mab)
-C	   print*,"Printing all photolysis prates for debugging..."
-C	   print*,(photolabel(j),j=1,kj)
-C       do i=1,nz
-C          print*,(prates(j,i),j=1,kj)
-C       enddo
-C       print*,'Done printing prates...'
 
       print*,"TOTCTESTER.F completed..."
 
