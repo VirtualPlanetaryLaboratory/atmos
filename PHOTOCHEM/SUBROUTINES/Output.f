@@ -376,16 +376,17 @@ C
 c  sum up the H fluxes at all heights except the ground
 c  this works good for stratosphere but in the troposphere
 c it fails - 
-c- this could be abstracted by looping over species where atomsH ne 0
+c-mab abstracted by looping over species where atomsH ne 0
+      flux_H = 0.0
       do i=1,NZ-1
-        flux_H(i) = 2.*FLUXO(LH2O,i) + FLUXO(LH,i) + 2.*FLUXO(LH2,i)
-     $ + FLUXO(LOH,i)+FLUXO(LHO2,i) + 2.*FLUXO(LH2O2,i) + FLUXO(LHCO,i) 
-     $ + 2.*FLUXO(LH2CO,i) + 4.*FLUXO(LCH4,i) + 2.*FLUXO(LCH3,i) 
-     $ + 6.*FLUXO(LC2H6,i)+FLUXO(LHNO,i)+2.*FLUXO(LH2S,i) +FLUXO(LHS,i) 
-     $ + 2.*FLUXO(LH2SO4,i) + FLUXO(LHSO,i) + FLUXO(LHNO3,i)
-c     $  + FLUXO(LHO2NO2,i)
+        do j=1,NSP
+          if(atomsH(j).gt.0.0) then 
+c-mab then only sum for species that contain H for a given layer
+        	flux_H(i) = flux_H(i) + atomsH(j)*FLUXO(j,i)
+          endif
+        enddo
       enddo
-      flux_H(nz) = FUP(LH) + 2.*FUP(LH2) 
+        flux_H(nz) = FUP(LH) + 2.*FUP(LH2)
       
       write(24,974) time,
      $  usol(LO2,1), usol(LH2,1), usol(LCO,1),usol(LCH4,1),
