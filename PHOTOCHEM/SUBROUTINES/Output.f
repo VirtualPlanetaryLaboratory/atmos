@@ -28,7 +28,7 @@
       COMMON/LifeTime/TAUO2,TAUCH4,TAUSO2
 
       DIMENSION FUP(NQ1),FLOW(NQ1),CON(NQ1),FLUXO(NQ1,NZ)
-     2  ,ZF(NZ),TAUAER(NP)  
+     2  ,ZF(NZ),TAUAER(NP+1)  
       dimension TAUHCABS(kw),TAUHCEXT(kw), TAUHCEFF(kw)
       dimension vdep(nq), flux_H(nz),USOLORIG(NQ,NZ)
       dimension PSO2MIF(nz),PROSO2MIF(nz),PROSO(nz)
@@ -274,6 +274,7 @@ c  what follows gives the fluxes
 c      vturb=0.0
 
 c fluxes for particles
+      if(NP.GT.0) THEN
       do k=1,np
        do I=1,NZ1
 
@@ -303,7 +304,7 @@ c fluxes for particles
 
        enddo
       enddo
-
+      endif
 c add in molecular diffusion
 
 c      print *, FLUX(
