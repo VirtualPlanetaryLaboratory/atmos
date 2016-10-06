@@ -94,7 +94,16 @@ c         print *, I,ISPEC(I),' short-lived'
       DO 3 J=1,NZ
    3  D(I,J) = XP(J)/XL(J)
 
- 
+c-mab Uncomment below to help with short-lived species XP/XL/D debugging
+C      print*,'NQ1+1 = ',NQ1+1
+C      DO J=1,NZ
+C        IF(J.EQ.1) print*,"Densities from XP/XL for species no.",NQ1+1
+C        IF(J.EQ.1) print*,"(printing within chempl....)"
+C        print*,"Layer no.,D(I,J),XP,XL",J,D(NQ1+1,J),XP(J),XL(J)
+C        print*,'---'
+C	  ENDDO
+!!!!!!!!!!!!!!!!!!!
+C      pause 5   
 
 C   SOLVE QUADRATIC FOR S4, if S4 is in the SL lived loop
 c equation is production=loss, which turns into a quadratic equation in S4 density
@@ -447,10 +456,20 @@ C
          REACRAT(L,J) =  A(L,J)*D(M,J)*D(K,J)  !reaction rate*densities
 c cm^3/mol/s * (mol/cm^3)^2 ->  mol/cm^3/s (i.e. rate units)
 
+C-mab:      IF(L.EQ.179) THEN For reaction rate debugging...
+C-mab: Uncomment below to track intermediate rates for chosen L
+C      	IF(J.EQ.1)print*, 'L =',L
+C      	print*, 'J,A,D(M),D(K)',J,A(L,J),D(M,J),D(K,J)
+C      ENDIF
   12  RAT(L) = RAT(L) + REACRAT(L,J)*DZ(J)  
 c      mol/cm^3/s * cm ->  mol/cm^2/s (i.e. RAT is in height integrated flux units)
 
-  
+c-mab: Below is bebugging help...
+c-mab: Uncomment below to get the integrated rates at the end of each time step N
+C      print*,'Integrated Rates	J:'
+C      DO L=1,NR
+C      	print*, RAT(L),L
+C      ENDDO  
       DO 8 I=1,NQ1
       XLG(I) = YL(I,1)
       DO 8 J=1,NZ
