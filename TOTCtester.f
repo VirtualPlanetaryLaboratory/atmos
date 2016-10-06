@@ -1018,12 +1018,15 @@ c       print *, NR
 C ***** READ THE PLANET PARAMETER DATAFILE *****
       READ(7,502) G,FSCALE,ALB,ZTROP,FAR,R0,P0,PLANET,TIMEGA,IRESET,
      &   msun, ihzscale
+c-mab: Uncomment below for debugging with this part
+C      	print*,'G,FSCALE,ALB,ZTROP,FAR,R0 = ',G,FSCALE,ALB,ZTROP,FAR,R0
+C      	print*,'P0,PLANET,TIMEGA,IRESET = ',P0,PLANET,TIMEGA,IRESET
  502  FORMAT(F7.1/,F7.2/,F7.3/,E7.1/,F7.3/,E8.3/,F8.3/,A8/,F4.2/,I1/
-     &  ,I2/,I1)
+     &  ,I2/,I1/,I3/,E10.4)
 C     adding IRESET to create the atmospheric profile for modern earth
 C     gna - added msun keyword to change the star from planet.dat
-      print *, 'msun is ', msun
-      print *, 'ihzscale is ', ihzscale
+C     print *, 'msun is ', msun
+C     print *, 'ihzscale is ', ihzscale
 C gna-scale stellar flux based on spectral type:
 C uses Kopparapu et al 2012 scalings for earth-equivalent distance
       IF (ihzscale.eq.1) then
