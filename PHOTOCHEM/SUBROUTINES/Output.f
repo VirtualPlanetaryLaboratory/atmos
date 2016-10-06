@@ -975,6 +975,10 @@ C
      2  RELH(I),CONDEN(I), flux_H(i), I=1,NZ,ISKIP)
  200  FORMAT(1X,1P10E10.3)
 C
+      IF (NP.GT.O) THEN 
+c-mab: THE STUFF BELOW ARE RELEVANT TO AEROSOLS/PARTICLES ONLY (AGAIN)
+c-mab: unhardcoded to now depend on NP, and print out HC type as well.
+c-mab: the hardcoding in the species and expected order still remain...
        DO J=1,NP
        	IF (J.EQ.1) THEN
       write(14, 230)
@@ -1024,7 +1028,7 @@ C
  256  FORMAT(/4X,'Z',8X,'AERSOL',5X,'RPAR',6X,'WFALL',5X,'TAUSED',4X,
      2  'TAUEDD',4X,'TAUC',6X,'CONVER')
 
-
+      ENDIF
 c GNA
 c HCAER type 1
       if (NP .GT. 2) then
