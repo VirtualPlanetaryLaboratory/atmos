@@ -323,24 +323,38 @@ c     so this is repeated once for L<1754 and L>2041A and NK(L) times for 1754<L
        !set up new Rayleigh scattering vectors
          do j=1,NSP
            if (SL(j,i)/DEN(i).GE. 0.01) then  !if more than 0.1% of atmosphere, consider Rayleigh contribution
-              ncomp(i)=ncomp(i)+1
 
 c              if (Z(i)/1e5.eq.107.5) print *, ispec(j)
 
-              volmix(ncomp(i),i)=SL(j,i)/DEN(i)
-
               if (ISPEC(j).eq.'CO2') then
+                 ncomp(i)=ncomp(i)+1
+                 volmix(ncomp(i),i)=SL(j,i)/DEN(i)
                  icomp(ncomp(i),i)=2
               else if (ISPEC(j).eq.'N2') then
+                 ncomp(i)=ncomp(i)+1
+                 volmix(ncomp(i),i)=SL(j,i)/DEN(i)
                  icomp(ncomp(i),i)=3
               else if (ISPEC(j).eq.'O2') then
+                 ncomp(i)=ncomp(i)+1
+                 volmix(ncomp(i),i)=SL(j,i)/DEN(i)
                  icomp(ncomp(i),i)=4
               else if (ISPEC(j).eq.'H2') then
+                 ncomp(i)=ncomp(i)+1
+                 volmix(ncomp(i),i)=SL(j,i)/DEN(i)
                  icomp(ncomp(i),i)=5
               else if (ISPEC(j).eq.'HE') then
+                 ncomp(i)=ncomp(i)+1
+                 volmix(ncomp(i),i)=SL(j,i)/DEN(i)
                  icomp(ncomp(i),i)=6
               else
-                 icomp(ncomp(i),i)=1  !use Earth 'air' - better than nothing? hard to know...
+                 if(FH2.LT.0.5) then
+c-mab assuming "rest" to be Earth air is not valid for giant planets!
+c-mab this H2 fraction-based loop is a temporary fix--don't want to hardcode ignoring H
+                  ncomp(i)=ncomp(i)+1
+                  volmix(ncomp(i),i)=SL(j,i)/DEN(i)
+                  icomp(ncomp(i),i)=1  
+!using Earth 'air' for the rocky planets - better than nothing? hard to know...
+                 endif
                if (wavl(L).eq.2273) then
                   if (tempcount.eq.0) then
                     print *, ISPEC(j),'at ', Z(i)/1e5, 'km is major
