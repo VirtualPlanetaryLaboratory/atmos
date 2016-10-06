@@ -377,16 +377,21 @@ c             endif
 
 
 
-      if (IO2 .EQ. 1) then   !re-compute O2 cross section via exponential sums
-
-        if (wavl(L) .LE. 2041. .AND. wavl(L).GE.1754.) then
+       if (IO2 .EQ. 1) then   !re-compute O2 cross section via exponential sums
+        if(PLANET.EQ.'WASP12B') then !ignore sum calculation entirely
+            do I=1,NZ
+       		 sq(JO2,I,L) = 0.0
+       		 ALP = 1.0 !reset ALP to 1.0 since we don't want to loop
+            enddo
+        else
+         if (wavl(L) .LE. 2041. .AND. wavl(L).GE.1754.) then
            ALP = ALPHAP(Lold,K)  !ALPHAP(17,4) are coeficients where 1<K<4
             do I=1,NZ
              sq(JO2,I,L)= SO2HZ(Lold) + BETA(Lold,K)
             enddo
-        endif
-
-        endif !end IO2=1 loop
+         endif !end O2 sum computation loop
+        endif !end planet wasp12b loop
+       endif !end IO2=1 loop
 
 
 
