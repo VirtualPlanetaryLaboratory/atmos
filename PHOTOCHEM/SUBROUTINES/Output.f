@@ -115,7 +115,7 @@ C
        DO J=1,NP
 !ack hardcoding to retain Kevin's original scheme  
 !where tauaer 2 and 3 were both for elemental sulfur
-!this should be integrated/updated below -> mab just did that below (after defining TAUAER with NP+1 above)
+!this should be integrated/updated below, mab: just did that below (after defining TAUAER with NP+1 above)
         IF (J.NE.3) TAUAER(J) = 0. 
 c-mab: hardcoding, designed to keep tauaer 3 value from previous J = 2 step
 corig      TAUAER(NP+1) = 0.   
@@ -133,12 +133,11 @@ corig      TAUAER(NP+1) = 0.
        ENDDO
         write(14, 153) (TAUAER(J),J=1,3) 
 !ACK hardcoded to 2 particles + S8UV (mab note: S8UV held in next, i.e. 3rd level for now)
-c-mab: Note if TAUAER is used for addition particles, increment J by 1, i.e. particle 3 would go to J=4
+c-mab: IF TAUAER is used for addition particles, increment J by 1, i.e. particle 3 would go to J=4
  153    format(/1X,'SCALED AEROSOL EXTINCTION OPTICAL DEPTHS',/5X,            
      2  'SULFATE =',1PE10.3,5X,'S8(VIS) =',E10.3,5X,'S8(UV) =',E10.3)
 C
       ENDIF
-
 
 !mc perhaps need to abstract the above with better wavelength behavior.
 !am porting over some HCAER stuff from Shawn's code:
@@ -322,6 +321,17 @@ c these should be flagged for IH2=-1
 c         \phi = b*f*({1/over H_A}-{1/over H}) - b*df/dz
 c the following gives fluxes from 1 to 80 km.
       if(ISOTOPE.EQ.0) then
+        if(PLANET.EQ.'WASP12B') then
+      do i=1,NZ-1
+       do j=1,NQ
+        fluxo(j,i) = fluxo(j,i)
+     5    - bX1X2(j,i)*(usol(j,i+1) - usol(j,i))/dz(i)
+     6    + bX1X2(j,i)*0.5*(usol(j,i) + usol(j,i+1))
+     7       *(1./H_atm(i) - 1./scale_H(j,i))
+       enddo
+      enddo
+        
+        else
       do i=1,NZ-1
         fluxo(LH,i) = fluxo(LH,i)
      5    - bHN2(i)*(usol(LH,i+1) - usol(LH,i))/dz(i)
@@ -332,6 +342,7 @@ c the following gives fluxes from 1 to 80 km.
      6    + bH2N2(i)*0.5*(usol(LH2,i) + usol(LH2,i+1))
      7      *(1./H_atm(i) - 1./scale_H(LH2,i))
       enddo
+        endif
       endif
 
 C
