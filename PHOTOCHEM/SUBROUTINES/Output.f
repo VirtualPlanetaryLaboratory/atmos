@@ -42,9 +42,14 @@ C
       IF(N.EQ.NSTEPS) ISKIP = 2
       TIMEY = TIME/3600./24./365.
       write(14, 100) TIME,TIMEY
- 100  format(/1X,'TIME =',E11.4,5X,'TIMEY =',F10.5,1X,'YEARS')
+
       write(14, 101) NPHOT
- 101  format(/1X,'NPHOT =',I3)
+ !100  format(/1X,'TIME =',E11.4,5X,'TIMEY =',F10.5,1X,'YEARS')
+ !101  format(/1X,'NPHOT =',I3)
+c-mab above are old format, using the format below to avoid **** in out.out
+ 100  FORMAT(/1X,"TIME =",1PE9.2,5X,"TIMEY =",E9.2,1X,"YEARS")
+ 101  format(/1X,'NPHOT =',I5)
+
 C
       write(14, 105)
  105  format(/1X,'MIXING RATIOS OF LONG-LIVED SPECIES'/)
