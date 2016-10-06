@@ -975,6 +975,8 @@ C
      2  RELH(I),CONDEN(I), flux_H(i), I=1,NZ,ISKIP)
  200  FORMAT(1X,1P10E10.3)
 C
+       DO J=1,NP
+       	IF (J.EQ.1) THEN
       write(14, 230)
  230  FORMAT(/1X,'SULFATE AEROSOL PARAMETERS')
       write(14, 235)
@@ -983,31 +985,44 @@ C
      3  'CONSO4',4X,'CONVER')
       if(ISOTOPE.EQ.0) LP=LH2SO4
       if(ISOTOPE.EQ.1) LP=LH2SXO4
-      write(14, 240) (Z(I),AERSOL(I,1),RPAR(I,1),WFALL(I,1),FSULF(I),     !ACK - harcoded particle numbers here
-     2  TAUSED(I,1),TAUEDD(I),TAUC(I,1),H2SO4S(I),USOL(LP,I),
-     3  CONSO4(I),CONVER(I,1),I=1,NZ,ISKIP)
- 240  FORMAT(1X,1P12E10.3)
+       write(14, 240) (Z(I),AERSOL(I,J),RPAR(I,J),WFALL(I,J),FSULF(I),     !ACK - harcoded particle numbers here
+     2  TAUSED(I,J),TAUEDD(I),TAUC(I,J),H2SO4S(I),USOL(LP,I),
+     3  CONSO4(I),CONVER(I,J),I=1,NZ,ISKIP)
+ 240   FORMAT(1X,1P12E10.3)
 C
+       	ELSE IF (J.EQ.2) THEN
       write(14, 250)
  250  FORMAT(/1X,'S8 AEROSOL PARAMETERS')
       write(14, 255)
  255  FORMAT(/4X,'Z',8X,'AERSOL',5X,'RPAR',6X,'WFALL',5X,'TAUSED',4X,
      2 'TAUEDD',4X,'TAUC',6X,'CONVER')
 
-      write(14, 261) (Z(I),AERSOL(I,2),RPAR(I,2),WFALL(I,2),TAUSED(I,2),  !ACK - harcoded particle numbers here
-     2  TAUEDD(I),TAUC(I,2),CONVER(I,2),I=1,NZ,ISKIP)
-
-      if (NP .GT. 2) then
-      J3 = 3
+       write(14, 261) (Z(I),AERSOL(I,J),RPAR(I,J),WFALL(I,J),  !ACK - harcoded particle numbers here
+     2  TAUSED(I,J),TAUEDD(I),TAUC(I,J),CONVER(I,J),I=1,NZ,ISKIP)
+      
+       	ELSE IF (J.EQ.3) THEN
       write(14,301)
- 301  FORMAT(/1X,"HC AEROSOL PARAMETERS")
+ 301  FORMAT(/1X,"S8 AEROSOL PARAMETERS")
       write(14,256)
+      write(14,261) (Z(I),AERSOL(I,J),RPAR(I,J),WFALL(I,J),
+     2  TAUSED(I,J),TAUEDD(I),TAUC(I,J),CONVER(I,J),I=1,NZ,ISKIP)
+ 261  FORMAT(1X,1P8E10.3)
+ 
+        	ELSE IF (J.EQ.4) THEN
+      write(14,302)
+ 302  FORMAT(/1X,"HC TYPE 2 AEROSOL PARAMETERS")
+      write(14,256)
+      write(14,262) (Z(I),AERSOL(I,J),RPAR(I,J),WFALL(I,J),
+     2  TAUSED(I,J),TAUEDD(I),TAUC(I,J),CONVER(I,J),I=1,NZ,ISKIP)
+ 262  FORMAT(1X,1P8E10.3)
+ 
+        ELSE
+      write(14,*) "(Other particles (if any) after HC are not printed)"
+       
+       	ENDIF
+       ENDDO
  256  FORMAT(/4X,'Z',8X,'AERSOL',5X,'RPAR',6X,'WFALL',5X,'TAUSED',4X,
      2  'TAUEDD',4X,'TAUC',6X,'CONVER')
-      write(14,261) (Z(I),AERSOL(I,J3),RPAR(I,J3),WFALL(I,J3),
-     2  TAUSED(I,J3),TAUEDD(I),TAUC(I,J3),CONVER(I,J3),I=1,NZ,ISKIP)
- 261  FORMAT(1X,1P8E10.3)
-      endif
 
 
 c GNA
