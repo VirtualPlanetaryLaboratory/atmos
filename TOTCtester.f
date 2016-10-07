@@ -661,26 +661,14 @@ C             Return to previous line in species.dat file
                backspace 4
 
 
-C              New species.dat formatting BELOW
-               if (NEWSPEC.eq.1) then
+
                   if (iprint.eq.0) then
-                     print *, 'species.dat should have new formatting'
-                     print *, "for VDEP and FIXEDMR (E8.2)"
+                     print *, "The ultimate 211 format in use"
                      iprint = 1
                   endif
 C                 Reads in boundary conditions
                   read(4,211) LBC, XX,YY,ZZ,XXX,LG,YYY,ZZZ
-               endif
-C                Old species.dat formatting
-               if (NEWSPEC.eq.0) then
-                   if (iprint.eq.0) then
-                     print *, 'species.dat should have old formatting'
-                     print *, "for VDEP and FIXEDMR (E7.2)"
-                     iprint = 1
-                  endif
-C                Reads in boundary conditions
-                  read(4,211) LBC, XX,YY,ZZ,XXX,LG,YYY,ZZZ
-               endif
+
             !   print *, LBC
                LBOUND(iLL)=LBC
                VDEP0(iLL)=XX
