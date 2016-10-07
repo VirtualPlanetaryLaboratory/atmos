@@ -643,7 +643,7 @@ C   So the species.dat statements print only once
 C     ACK this will crash if species.dat is longer than 300 lines.
 C     Ignore comments in species.dat file
       do while (I.LT.300)
-         read (4,203, end=96) SPECIES,SPECTYPE
+         read(4,*, end=96) SPECIES,SPECTYPE
          if (scan(species,'*').LT.1) then
             iSP=iSP+1
             ISPEC(iSP)=species
@@ -654,37 +654,16 @@ C             Return to previous line in species.dat file
               backspace 4
 C  read in atmoic number data,NEVER use LC,LH,LN,LO,LS as placeholders
 C  as they mean something else...
-              read(4,207) LA,LB,LD,LE,LF,LM
+              read(4,*) AX,AX,LA,LB,LD,LE,LF,LM
 
             if (SPECTYPE.EQ.'LL') then
                iLL=iLL+1
 C             Return to previous line in species.dat file
                backspace 4
-
-
-C              New species.dat formatting BELOW
-c               if (NEWSPEC.eq.1) then
-c                  if (iprint.eq.0) then
-c                     print *, 'species.dat should have new formatting'
-c                     print *, "for VDEP and FIXEDMR (E8.2)"
-c                     iprint = 1
-c                  endif
-C                 Reads in boundary conditions
-c                  read(4,208) LBC, XX,YY,ZZ,XXX,LG,YYY,ZZZ
+C This section reads in the boundary conditions from species.dat.
+C Note this now uses non-fixed formatting! :-D
                   read(4,*) AX,AX,LX,LX,LX,LX,LX,LX,LBC,XX,YY,ZZ,XXX,LG
      &   ,YYY,ZZZ
-c               endif
-C                Old species.dat formatting
-c               if (NEWSPEC.eq.0) then
-c                   if (iprint.eq.0) then
-c                     print *, 'species.dat should have old formatting'
-c                     print *, "for VDEP and FIXEDMR (E7.2)"
-c                     iprint = 1
-c                  endif
-C                Reads in boundary conditions
-c                  read(4,210) LBC, XX,YY,ZZ,XXX,LG,YYY,ZZZ
-c                  read(4,*) x,x,x,x,x,x,x,x,LBC, XX,YY,ZZ,XXX,LG,YYY,ZZZ
-c               endif
             !   print *, LBC
                LBOUND(iLL)=LBC
                VDEP0(iLL)=XX
@@ -710,8 +689,7 @@ C      CO2 only works as fixed mixing ratio. This could be handled better.
 C              Returns to previous line in species.dat file
                backspace 4
 C              Reads in fixed mixing ratios
-               if (species.NE.'HE') read(4,209) XX   !read in fixed mixing ratios
-               if (species.EQ.'HE') read(4,212) XX !read in fixed mixing ratios
+               read(4,*) AX,AX,LX,LX,LX,LX,LX,LX,XX   !read in fixed mixing ratios
 C            Hardcoding woohoo! need to do N2 as well WARNING
                if (species.EQ.'HE') FHE=XX
                if (species.EQ.'CO2') FCO2=XX
