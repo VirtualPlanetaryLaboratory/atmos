@@ -653,7 +653,7 @@ C             Return to previous line in species.dat file
               backspace 4
 C  read in atmoic number data,NEVER use LC,LH,LN,LO,LS as placeholders
 C  as they mean something else...
-              read(4,207) LA,LB,LD,LE,LF,LM
+              read(4,206) LA,LB,LD,LE,LF,LM
 
             if (SPECTYPE.EQ.'LL') then
                iLL=iLL+1
@@ -669,7 +669,7 @@ C              New species.dat formatting BELOW
                      iprint = 1
                   endif
 C                 Reads in boundary conditions
-                  read(4,208) LBC, XX,YY,ZZ,XXX,LG,YYY,ZZZ
+                  read(4,211) LBC, XX,YY,ZZ,XXX,LG,YYY,ZZZ
                endif
 C                Old species.dat formatting
                if (NEWSPEC.eq.0) then
@@ -679,7 +679,7 @@ C                Old species.dat formatting
                      iprint = 1
                   endif
 C                Reads in boundary conditions
-                  read(4,210) LBC, XX,YY,ZZ,XXX,LG,YYY,ZZZ
+                  read(4,211) LBC, XX,YY,ZZ,XXX,LG,YYY,ZZZ
                endif
             !   print *, LBC
                LBOUND(iLL)=LBC
@@ -706,8 +706,7 @@ C      CO2 only works as fixed mixing ratio. This could be handled better.
 C              Returns to previous line in species.dat file
                backspace 4
 C              Reads in fixed mixing ratios
-               if (species.NE.'HE') read(4,209) XX   !read in fixed mixing ratios
-               if (species.EQ.'HE') read(4,212) XX !read in fixed mixing ratios
+               read(4,212) XX   !read in fixed mixing ratios
 C            Hardcoding woohoo! need to do N2 as well WARNING
                if (species.EQ.'HE') FHE=XX
                if (species.EQ.'CO2') FCO2=XX
