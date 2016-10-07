@@ -732,20 +732,23 @@ C            Hardcoding woohoo! need to do N2 as well WARNING
 C     format for species name and type
  203  FORMAT(A8,3X,A2)
 C     format for elemental counts
- 207  format(15X,6(I1,1X))
+c 207  format(15X,6(I1,1X))
+C 206 is the new standard
  206  format(15X,6(I2,1X))
 C-mab     format for two-column elemental count
 C   FOLLOWING FORMATS BELOW ARE FOR BOUNDARY CONDITIONS
       !Original boundary conditions
 C 208  format(30X,I1,5X,4(E7.1,1X),I1,6X,2(E7.1,1X))
- 208  format(30X,I1,5X,2(E8.2,1X),E9.3,1X,E7.1,1X,I1,6X,2(E7.1,1X))
+c 208  format(30X,I1,5X,2(E8.2,1X),E9.3,1X,E7.1,1X,I1,6X,2(E7.1,1X))
  210  format(30X,I1,5X,2(E7.1,1X),E9.3,1X,E7.1,1X,I1,6X,2(E7.1,1X))
- 211  format(30X,I1,5X,E8.2,1X,E11.2,1X,E9.3,1X,E7.1,1X,I1,6X,2E8.1)
+C 211 is the new standard (for columns after 206)
+ 211  format(36X,I1,5X,E9.2,1X,E12.2,1X,E10.2,1X,E7.0,1X,I1,6X,2E9.2)
 C  Above - 211 - added as boundary conditions for Hot Jupiters
 c 208  format(30X,I1,5X,2(E8.1),E9.3,1X,E7.1,1X,I1,6X,2(E7.1,1X))
 C     Format for INERT species boundary conditions
  209  format(30X,E7.1)
- 212  format(30X,F7.5) !for INERT species boundary conditions
+C for INERT species boundary conditions
+ 212  format(36X,F7.5)
  96   CONTINUE
 
 c      stop
@@ -3098,7 +3101,7 @@ C-EWS  debug to prevent floating point errors
          FCO2=SL(LCO2,1)/DEN(1)
          FN2=SL(LN2,1)/DEN(1) + FCO2
 C-EWS Note that CLIMA/mixing_ratios.dat treats the condensible (CO2) and
-C     non-consibles mixing ratios differently  
+C     non-consibles mixing ratios differently
 C     e.g., if the atmosphere is 99% N2 and 1% CO2, then the CO2 fraction is
 C     0.01 and N2 should be set to 1, because it is 100% of noncondensibles.
 C     In practice, N2 should be = (1 - [everything but CO2]).
