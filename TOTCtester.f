@@ -405,6 +405,7 @@ c      dimension atomsN(NSP2),atomsCL(NSP2),atomsS(NSP2)
       dimension distheight(nq)
 
       CHARACTER*11 photolabel, AA
+      CHARACTER*8  AX
 
 
 
@@ -662,25 +663,28 @@ C             Return to previous line in species.dat file
 
 
 C              New species.dat formatting BELOW
-               if (NEWSPEC.eq.1) then
-                  if (iprint.eq.0) then
-                     print *, 'species.dat should have new formatting'
-                     print *, "for VDEP and FIXEDMR (E8.2)"
-                     iprint = 1
-                  endif
+c               if (NEWSPEC.eq.1) then
+c                  if (iprint.eq.0) then
+c                     print *, 'species.dat should have new formatting'
+c                     print *, "for VDEP and FIXEDMR (E8.2)"
+c                     iprint = 1
+c                  endif
 C                 Reads in boundary conditions
-                  read(4,208) LBC, XX,YY,ZZ,XXX,LG,YYY,ZZZ
-               endif
+c                  read(4,208) LBC, XX,YY,ZZ,XXX,LG,YYY,ZZZ
+                  read(4,*) AX,AX,LX,LX,LX,LX,LX,LX,LBC,XX,YY,ZZ,XXX,LG
+     &   ,YYY,ZZZ
+c               endif
 C                Old species.dat formatting
-               if (NEWSPEC.eq.0) then
-                   if (iprint.eq.0) then
-                     print *, 'species.dat should have old formatting'
-                     print *, "for VDEP and FIXEDMR (E7.2)"
-                     iprint = 1
-                  endif
+c               if (NEWSPEC.eq.0) then
+c                   if (iprint.eq.0) then
+c                     print *, 'species.dat should have old formatting'
+c                     print *, "for VDEP and FIXEDMR (E7.2)"
+c                     iprint = 1
+c                  endif
 C                Reads in boundary conditions
-                  read(4,210) LBC, XX,YY,ZZ,XXX,LG,YYY,ZZZ
-               endif
+c                  read(4,210) LBC, XX,YY,ZZ,XXX,LG,YYY,ZZZ
+c                  read(4,*) x,x,x,x,x,x,x,x,LBC, XX,YY,ZZ,XXX,LG,YYY,ZZZ
+c               endif
             !   print *, LBC
                LBOUND(iLL)=LBC
                VDEP0(iLL)=XX
@@ -3098,7 +3102,7 @@ C-EWS  debug to prevent floating point errors
          FCO2=SL(LCO2,1)/DEN(1)
          FN2=SL(LN2,1)/DEN(1) + FCO2
 C-EWS Note that CLIMA/mixing_ratios.dat treats the condensible (CO2) and
-C     non-consibles mixing ratios differently  
+C     non-consibles mixing ratios differently
 C     e.g., if the atmosphere is 99% N2 and 1% CO2, then the CO2 fraction is
 C     0.01 and N2 should be set to 1, because it is 100% of noncondensibles.
 C     In practice, N2 should be = (1 - [everything but CO2]).
