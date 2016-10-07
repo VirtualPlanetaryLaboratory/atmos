@@ -8,6 +8,7 @@
 c      real*8 temp(kj) !EWS - not used
       character*8 REACTYPE,PLANET,CHEMJ,ISPEC
       CHARACTER*20 fmtstr
+      CHARACTER*11 photolabel, AA
       DIMENSION D0(2)
       dimension LLNO(35)
 
@@ -28,7 +29,7 @@ c      real*8 temp(kj) !EWS - not used
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/NBLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/ISOBLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/MBLOK.inc'
-
+      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
 
       dimension columndepth(KJ,NZ)
 c      dimension PLOG(NZ) !EWS - not used
@@ -157,7 +158,7 @@ c-mc the following two sections require debugging before use...
         JO2_O1D=minloc(photoreac,1,ISPEC(INT(photoreac)).eq.'O2     ')
         JO3_O1D=minloc(photoreac,1,ISPEC(INT(photoreac)).eq.'O3     ')
         JNO=minloc(photoreac,1,ISPEC(INT(photoreac)).eq.'NO     ')
-
+c-mab  print*,'JNO',JNO !debugging for templates w/o NO photolysis
 
       CALL XS('O2      ',nw,wavl,wav,T,DEN,JO2_O1D,sq,columndepth,zy,
      $         IO2)
@@ -180,7 +181,7 @@ C    REPEAT THIS SECTION ONLY IF SOLAR ZENITH ANGLE OR O2 VARIES WITH TIME
 
        JO2_O1D=minloc(photoreac,1,ISPEC(INT(photoreac)).eq.'O2     ')
        JNO=minloc(photoreac,1,ISPEC(INT(photoreac)).eq.'NO     ')
-
+c-mab  print*,'JNO',JNO !debugging for templates w/o NO photolysis
       CALL XS('O2      ',nw,wavl,wav,T,DEN,JO2_O1D,sq,columndepth,zy,
      $        IO2)
 
@@ -203,6 +204,7 @@ c - consider some IF's here, but this would also entail changing the output file
 
       if (INO.LE.2) then  !used if INO=0 or INO=1 - on JPL grid only... !actually for now using in high res too...
        JNO=minloc(photoreac,1,ISPEC(INT(photoreac)).eq.'NO     ')
+c-mab  print*,'JNO',JNO !debugging for templates w/o NO photolysis
       endif
 
 !return to this sulfur stuff in a bit....
@@ -276,7 +278,12 @@ c      if (J.EQ.1)print *,QEXTT(I,J),W0T(I,J)
       enddo
       endif
 
-
+C       do j=1,NSP
+C       	do i=1,nz
+C            print*,"j,i,ISPEC(j),SL(j,i)/DEN(i),SL(j,i),DEN(i)",
+C     .      j,i,ISPEC(j),SL(j,i)/DEN(i),SL(j,i),DEN(i)
+C        enddo
+C       enddo
 C ***** ***** ***** START WAVELENGTH LOOP   ***** ***** *****
       do 19 L=1,nw
 
@@ -316,24 +323,38 @@ c     so this is repeated once for L<1754 and L>2041A and NK(L) times for 1754<L
        !set up new Rayleigh scattering vectors
          do j=1,NSP
            if (SL(j,i)/DEN(i).GE. 0.01) then  !if more than 0.1% of atmosphere, consider Rayleigh contribution
-              ncomp(i)=ncomp(i)+1
 
 c              if (Z(i)/1e5.eq.107.5) print *, ispec(j)
 
-              volmix(ncomp(i),i)=SL(j,i)/DEN(i)
-
               if (ISPEC(j).eq.'CO2') then
+                 ncomp(i)=ncomp(i)+1
+                 volmix(ncomp(i),i)=SL(j,i)/DEN(i)
                  icomp(ncomp(i),i)=2
               else if (ISPEC(j).eq.'N2') then
+                 ncomp(i)=ncomp(i)+1
+                 volmix(ncomp(i),i)=SL(j,i)/DEN(i)
                  icomp(ncomp(i),i)=3
               else if (ISPEC(j).eq.'O2') then
+                 ncomp(i)=ncomp(i)+1
+                 volmix(ncomp(i),i)=SL(j,i)/DEN(i)
                  icomp(ncomp(i),i)=4
               else if (ISPEC(j).eq.'H2') then
+                 ncomp(i)=ncomp(i)+1
+                 volmix(ncomp(i),i)=SL(j,i)/DEN(i)
                  icomp(ncomp(i),i)=5
               else if (ISPEC(j).eq.'HE') then
+                 ncomp(i)=ncomp(i)+1
+                 volmix(ncomp(i),i)=SL(j,i)/DEN(i)
                  icomp(ncomp(i),i)=6
               else
-                 icomp(ncomp(i),i)=1  !use Earth 'air' - better than nothing? hard to know...
+                 if(FH2.LT.0.5) then
+c-mab assuming "rest" to be Earth air is not valid for giant planets!
+c-mab this H2 fraction-based loop is a temporary fix--don't want to hardcode ignoring H
+                  ncomp(i)=ncomp(i)+1
+                  volmix(ncomp(i),i)=SL(j,i)/DEN(i)
+                  icomp(ncomp(i),i)=1  
+!using Earth 'air' for the rocky planets - better than nothing? hard to know...
+                 endif
                if (wavl(L).eq.2273) then
                   if (tempcount.eq.0) then
                     print *, ISPEC(j),'at ', Z(i)/1e5, 'km is major
@@ -344,6 +365,9 @@ c              if (Z(i)/1e5.eq.107.5) print *, ispec(j)
                endif
               endif
 
+C            if(i.eq.1.OR.i.eq.100)print*,
+C     .      "j,i,ncomp,icomp,SL,volmix",
+C     .      j,i,ncomp(i),icomp(ncomp(i),i),SL(j,i),volmix(ncomp(i),i)
 c              if (ncomp(i).eq.3) then
 c                 print *, WAVL(L),Z(I)/1e5,ISPEC(J),ncomp(i)
 c                 print *,ncomp
@@ -367,16 +391,21 @@ c             endif
 
 
 
-      if (IO2 .EQ. 1) then   !re-compute O2 cross section via exponential sums
-
-        if (wavl(L) .LE. 2041. .AND. wavl(L).GE.1754.) then
+       if (IO2 .EQ. 1) then   !re-compute O2 cross section via exponential sums
+        if(PLANET.EQ.'WASP12B') then !ignore sum calculation entirely
+            do I=1,NZ
+       		 sq(JO2,I,L) = 0.0
+       		 ALP = 1.0 !reset ALP to 1.0 since we don't want to loop
+            enddo
+        else
+         if (wavl(L) .LE. 2041. .AND. wavl(L).GE.1754.) then
            ALP = ALPHAP(Lold,K)  !ALPHAP(17,4) are coeficients where 1<K<4
             do I=1,NZ
              sq(JO2,I,L)= SO2HZ(Lold) + BETA(Lold,K)
             enddo
-        endif
-
-        endif !end IO2=1 loop
+         endif !end O2 sum computation loop
+        endif !end planet wasp12b loop
+       endif !end IO2=1 loop
 
 
 
@@ -390,6 +419,7 @@ c             endif
 ! this returns the Source function S to this code
 
        FLX = FLUX(L)*AGL*ALP*FSCALE
+C       print*,'wavelength, flx',wavl(L),FLX
       !AGL is diurnal averaging factor, ALP is 1 if out of the SR band or IO2.NE.1
       ! or is the exponential sum coeffiecent if in the SR band and IO2.EQ.1
       ! FLUX is already corrected based on solar age (timeGa set in INPUTFILES/PLANET.dat)
@@ -401,6 +431,10 @@ c compute photlysis rates for each reaction at each height (summed over waveleng
       do j=1,kj
        do i=1,nz
           prates(j,i) = prates(j,i) + FLX*sq(j,i,L)*S(i)
+C      IF(J.EQ.10) THEN
+C      IF(I.EQ.1)print*,"J,wav,Reaction No.",J,L,wav(L),photonums(j)
+C      print*,'L,I,prates,FLX,sq,S',L,I,prates(j,i),FLX,sq(j,i,L),S(i) !!!PRINT ADD !!!
+C      ENDIF 
        enddo
       enddo
 
@@ -413,8 +447,9 @@ c save wavelength dependence of SO2 photolysis and optical depth
       if (INO.LE.1) then
 C   NO PREDISSOCIATION IN THE D00 (1910 A) AND D10 (1830 A) BANDS
       if (wavl(L).LE.2500.0 .AND. wavl(L).GE.1754.) then
-       NOL = LLNO(Lold)         !      DATA LLNO/3*0, 2*2, 3*0, 2*1, 25*0/
-       IF (NOL .NE. 0) THEN         ! else bail out of loop over K (GOTO 19)
+c -mab: JNO = 0 when there is no NO photolysis in template (e.g. hjs).
+       IF(JNO.NE.0)NOL = LLNO(Lold)!DATA LLNO/3*0, 2*2, 3*0, 2*1, 25*0/
+       IF (NOL .NE. 0) THEN         !else bail out of loop over K (GOTO 19)
 
          IF (INO .EQ. 1) THEN
 C             old (cieslik and nicolet) method with intensities updated to

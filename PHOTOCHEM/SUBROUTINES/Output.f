@@ -28,7 +28,7 @@
       COMMON/LifeTime/TAUO2,TAUCH4,TAUSO2
 
       DIMENSION FUP(NQ1),FLOW(NQ1),CON(NQ1),FLUXO(NQ1,NZ)
-     2  ,ZF(NZ),TAUAER(NP)  
+     2  ,ZF(NZ),TAUAER(NP+1)  
       dimension TAUHCABS(kw),TAUHCEXT(kw), TAUHCEFF(kw)
       dimension vdep(nq), flux_H(nz),USOLORIG(NQ,NZ)
       dimension PSO2MIF(nz),PROSO2MIF(nz),PROSO(nz)
@@ -42,9 +42,14 @@ C
       IF(N.EQ.NSTEPS) ISKIP = 2
       TIMEY = TIME/3600./24./365.
       write(14, 100) TIME,TIMEY
- 100  format(/1X,'TIME =',E11.4,5X,'TIMEY =',F10.5,1X,'YEARS')
+
       write(14, 101) NPHOT
- 101  format(/1X,'NPHOT =',I3)
+ !100  format(/1X,'TIME =',E11.4,5X,'TIMEY =',F10.5,1X,'YEARS')
+ !101  format(/1X,'NPHOT =',I3)
+c-mab above are old format, using the format below to avoid **** in out.out
+ 100  FORMAT(/1X,"TIME =",1PE9.2,5X,"TIMEY =",E9.2,1X,"YEARS")
+ 101  format(/1X,'NPHOT =',I5)
+
 C
       write(14, 105)
  105  format(/1X,'MIXING RATIOS OF LONG-LIVED SPECIES'/)
@@ -105,23 +110,34 @@ C
      2  E10.3,2X,'S2 =',E10.3,2X,'S4 =',E10.3,2X,'S8 =',E10.3)
       endif
 
-      DO 11 J=1,2  !ack hardcoding to retain Kevin's original scheme  
-         !where tauaer 2 and 3 were both for elemental sulfur
-         !this should be integrated/updated below
-      TAUAER(J) = 0.
-      DO 11 I=1,NZ
-      R = RPAR(I,J)           !this should be the extinction efficiency at some wavelength - presumably visible? why 0.6?
-  11  TAUAER(J) = TAUAER(J) + 0.6*3.14159*R*R*AERSOL(I,J)*DZ(I)
-C
+      
+      IF (NP.GT.0) THEN !mab FOR THE FIRST TWO PARTICLES (ASSUMED SULPHATE AND S8 IN HARDCODING ORDER)
+       DO J=1,NP
+!ack hardcoding to retain Kevin's original scheme  
+!where tauaer 2 and 3 were both for elemental sulfur
+!this should be integrated/updated below, mab: just did that below (after defining TAUAER with NP+1 above)
+        IF (J.NE.3) TAUAER(J) = 0. 
+c-mab: hardcoding, designed to keep tauaer 3 value from previous J = 2 step
 corig      TAUAER(NP+1) = 0.   
-      TAUAER(NP) = 0.   
-      DO 14 I=1,NZ
-      R = RPAR(I,2)                 !so 1.2 is somehow Qext of S8 in the UV? - don't we have these all as 2?
-  14  TAUAER(NP) = TAUAER(NP) + 1.2*3.14159*R*R*AERSOL(I,2)*DZ(I)
-      write(14, 153) TAUAER
- 153  format(/1X,'SCALED AEROSOL EXTINCTION OPTICAL DEPTHS',/5X,            !ACK hardcoded to 2 particles + S8UV
+        DO I=1,NZ
+         R = RPAR(I,J)           
+!this should be the extinction efficiency at some wavelength - presumably visible? why 0.6?
+!c-mab reconfigured this loop cause there was a bug previously...
+         IF (J.LT.3) TAUAER(J) = TAUAER(J) + 0.6*3.14159*R*R*AERSOL(I,J)*DZ(I) !S8 VIS (0.6)
+         IF (J.EQ.2) TAUAER(J+1) = TAUAER(J+1) +  !c-mab Hold S8(UV) in tauaer3
+     2     1.2*3.14159*R*R*AERSOL(I,J)*DZ(I)
+!so 1.2 is somehow Qext of S8 in the UV? - don't we have these all as 2?
+         IF (J.EQ.3) TAUAER(J) = TAUAER(J) 
+!c-mab Double check to make sure tauaer3 doesn't get re-written by 0.0 or something
+        ENDDO
+       ENDDO
+        write(14, 153) (TAUAER(J),J=1,3) 
+!ACK hardcoded to 2 particles + S8UV (mab note: S8UV held in next, i.e. 3rd level for now)
+c-mab: IF TAUAER is used for addition particles, increment J by 1, i.e. particle 3 would go to J=4
+ 153    format(/1X,'SCALED AEROSOL EXTINCTION OPTICAL DEPTHS',/5X,            
      2  'SULFATE =',1PE10.3,5X,'S8(VIS) =',E10.3,5X,'S8(UV) =',E10.3)
-
+C
+      ENDIF
 
 !mc perhaps need to abstract the above with better wavelength behavior.
 !am porting over some HCAER stuff from Shawn's code:
@@ -258,6 +274,7 @@ c  what follows gives the fluxes
 c      vturb=0.0
 
 c fluxes for particles
+      if(NP.GT.0) THEN
       do k=1,np
        do I=1,NZ1
 
@@ -287,7 +304,7 @@ c fluxes for particles
 
        enddo
       enddo
-
+      endif
 c add in molecular diffusion
 
 c      print *, FLUX(
@@ -305,6 +322,17 @@ c these should be flagged for IH2=-1
 c         \phi = b*f*({1/over H_A}-{1/over H}) - b*df/dz
 c the following gives fluxes from 1 to 80 km.
       if(ISOTOPE.EQ.0) then
+        if(PLANET.EQ.'WASP12B') then
+      do i=1,NZ-1
+       do j=1,NQ
+        fluxo(j,i) = fluxo(j,i)
+     5    - bX1X2(j,i)*(usol(j,i+1) - usol(j,i))/dz(i)
+     6    + bX1X2(j,i)*0.5*(usol(j,i) + usol(j,i+1))
+     7       *(1./H_atm(i) - 1./scale_H(j,i))
+       enddo
+      enddo
+        
+        else
       do i=1,NZ-1
         fluxo(LH,i) = fluxo(LH,i)
      5    - bHN2(i)*(usol(LH,i+1) - usol(LH,i))/dz(i)
@@ -315,6 +343,7 @@ c the following gives fluxes from 1 to 80 km.
      6    + bH2N2(i)*0.5*(usol(LH2,i) + usol(LH2,i+1))
      7      *(1./H_atm(i) - 1./scale_H(LH2,i))
       enddo
+        endif
       endif
 
 C
@@ -348,16 +377,17 @@ C
 c  sum up the H fluxes at all heights except the ground
 c  this works good for stratosphere but in the troposphere
 c it fails - 
-c- this could be abstracted by looping over species where atomsH ne 0
+c-mab abstracted by looping over species where atomsH ne 0
+      flux_H = 0.0
       do i=1,NZ-1
-        flux_H(i) = 2.*FLUXO(LH2O,i) + FLUXO(LH,i) + 2.*FLUXO(LH2,i)
-     $ + FLUXO(LOH,i)+FLUXO(LHO2,i) + 2.*FLUXO(LH2O2,i) + FLUXO(LHCO,i) 
-     $ + 2.*FLUXO(LH2CO,i) + 4.*FLUXO(LCH4,i) + 2.*FLUXO(LCH3,i) 
-     $ + 6.*FLUXO(LC2H6,i)+FLUXO(LHNO,i)+2.*FLUXO(LH2S,i) +FLUXO(LHS,i) 
-     $ + 2.*FLUXO(LH2SO4,i) + FLUXO(LHSO,i) + FLUXO(LHNO3,i)
-c     $  + FLUXO(LHO2NO2,i)
+        do j=1,NSP
+          if(atomsH(j).gt.0.0) then 
+c-mab then only sum for species that contain H for a given layer
+        	flux_H(i) = flux_H(i) + atomsH(j)*FLUXO(j,i)
+          endif
+        enddo
       enddo
-      flux_H(nz) = FUP(LH) + 2.*FUP(LH2) 
+        flux_H(nz) = FUP(LH) + 2.*FUP(LH2)
       
       write(24,974) time,
      $  usol(LO2,1), usol(LH2,1), usol(LCO,1),usol(LCH4,1),
@@ -946,6 +976,12 @@ C
      2  RELH(I),CONDEN(I), flux_H(i), I=1,NZ,ISKIP)
  200  FORMAT(1X,1P10E10.3)
 C
+      IF (NP.GT.O) THEN 
+c-mab: THE STUFF BELOW ARE RELEVANT TO AEROSOLS/PARTICLES ONLY (AGAIN)
+c-mab: unhardcoded to now depend on NP, and print out HC type as well.
+c-mab: the hardcoding in the species and expected order still remain...
+       DO J=1,NP
+       	IF (J.EQ.1) THEN
       write(14, 230)
  230  FORMAT(/1X,'SULFATE AEROSOL PARAMETERS')
       write(14, 235)
@@ -954,33 +990,46 @@ C
      3  'CONSO4',4X,'CONVER')
       if(ISOTOPE.EQ.0) LP=LH2SO4
       if(ISOTOPE.EQ.1) LP=LH2SXO4
-      write(14, 240) (Z(I),AERSOL(I,1),RPAR(I,1),WFALL(I,1),FSULF(I),     !ACK - harcoded particle numbers here
-     2  TAUSED(I,1),TAUEDD(I),TAUC(I,1),H2SO4S(I),USOL(LP,I),
-     3  CONSO4(I),CONVER(I,1),I=1,NZ,ISKIP)
- 240  FORMAT(1X,1P12E10.3)
+       write(14, 240) (Z(I),AERSOL(I,J),RPAR(I,J),WFALL(I,J),FSULF(I),     !ACK - harcoded particle numbers here
+     2  TAUSED(I,J),TAUEDD(I),TAUC(I,J),H2SO4S(I),USOL(LP,I),
+     3  CONSO4(I),CONVER(I,J),I=1,NZ,ISKIP)
+ 240   FORMAT(1X,1P12E10.3)
 C
+       	ELSE IF (J.EQ.2) THEN
       write(14, 250)
  250  FORMAT(/1X,'S8 AEROSOL PARAMETERS')
       write(14, 255)
  255  FORMAT(/4X,'Z',8X,'AERSOL',5X,'RPAR',6X,'WFALL',5X,'TAUSED',4X,
      2 'TAUEDD',4X,'TAUC',6X,'CONVER')
 
-      write(14, 261) (Z(I),AERSOL(I,2),RPAR(I,2),WFALL(I,2),TAUSED(I,2),  !ACK - harcoded particle numbers here
-     2  TAUEDD(I),TAUC(I,2),CONVER(I,2),I=1,NZ,ISKIP)
-
-      if (NP .GT. 2) then
-      J3 = 3
+       write(14, 261) (Z(I),AERSOL(I,J),RPAR(I,J),WFALL(I,J),  !ACK - harcoded particle numbers here
+     2  TAUSED(I,J),TAUEDD(I),TAUC(I,J),CONVER(I,J),I=1,NZ,ISKIP)
+      
+       	ELSE IF (J.EQ.3) THEN
       write(14,301)
- 301  FORMAT(/1X,"HC AEROSOL PARAMETERS")
+ 301  FORMAT(/1X,"S8 AEROSOL PARAMETERS")
       write(14,256)
+      write(14,261) (Z(I),AERSOL(I,J),RPAR(I,J),WFALL(I,J),
+     2  TAUSED(I,J),TAUEDD(I),TAUC(I,J),CONVER(I,J),I=1,NZ,ISKIP)
+ 261  FORMAT(1X,1P8E10.3)
+ 
+        	ELSE IF (J.EQ.4) THEN
+      write(14,302)
+ 302  FORMAT(/1X,"HC TYPE 2 AEROSOL PARAMETERS")
+      write(14,256)
+      write(14,262) (Z(I),AERSOL(I,J),RPAR(I,J),WFALL(I,J),
+     2  TAUSED(I,J),TAUEDD(I),TAUC(I,J),CONVER(I,J),I=1,NZ,ISKIP)
+ 262  FORMAT(1X,1P8E10.3)
+ 
+        ELSE
+      write(14,*) "(Other particles (if any) after HC are not printed)"
+       
+       	ENDIF
+       ENDDO
  256  FORMAT(/4X,'Z',8X,'AERSOL',5X,'RPAR',6X,'WFALL',5X,'TAUSED',4X,
      2  'TAUEDD',4X,'TAUC',6X,'CONVER')
-      write(14,261) (Z(I),AERSOL(I,J3),RPAR(I,J3),WFALL(I,J3),
-     2  TAUSED(I,J3),TAUEDD(I),TAUC(I,J3),CONVER(I,J3),I=1,NZ,ISKIP)
- 261  FORMAT(1X,1P8E10.3)
-      endif
 
-
+      ENDIF
 c GNA
 c HCAER type 1
       if (NP .GT. 2) then

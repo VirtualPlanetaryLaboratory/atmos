@@ -13,7 +13,7 @@ c - but doesn't have any time-dependent gear stuff in it
 c- at some point go through and clean up all comments
 c
 c
-c - this code contains the variable grid e changes used to compute
+c - this code contains the variable grid size changes used to compute
 c - the suite of models for the whiff paper.
 c - this code could/should be modified to use a variable grid size at some point
 c - to make it faster all common blocks abstracted to DATA/INCLUDE
@@ -652,7 +652,7 @@ C         This loads the "Lnumbers" for ease of use later in the code
 C             Return to previous line in species.dat file
               backspace 4
 C  read in atmoic number data,NEVER use LC,LH,LN,LO,LS as placeholders
-C  as they mean something else... 
+C  as they mean something else...
               read(4,207) LA,LB,LD,LE,LF,LM
 
             if (SPECTYPE.EQ.'LL') then
@@ -709,7 +709,7 @@ C              Reads in fixed mixing ratios
                if (species.NE.'HE') read(4,209) XX   !read in fixed mixing ratios
                if (species.EQ.'HE') read(4,212) XX !read in fixed mixing ratios
 C            Hardcoding woohoo! need to do N2 as well WARNING
-               if (species.EQ.'HE') FHE=XX 
+               if (species.EQ.'HE') FHE=XX
                if (species.EQ.'CO2') FCO2=XX
             endif
 
@@ -733,6 +733,8 @@ C     format for species name and type
  203  FORMAT(A8,3X,A2)
 C     format for elemental counts
  207  format(15X,6(I1,1X))
+ 206  format(15X,6(I2,1X))
+C-mab     format for two-column elemental count
 C   FOLLOWING FORMATS BELOW ARE FOR BOUNDARY CONDITIONS
       !Original boundary conditions
 C 208  format(30X,I1,5X,4(E7.1,1X),I1,6X,2(E7.1,1X))
@@ -1016,12 +1018,15 @@ c       print *, NR
 C ***** READ THE PLANET PARAMETER DATAFILE *****
       READ(7,502) G,FSCALE,ALB,ZTROP,FAR,R0,P0,PLANET,TIMEGA,IRESET,
      &   msun, ihzscale
+c-mab: Uncomment below for debugging with this part
+C      	print*,'G,FSCALE,ALB,ZTROP,FAR,R0 = ',G,FSCALE,ALB,ZTROP,FAR,R0
+C      	print*,'P0,PLANET,TIMEGA,IRESET = ',P0,PLANET,TIMEGA,IRESET
  502  FORMAT(F7.1/,F7.2/,F7.3/,E7.1/,F7.3/,E8.3/,F8.3/,A8/,F4.2/,I1/
-     &  ,I2/,I1)
+     &  ,I2/,I1/,I3/,E10.4)
 C     adding IRESET to create the atmospheric profile for modern earth
 C     gna - added msun keyword to change the star from planet.dat
-      print *, 'msun is ', msun
-      print *, 'ihzscale is ', ihzscale
+C     print *, 'msun is ', msun
+C     print *, 'ihzscale is ', ihzscale
 C gna-scale stellar flux based on spectral type:
 C uses Kopparapu et al 2012 scalings for earth-equivalent distance
       IF (ihzscale.eq.1) then
@@ -3091,8 +3096,9 @@ C-EWS  debug to prevent floating point errors
 C-EWS  debug to prevent floating point errors
          FC2H6=max(USOL(LC2H6,1),1.e-60)
          FCO2=SL(LCO2,1)/DEN(1)
+         FN2=SL(LN2,1)/DEN(1) + FCO2
 C-EWS Note that CLIMA/mixing_ratios.dat treats the condensible (CO2) and
-C     non-consibles mixing ratios differently  FN2=SL(LN2,1)/DEN(1) + FCO2
+C     non-consibles mixing ratios differently  
 C     e.g., if the atmosphere is 99% N2 and 1% CO2, then the CO2 fraction is
 C     0.01 and N2 should be set to 1, because it is 100% of noncondensibles.
 C     In practice, N2 should be = (1 - [everything but CO2]).
