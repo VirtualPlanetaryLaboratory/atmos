@@ -1,0 +1,30 @@
+373.0    = G, Gravity - Earth=980.7, Mars=373.0
+0.43     = FSCALE, Solar Flux Scaling - Earth=1.0, Mars=0.43
+0.215    = ALB, Surface Albedo - Earth=0.25, Mars=0.215 !accrding to Kevin's mars model
+1.5E6    = ZTROP, Height of the tropopause - typically Earth=11km, Mars=15km
+0.01     = FAR       Ar partial pressure on modern Earth 1% for Mars 1.6 according to Kevin's model
+3.3766E8 = R0    Planet Radius Earth 6.371e8, Mars 3.3766e8
+0.0063   = P0  = surface pressure of modern Earth in atm ( 0.0063 for Mars)
+MARS     = PLANET  string naming the planet for extra changes (MARS is the only other option for the moment)
+0.0      = TIMEGA - time in Ga, for modifying the solar flux
+0        = IRESET
+13       = msun
+
+-below here are not read in.  They are from Shawn's Planet.earth file but are handled differently here.
+
+choices for msun (these numbers are from photgrid.f)
+      msun = 12    !Gj 581 from Lucianne
+      msun = 13    !high resolution solar data from ATLAS1/3 (Thullier et al 2004)
+      msun = 14    !kevin's data from photo.dat
+      msun = 15    !AD Leo from VPL climate DB
+      msun = 16    !AD LEO from VPL website
+      msun = 17    !T3200.dat
+      msun = 18    !K2V
+      msun = 19    !F2V
+      msun = 76    !GJ876
+      msun = 20    !M8V
+      msun = 21    !M5V
+      msun = 22    !G0V star for wasp12b (first Hot Jupiter model)
+
+11    = JTROP, Grid layer marking the tropopause height, depends on ZTROP and DELZ
+1.0E5 = DELZ, Height of each atm layer - Earth=1.0E5, Mars=2.0E5 (cm)
