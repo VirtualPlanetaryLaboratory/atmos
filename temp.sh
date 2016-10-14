@@ -29,8 +29,13 @@ pwd
 echo -n 'Would you like to run PHOTOCHEM (y/n)? '
 read run_photo
 if [ "$run_photo" == "y" -o "$run_photo" == 'Y' ]
-  then
-  make '-f' 'makefilePhotochem' 'clean'
-  make '-f' 'makefilePhotochem'
+   then
+       echo -n 'Would you like to recompile the model? (y/n?)'
+       read recompile
+       if [ "$recompile" == "y" -o "$recompile" == 'Y' ]
+       then
+	   make '-f' 'makefilePhotochem' 'clean'
+	   make '-f' 'makefilePhotochem'
+       fi
   ./'TOTCdev'
 fi
