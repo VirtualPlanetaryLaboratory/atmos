@@ -24,12 +24,16 @@ This generalization of the code allowed us to develop “templates” for differ
 * Amber Britt fixed the modernEarth+CL template, and incorporated the Mars template that was originally developed by Mark Claire and Meg Smith.
 * Mahmuda Afrin Badhan added a hot Jupiters template, under the guidance of and based on the prior work of Ravi Kopparapu.
 * Ryan Felton added a Titan template to the model (not public yet), under the guidance of Eric Hébrard.
-* Eddie Schwieterman added templates for very high O2 conditions that could be caused by “Luger-Barnes” atmospheres where H is stripped away by high-energy radiation, leaving behind O.
+* Eddie Schwieterman added templates for very high O2 conditions that could be caused by “Luger-Barnes” atmospheres where H is stripped away by high-energy radiation, leaving behind O-dominated atmospheres.
 
 The climate code was updated by Ravi Kopparapu and
 Ramses Ramirez, working for James Kasting. They improved the model's water-vapor and CO2 absorption coefficients, and upgraded many of the numerical approaches.
 
-Eddie Schwieterman improved the numerical solver so the code would run for a wider range (more oxidizing) redox conditions. He also added templates for very high O2 conditions that could be caused by “Luger-Barnes” atmospheres where H is stripped away by high-energy radiation, leaving behind O. Along with Giada Arney, he developed tools to couple these codes to SMART, a line-by-line radiative transfer tool that we can use to predict the transit and reflected light spectra of the atmospheres we simulate.
+Eddie Schwieterman modified  the numerical solver so the code would run for a wider range (of more oxidizing) redox conditions.
+
+Eddie Schwieterman and Giada Arney developed tools to couple Atmos outputs to SMART, a line-by-line radiative transfer tool that we can use to predict the transit and reflected light spectra of the atmospheres we simulate.
+
+Eddie Schwieterman, Giada Arney, Shawn Domagal-Goldman, Ashley Horan, Dillon Teal, Will Sluder, and Natasha Batalha addressed many (hundreds?) of compilations errors in the gfortran build of the previous Atmos code.
 
 Giada Arney added fractal hazes to the climate code and ensured coupling between photochem and clima, including self-cosnistent treatment of hazes. She also added (or repaired) all of the Archean Earth templates.
 
