@@ -55,9 +55,11 @@
 ! Open reactions.rx and find current species
 ! This read style relies on a single species' reaction paths being together in reactions.rx
       open(12, file='PHOTOCHEM/INPUTFILES/reactions.rx', status='OLD')
-      READ(12, *) ! skip header
-! 667   FORMAT(A10, A10, A10, A10, A8, A5) ! old modern earth format
-667   FORMAT(A10,A10,A10,A10,A10,10X,A5) ! new formatting
+
+! use this format for now:
+667   FORMAT(A10, A10, A10, A10, A8, A5)
+! new formatting (commented out for now, will update):
+!667   FORMAT(A10,A10,A10,A10,A10,10X,A5)
 
 !  Read until first photo species match (error if species not in .rx)
 !  Matching first 4 characters to PHOT for photolysis
