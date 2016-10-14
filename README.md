@@ -5,6 +5,7 @@ This README would normally document whatever steps are necessary to get your app
 ### What is this repository for? ###
 
 * Quick summary
+
 This is a coupled photochemistry-climate code. This model leverages
 the work by the Kasting, Zahnle, and Catling groups and represents an
 an effort to merge the various versions and features of the codes
