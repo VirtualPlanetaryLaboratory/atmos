@@ -10,7 +10,7 @@ the work by the Kasting, Zahnle, and Catling groups and represents an
 an effort to merge the various versions and features of the codes
 that have been developed over the years by the groups using the code.
 
-* Contributors
+### Contributors ###
 
 The coupling routines used here were developed by Antigona Segura.
 She also introduced much of the multi-star functionality used here.
