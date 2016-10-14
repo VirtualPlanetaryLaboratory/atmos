@@ -19,6 +19,8 @@ The photochemical code was significantly advanced by Mark Claire,
 who combined features, generalized the model to be less Earth-
 specific, and modernized the FORTRAN coding.
 
+This generalization of the code allowed us to develop “templates” for different types of planets. These templates contain different input files to get the code to run for different planet types - without having to change the Fortran code itself. This prevents the need to maintain different “versions” of the code for these different cases. Instead, all one has to do is move these input files to the correct directory (the temp.sh script will automate this for you), recompile the code, and then run it.
+
 The climate code was updated by Ravi Kopparapu and
 Ramses Ramirez, working for James Kasting. They improved the model's water-vapor and CO2 absorption coefficients, and upgraded many of the numerical approaches.
 
