@@ -30,19 +30,27 @@ cd $true_path
 pwd
 
 
-echo -n 'Would you like to run PHOTOCHEM (y/n)? '
-read run_photo
-if [ "$run_photo" == "y" -o "$run_photo" == 'Y' ]
+echo -n 'Would you like to compile PHOTOCHEM (y/n)? '
+ read recompile
+  if [ "$recompile" == "y" -o "$recompile" == 'Y' ]
    then
-       echo -n 'Would you like to recompile the model? (y/n?)'
-       read recompile
-       if [ "$recompile" == "y" -o "$recompile" == 'Y' ]
-       then
-	   make '-f' 'makefilePhotochem' 'clean'
-	   make '-f' 'makefilePhotochem'
-       fi
-  ./'TOTCdev'
-fi
+       make '-f' 'makefilePhotochem' 'clean'
+       make '-f' 'makefilePhotochem'
+  fi
+echo -n 'Would you like to run PHOTOCHEM (y/n)'
+  read run_photo
+  if [ "$run_photo" == "y" -o "$run_photo" == 'Y' ]
+   then             
+       ./'TOTCdev'
+  fi
+
+ echo -n 'Would you like to recompile CLIMA? (y/n?)'
+ read recompile
+ if [ "$recompile" == "y" -o "$recompile" == 'Y' ]
+ then
+     make '-f' 'makefileClima' 'clean'
+     make '-f' 'makefileClima'
+ fi 
 
 echo -n 'Would you like to run CLIMA (coupled to PHOTO) (y/n)? '
 read run_clima
@@ -70,12 +78,6 @@ then
     echo 'Finished copying clima templates over'
     cd $true_path
     pwd
-       echo -n 'Would you like to recompile the model? (y/n?)'
-       read recompile
-       if [ "$recompile" == "y" -o "$recompile" == 'Y' ]
-       then
-	   make '-f' 'makefileClima' 'clean'
-	   make '-f' 'makefileClima'
-       fi
+
   ./'runclima'
 fi
