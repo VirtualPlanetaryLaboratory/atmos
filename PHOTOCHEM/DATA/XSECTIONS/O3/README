@@ -1,0 +1,4 @@
+Because the subroutine for O3 uses both prefactoring and temperature dependence
+The old XSections will be called for it. Therefore QY files were not made.
+If in the future O3 becomes a simple routine, split O3_zahnle into 2 QY files (using O3.XS in combination)
+for the different ozones

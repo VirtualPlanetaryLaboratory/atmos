@@ -1,0 +1,44 @@
+previous JPL recs had quantum yields for NO3 + NO + O3P, but recent data calls this into question.  While JPL-06 states that the yield of O increases at short wavelengths, but there is no recomendation to speak of.  I am going to keep it at 0 here, but will do the work to change it later.
+
+for historical sake, look at:
+
+~oxygen/gaia/TEMP/models/graces/photo/2002/DATAJ1/YLD/N2O5.qy
+which contains a fit to old QY data
+
+and
+
+SUBROUTINE N2O5 in /Users/mark1/oxygen/gaia/TEMP/models/graces/photo/2002a/src/rn.f 
+
+;copying table 4-21, also saving to file N2O5td.abs
+;given the way inter2 folds data at the end of the bin, it screws up the fit, so we go farther than the data in the table, but only use the proper range in the XS read in file...
+
+260 25.2 -18.27 -0.091 
+270 26.2 -18.42 -0.104 
+280 10.5 -18.59 -0.112 
+290 6.52 -18.72 -0.135 
+300 3.81 -18.84 -0.170 
+310 2.13 -18.90 -0.226 
+320 1.18 -18.93 -0.294 
+330 0.654 -18.87 -0.388 
+340 0.368 -18.77 -0.492
+350 0.210 -18.71 -0.583	 	 
+360 0.120 -18.31 -0.770	 
+370 0.0685 -18.14 -0.885 
+380 0.0383 -18.01 -0.992 
+390 0.0215 -18.42 -0.949 
+400 0.014 -18.59 -0.966
+410 0.009 -18.13 -1.160
+420 0.005              
+
+
+;some idl commands to look at these:
+readcol, 'N2O5thoughts.txt', wl,xs,A,B
+
+readcol, 'N2O5_JPL06_298.abs', wl2,xs2
+
+plot, wl2, xs2, /ylog
+
+oplot, wl, 10^(A + 1000*B/288.), psym=1
+oplot, wl, 10^(A + 1000*B/208.), psym=2
+
+The XSection is continuous - and the parameterization matches perfectly around 298, so its fine to use this longward, including 420 - should not use this data point.
