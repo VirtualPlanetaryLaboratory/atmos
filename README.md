@@ -19,9 +19,8 @@ The photochemical code was significantly advanced by Mark Claire,
 who combined features, generalized the model to be less Earth-
 specific, and modernized the FORTRAN coding.
 
-The climate code was most recently advanced by Ravi Kopparapu and
-Ramses Ramirez, working for James Kasting. They improved the model's
-k-coefficients, and upgraded many of the numerical approaches.
+The climate code was updated by Ravi Kopparapu and
+Ramses Ramirez, working for James Kasting. They improved the model's water-vapor and CO2 absorption coefficients, and upgraded many of the numerical approaches.
 
 Eddie Schwieterman improved the numerical solver so the code would run for a wider range (more oxidizing) redox conditions. He also added templates for very high O2 conditions that could be caused by “Luger-Barnes” atmospheres where H is stripped away by high-energy radiation, leaving behind O. Along with Giada Arney, he developed tools to couple these codes to SMART, a line-by-line radiative transfer tool that we can use to predict the transit and reflected light spectra of the atmospheres we simulate.
 
