@@ -13,7 +13,7 @@ The model development was supported by NASA Astrobiology Institute's  Virtual Pl
 
 ### [Contributors and Development History](https://bitbucket.org/ravikopparapu/contributors/wiki/Contributors) ###
 
-### [How to run Atmos](https://bitbucket.org/ravikopparapu/how-to-run-atmos/wiki/How%20to%20Run%20Atmos) ###
+### [How to run Atmos ?](https://bitbucket.org/ravikopparapu/how-to-run-atmos/wiki/How%20to%20Run%20Atmos) ###
 
 ### [What does the converged output looks like?](https://bitbucket.org/ravikopparapu/output-examples/wiki/Converged%20Output%20Examples) ###
 
