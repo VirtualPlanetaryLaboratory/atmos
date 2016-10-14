@@ -7,7 +7,7 @@ This README would normally document whatever steps are necessary to get your app
 This is a coupled photochemistry-climate code. This model leverages
 the work by the Kasting, Zahnle, and Catling groups and represents an
 an effort to merge the various versions and features of the codes
-that have been developed over the years by the groups using the code.
+that have been developed over the years by the groups using the code. Ashley Horan and Shawn Domagal-Goldman, using the past work of Antigona Segura as a guide, coupled the modern versions of photochem and clima together.
 
 ### Contributors ###
 
@@ -20,6 +20,12 @@ specific, and modernized the FORTRAN coding.
 
 This generalization of the code allowed us to develop “templates” for different types of planets. These templates contain different input files to get the code to run for different planet types - without having to change the Fortran code itself. This prevents the need to maintain different “versions” of the code for these different cases. Instead, all one has to do is move these input files to the correct directory (the temp.sh script will automate this for you), recompile the code, and then run it.
 
+* Giada Arney added (or repaired) all of the Archean Earth templates.
+* Amber Britt fixed the modernEarth+CL template, and incorporated the Mars template that was originally developed by Mark Claire and Meg Smith.
+* Mahmuda Afrin Badhan added a hot Jupiters template, under the guidance of and based on the prior work of Ravi Kopparapu.
+* Ryan Felton added a Titan template to the model (not public yet), under the guidance of Eric Hébrard.
+* Eddie Schwieterman added templates for very high O2 conditions that could be caused by “Luger-Barnes” atmospheres where H is stripped away by high-energy radiation, leaving behind O.
+
 The climate code was updated by Ravi Kopparapu and
 Ramses Ramirez, working for James Kasting. They improved the model's water-vapor and CO2 absorption coefficients, and upgraded many of the numerical approaches.
 
@@ -29,7 +35,6 @@ Giada Arney added fractal hazes to the climate code and ensured coupling between
 
 Eric Hébrard, Will Sluder, and Ryan Felton generalized the subroutine that calculated absorption crosss-sections (Xsections.f) and modernized many of the reaction rate constants. Ryan Felton also added a Titan template to the model (not public yet), under the guidance of Eric Hébrard.
 
-Ashley Horan and Shawn Domagal-Goldman, using the past work of Antigona Segura as a guide, coupled the modern versions of photochem and clima together.
 
 Dillon Teal developed run scripts to automate input file generation, code compiling, and code convergence criteria.
 
