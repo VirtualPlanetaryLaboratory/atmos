@@ -119,7 +119,7 @@ SO2       HV        SO21                        PHOTO     1.00 ! <- This quantum
 SO2       HV        SO23                        PHOTO     1.00 ! <- This quantum yield is folded into the cross section file
 H2S       HV        HS        H                 PHOTO     1.00
 SO        O2        O         SO2               2BODY     2.6E-13     -2400.     0.                              ! JPL-02
-SO        HO2       SO2       OH                2BODY     2.8E-11     0.         0.                              ! Kasting [1990]. Different than Mark's constant. !GNA zeroed in Archean template (2.8E-11 here)
+SO        HO2       SO2       OH                2BODY     2.8E-11     0.         0.                              ! Kasting [1990]. Different than Mark's constant.
 SO        O         SO2                         WEIRD     5.1E-31     DEN(I)                                     ! JPL-02
 SO        OH        SO2       H                 2BODY     8.6E-11     0.         0.                              ! JPL-02
 SO2       OH        HSO3                        3BODY     3.E-31      1.5E-12    3.30  0.                        ! JPL-02
@@ -133,8 +133,8 @@ H2S       OH        H2O       HS                2BODY     6.0E-12     -70.      
 H2S       H         H2        HS                WEIRD     3.66E-12    -455.      1.94                            ! Pen et al. [1999]. Different than Mark's constant.
 H2S       O         OH        HS                2BODY     9.2E-12     -1800.     0.                              ! JPL-02
 HS        O         H         SO                2BODY     1.6E-10     0.         0.                              ! JPL-02. Different than Mark's constant.
-HS        O2        OH        SO                2BODY     0.0E-19     0.         0.                              ! Upper limit from JPL-02. Different than Mark's constant.
-HS        HO2       H2S       O2                2BODY     1 0E-11     0.         0.                              ! Stachnik and Molina [1987]
+HS        O2        OH        SO                2BODY     4.0E-19     0.         0.                              ! Upper limit from JPL-02. Different than Mark's constant.
+HS        HO2       H2S       O2                2BODY     1.0E-11     0.         0.                              ! Stachnik and Molina [1987]
 HS        HS        H2S       S                 2BODY     1.5-11      0.         0.                              ! Schofield [1973]. Different than Mark's constant.
 HS        HCO       H2S       CO                2BODY     5.0E-11     0.         0.                              ! Kasting [1990]. Different than Mark's constant.
 HS        H         H2        S                 2BODY     2.0E-11     0.                                         ! measured upper limit 1.7e-11 but other authorities prefer higher
@@ -145,6 +145,7 @@ S         HCO       HS        CO                2BODY     5.0E-11     0.        
 S         HO2       HS        O2                2BODY     1.5E-11     0.         0.                              ! Kasting [1990]. Different than Mark's constant.
 S         HO2       SO        OH                2BODY     1.5E-11     0.         0.                              ! Kasting [1990]. Different than Mark's constant.
 S         S         S2                          WEIRD     1.98E-33    DEN(I)     -206.                           ! Theory, Du et al. [2008]
+S2        OH        HSO       S                 WEIRD     0.                                                     
 S2        O         S         SO                2BODY     1.1E-11     0.         0.                              ! Hills et al. [1987]
 HS        H2CO      H2S       HCO               2BODY     1.7E-11     -800.      0.                              ! DeMore et al. [1992]. Different than Mark's constant.
 S2        HV        S         S                 PHOTO     1.00
@@ -168,7 +169,8 @@ HS        NO2       HSO       NO                2BODY     2.9E-11     240.      
 S         O3        SO        O2                2BODY     1.2E-11     0.         0.                              ! NIST 2005 - DeMore et al. [1992]
 SO        SO        SO2       S                 2BODY     2.0E-15     0.         0.                              ! NIST (average of two measurements)
 SO3       SO        SO2       SO2               2BODY     2.0E-15     0.         0.                              ! NIST 2005 - Yung and DeMore [1982]
-S         CO2       SO        CO                2BODY     0.0E-20     0.         0.                              ! Yung and DeMore [1982]. Different than Mark's constant (0).
+S         CO2       SO        CO                2BODY     1.0E-20     0.         0.                              ! Yung and DeMore [1982]. Different than Mark's constant (0).
+SO        HO2       HSO       O2                WEIRD     0.                                                     ! Different than Mark's constant????
 SO        HCO       HSO       CO                WEIRD     5.5E-11     1/T(I)**0.4                                ! Kasting [1990], same as RXN 44. Different than Mark's constant.
 H         SO        HSO                         3BODY     5.7E-32     7.5E-11    1.60  0.                        ! Kasting [1990], same as H+O2+M->HO2+M
 HSO       HV        HS        O                 PHOTO     1.00
@@ -185,9 +187,29 @@ S         S3        S4                          WEIRD     2.8E-31     DEN(I)    
 S4        S4        S8AER                       WEIRD     2.8E-31     DEN(I)                                     ! Kasting [1990] same as RXN 180
 S4        HV        S2        S2                PHOTO     1.00
 S3        HV        S2        S                 PHOTO     1.00
+NH3       HV        NH2       H                 PHOTO     1.00
+NH3       OH        NH2       H2O               2BODY     1.7E-12     -710.      0.                              ! DeMore et al. [1992]
+NH3       O1D       NH2       OH                2BODY     2.5E-10     0.         0.                              ! DeMore et al. [1992]
+NH2       H         NH3                         WEIRD     (6.E-30*DEN(I))/(1.+3.E-20*DEN(I))                     ! Gordon et al. [1971]
+NH2       NO        N2        H2O               2BODY     3.8E-12     450.       0.                              ! DeMore et al. [1992]
+NH2       NH2       N2H4                        2BODY     1.E-10      0.         0.                              ! Gordon et al. [1971]
+NH2       O         NH        OH                2BODY     5.E-12      0.         0.                              ! Albers et al. [1969]
+NH2       O         HNO       H                 2BODY     5.E-12      0.         0.                              ! Albers et al. [1969]
 NH        NO        N2        O         H       2BODY     4.9E-11     0.         0.                              ! DeMore et al. [1992]
 NH        O         N         OH                2BODY     1.E-11      0.         0.                              ! Kasting [1982]
+N2H4      HV        N2H3      H                 PHOTO     1.00                                                       
+N2H4      H         N2H3      H2                2BODY     9.9E-12     -1200.     0.                              ! Stief and Payne [1976]
+N2H3      H         NH2       NH2               2BODY     2.7E-12     0.         0.                              ! Gehring et al. [1969]
+N2H3      N2H3      N2H4      N2        H2      2BODY     6.E-11      0.         0.                              ! Kuhn and Atreya [1979]
+NH        H         NH2                         WEIRD     (6.E-30*DEN(I))/(1.+3.E-20*DEN(I))                     ! Kasting [1982], same as RXN 188
 NH        HV        N         H                 PHOTO     1.00
+NH2       HV        NH        H                 PHOTO     1.00
+NH2       HV        NH2X      HV                2BODY     3.8E-3      0.         (mc ???)                        
+NH2X      HV        NH2       HV                2BODY     1.2E5       0.         (mc ???)                        
+NH2X      M         NH2       M                 2BODY     3.E-11      0.         0.                              ! Kasting [1982]
+NH2X      H2        NH3       H                 2BODY     3.E-11      0.         0.                              ! Kasting [1982]
+NH2       HCO       NH3       CO                2BODY     1.E-11      0.         0.                              ! Pavlov et al. [2001], same as RXN 35
+NH        HCO       NH2       CO                2BODY     1.E-11      0.         0.                              ! Pavlov et al. [2001], same as RXN 37
 CH21      O2        H2CO      O                 WEIRD     0.                                                     ! why are these here if unused?
 CH23      O2        H2CO      O                 WEIRD     0.                                                     ! why are these here if unused? 
 C2H2      HV        C2H       H                 PHOTO     0.06
