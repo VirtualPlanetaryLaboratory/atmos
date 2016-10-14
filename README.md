@@ -11,7 +11,6 @@ that have been developed over the years by the groups using the code. Ashley Hor
 
 ### [Contributors](https://bitbucket.org/ravikopparapu/contributors/wiki/Contributors) ###
 
-
 ### [How to run Atmos](https://bitbucket.org/ravikopparapu/how-to-run-atmos/wiki/How%20to%20Run%20Atmos) ###
 
 ### How do I get set up? ###
