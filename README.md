@@ -51,7 +51,7 @@ Dillon Teal, Will Sluder, Amber Britt, and Shawn Domagal-Goldman did extensive e
 
 * Version
 
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+* [How to run Atmos](https://bitbucket.org/ravikopparapu/how-to-run-atmos/wiki/How%20to%20Run%20Atmos)
 
 ### How do I get set up? ###
 
