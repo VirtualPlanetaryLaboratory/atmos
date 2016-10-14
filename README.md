@@ -13,7 +13,7 @@ that have been developed over the years by the groups using the code. Ashley Hor
 
 ### [How to run Atmos](https://bitbucket.org/ravikopparapu/how-to-run-atmos/wiki/How%20to%20Run%20Atmos) ###
 
-### How do I get set up? ###
+### [What does the converged output looks like?]() ###
 
 * Summary of set up
 
