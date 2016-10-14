@@ -21,7 +21,7 @@ specific, and modernized the FORTRAN coding.
 This generalization of the code allowed us to develop “templates” for different types of planets. These templates contain different input files to get the code to run for different planet types - without having to change the Fortran code itself. This prevents the need to maintain different “versions” of the code for these different cases. Instead, all one has to do is move these input files to the correct directory (the temp.sh script will automate this for you), recompile the code, and then run it.
 
 * Giada Arney added (or repaired) all of the Archean Earth templates.
-* Amber Britt fixed the modernEarth+CL template, and incorporated the Mars template that was originally developed by Mark Claire and Meg Smith.
+* Amber Britt fixed the modernEarth+Chlorine template, and incorporated the Mars template that was originally developed by Mark Claire and Meg Smith.
 * Mahmuda Afrin Badhan added a hot Jupiters template, under the guidance of and based on the prior work of Ravi Kopparapu.
 * Ryan Felton added a Titan template to the model (not public yet), under the guidance of Eric Hébrard.
 * Eddie Schwieterman added templates for very high O2 conditions that could be caused by “Luger-Barnes” atmospheres where H is stripped away by high-energy radiation, leaving behind O-dominated atmospheres.
