@@ -1,4 +1,4 @@
-      PARAMETER(NZ=160, NQ=75, NQ1=NQ+2)   !particles in TRI_DIAG
+      PARAMETER(NZ=160, NQ=77, NP=2, NQ1=NQ)   !particles in TRI_DIAG
       PARAMETER(NEQ=NQ*NZ,LDA=3*NQ+1)
       PARAMETER(NR=367, NSP=88, NSP1=NSP+1, NSP2=NSP+2, NMAX=65)
       PARAMETER(kw=250,kj=62)    !kw = maximum number of wl intervals, kj=number of photolysis reactions
