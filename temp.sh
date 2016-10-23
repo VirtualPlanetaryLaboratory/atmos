@@ -8,6 +8,8 @@ clear
 echo "This script imports PHOTOCHEM & CLIMA templates from a template file."
 echo "You will need to be in your top folder for atmos, not a subfolder."
 echo "Your current folder is $(pwd)."
+echo "Your PHOTOCHEM has these templates:"
+ls $temp_path
 true_path=$(pwd)
 echo -n "Enter the folder title (NOT THE PATH) and press [ENTER]: "
 read folder
@@ -29,7 +31,7 @@ echo 'Finished copying photochem templates over'
 cd $true_path
 pwd
 
-
+echo -e '\n'
 echo -n 'Would you like to compile PHOTOCHEM (y/n)? '
  read recompile
   if [ "$recompile" == "y" -o "$recompile" == 'Y' ]
@@ -37,22 +39,23 @@ echo -n 'Would you like to compile PHOTOCHEM (y/n)? '
        make '-f' 'makefilePhotochem' 'clean'
        make '-f' 'makefilePhotochem'
   fi
+echo -e '\n'
 echo -n 'Would you like to run PHOTOCHEM (y/n)'
   read run_photo
   if [ "$run_photo" == "y" -o "$run_photo" == 'Y' ]
    then             
        ./'TOTCdev'
   fi
-
- echo -n 'Would you like to recompile CLIMA? (y/n?)'
- read recompile
+echo -e '\n'
+echo -n 'Would you like to recompile CLIMA? (y/n?)'
+read recompile
  if [ "$recompile" == "y" -o "$recompile" == 'Y' ]
  then
      make '-f' 'makefileClima' 'clean'
      make '-f' 'makefileClima'
  fi 
-
-echo -n 'Would you like to run CLIMA (coupled to PHOTO) (y/n)? '
+echo -e '\n'
+echo -n 'Would you like to run CLIMA (NOTE: CLIMA will run in coupled mode, which assumes you already ran PHOTO first!) (y/n)? '
 read run_clima
 if [ "$run_clima" == "y" -o "$run_clima" == 'Y' ]
 then

@@ -1131,19 +1131,24 @@ C sgflux, vdep, smflux, and distributed fluxes are already set
 
 
 C added by giada
-      OPEN(unit=999, file='COUPLE/time_frak_photo.out')
- 909  FORMAT(1X, F4.2, 7X, F8.3, 5X, F18.16, 5X, I2, 5X, I2,
-     &     9X, I4, 6X, F4.2)
- 908  FORMAT(1X, 'timega', 5X, 'P0', 10X, 'frak', 18X, 'msun', 4X,
-     &   'ihztype', 6X, 'NZ', 6X, 'FSCALE')
-      print *, frak
-      print *, P0
-      print *, msun
-      print *, ihztype
-      print *, NZ
-      print *, FSCALE
+      OPEN(unit=999, file='COUPLE/coupling_params.out')
+ 909  FORMAT(1X, F4.2, 5X, F8.3, 5X, F3.1, 5X, I2, 5X, I2,
+     &     9X, I4, 6X, F4.2, 6X, F7.3)
+ 908  FORMAT(1X, 'timega', 6X, 'P0', 8X, 'frak', 3X, 'msun', 3X,
+     &   'ihztype', 6X, 'NZ', 6X, 'FSCALE', 6X, 'G')
+      print *, 'FRAK = ', frak
+      print *, 'P0 = ', P0
+      print *, 'msun = ', msun
+      if(NP.eq.4) print *, 'ihztype = ', ihztype
+      print *, 'NZ =', NZ
+      print *, 'FSCALE = ', FSCALE
+      print *, 'G = ', G
+      if(NP.eq.4) ihz = ihztype
+      if(NP.lt.4) ihz = 99
+      print *, 'ihz = ', ihz
+      print *, 'NP =', NP
       WRITE(999,908)
-      WRITE(999,909) timega, P0, frak, msun, ihztype, NZ, FSCALE
+      WRITE(999,909) timega, P0, frak, msun, ihz, NZ, FSCALE,G
 
 C
 C

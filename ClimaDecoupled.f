@@ -440,11 +440,12 @@ c*******Changed for now*********
 
 !gna - read more inputs from photo for coupling
       IF (ICOUPLE.eq.1) THEN 
-      OPEN(unit=999,FILE= 'COUPLE/time_frak_photo.out')
- 107  FORMAT(1X, F4.2, 7X, F8.3, 5X, F18.16, 5X, I2, 5X, I2, 
-     &     9X, I4, 6X, F4.2)
+      OPEN(unit=999,FILE= 'COUPLE/coupling_params.out')
+ 107  FORMAT(1X, F4.2, 5X, F8.3, 5X, F3.1, 5X, I2, 5X, I2,
+     &     9X, I4, 6X, F4.2, 6X, F7.3)
       READ(999,*)
-      READ(999,107) timega, P0ground, frak, msun, ihztype, nzp, fscale
+      READ(999,107) timega, P0ground, frak, msun, ihztype, nzp, fscale,
+     & G
       print *, timega
       print *, P0ground
       print *, frak
@@ -452,6 +453,11 @@ c*******Changed for now*********
       print *, ihztype
       print *, nzp
       print *, fscale
+      print *, G
+
+      !remove haze in input file if ihztype = 99 (this means no hcaer was run in PHOTO so nonsensical to include it)
+      if(ihztype.eq.99) IHAZE = 0
+      
       IF (msun.eq.13) STARR = "Sun"
       IF (msun.eq.14) STARR = "Sun"
       IF (msun.eq.15) STARR = "ADLEO"
@@ -810,7 +816,7 @@ c  352   FORMAT("Alt = ",1PE12.3," H20=",1PE12.3)
 c  353   FORMAT(6(1PE9.2,1x))
 c  Interpolate the grid from the photochemical model to the grid of the
 c  climate model 
-        print *,'about to call input_interp'
+
         CALL INPUT_INTERP(temp_alt, water, O3, CH4, CO2, ethane, Jcold,
      &   T, FI)
         print *,'called input_interp'
@@ -841,8 +847,7 @@ c 161  format(1x,"NST =", I6)
       
 C Set up gas concentrations for Solar code and former IR code
       
-      print *, 'about to call gascon'
- 
+       
 
       CALL GASCON(T,PF,FO2,FH22,FI,FNC,CGAS,NST)  ! Added FH2 to GASCON input argument 5/30/2012
       print *, 'called gascon'
