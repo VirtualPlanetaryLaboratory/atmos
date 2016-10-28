@@ -406,6 +406,7 @@ c      dimension atomsN(NSP2),atomsCL(NSP2),atomsS(NSP2)
 
       CHARACTER*11 photolabel, AA
       CHARACTER*8  AX
+      LOGICAL newphot
 
 
 
@@ -783,8 +784,11 @@ C Reading the altitude, temperature, and water profiles from the climate code
 C ***** READ THE CHEMISTRY DATA CARDS *****
 corig      read (9,200) CHEMJ
  !     print *, 'this is nr', NR
+ ! Skip header
+      read(9, *)
       read (9,200) CHEMJ
-corig 200  FORMAT(10X,A8,2X,A8,2X,A8,2X,A8,2X,A8)
+corig 200  FORMAT(A8,2X,A8,2X,A8,2X,A8,2X,A8)
+! Format changed from skipping 10 first W.S.
  200  FORMAT(A8,2X,A8,2X,A8,2X,A8,2X,A8)
       write(14, 201) (J,(CHEMJ(M,J),M=1,5),J=1,NR)
  201  FORMAT(1X,I3,' ',5X,A8,' +  ',A8,'  =    ',A8,' +  ',A8,4X,A8)
@@ -801,8 +805,10 @@ c-mc closing and opening the file again     WARNING
       close(9)
       ! chemical reaction file
       open(9, file='PHOTOCHEM/INPUTFILES/reactions.rx',status='OLD')
+      read(9, *)
       read(9,204) REACTYPE
- 204  FORMAT(48X,A5)
+      ! Changed from 48 to 50 W.S.
+ 204  FORMAT(50X,A5)
 
 C    close this because Rates.f and Initphoto.f will re-open it later.
       close(9)
@@ -919,41 +925,49 @@ c                 used in Photo.f to fill up the A vector of rates
 
 
 C A vector of length nr with 1's in the location where photolysis reactions are
-       testvec=INDEX(REACTYPE,'PHOTO')
 
+       !testvec=INDEX(REACTYPE,'PHOTO')
+       !a vector of length nr with 1's in the location where photolysis reactions are
 
-
+       ! This was replaced by new loop
         jcount=1
         jrcount=1
         juniq=1
        do i=1,nr
-        if (testvec(i).eq.1.) then
-C    Captures the species number of each photo reaction
-           photoreac(jrcount)=JCHEM(1,i)
-C    Captures the reaction number of each photoreaction
-           photonums(jrcount)=i
+         if (REACTYPE(i)(1:4).eq.'PHOT') then
+           photoreac(jrcount)=JCHEM(1,i)   !capture the species number of each photo reaction
+           photonums(jrcount)=i             !capture the reaction number of each photoreaction
 
 c           print *, jrcount,i,JCHEM(1,i),(CHEMJ(m,i),m=1,5)
 
            jrcount=jrcount+1
 
-C    Captures the unique photolysis species in photospec
-           if (juniq.eq.1) then
-              photospec(juniq)=JCHEM(1,i)
-              juniq=juniq+1
-           else
-              bad=0
-              do m=1,ks
-               if (JCHEM(1,i).eq.photospec(m)) bad=1
-              enddo
-              if (bad.eq.0) then
-                photospec(juniq)=JCHEM(1,i)
-                juniq=juniq+1
+           newphot = .TRUE.
+           m = 1
+
+!            if(juniq.eq.1) then
+!              photospec(juniq) = JCHEM(1,i)
+!              juniq = juniq + 1
+!            endif
+
+! Loop photospec, if species at JCHEM(1, i) has already been seen
+! then set newphot to false           
+           do while(m <= ks)
+              if(JCHEM(1, i).eq.photospec(m)) then
+                  newphot = .FALSE.
+                  m = ks + 1 ! break loop
+              else
+                  m = m + 1
               endif
-           endif
-c          print *, jrcount,juniq,photospec(juniq-1)
-      endif
-           jcount=jcount+1
+           enddo
+
+! If this reaction is new, add it to photospec and increment juniq
+           if (newphot .eqv. .TRUE.) then
+             photospec(juniq) = JCHEM(1,i)
+             juniq = juniq + 1
+           end if
+         endif
+         jcount = jcount + 1
 
        enddo
 
@@ -974,7 +988,7 @@ C - SOME CHECKS TO MAKE SURE THE INPUT FILES JIVE WITH PARAMATERS.INC
           stop
        endif
 
-       if (SUM(INDEX(REACTYPE,'PHOTO')) .NE. kj) then
+       if (SUM(INDEX(REACTYPE,'PHOT')) .NE. kj) then
           print *,'discrepency between number of photo reactions and kj'
           print *, SUM(INDEX(REACTYPE,'PHOTO')), kj
        stop
@@ -1112,7 +1126,7 @@ C gna - we need to make it so that T = T_new
       enddo
       endif
 
-
+      
       do K=1,NQ
        VDEP(K) = VDEP0(K)
        VEFF(K) = VEFF0(K)
@@ -1131,24 +1145,19 @@ C sgflux, vdep, smflux, and distributed fluxes are already set
 
 
 C added by giada
-      OPEN(unit=999, file='COUPLE/coupling_params.out')
- 909  FORMAT(1X, F4.2, 5X, F8.3, 5X, F3.1, 5X, I2, 5X, I2,
-     &     9X, I4, 6X, F4.2, 6X, F7.3)
- 908  FORMAT(1X, 'timega', 6X, 'P0', 8X, 'frak', 3X, 'msun', 3X,
-     &   'ihztype', 6X, 'NZ', 6X, 'FSCALE', 6X, 'G')
-      print *, 'FRAK = ', frak
-      print *, 'P0 = ', P0
-      print *, 'msun = ', msun
-      if(NP.eq.4) print *, 'ihztype = ', ihztype
-      print *, 'NZ =', NZ
-      print *, 'FSCALE = ', FSCALE
-      print *, 'G = ', G
-      if(NP.eq.4) ihz = ihztype
-      if(NP.lt.4) ihz = 99
-      print *, 'ihz = ', ihz
-      print *, 'NP =', NP
+      OPEN(unit=999, file='COUPLE/time_frak_photo.out')
+ 909  FORMAT(1X, F4.2, 7X, F8.3, 5X, F18.16, 5X, I2, 5X, I2,
+     &     9X, I4, 6X, F4.2)
+ 908  FORMAT(1X, 'timega', 5X, 'P0', 10X, 'frak', 18X, 'msun', 4X,
+     &   'ihztype', 6X, 'NZ', 6X, 'FSCALE')
+      print *, frak
+      print *, P0
+      print *, msun
+      print *, ihztype
+      print *, NZ
+      print *, FSCALE
       WRITE(999,908)
-      WRITE(999,909) timega, P0, frak, msun, ihz, NZ, FSCALE,G
+      WRITE(999,909) timega, P0, frak, msun, ihztype, NZ, FSCALE
 
 C
 C
@@ -1275,6 +1284,7 @@ c      enddo
 
       CALL DENSTY(FO2,poop3)
       CALL RATES
+
 C    computes diffusion coefficents (K*N) and binary
 C          diffusion coefficents for H and H2
       CALL DIFCO(FO2)
@@ -1373,7 +1383,6 @@ C     AVB changed to 1 for Earth+CL debugging
       NSTEPS = 10000
 C     for standalone mode this should probably be the default
 C      ICOUPLE = 1
-
 
 C ***** write OUT INITIAL DATA *****
       CALL OUTPUT(0,NSTEPS,0.D0,jtrop, vdep,USOLORIG,USETD, frak)
