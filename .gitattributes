@@ -1,0 +1,7 @@
+# Declare all files as "text" files so they get converted from CRLF to LF (line endings)
+* text
+# Unset object and executable files so they are NOT converted
+*.o -text
+*.run -text
+# Any file recognized as a text file will be automatically converted
+* text=auto
