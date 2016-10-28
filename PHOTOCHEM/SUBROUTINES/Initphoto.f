@@ -88,8 +88,7 @@ C read in relevant cross sections and set the Jnumbers,photospec,and photolabel
 
       j=1
       do i=1,ks   !number of photolysis species
-c         print *, photospec(i),ISPEC(INT(photospec(i))),j
-       CALL XS(ISPEC(INT(photospec(i))),nw,wavl,wav,T,DEN,j,sq,
+       CALL newXS(ISPEC(INT(photospec(i))),nw,wavl,wav,T,DEN,j,sq,
      $         columndepth,zy,IO2)         
        enddo   
 

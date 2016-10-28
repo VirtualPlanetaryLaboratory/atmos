@@ -796,7 +796,10 @@ c-mc rate constant units are cm^3/mol/s
  !new 2body/3body: SIX values read: A0, A1 in E, n0, n1 in F, then e0 and e1 in E (activation energy):
  !for 2body cases, A1,n1 and E1 are padded in as 0's (not used in computation).
   !In other words, in the the existing reaction.rx, this needs to be updated (by 0 padding).
- 667   FORMAT(58X,E9.3,3X,E9.3,2X,2F5.2,1X,E10.3,1X,E10.3)            !for two body reaction rates
+  ! Format statement changed by W.S.
+ 667    FORMAT(60X, 6(E12.3))
+        ! skip reactions header
+        read(9, *)
 
         kB = 1.38054E-16 !Boltzmann constant in cgs (erg K-1)
         PFAC = 1.013E+06 !Standard pressure in cgs (dyne/cm^2)
@@ -812,7 +815,9 @@ C READ IN REACTION INFORMATION
            ! Only one set of a, tn, and e's for 2body: 0's padded for rest
 C COMPUTE TWO BODY REACTION RATES
           if (REACTYPE(J) .EQ. '2BODY') then
-           read (9,667) a0,a1,tn0,tn1,e0,e1         
+            ! This is alpha_0, alpha_inf, beta_0, beta_inf, gamma_0, gamma_inf
+            ! read (9,667) a0,a1,tn0,tn1,e0,e1    
+            read(9, 667) a0, tn0, e0, a1, tn1, e1     
            !PRINT*, "J,a0,a1,tn0,tn1,e0,e1 = ",J,a0,a1,tn0,tn1,e0,e1
            do I=1,NZ
             A(J,I)=a0*(T(I)/298.)**tn0*EXP(-e0/T(I))   !two body reaction rates
@@ -826,7 +831,8 @@ C     .      'J, A(highest P), A(Z=50) (2body rxn)',J,A(J,1),A(J,50)
 
 C COMPUTE THREE BODY REACTION RATES
           else if (REACTYPE(J) .EQ. '3BODY') then
-           read (9,667) a0,a1,tn0,tn1,e0,e1         
+           !read (9,667) a0,a1,tn0,tn1,e0,e1  
+           read(9, 667) a0, tn0, e0, a1, tn1, e1        
            !PRINT*, "J,a0,a1,tn0,tn1,e0,e1 = ",J,a0,a1,tn0,tn1,e0,e1
              if (PLANET .EQ. 'MARS') then
                 B=B*2.5      !multiply low density rate by 2.5 to account for CO2 rather than N2 as background gas (Nair, 94)

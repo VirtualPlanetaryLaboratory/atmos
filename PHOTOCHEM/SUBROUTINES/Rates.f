@@ -18,21 +18,28 @@ c-mc rate constant units are cm^3/mol/s
        open(9, file='PHOTOCHEM/INPUTFILES/reactions.rx',status='OLD')
       endif
 
-667   FORMAT(58X,E9.2,3X,F8.2)            !for two body reaction rates
-668   FORMAT(58X,E9.2,3X,E9.2,2X,2F5.2)   !for three body reaction rates
+! 667   FORMAT(58X,E9.2,3X,F8.2)            !for two body reaction rates
+! 668   FORMAT(58X,E9.2,3X,E9.2,2X,2F5.2)   !for three body reaction rates
 
-669   FORMAT(70X,E9.3,2X,E10.3,2X,E10.3,2X,E9.3,2X,E9.3,2X,E9.3,2X,
-     $      E10.3,2X,E10.3,2X,E9.3,2X,E9.3) !two, three, & capture rate reaction rates
+! 669   FORMAT(60X,E12.3,2X,E10.3,2X,E10.3,2X,E9.3,2X,E9.3,2X,E9.3,2X,
+!      $      E10.3,2X,E10.3,2X,E9.3,2X,E9.3) !two, three, & capture rate reaction rates
+! One format statement to rule them all   W.S. 
+! (this is more of reference... Only actually matches the KIDA loop)
+ 700  FORMAT(60X, 10(E12.3))  
+
+ 667  FORMAT(60X, E12.3, 12X, E12.3) ! Two Body
+ 668  FORMAT(60X, 2(E12.3), 36X, 2(E12.3)) ! Three Body
+      ! skip header
+      read(9, *)
 
       KIDA = 0
 
        do J=1,NR
              if (kida.eq.1) then
-                   read(9,*)
            ! Read in two body reaction rates
                      if (REACTYPE(J) .EQ. '2BODY') then
            !read in Arhenius and Temperature factor (note TFAC contains the negative sign. not standard practice)
-                      read (9,669) alpha_0,beta_0,gamma_0,f_0,g_0
+                      read (9,700) alpha_0,beta_0,gamma_0,f_0,g_0
 
 
                      do i=1,nz
@@ -42,7 +49,7 @@ c-mc rate constant units are cm^3/mol/s
            ! Read in 2BCRT reaction rates
                      else if (REACTYPE(J) .EQ. '2BCRT') then
            !read in Arhenius and Temperature factor (note TFAC contains the negative sign. not standard practice)
-                      read (9,669) alpha_0,beta_0,gamma_0,f_0,g_0
+                      read (9,700) alpha_0,beta_0,gamma_0,f_0,g_0
 
 
                      do i=1,nz
@@ -51,7 +58,7 @@ c-mc rate constant units are cm^3/mol/s
 
            ! Read in three body reaction rates
                    else if (REACTYPE(J) .EQ. '3BODY') then
-                    read(9,669) alpha_0,beta_0,gamma_0,f_0,g_0,alpha_inf,
+                    read(9,700) alpha_0,beta_0,gamma_0,f_0,g_0,alpha_inf,
      $        beta_inf,gamma_inf,f_inf,g_inf
 
 
@@ -65,9 +72,12 @@ c-mc rate constant units are cm^3/mol/s
              else
 C READ IN TWO BODY REACTION RATES
           if (REACTYPE(J) .EQ. '2BODY') then
-           !read in Arhenius and Temperature factor (note TFAC contains the negative sign. not standard practice)
+           !read in Arhenius and Temperature factor (note TFAC contains the negative sign. not standard practice)4
+           ! need to get alpha_0, gamma_0
            read (9,667) ARH, TFAC
-
+           TFAC = -1 * TFAC
+           ! Reactions.rx was actually updated to get rid of TFAC's negative sign but I (Will S.) didn't want
+           ! to mess with more code below than I needed to for now
 
           do i=1,nz
             A(J,I) = ARH * EXP (TFAC/T(I))   !two body reaction rates
@@ -75,7 +85,9 @@ C READ IN TWO BODY REACTION RATES
 
 C READ IN THREE BODY REACTION RATES
           else if (REACTYPE(J) .EQ. '3BODY') then
-             read(9,668) B,C,D,E          !read in K0, Kinf, T0exp, Tinfexp
+            ! read(9,700) B,C,D,E          !read in K0, Kinf, T0exp, Tinfexp
+            ! Need to get alpha_0, alpha_Inf, beta_0, beta_Inf  W.S.
+              read(9, 668) B, D, C, E
                                           !A(J,I) = TBDY(K0,KINF,T0exp,Tinfexp,T,DEN)
 c             print *, J, B,C,D,E
              if (PLANET .EQ. 'MARS') then
