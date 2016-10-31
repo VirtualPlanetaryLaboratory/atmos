@@ -29,6 +29,10 @@ photochem_smart/photchem/photfile.pt
 */*.par
 */*/*.par
 
+#junk emacs files
+############
+**/*~
+**/*#
 
 # Packages #
 ############
