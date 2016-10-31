@@ -763,7 +763,7 @@ c - the youngsun correction will be overwritten and should be done in energy spa
                f(iw) = yg3(iw)*(wl(iw+1)-wl(iw))*5.039e8*wl(iw)/10. !convert to photons/cm2/s
                relflux(iw)=yg2(iw)
             endif
-            print *, wl(iw), yg3(iw)
+c            print *, wl(iw), yg3(iw)
          ENDDO
 
 

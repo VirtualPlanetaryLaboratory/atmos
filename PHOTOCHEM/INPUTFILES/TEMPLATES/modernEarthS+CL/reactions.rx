@@ -154,7 +154,7 @@ S3        HV        S2        S                 PHOTO     !note - we use the S2 
 S8        HV        S4        S4                PHOTO     !ficticious reaction using the cross section for the linear S8 molecule (prate set to 0 in Photo)
 S8        HV        S4        S4                PHOTO     !this line must follow the S8L reaction - also a fake reaction using the XS for the ring S8 molecule
 S8        HV        S4        S4                PHOTO     !this line must follow the S8R reaction - this is the "real" reaction, prate set in Photo 
-SO3       HV        SO2       O                 PHOTO                                                                                                                            
+SO3       HV        SO2       O                 PHOTO     
 SO21      HV        SO23                        2BODY     1.0E-12     0.                     ! Turco et al. [1982]      (HV=M)
 SO21      HV        SO2                         2BODY     1.0E-11     0.                     ! Turco et al. [1982]      (HV=M)
 SO21      HV        SO23      HV                2BODY     1.5E+3      0.                     ! Turco et al. [1982]     (quenching)
@@ -176,7 +176,7 @@ S         CO2       SO        CO                2BODY     0.0E-20     0.        
 SO        HO2       HSO       O2                2BODY     0.          0.                     ! no information - zeroed and remove someday?
 SO        HCO       HSO       CO                2BODY     5.2E-12     0.                     ! no info: assumed same as HCO + O2 -> HO2 + CO
 H         SO        HSO                         3BODY     5.7D-32     7.5D-11    1.60  0.0   ! JPL-02 !Assumed same as H+O2+M->HO2+M                          
-HSO       HV        HS        O                 PHOTO                                        ! note - we use the HO2 cross section for HSO                                       
+HSO       HV        HS        O                 PHOTO                                        ! note - we use the HO2 cross section for HSO
 HSO       NO        HNO       SO                2BODY     0.          0.                     ! JPL-02  - zeroed and remove someday?  Shawn has this at same as NO + HO2 -> NO2 + OH
 HSO       OH        H2O       SO                2BODY     3.0E-11     0.                     ! Kasting [1990] assumes same as OH + HO2 -> H2O + O2, KZ says no information
 HSO       H         HS        OH                2BODY     2.0E-11     0.                     ! Kasting [1990] Assumed same as H+HO2->OH+OH: QY of 0.90 against rate of 8.1E-11 KZ estimate
@@ -270,6 +270,7 @@ O1D       HCL       OH        CL                2BODY     9.75E-11    0.        
 CL        H2S       HCL       HS                2BODY     3.70E-11    210.                   ! JPL-06
 HCL       HV        H         CL                PHOTO
 O         CLO       CL        O2                2BODY     2.80E-11    85.                    ! JPL-06
+O         CLO       OCLO                        WEIRD                                        ! Zhu and Lin 2003
 O         HOCL      OH        CLO               2BODY     1.70E-13    0.                     ! JPL-06
 OH        CLO       CL        HO2               2BODY     7.40E-12    270.                   ! JPL-06  
 OH        CLO       HCL       O2                2BODY     6.00E-13    230.                   ! JPL-06
@@ -337,7 +338,6 @@ COCL2     HV        CL        CL        CO      PHOTO
 NO2       CCL3O2    CCL3NO4                     3BODY     2.9D-29     1.3D-11    6.80  1.00  ! JPL-06
 CCL3NO4   M         CCL3O2    NO2               WEIRD     !IUPAC-07
 CLOO      M         CL        O2                2BODY     2.8E-10     -1820.                 !IUPAC 2007
-CL        CH3O2     CLO       CH3O              2BODY     0.          0.                     !this was doubled for a while - eventually remove this line - (zeroed)
 CLO       CH3O2     CLOO      CH3O              2BODY     3.3E-12     -115.                  !JPL-06 products assumed as in yuk 229
 CL        CH3ONO2   CH2ONO2   HCL               2BODY     1.30E-11    -1200.                 ! JPL-06  products assumed
 CL        CH3O2     HCL       CH2O2             2BODY     8.0E-11     0.                     !JPL-06 branches uncertain - spliting 1.6E-10 equally
@@ -361,7 +361,10 @@ O         OCLO      CLO3                        3BODY     2.90D-31    8.3D-12   
 O3        OCLO      CLO3      O2                2BODY     2.1e-12     -4700.                 !JPL-06
 CLO3      HV        CLO       O2                PHOTO
 OH        CLO3      HCLO4                       2BODY     2.0e-12     0.0                    ! Simonatitis 1975 (estimated) ACK - temporarily changing
-CLO       O2        CLO3                        WEIRD     !yuk 214 - temporarily zeroed
+OH        CLO3      HO2       OCLO              WEIRD     !Zhu and Lin 01
+CLO       O2        CLO3                        WEIRD     !yuk 214 - ZEREOD - this actually goes to CLO.O2 (i.e. Prassad pathway)
 CLO       CLO3      CL2O4                       WEIRD     !Xu and Lin 2003
+CLO       CLO3      CLOO      OCLO              WEIRD     !Xu and Lin 2003 (slow)
+CLO       CLO3      OCLO      OCLO              WEIRD     !Xu and Lin 2003 (slow)
 CL2O4     HV        CLOO      OCLO              PHOTO
 O3        CL        CLO3                        WEIRD     !Simonaitis 1975

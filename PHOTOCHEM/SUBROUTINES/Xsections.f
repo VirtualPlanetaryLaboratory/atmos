@@ -6864,7 +6864,8 @@ c     1)extraction of Kopitzky et al 2002 by Mark Claire
 
 c assuming Quantum yield is 1, 
       qy=1.0
-
+c      print *, yg1
+c      stop
       DO iw = 1, nw
          DO i = 1, nz
                sq(jn,i,iw) = yg1(iw)*qy

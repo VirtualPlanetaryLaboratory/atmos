@@ -48,8 +48,7 @@ OH        OH        H2O2                        3BODY     6.9D-31     2.6D-11   
 H2CO      O         HCO       OH                2BODY     3.4E-11     -1600.                 ! JPL-02                                                           
 H2O2      O         OH        HO2               2BODY     1.4E-12     -2000.                 ! JPL-02                                                           
 HO2       HV        OH        O                 PHOTO                                                                                               
-CH4       HV        CH21      H2                PHOTO 
-CH4       HV        CH3       H                 PHOTO     !must follow CH4 + HV -> CH21 + H2 (this reac only goes at Ly a)                                                                                              
+CH4       HV        CH21      H2                PHOTO                                                                                               
 C2H6      HV        CH23      CH23      H2      PHOTO                                        ! (IN PLACE OF C2H2 AND C2H4)
 C2H6      HV        CH4       CH21              PHOTO                                        ! this line must follow C2H6+hv->CH23+CH23+H2
 HNO2      HV        NO        OH                2BODY     1.7E-3     0.                      !this is a photolysis reaction, but w/o cross section.
@@ -66,7 +65,9 @@ CH23      H2        CH3       H                 2BODY     0.          0.        
 CH23      CH4       CH3       CH3               2BODY     0.          0.                     ! zeroed out - could be deleted eventually
 CH23      O2        HCO       OH                2BODY     4.1E-11     -750.                  ! NIST - products uncertain
 CH3       O2        H2CO      OH                3BODY     4.5D-31     1.8D-12    3.0   1.70  ! JPL-02  (am I doubling this with reac 311?)
+CH3       OH        CH3O      H                 2BODY     1.3E-11     0.                     ! the real product is methanol. this is probably the best fix
 CH3       O         H2CO      H                 2BODY     1.1E-10     0.                     ! JPL-06
+CH3       O3        CH3O      O2                2BODY     5.4E-12     -220.                  ! JPL-06 - using yuk's suggested product (kevin has H2CO + HO2)        
 CH3       CH3       C2H6                        WEIRD                                        ! what a mess - NIST 2005
 CH3       HV        CH23      H                 2BODY     1.0E-5      0.0                    ! seems bad, but it has a history...
 CH3       H         CH4                         3BODY     1.0D-28     2.0D-10    1.80  0.40  ! Kevin's note: tricky ; Shawn's :Parkes et al. [1973] and Allen et al. [1980](check refs)
@@ -153,7 +154,7 @@ S3        HV        S2        S                 PHOTO     !note - we use the S2 
 S8        HV        S4        S4                PHOTO     !ficticious reaction using the cross section for the linear S8 molecule (prate set to 0 in Photo)
 S8        HV        S4        S4                PHOTO     !this line must follow the S8L reaction - also a fake reaction using the XS for the ring S8 molecule
 S8        HV        S4        S4                PHOTO     !this line must follow the S8R reaction - this is the "real" reaction, prate set in Photo 
-SO3       HV        SO2       O                 PHOTO                                                                                                                            
+SO3       HV        SO2       O                 PHOTO     
 SO21      HV        SO23                        2BODY     1.0E-12     0.                     ! Turco et al. [1982]      (HV=M)
 SO21      HV        SO2                         2BODY     1.0E-11     0.                     ! Turco et al. [1982]      (HV=M)
 SO21      HV        SO23      HV                2BODY     1.5E+3      0.                     ! Turco et al. [1982]     (quenching)
@@ -175,7 +176,7 @@ S         CO2       SO        CO                2BODY     0.0E-20     0.        
 SO        HO2       HSO       O2                2BODY     0.          0.                     ! no information - zeroed and remove someday?
 SO        HCO       HSO       CO                2BODY     5.2E-12     0.                     ! no info: assumed same as HCO + O2 -> HO2 + CO
 H         SO        HSO                         3BODY     5.7D-32     7.5D-11    1.60  0.0   ! JPL-02 !Assumed same as H+O2+M->HO2+M                          
-HSO       HV        HS        O                 PHOTO                                        ! note - we use the HO2 cross section for HSO                                       
+HSO       HV        HS        O                 PHOTO                                        ! note - we use the HO2 cross section for HSO
 HSO       NO        HNO       SO                2BODY     0.          0.                     ! JPL-02  - zeroed and remove someday?  Shawn has this at same as NO + HO2 -> NO2 + OH
 HSO       OH        H2O       SO                2BODY     3.0E-11     0.                     ! Kasting [1990] assumes same as OH + HO2 -> H2O + O2, KZ says no information
 HSO       H         HS        OH                2BODY     2.0E-11     0.                     ! Kasting [1990] Assumed same as H+HO2->OH+OH: QY of 0.90 against rate of 8.1E-11 KZ estimate
@@ -213,6 +214,33 @@ O1D       N2        N2O                         WEIRD
 O1D       N2O       N2        O2                2BODY     4.70E-11    20.                    ! JPL-06
 O1D       N2O       NO        NO                2BODY     6.70E-11    20.                    ! JPL-06
 N2O       HV        N2        O1D               PHOTO
+NO        CH3O      HNO       H2CO              WEIRD     !IUPAC worksheet - 2 body with the 300/T form... (yuk 123)
+NO2       CH3O      H2CO      HNO2              2BODY     9.60E-12    -1150.                 !IUPAC-06 (yuk 130)
+O1D       CH4       CH3O      H                 2BODY     3.0E-11     0.                     !JPL-06 gives 75% for CH3+H2O, 20% for CH3O + H, 5% for H2CO + O2, against 1.5e-10
+CH3O      O2        H2CO      HO2               2BODY     7.2E-14     -1080.                 !IUPAC-06 (yuk 272) 
+NO        CH3O      CH3ONO                      3BODY     2.60D-29    3.30D-11   2.8   0.6   !yuk 124 
+NO2       CH3O      CH3ONO2                     WEIRD     !IUPAC -06 (yuk 129)
+O3        CH3ONO    CH3ONO2   O2                2BODY     6.76E-13    -5315.                 !Hastie et al.(1976) yuk 101
+OH        CH3ONO2   CH2ONO2   H2O               2BODY     4.00E-13    -845.                  !IUPAC-06 (yuk 107)  !this might not be the best decomp pathway - see NIST
+CH2ONO2   O2        H2CO      NO2       O2      2BODY     1.00E-10    0.                     !yuk 108 - yuk has PROD in slot 3, but O2 is all that is left...
+NO2       CH3O2     CH3O2NO2                    WEIRD     ! IUAPC-06 (yuk 131)  
+CH3O2NO2  M         CH3O2     NO2               WEIRD     !IUPAC
+OH        CH3OH     CH3O      H2O               2BODY     4.28E-13    -345.                  !IUPAC-06 second branch (uncertain QY of 15%) (yuk 257 has just CH2OH branch)
+O         HNO3      OH        NO3               2BODY     3.0E-17     0.0                    !JPL-06 (upper limit, slow)  
+HO2       NO2       HNO2      O2                2BODY     5.00E-16    0.0                    !JPL-06 (upper limit, slow)
+CH2O2     M         CO        H2O               WEIRD     ! IUPAC-06 thermal decomp
+HO2       CH3O2     CH3OOH    O2                2BODY     3.80E-13    780.                   !IUPAC-06 (yuk 262) - another channel to O2+HCHO+H2O? <10% so just this for now 
+OH        CH3OOH    CH2OOH    H2O               2BODY     2.12E-12    190.                   !IUPAC-06 (yuk 261)    
+OH        CH3OOH    CH3O2     H2O               2BODY     3.18E-12    190.                   !IUPAC-06 (yuk 260)    
+CH2OOH    M         OH        H2CO              WEIRD     !Vaghjinai et al. 1989 (via NIST) as 1st order -(yuk 278) has 1e-10 as 2body
+NO        CH3O2     CH3O      NO2               2BODY     2.80E-12    300.                   !JPL-06
+CH3O2     CH3O2     CH3O      CH3O      O2      2BODY     7.40E-13    -520.                  !IUPAC-06 (yuk 273) has second branch
+CH3       O2        CH3O2                       3BODY     4.00D-31    1.20D-12   3.6   -1.1  !JPL-06
+CH3O2NO2  HV        CH3O2     NO2               PHOTO
+CH3O2     CH3O2     H2CO      CH3OH     O2      2BODY     1.03E-13    365.                   !IUPAC-06 (yuk 274) second branch of this reaction 
+OH        CH3OH     CH2OH     H2O               2BODY     2.42E-12    -345.                  !IUPAC-06 85% QY note another branch below (yuk 257 has just CH2OH branch)
+CH2OH     O2        H2CO      HO2               2BODY     9.70E-12    0.                     !IUPAC-06 (yuk 271)
+CH3OOH    HV        CH3O      OH                PHOTO
 N         HO2       NO        OH                2BODY     2.2E-11     0.0                    !Brune et al. 1983 (yuk 114)
 O         N2O5      NO2       NO2       O2      2BODY     3.0E-16     0.0                    !JPL-97 (yuk 97) 
 NO2       NO3       N2O5                        3BODY     2.0D-30     1.4D-12    4.4   0.7   !JPL-06
@@ -228,5 +256,115 @@ HO2NO2    HV        HO2       NO2               PHOTO
 HO2NO2    HV        OH        NO3               PHOTO   ! this line must follow HO2NO2+hv->HO2+NO2
 N2O5      HV        NO3       NO2               PHOTO 
 N2O5      HV        NO3       NO        O       PHOTO   ! this line must follow N2O5+hv->NO3+NO2
-O         HNO3      OH        NO3               2BODY     3.0E-17     0.0                    !JPL-06 (upper limit, slow)  
-HO2       NO2       HNO2      O2                2BODY     5.00E-16    0.0                    !JPL-06 (upper limit, slow)
+CH3ONO    M         CH3O      NO                WEIRD     1.06e15     -18282.                !NIST 1988 Theory (300K-1500K) 1st order reaction
+O         HCL       OH        CL                2BODY     1.00E-11    -3300.                 ! JPL-06  (this is really slow)
+OH        HCL       H2O       CL                2BODY     2.60E-12    -350.                  ! JPL-06
+HO2       CL        HCL       O2                2BODY     1.80E-11    170.                   ! JPL-06  (other branch is OH + CLO)
+CL        H2        HCL       H                 2BODY     3.05E-11    -2270.                 ! JPL-06
+CL        H2O2      HCL       HO2               2BODY     1.10E-11    -980.                  ! JPL-06
+CL        CH4       HCL       CH3               2BODY     7.30E-12    -1280.                 ! JPL-06
+CL        H2CO      HCL       HCO               2BODY     8.10E-11    -30.                   ! JPL-06
+CL        C2H6      HCL       C2H5              2BODY     7.20E-11    -70.                   ! JPL-06
+O1D       HCL       O         HCL               2BODY     1.50E-11    0.                     !(yield 10% O+HCL, 25% H+CLO, 65% OH+CL - against 1.50e-10 JPL-06)
+O1D       HCL       OH        CL                2BODY     9.75E-11    0.                     !(yield 10% O+HCL, 25% H+CLO, 65% OH+CL - against 1.50e-10 JPL-06)
+CL        H2S       HCL       HS                2BODY     3.70E-11    210.                   ! JPL-06
+HCL       HV        H         CL                PHOTO
+O         CLO       CL        O2                2BODY     2.80E-11    85.                    ! JPL-06
+O         CLO       OCLO                        WEIRD                                        ! Zhu and Lin 2003
+O         HOCL      OH        CLO               2BODY     1.70E-13    0.                     ! JPL-06
+OH        CLO       CL        HO2               2BODY     7.40E-12    270.                   ! JPL-06  
+OH        CLO       HCL       O2                2BODY     6.00E-13    230.                   ! JPL-06
+OH        HOCL      H2O       CLO               2BODY     3.00E-12    -500.                  ! JPL-06
+HO2       CL        OH        CLO               2BODY     4.10E-11    -450.                  ! JPL-06 (second branch of '218' other is HCL + O2)
+HO2       CLO       HOCL      O2                2BODY     2.70E-12    220.                   ! JPL-06
+CL        O3        CLO       O2                2BODY     2.30E-11    -200.                  ! JPL-06
+CLO       NO        NO2       CL                2BODY     6.40E-12    290.                   ! JPL-06 
+CLO       SO        CL        SO2               2BODY     2.80E-11    0.                     ! JPL-06
+O1D       HCL       H         CLO               2BODY     3.75E-11    0.                     !(yield 10% O+HCL, 25% H+CLO, 65% OH+CL - against 1.50e-10 JPL-06)
+CLO       HV        O1D       CL                PHOTO
+CLO       HV        O         CL                PHOTO    ! this line must follow CLO+hv->O1D+CL 
+HOCL      HV        OH        CL                PHOTO
+O1D       CL2       CLO       CL                2BODY     2.025E-10   0.                     ! JPL-06 QY of 0.75 against 2.7e-10
+O1D       CL2       CL2       O                 2BODY     6.75E-11    0.                     ! JPL-06 QY of 0.25 against 2.7e-10
+OH        CL2       HOCL      CL                2BODY     1.40E-12    -900.                  ! JPL-06
+CL        HOCL      CL2       OH                2BODY     1.25E-12    -130.                  ! JPL-06 (uncertain br so splitting 2.5e-12 evenly between the two channels) 
+CL        HOCL      HCL       CLO               2BODY     1.25E-12    -130.                  ! JPL-06 (uncertain br so splitting 2.5e-12 evenly between the two channels) 
+CLO       CLO       CL2       O2                2BODY     1.00E-12    -1590.                 ! JPL-06 (branch 1 of 3)
+CL2       HV        CL        CL                PHOTO
+O         OCLO      CLO       O2                2BODY     2.40E-12    -960.                  ! JPL-06
+NO        OCLO      NO2       CLO               2BODY     2.50E-12    -600.                  ! JPL-06  
+OH        OCLO      HOCL      O2                2BODY     4.50E-13    800.                   ! JPL-06  
+CL        O2        CLOO                        WEIRD     !IUPAC 2007 rec - only a low density rate (could modify TBDY to deal with this...)
+CL        OCLO      CLO       CLO               2BODY     3.40E-11    160.                   ! JPL-06
+CL        CLOO      CL2       O2                2BODY     2.3E-10     0.                     ! JPL-06
+CL        CLOO      CLO       CLO               2BODY     1.2E-11                            ! JPL-06
+CLO       O3        CLOO      O2                2BODY     1.0E-12     -3600.                 ! JPL-06  uncertain upper limit (and slow)
+CLO       O3        OCLO      O2                2BODY     1.0E-12     -4000.                 ! JPL-06  uncertain upper limit (and slow) 
+CLO       CLO       CLOO      CL                2BODY     3.00E-11    -2450.                 ! JPL-06 
+CLO       CLO       OCLO      CL                2BODY     3.5E-13     -1370.                 ! JPL-06
+SO        OCLO      SO2       CLO               2BODY     1.90E-12    0.                     ! JPL-06   (uncertain)
+CLOO      HV        CLO       O                 PHOTO     
+OCLO      HV        CLO       O                 PHOTO
+CL        NO3       CLO       NO2               2BODY     2.4E-11     0.                     ! JPL-06                         
+NO3       CLO       CLOO      NO2               2BODY     4.7E-13     0.                     ! JPL-06           
+CL        NO2       CLONO                       3BODY     1.3D-30     1.0D-10    2.00  1.00  ! JPL-06                         
+O         CLONO2    O2        CLONO             2BODY     2.9E-12     -800.                  ! JPL-06 (no JPL recomendation on products - using Yuk's)               
+OH        CLONO2    HOCL      NO3               2BODY     6.0E-13     -330.                  ! JPL-06 spliiting rec rate of 1.2e-12 equally between two channels (following Yuk)
+OH        CLONO2    CLO       HNO3              2BODY     6.0E-13     -330.                  ! JPL-06 spliiting rec rate of 1.2e-12 equally between two channels (following Yuk)
+CL        CLONO2    CL2       NO3               2BODY     6.5E-12     135.                   ! JPL-06
+CLO       NO2       CLONO2                      3BODY     1.8D-31     1.5D-11    3.40  1.90  ! JPL-06  (high pressure rate uncertain)                         
+CLONO     HV        CL        NO2               PHOTO
+CLONO2    HV        CL        NO3               PHOTO
+CLONO2    HV        CLO       NO2               PHOTO    ! this line must follow CLONO2+hv->CL+NO3
+CL        NO        CLNO                        WEIRD     !3 body but no high pressure limit given (can I fold this into tbdy?))
+CL        CLNO      NO        CL2               2BODY     5.8E-11      100.                  ! JPL-06 
+CL        NO2       CLNO2                       3BODY     1.8D-31     1.0D-10    2.00  1.00  ! JPL-06                         
+OH        CLNO2     HOCL      NO2               2BODY     2.4E-12     -1250.                 ! JPL-06 
+CLNO2     HV        CL        NO2               PHOTO
+CLNO      HV        CL        NO                PHOTO
+OH        CH3CL     CH2CL     H2O               2BODY     2.4E-12     -1250.                 ! JPL-06
+CL        CH3CL     CH2CL     HCL               2BODY     2.17E-11    -1130.                 ! JPL-06
+CH2CL     O2        CH2CLO2                     3BODY     1.9D-30     2.9D-12    3.20  1.20  ! JPL-06                         
+NO        CH2CLO2   CH2CLO    NO2               2BODY     7.0E-12     300.                   ! JPL-06
+CH2CLO    O2        CHCLO     HO2               2BODY     6.0E-14     0.                     ! JPL-06  (very uncertain rate)
+CHCLO     HV        HCO       CL                PHOTO
+CH3CL     HV        CL        CH3               PHOTO
+O1D       CCL4      CLO       CCL3              2BODY     2.838E-10   0.                     ! JPL-06 (14% is quenched)
+CCL3      O2        CCL3O2                      3BODY     8.0D-31     3.5D-12    6.00  1.00  ! JPL-06                         
+NO        CCL3O2    COCL2     CL        NO2     2BODY     7.30E-12    270.                   ! JPL-06 
+O1D       COCL2     CL        CLO       CO      2BODY     2.20E-10    30.                    ! JPL-06
+CCL4      HV        CCL3      CL                PHOTO
+COCL2     HV        CL        CL        CO      PHOTO
+NO2       CCL3O2    CCL3NO4                     3BODY     2.9D-29     1.3D-11    6.80  1.00  ! JPL-06
+CCL3NO4   M         CCL3O2    NO2               WEIRD     !IUPAC-07
+CLOO      M         CL        O2                2BODY     2.8E-10     -1820.                 !IUPAC 2007
+CLO       CH3O2     CLOO      CH3O              2BODY     3.3E-12     -115.                  !JPL-06 products assumed as in yuk 229
+CL        CH3ONO2   CH2ONO2   HCL               2BODY     1.30E-11    -1200.                 ! JPL-06  products assumed
+CL        CH3O2     HCL       CH2O2             2BODY     8.0E-11     0.                     !JPL-06 branches uncertain - spliting 1.6E-10 equally
+CL        CH3O2     CLO       CH3O              2BODY     8.0E-11     0.                     !JPL-06 branches uncertain - spliting 1.6E-10 equally
+CL        CH3OH     CH2OH     HCL               2BODY     5.50E-11    0.                     !JPL-06 
+CLO       CH3O2     CH3OCL    O2                2BODY     1.65E-12    -115.                  !JPL-06 (products uncertain splitting equally with other branch)             
+CLO       CH3O2     CLOO      CH3O              2BODY     1.65E-12    -115.                  !JPL-06 (products uncertain splitting equally with other branch)             
+OH        CH3OCL    HOCL      CH3O              2BODY     2.50E-12    -370.                  !JPL-06 product assumed as in yuk 174
+CH3OCL    HV        CH3O      CL                PHOTO
+CL        HO2NO2    CLO       HNO3              2BODY     1.0E-13     0.0                    !JPL-06 Upper limit (products assumed)
+O         CL2O      CLO       CLO               2BODY     2.7E-11     -530.                  !IUPAC-07  yuk-147
+CL        CL2O      CL2       CLO               2BODY     6.2E-11     130.                   !IUPAC-07  yuk-200 
+NO        CL2O2     CL2O      NO2               2BODY     1.0E-15     0.0                    !
+CL2O      HV        CL        CLO               PHOTO
+CLO       CLO       CL2O2                       3BODY     1.6D-32     2.0D-12    4.5    2.4  !JPL-06
+CL        CL2O2     CL2       CLOO              2BODY     1.0E-10     0.0                    !JPL-06 rate, products assumed as in Yuk's model                  
+CL2O2     M         CLO       CLO               WEIRD   !IUPAC
+CL2O2     HV        CL        CLOO              PHOTO 
+CL2O2     HV        CLO       CLO               PHOTO   ! this line must follow CL2O2+hv->CL+CLOO  - existence of this branch is uncertain
+O         OCLO      CLO3                        3BODY     2.90D-31    8.3D-12    3.1   0.0   !JPL-06
+O3        OCLO      CLO3      O2                2BODY     2.1e-12     -4700.                 !JPL-06
+CLO3      HV        CLO       O2                PHOTO
+OH        CLO3      HCLO4                       2BODY     2.0e-12     0.0                    ! Simonatitis 1975 (estimated) ACK - temporarily changing
+OH        CLO3      HO2       OCLO              WEIRD     !Zhu and Lin 01
+CLO       O2        CLO3                        WEIRD     !yuk 214 - ZEREOD - this actually goes to CLO.O2 (i.e. Prassad pathway)
+CLO       CLO3      CL2O4                       WEIRD     !Xu and Lin 2003
+CLO       CLO3      CLOO      OCLO              WEIRD     !Xu and Lin 2003 (slow)
+CLO       CLO3      OCLO      OCLO              WEIRD     !Xu and Lin 2003 (slow)
+CL2O4     HV        CLOO      OCLO              PHOTO
+O3        CL        CLO3                        WEIRD     !Simonaitis 1975

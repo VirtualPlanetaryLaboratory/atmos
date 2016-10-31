@@ -62,7 +62,7 @@ c-mc rate constant units are cm^3/mol/s
                    A(J,I)= TBDY(B,C,D,E,T(I),DEN(I))  !computed three body reaction rate
                   enddo
                      end if
-             else
+             else   ! if kida <> 1 then proceed with the old school reactions.rx read ins.
 C READ IN TWO BODY REACTION RATES
           if (REACTYPE(J) .EQ. '2BODY') then
            !read in Arhenius and Temperature factor (note TFAC contains the negative sign. not standard practice)
@@ -112,7 +112,7 @@ c-mc the below are rate constants which don't fit in the 2BODY or 3BODY category
        A(J,I) = 9.46E-34*EXP(480./T(I))*DEN(I)  ! NIST 05 low Temp in N2.  Its 2x bigger in H2 or O2
       endif
 
-!   O + OH -> CO2 + H (also CS + HS -> CS2 + H)  !SORG
+!   CO + OH -> CO2 + H (also CS + HS -> CS2 + H)  !SORG
       if ((CHEMJ(1,J).EQ.'CO'.AND.CHEMJ(2,J).EQ.'OH') .OR.
      $    (CHEMJ(1,J).EQ.'CS'.AND.CHEMJ(2,J).EQ.'HS') .OR.
      $    (CHEMJ(1,J).EQ.'CSX'.AND.CHEMJ(2,J).EQ.'HS') .OR.
@@ -426,24 +426,31 @@ c       A(J,I) = TBDY(1.0D-32,5.0E-12, 2.0E0,2.0E0,T(I),DEN(I))   ! from yuk (21
       endif
 
 !   CLO + CLO3 + M -> CL2O4 +M              WEIRD     !Xu and Lin 2003
+!   CLO + CLO3  -> CLOO + OCLO              WEIRD     !Xu and Lin 2003 (slow)
+!   CLO + CLO3  -> OCLO +OCLO               WEIRD     !Xu and Lin 2003 (slow)
       if (CHEMJ(1,J).EQ.'CLO'.AND.CHEMJ(2,J).EQ.'CLO3') THEN
-c       A(J,I) = 1.85E-18*exp(-2417./T(I))*(T(I)/300.)**2.82
-c       A(J,I) = 1.85E-18*exp(-2417./T(I))*T(I)**2.28
-
-       A363_0=8.62E15*exp(-1826./T(I))*T(i)**(-9.75)
-       A363_inf=1.43E-10*exp(-82./T(I))*T(i)**0.094
-       A(J,I) = TBDY(A363_0,A363_inf, 0E0,0.0E0,T(I),DEN(I))
+        if (CHEMJ(3,J).EQ.'CL2O4') then 
+         A0=8.62E15*exp(-1826./T(I))*T(i)**(-9.75)
+         Ainf=1.43E-10*exp(-82./T(I))*T(i)**(0.094)
+         A(J,I) = TBDY(A0,Ainf, 0E0,0.0E0,T(I),DEN(I))
+        endif
+        if (CHEMJ(3,J).EQ.'CLOO') then 
+         A(J,I) = 1.85E-18*T(I)**2.28*exp(-2417./T(I))
+        endif
+        if (CHEMJ(3,J).EQ.'OCLO') then 
+         A(J,I) = 1.42E-18*T(I)**2.11*exp(-2870./T(I))
+        endif
       endif
 
 
 !    O3 + CL + M -> CLO3                        WEIRD     !Simonaitis 1975
       if (CHEMJ(1,J).EQ.'O3'.AND.CHEMJ(2,J).EQ.'CL') THEN
        A(J,I) =  3E-30*Den(i)     ! rate constant estimated for 300K (some words about t-dependence - could look to analogs...)
-
-c       A(J,I) =  1E-30*Den(i)     !testing lowering this uncertain rate
-c get back to orig - save an in.dist - then try to lower this.
+c       A(J,I) =  1E-31*Den(i)     !lowering this uncertain rate by a factor of 30 1e-13 is nominial case
       endif
 
+
+c
 
 !    CLO + O2 -> CLOOO                       WEIRD     ! DeMore 1990 rate (Via Shindell)
       if (CHEMJ(1,J).EQ.'CLO'.AND.CHEMJ(2,J).EQ.'O2'.AND.
@@ -460,9 +467,38 @@ c get back to orig - save an in.dist - then try to lower this.
        A367_EQ = 2.9E-26*exp(3500./T(I))
 
        A(J,I) = TBDY(A366_0,A366_inf, 2.0E0,2.0E0,T(I),DEN(I))
-     $           /A367_EQ/1E5
+     $           /A367_EQ/1E5/DEN(I)
 !    note use of coefficients from formation reaction so this is a dependency
+! this species was used a test in Catling et al. 2010 for the CLO.O2 adduct - see sensitivity analysis there...
       endif
+
+!   O + CLO + M  ->  OCLO + M
+      if (CHEMJ(1,J).EQ.'O'.AND.CHEMJ(2,J).EQ.'CLO') THEN
+         A0=8.60E-21*T(I)**(-4.1)*EXP(-420./T(I))
+         Ainf=4.33E-11*T(I)**(-0.03)*EXP(43./T(I))
+
+       A(J,I) = TBDY(A0,Ainf,0.0E0,0.0E0,T(I),DEN(I))   ! taken from Zhu and Lin 2003
+      endif
+
+
+!   OH + CLO3 + M  ->  HCLO4 or HO2 + OCLO  (Zhu and Lin 2001) - note this will interfere if we go back to Simonitatis!
+      if (CHEMJ(1,J).EQ.'OH'.AND.CHEMJ(2,J).EQ.'CLO3') THEN
+         if (CHEMJ(3,J).EQ.'HCLO4') then
+          A0=1.94D36*T(I)**(-15.3)*EXP(-5542./T(I))
+          Ainf=3.2D-10*T(I)**(0.07)*EXP(-25./T(I))
+
+          A(J,I) = TBDY(A0,Ainf,0.0E0,0.0E0,T(I),DEN(I))   ! taken from Zhu and Lin 2001
+
+!should perhaps put the Simonaitis rate in here for completeness so we don't have to switch back and forth on reactions.rx
+
+         endif
+
+         if (CHEMJ(3,J).EQ.'HO2') then
+          A(J,I)=2.1D-10*T(I)**(0.09)*EXP(-18./T(I))   !ditto
+         endif
+      endif
+
+
 
 !   CS2 + S  ->  CS + S2  !SORG
       if ((CHEMJ(1,J).EQ.'CS2'.AND.CHEMJ(2,J).EQ.'S') .OR.
