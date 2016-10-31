@@ -93,12 +93,8 @@ HCLO4      LL  4 1 0 0 0 1    0     2.0E-01 0.      0.        0.      0      0. 
 CL2O4      LL  4 0 0 0 0 2    0     0.      0.      0.        0.      0      0.      0.
 SO4AER     LL  4 2 0 1 0 0    0     1.0E-02 0.      0.        0.      0      0.      0.            !turbulent depostion velocity for particles (hardcoded for td)
 S8AER      LL  0 0 0 8 0 0    0     1.0E-02 0.      0.        0.      0      0.      0.            !turbulent depostion velocity for particles
-*CL2O3      LL
-*CH2CLO2H   LL
 * NQ should be the number above
 *   TRIDIAGONAL SOLVER
-*SO4AER     TD  4 0 0 1 0 0    0     ???
-*S8AER      TD  0 0 0 8 0 0    0     ???
 *NQ1 should be the number directly above
 *   SHORT-LIVED SPECIES
 HNO2       SL  2 1 0 0 1 0
