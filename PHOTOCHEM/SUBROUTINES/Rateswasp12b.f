@@ -826,7 +826,7 @@ C     .      'J, A(highest P), A(Z=50) (2body rxn)',J,A(J,1),A(J,50)
 
 C COMPUTE THREE BODY REACTION RATES
           else if (REACTYPE(J) .EQ. '3BODY') then
-           read (9,667) a0,a1,tn0,tn1,e0,e1         
+           read (9,667) a0,a1,tn0,tn1,e0,e1
            !PRINT*, "J,a0,a1,tn0,tn1,e0,e1 = ",J,a0,a1,tn0,tn1,e0,e1
              if (PLANET .EQ. 'MARS') then
                 B=B*2.5      !multiply low density rate by 2.5 to account for CO2 rather than N2 as background gas (Nair, 94)
@@ -971,6 +971,7 @@ C           PRINT*,"J, Products = ",J,CHEMJ(3,J),CHEMJ(4,J)
         end
                      
         FUNCTION TBDYR(A0,AI,CN,CM,E0,EI,T,D)
+        real*8 tbdyr
           B0 = A0*(300./T)**CN*exp(-E0/T)
           BI = AI*(300./T)**CM*exp(-EI/T)
 !          print *,'a0 = ',a0,'ai = ',ai

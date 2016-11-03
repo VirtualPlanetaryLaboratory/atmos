@@ -149,6 +149,10 @@
      $      CALL XS_CS2(nw,wavl,j,sq,ISOS)
       IF((species.eq.'CH3SH  ').OR.(species.eq.'CH3SXH ')) 
      $      CALL XS_CH3SH(nw,wavl,j,sq,ISOS)
+
+!below here there are calls to XS_simple.
+
+
       IF((species.eq.'C2H6S  ').OR.(species.eq.'C2H6SX ')) CALL
      & XS_simple(species,nw,wavl,j,sq)   
       IF((species.eq.'C2H6S2 ').OR.(species.eq.'C2H6SXS')) CALL 
@@ -3423,9 +3427,8 @@ c Quantum yield (no reference nor research)
 
 
       if (option.eq.2) then  !JPL-06
-      OPEN(UNIT=kin,
-     &  file='PHOTOCHEM/DATA/XSECTIONS/HCL/HCL_JPL06.abs',
-     &  STATUS='old')
+      OPEN(UNIT=kin, 
+     & file='PHOTOCHEM/DATA/XSECTIONS/HCL/HCL_JPL06.abs',STATUS='old')
 
 c      DO i = 1, 2
 c         READ(kin,*)
@@ -3451,8 +3454,8 @@ c      ENDDO
 c      print *, wl
 c      print *, y1
 c      print *, ''
-c      print *, yg
-c      stop
+c      print *, yg     
+c       stop
 
 c Quantum yield ( - there are some channel data for excited states of CL but whatever...)
 
@@ -3460,7 +3463,7 @@ c Quantum yield ( - there are some channel data for excited states of CL but wha
 
       DO iw = 1, nw
          DO i = 1, nz
-              sq(jn,i,iw) = yg1(iw)*qy
+              sq(jn,i,iw) = yg(iw)*qy
          ENDDO
       ENDDO
       endif  !end option 2
@@ -3901,9 +3904,9 @@ c      SUBROUTINE XS_CH4(nw,wl,wc,tlev,airlev,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for CH4 photolysis  =*
-*=                    CH4 + HV  ->  1CH2 + H2                                =*
+*=                    CH4 + HV  ->  ^1CH2 + H2                               =*
 *=                    CH4 + HV  ->  CH3 +  H                                 =*
-*=                    CH4 + HV  ->  CH23 + H + H                             =*
+*=                    CH4 + HV  ->  ^3CH2 + H + H                            =*
 *=  Cross section:  from photo.dat                                           =* 
 *=  Quantum yield:  1 for 1st reac, except at Ly a                           =* 
 *-----------------------------------------------------------------------------*
@@ -3949,14 +3952,6 @@ c     1)Kevin's photo.dat data
 
       option=1
       
-      HJtest=0 !HOT JUPITER TEST
-      do i=1,nsp
-C         print*,i,ISPEC(i)
-         if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
-      enddo 
-
-C         print*,"HJtest",HJtest
-
       if (option.eq.1) then  !Kevin's data
       OPEN(UNIT=kin,
      &  file='PHOTOCHEM/DATA/XSECTIONS/CH4/CH4_zahnle.abs',
@@ -3975,11 +3970,8 @@ C         print*,"HJtest",HJtest
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      IF (HJtest.eq.1) THEN
-      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)   
-      ELSE
-      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
-      ENDIF
+      CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
+
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_CH4***'
@@ -3988,48 +3980,21 @@ C         print*,"HJtest",HJtest
 
 c Quantum yields and reactions depend on wavelength and presence of hydrocarbons
 
-      HCtest=0
-      do i=1,nsp
-         if (ISPEC(i).eq.'C2H4') HCtest=1  !ACK - presence of C2H4 means all hc's
-      enddo   
-
-
       DO iw = 1, nw
          if (wl(iw).eq.1216) then  !ack hardcoded wavelength
-           if (HCtest.eq.1) then  !three branches in hydrocarbon code
             qy=0.24
             qy2=0.25
             qy3=0.51
-C            print*,'HCtest,qy,qy2,qy3',HCtest,qy,qy2,qy3
-           elseif (HJtest.eq.1) then  !three branches in hydrocarbon code
-            qy=0.24
-            qy2=0.51
-            qy3=0.25
-C            print*,'HJtest,qy,qy2,qy3',HJtest,qy,qy2,qy3
-           else  !splitting 50/50 between reac 1 and 2 in non-hc code
-            qy=0.5
-            qy2=0.5
-            print *, 'new CH4 reactions in non-hc code not tested'
-            print *, 'so test me when you see this. in XS_CH4'
-           endif   
          else  !first reaction dominates everywhere but Ly a
           qy=1.0
           qy2=0.0
           qy3=0.0
-            !print*,'HCtest,qy,qy2,qy3',HCtest,qy,qy2,qy3
          endif   
 
-c         do i=1,nw
-c          print *, wl(i),wc(i),yg1(i)  
-c         enddo   
-c         print *, 'stopping in XS_CH4'
-c         stop
-
-            
          DO i = 1, nz
               sq(jn,i,iw) = yg1(iw)*qy
               sq(jn+1,i,iw) = yg1(iw)*qy2
-          if (HCtest.eq.1.or.HJtest.eq.1) sq(jn+2,i,iw) = yg1(iw)*qy3
+              sq(jn+2,i,iw) = yg1(iw)*qy3
          ENDDO
       ENDDO
       endif  !end option 1
@@ -4042,10 +4007,8 @@ c      print *, jn, photolabel
       photolabel(jn)='PCH4_CH3'
       jn=jn+1
 
-      if (HCtest.eq.1.or.HJtest.eq.1) then
       photolabel(jn)='PCH4_3CH2'
       jn=jn+1
-      endif
 
       RETURN
       END
@@ -4141,7 +4104,7 @@ C         print*,"HJtest",HJtest
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
       IF (HJtest.eq.1) THEN
-      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)   
+        CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)   
       ELSE
       	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
       ENDIF  

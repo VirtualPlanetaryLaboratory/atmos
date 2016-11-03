@@ -380,7 +380,7 @@ c it fails -
 c-mab abstracted by looping over species where atomsH ne 0
       flux_H = 0.0
       do i=1,NZ-1
-        do j=1,NSP
+        do j=1,NQ1   !note
           if(atomsH(j).gt.0.0) then 
 c-mab then only sum for species that contain H for a given layer
         	flux_H(i) = flux_H(i) + atomsH(j)*FLUXO(j,i)

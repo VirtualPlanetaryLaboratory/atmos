@@ -432,7 +432,7 @@ c       A(J,I) = TBDY(1.0D-32,5.0E-12, 2.0E0,2.0E0,T(I),DEN(I))   ! from yuk (21
         if (CHEMJ(3,J).EQ.'CL2O4') then 
          A0=8.62E15*exp(-1826./T(I))*T(i)**(-9.75)
          Ainf=1.43E-10*exp(-82./T(I))*T(i)**(0.094)
-         A(J,I) = TBDY(A0,Ainf, 0E0,0.0E0,T(I),DEN(I))
+         A(J,I) = TBDY(A0,Ainf, 0D0,0.0D0,T(I),DEN(I))
         endif
         if (CHEMJ(3,J).EQ.'CLOO') then 
          A(J,I) = 1.85E-18*T(I)**2.28*exp(-2417./T(I))
@@ -474,10 +474,11 @@ c
 
 !   O + CLO + M  ->  OCLO + M
       if (CHEMJ(1,J).EQ.'O'.AND.CHEMJ(2,J).EQ.'CLO') THEN
-         A0=8.60E-21*T(I)**(-4.1)*EXP(-420./T(I))
+         Alow=8.60E-21*T(I)**(-4.1)*EXP(-420./T(I))
          Ainf=4.33E-11*T(I)**(-0.03)*EXP(43./T(I))
-
-       A(J,I) = TBDY(A0,Ainf,0.0E0,0.0E0,T(I),DEN(I))   ! taken from Zhu and Lin 2003
+        
+       A(J,I) = TBDY(Alow,Ainf,0.0D0,0.0D0,T(I),DEN(I))   ! taken from Zhu and Lin 2003
+c       print *, I, A(J,I),Alow,Ainf,T(I),DEN(I)
       endif
 
 
@@ -887,11 +888,13 @@ c      print *, (A(284,I),I=1,NZ)
        end do
        close(9)
 
+
+
       RETURN
       END
 
       real*8 FUNCTION TBDY(A0,AI,CN,CM,T,D)
-      implicit real*8(A-H,O-Z)
+      real*8 B0,BI,Y,X,A0,AI,CN,CM,T,D
       !this form of the three body equations allows us to copy the n and m factor directly from the JPL recomendations.
       !note that it is presented there as: (T/300)^(-n) which is done here as (300/T)^(n) either way. it should be n and m directly.
       B0 = A0*(300./T)**CN

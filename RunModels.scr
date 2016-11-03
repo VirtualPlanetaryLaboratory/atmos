@@ -18,12 +18,12 @@ folder_path=$temp_path$folder
 folder_path2=$temp_path2$folder
 
 cd $folder_path
-cp 'in.dist' '../../..' && echo "Copied in.dist to $(pwd ../../..)"
-cp 'input_photchem.dat' '../..' && echo "Copied input_photchem.dat to $(pwd ../..)"
-cp 'reactions.rx' '../..' && echo "Copied reactions.rx to $(pwd ../..)"
-cp 'parameters.inc' '../..' && echo "Copied parameters.inc to $(pwd ../..)"
-cp 'species.dat' '../..' && echo "Copied species.dat to $(pwd ../..)"
-cp 'PLANET.dat' '../..' && echo "Copied PLANET.dat to $(pwd ../..)"
+cp 'in.dist' '../../..' && echo "Copied in.dist from $(pwd ../../..)"
+cp 'input_photchem.dat' '../..' && echo "Copied input_photchem.dat from $(pwd ../..)"
+cp 'reactions.rx' '../..' && echo "Copied reactions.rx from $(pwd ../..)"
+cp 'parameters.inc' '../..' && echo "Copied parameters.inc from $(pwd ../..)"
+cp 'species.dat' '../..' && echo "Copied species.dat from $(pwd ../..)"
+cp 'PLANET.dat' '../..' && echo "Copied PLANET.dat from $(pwd ../..)"
 echo 'Finished copying photochem templates over'
 cd $true_path
 pwd

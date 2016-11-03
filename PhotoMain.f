@@ -1378,7 +1378,7 @@ c      TSTOP = 1.E14
 C     AVB changed to 1 for Earth+CL debugging
       NSTEPS = 10000
 
-c      NSTEPS = 1
+      NSTEPS = 1
 
 C     for standalone mode this should probably be the default
 C      ICOUPLE = 1
