@@ -396,7 +396,7 @@ Cc-mc USOLPREV(NQ,NZ) added for second order reverse Euler calculations
       DIMENSION TA(NZ),TB(NZ),TC(NZ),TY(NZ)
       dimension PRES_bar(NZ)
 
-      integer rhOcount,rhHcount,rhCcount,rhScount,rhNcount,rhCLcount
+      integer rhOcount, rhHcount, rhCcount, rhScount, rhNcount, rhCLcount
 c      dimension atomsO(NSP2),atomsH(NSP2),atomsC(NSP2)
 c      dimension atomsN(NSP2),atomsCL(NSP2),atomsS(NSP2)
 
@@ -502,6 +502,17 @@ C      TIME OUTPUTS
       open(24, file='PHOTOCHEM/out.tim',status='UNKNOWN')
 C-AVB  Final Output for P, T, Z and mixingratios
       open(255, file='PHOTOCHEM/PTZ_MixingOut.dat')
+
+c The next four files are used only when this model is coupled
+C           with the climate model (ICOUPLE=1)
+C   To be used as input for the climate model (coupling)
+      open(90, file='COUPLE/hcaer.photoout.out',status='UNKNOWN')
+      open(84, file='COUPLE/fromPhoto2Clima.dat',
+     &         status='OLD')
+      open(116, file='COUPLE/fromClima2Photo.dat')
+      open(117, file='COUPLE/mixing_ratios.dat')
+      open(118, file='COUPLE/fromClima2Photo_works.dat')
+
 c-mc
 C     redox output - eventually combine into out.trs
       open(25, file='PHOTOCHEM/out.redox',status='UNKNOWN')
@@ -613,25 +624,6 @@ C     NO photolysis rates output
 C    Wavelength specific SO2 photorates on HR grid
       if (LGRID.EQ.1) open(61, file='PHOTOCHEM/out.so2HR',
      &                         status='UNKNOWN')
-
-
-
-c The next four files are used only when this model is coupled
-C           with the climate model (ICOUPLE=1)
-C   To be used as input for the climate model (coupling)
-      if (ICOUPLE.EQ.1) then
-       open(90, file='COUPLE/hcaer.photoout.out',status='UNKNOWN')
-       open(84, file='COUPLE/fromPhoto2Clima.dat', status='OLD')
-       open(116, file='COUPLE/fromClima2Photo.dat')
-       open(117, file='COUPLE/mixing_ratios.dat')
-       open(118, file='COUPLE/fromClima2Photo_works.dat')
-      endif
-
-
-
-
-
-
 
 C - READ IN SPECIES NAMES, ATOMIC NUMBERS, AND BOUNDARY CONDITIONS
 
@@ -931,7 +923,6 @@ C A vector of length nr with 1's in the location where photolysis reactions are
 
 
 
-
         jcount=1
         jrcount=1
         juniq=1
@@ -1101,14 +1092,10 @@ C gna - we need to make it so that T = T_new
          print *, 'T0 is'
          print *, T(1)
       ENDIF
-
-
-
-
-c      print *, USOL
-c      stop
-
-
+      if (NP.gt.0) then
+        print*,'Warning: NP = 0, so no particles are being' 
+        print*,'assumed in this model. Proceed with caution...'
+        print*,'(NP=0 to be used in giant planet templates only.)'
         fmtstr='(  E17.8)'
         write(fmtstr(2:3),'(I2)')NP*3
 
@@ -1121,9 +1108,10 @@ c      stop
        if(USETD.EQ.1) then !particles in tri-diag
         fmtstr='(  E17.8)'
         write(fmtstr(2:3),'(I2)')NP
-      do i=1,nz
-       read(17,fmtstr)  (PARTICLES(i,j),j=1,np)
-      enddo
+        do i=1,nz
+          read(17,fmtstr)  (PARTICLES(i,j),j=1,np)
+        enddo
+      endif
       endif
 
 
@@ -1385,9 +1373,6 @@ c      TSTOP = 1.E14
       TSTOP = 1.E17
 C     AVB changed to 1 for Earth+CL debugging
       NSTEPS = 10000
-
-c      NSTEPS = 1
-
 C     for standalone mode this should probably be the default
 C      ICOUPLE = 1
 
@@ -1644,7 +1629,13 @@ c testing, or someone to figure out how to do that in Mark's input
 c framework. -Shawn D-G       WARNING
 
 
-      if(USETD.EQ.0) then
+      if(USETD.EQ.0.AND.NP.EQ.0) then
+c-mab Time-dependent boundary conditions for particles set to 0
+        NPSO4 = 0
+        NPS8 = 0
+        NPHC = 0
+        NPHC2 = 0
+      elseif(USETD.EQ.0.AND.NP.GT.0) then
         NPSO4 = LSO4AER - NQ + NP
         NPS8 = LS8AER - NQ + NP
         NPHC = LHCAER - NQ + NP
@@ -1732,10 +1723,11 @@ C   start here if we are skipping PHOTO
 
 
 C
-      CALL SEDMNT(FSULF,USETD,frak,HCDENS,ihztype)
+      if (NP.GT.0) then   !particles in main loop
+       CALL SEDMNT(FSULF,USETD,frak,HCDENS,ihztype)
 
 C    particles in main loop
-      if (USETD.EQ.0) then
+       if (USETD.EQ.0) then
 
       do J=1,NZ
       do JJ=1, NP
@@ -1780,17 +1772,19 @@ c   it may be that I should instead change flux estimates to use the "2"
       DO 38 I=2,NZ1
       DPU(I,J) = WFALL(I+1,J)*DEN(I+1)/DEN(I)/(2.*DZ(I))
   38  DPL(I,J) = WFALL(I-1,J)*DEN(I-1)/DEN(I)/(2.*DZ(I))
+       elseif (USETD.GT.0) then
 C   particles in tri-diag
-      else
+        do J=1,NZ
+         do k=1,NP
+           AERSOL(J,K)=PARTICLES(J,K)*DEN(J)/CONVER(J,K)
+         enddo
+        enddo
+       endif
 
-      do J=1,NZ
-       do k=1,NP
-        AERSOL(J,K)=PARTICLES(J,K)*DEN(J)/CONVER(J,K)
-       enddo
-      enddo
+       else
+       print*,'Note: Since NP = 0, did not call SDMNT...'
 
-
-      endif
+       endif
 
 
 
@@ -1926,7 +1920,7 @@ c-mc J_upper=DU and J_lower=DL, so DJAC (which is -J)
 c-mc uses -DU and -DL respectivly
 
 
-      if(USETD.EQ.0) then  !particles in main loop
+      if(USETD.EQ.0.and.NP.gt.0) then  !particles in main loop
 C ack - these need to be abstracted... WARNING
 C   ADD ADVECTION TERMS FOR PARTICLES
 
@@ -2259,7 +2253,6 @@ c-mc test this at some point down the road WARNING
 c       USOL(LS8,J) = S8S(J)
    4  CONTINUE
 
-
 c      do i=1,nq
 c       do j=1,nz
 c          print *,Z(j), USOL(LSO4AER,j),USOL(LS8AER,j)
@@ -2269,7 +2262,7 @@ c      enddo
 C      temp
 
 
-      if (USETD.EQ.0) then
+      if (USETD.EQ.0.AND.NP.GT.0) then
 C switch around main loop particles
 c 1.e-38 is the smallest number for single precision. We should upgrade
 c this to double precision at some point. -Shawn D-G  WARNING
@@ -2349,7 +2342,7 @@ c           USOL(i,j)=max(USOL(i,j),smallest)
       enddo
 
 
-      if(USETD.EQ.1) then
+      if(USETD.EQ.1.AND.NP.GT.0) then
 
 
 
@@ -2535,7 +2528,7 @@ c   what follows needs work - WARINING
 c nb that vdep for particles is defined to include wfall
 C    when particles are in the main loop
 
-      if(USETD.EQ.1) then
+      if(USETD.EQ.1.AND.NP.GT.0) then
 C This mimics the code Jim has, but is more general.
 C I don't think I ever got this working 100% correctly to where
 C  I could balance the sulfur budget when using the tri-diag WARNGING
@@ -2822,6 +2815,7 @@ C     (NSP - 1), indicates (inert) CO2 density for terrestrial planets ONLY
 C     Print into another file .strctr
         write (66,881) (T(i),EDD(i),DEN(i),O3(i), SL(LCO2,i),i=1,nz)
 
+      IF (NP.GT.0) THEN 
         fmtstr='(  E17.8)'
         write(fmtstr(2:3),'(I2)')NP*3
         do i=1,nz
@@ -2837,15 +2831,15 @@ C      Print aerosols into another file .aersol
         fmtstr='(  E17.8)'
         write(fmtstr(2:3),'(I2)')NP
 
-      if(USETD.EQ.1) then
-      do i=1,nz
+       if(USETD.EQ.1) then
+        do i=1,nz
 C   Ordering is that in species.dat
-       write(18,fmtstr)  (PARTICLES(i,j),j=1,np)
+         write(18,fmtstr)  (PARTICLES(i,j),j=1,np)
 C   Print tridag into another file .tridag
-       write(72,fmtstr)  (PARTICLES(i,j),j=1,np)
-      enddo
-      endif
-
+         write(72,fmtstr)  (PARTICLES(i,j),j=1,np)
+        enddo
+       endif
+      ENDIF
 C write out formatted ISOin.dist file
 C - ISOHACK!
       fac=1.0
@@ -2884,6 +2878,7 @@ C   OK for one character as this should always be <10
        ENDIF
       enddo
 
+      IF (NP.GT.0) then
 C this final one is CO2 number density
         write (52,881) (T(i),EDD(i),DEN(i),O3(i), SL(LCO2,i),i=1,nz)
 C  WARNING (NSP-1) hardcoding to LCO2 is only valid for terrestrial cases.
@@ -2895,14 +2890,14 @@ C  WARNING (NSP-1) hardcoding to LCO2 is only valid for terrestrial cases.
      $    (WFALL(i,j)*fac,j=1,NP),(RPAR(i,j)*fac,j=1,NP)
         enddo
 
-      if(USETD.EQ.1) then
+       if(USETD.EQ.1) then
         fmtstr='(  E17.8)'
         write(fmtstr(2:3),'(I2)')NP
-       do i=1,nz
+        do i=1,nz
         write(52,fmtstr) (PARTICLES(i,j)*fac,j=1,np)
-       enddo
-      endif
-
+        enddo
+       endif
+      ENDIF
 
 C - write out file with all the inert species...
 C  the commented version was for the TESTING code where (S*=S)
@@ -3118,7 +3113,7 @@ C     But in other parts of photochem, N2 is of the total,
 C     not excluding CO2, so we only change it here. 9/8/2015
 C-gna clima can't currently cope with NO2 and having it is screwing it up
 C WARNING
-         FNO2=USOL(LNO2,1)*1.0e-60
+         FNO2=USOL(LNO2,1)/1.0E60
          JCOLD=JTROP
 
          WRITE(117,102) FAR, FCH4, FC2H6, FCO2,
@@ -3159,3 +3154,6 @@ C    error in reactions
  301    FORMAT(//1X,'ERROR IN REACTION ',I3)
         STOP
       END
+
+
+
