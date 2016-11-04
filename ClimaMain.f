@@ -392,7 +392,7 @@ C JK   Idry   - If Idry = 0, use the moist adiabat. If Idry = 1, use a dry adiab
 
 
       READ(1,51)
-      print *,'reading in'
+!      print *,'reading in'
       READ(1,*) AA,NSTEPS       !step number
       READ(1,*) AA,IMW
       READ(1,*) AA,RSURF               
@@ -424,7 +424,7 @@ c*******Changed for now*********
       READ(1,*) AA, icealbedo
       READ(1,*) AA, INVERSE
       READ(1,*) AA, FRAK        !can get a fractal haze without being coupled now
-      print *, 'inverse', inverse
+!      print *, 'inverse', inverse
 
 
 !gna - moved this part here so now we know what ICOUPLE is supposed to be  
@@ -435,8 +435,7 @@ c*******Changed for now*********
          OPEN (unit=114,file= 'COUPLE/mixing_ratios.dat')
       END IF
 
-      print *, 'icouple is'
-      print *, ICOUPLE
+      print *, 'icouple is', ICOUPLE
 
 !gna - read more inputs from photo for coupling
       IF (ICOUPLE.eq.1) THEN 
@@ -446,14 +445,15 @@ c*******Changed for now*********
       READ(999,*)
       READ(999,107) timega, P0ground, frak, msun, ihztype, nzp, fscale,
      & G
-      print *, timega
-      print *, P0ground
-      print *, frak
-      print *, msun
-      print *, ihztype
-      print *, nzp
-      print *, fscale
-      print *, G
+      print *, 'COUPLING PARAMETERS ARE:'
+      print *, 'TIMEGA = ', timega
+      print *, 'P0ground = ', P0ground
+      print *, 'frak = ', frak
+      print *, 'msun = ', msun
+      print *, 'ihztype = ', ihztype
+      print *, 'nzp = ', nzp
+      print *, 'fscale = ', fscale
+      print *, 'G = ', G
 
       !remove haze in input file if ihztype = 99 (this means no hcaer was run in PHOTO so nonsensical to include it)
       if(ihztype.eq.99) IHAZE = 0
@@ -476,7 +476,7 @@ c*******Changed for now*********
          time = age-timega
          SOLCON = (1+0.4*(1-time/4.7))**(-1)*FSCALE
          PG0 = P0ground
-         print *, STARR
+         print *, 'STAR = ', STARR
          
       !correction to SOLCON based on kopparapu HZ (earth distance ~> moist IHZ)
       !IF (msun.eq.16) SOLCON = SOLCON * 0.870
@@ -706,7 +706,7 @@ c       print *,'j =',j,'  fi(1,j)=',fi(1,j)
 C-KK   The following line was modified to finish filling H2O grid. 
          END DO
  
-       print *, 'JCOLD original is', JCOLD
+!       print *, 'JCOLD original is', JCOLD
 
        !first try to make JCOLD more sensible - giada
        !it's looking for where FSATURATION goes above 1
@@ -727,7 +727,7 @@ C-KK   The following line was modified to finish filling H2O grid.
             JCOLD = max(JCOLD,13) !EWS ensure JCOLD isn't too small.
        end if
        
-       print *, 'JCOLD updated is ', JCOLD
+!       print *, 'JCOLD updated is ', JCOLD
        DO J=1, ND 
           IF (J .GE. JCOLD) FI(1,J)=FSATURATION(J)
        END DO
@@ -819,7 +819,7 @@ c  climate model
 
         CALL INPUT_INTERP(temp_alt, water, O3, CH4, CO2, ethane, Jcold,
      &   T, FI)
-        print *,'called input_interp'
+!        print *,'called input_interp'
 c        print *, 'temp_alt,water,co2,ch4,o3(after input_interp)'
 c        DO J=1,ND
 c         print 353, alt(J), (FI(I,J),I=1,5) 
@@ -836,21 +836,21 @@ C***********************************************************
 C ****************** START ITERATIVE LOOP *******************
       DO 40 NST=1,NSTEPS
 C************************************************************
-      print *, 'in NST loop'
+      print *, 'TIME STEP = ', NST
       ITROP = 1
 c      PRINT 161,NST
 c 160  FORMAT(/1X,"---------------------------------------------",
 c     2  //1X,"NST =",I6)
 c 161  format(1x,"NST =", I6)
       TIME = Time + dt0
-      print *, 'found time'
+!      print *, 'found time'
       
 C Set up gas concentrations for Solar code and former IR code
       
        
 
       CALL GASCON(T,PF,FO2,FH22,FI,FNC,CGAS,NST)  ! Added FH2 to GASCON input argument 5/30/2012
-      print *, 'called gascon'
+!      print *, 'called gascon'
 C SWITCH FOR OLD IR CODE
 c      if(FCO2.gt.CO2MAX) then
 c-as Old subroutine to calculate IR flux
@@ -859,20 +859,20 @@ C PLANCK FUNCTION WAS CHANGED
 c-rr gna  Created IRME.F (IR clone with methane and ethane loops turned on). When there is methane call IRM instead of IR. 5/2/2011 
 
       IF (IMET.eq.0) THEN
-       print *, 'calling ir.f'
+!       print *, 'calling ir.f'
        CALL IR(T,PF,P,FNC,CGAS)  ! Passes FNC to IR c-rr 6/7/2012
       ENDIF
 
        IF ((IMET.eq.1).and.(IMETETH.eq.0)) THEN
-       print *, 'calling IRM'
+!       print *, 'calling IRM'
        CALL IRM(T,PF,P,FNC,CGAS) ! Passes FNC to IRM c-rr 6/7/2012
-       print *, 'called IRM'
+!       print *, 'called IRM'
        ENDIF
 
       IF (IMETETH.eq.1) THEN
-       print *, 'calling IRME'
+!       print *, 'calling IRME'
        CALL IRME(T,PF,P,FNC,CGAS) ! Passes FNC to IRM c-rr 6/7/2012
-       print *, 'called IRME' 
+!       print *, 'called IRME' 
       ENDIF  
        
 c      else

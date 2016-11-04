@@ -619,18 +619,15 @@ C    Wavelength specific SO2 photorates on HR grid
 c The next four files are used only when this model is coupled
 C           with the climate model (ICOUPLE=1)
 C   To be used as input for the climate model (coupling)
-      if (ICOUPLE.EQ.1) then
+!     gna - these next few lines should not just be when ICOUPLE = 1
+!     because the model needs to print coupling
+!     regardless of whether it's running in coupled mode
        open(90, file='COUPLE/hcaer.photoout.out',status='UNKNOWN')
-       open(84, file='COUPLE/fromPhoto2Clima.dat', status='OLD')
-       open(116, file='COUPLE/fromClima2Photo.dat')
-       open(117, file='COUPLE/mixing_ratios.dat')
-       open(118, file='COUPLE/fromClima2Photo_works.dat')
-      endif
-
-
-
-
-
+       open(84, file='COUPLE/fromPhoto2Clima.dat', status='UNKNOWN')
+       open(116, file='COUPLE/fromClima2Photo.dat', status='UNKNOWN')
+       open(117, file='COUPLE/mixing_ratios.dat', status='UNKNOWN')
+!       open(118, file='COUPLE/fromClima2Photo_works.dat', status='UNKNOWN')
+    
 
 
 C - READ IN SPECIES NAMES, ATOMIC NUMBERS, AND BOUNDARY CONDITIONS
