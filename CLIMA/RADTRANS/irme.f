@@ -378,8 +378,8 @@ c       PRINT *, 'TAUSIRTOTAL'
 c       PRINT *, TAUASIRTOTAL
        TAUAABSIRTOTAL = TAUEXTIRTOTAL - TAUASIRTOTAL
        
-       PRINT *, 'TAUAABSIRTOTAL'
-       PRINT *, TAUAABSIRTOTAL
+!       PRINT *, 'TAUAABSIRTOTAL'
+!       PRINT *, TAUAABSIRTOTAL
 c       PRINT *, '*******************************'
        ENDIF 
 
@@ -929,9 +929,9 @@ c 100    FORMAT(1X,1P10E12.5) !EWS - label not used
  !     PRINT*,'TAUTOTAL'
  !     PRINT 100, TAUTOTAL
  !     pause
-      print *, FDNIR(1)
-      print *, FUPIR(1)  
-      print *, 'fupj', FUP(1)
+ !     print *, FDNIR(1)
+ !     print *, FUPIR(1)  
+ !     print *, 'fupj', FUP(1)
       RETURN
       END
 

@@ -10,7 +10,7 @@
 C     in this case NZ = 100 is appropriate since the hcaer files have 100 layers
 
       IF (IHAZE.eq.0) THEN
-      print *, 'reading in no haze'
+      print *, 'atmosphere has no haze'
       OPEN(unit=101,file="CLIMA/IO/hcaer_nohaze.out")
       ENDIF
 

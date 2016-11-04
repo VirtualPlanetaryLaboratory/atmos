@@ -267,7 +267,7 @@ C
 C       DO IL=1,NLAYERS
       ! PRINT *, QEXT(I,IL), OMG0A(I,IL), ALT(IL) 
 C       ENDDO 
-     ! PRINT *, '***************************'
+      ! PRINT *, '***************************'
        ENDIF
 C
 
