@@ -514,7 +514,7 @@ C           between 190-220 as MIF signature
 C     Reaction rates,reactions,species,densities,rate constants
       open(28, file='PHOTOCHEM/OUTPUT/out.rates',status='UNKNOWN')
 C     FOLLOWING ARE CROSS SECTIONS, HEIGHT GRID, WAVELENGTH GRID:
-      open(29, file='PHOTOCHEM/out.xsec',status='UNKNOWN')
+      open(29, file='PHOTOCHEM/OUTPUT/out.xsec',status='UNKNOWN')
       open(30, file='PHOTOCHEM/OUTPUT/out.gridz',status='UNKNOWN')
       open(31, file='PHOTOCHEM/OUTPUT/out.gridw',status='UNKNOWN')
 
@@ -536,7 +536,7 @@ C      Some model parameters
 C      NGE and L2 are normally between start and finish
       open(50, file='PHOTOCHEM/OUTPUT/out.error',status='UNKNOWN')
 C      TP/FLOW for chlorine species,nitrate, adn sulfate
-      open(51, file='PHOTOCHEM/out.cl',status='UNKNOWN')
+      open(51, file='PHOTOCHEM/OUTPUT/out.cl',status='UNKNOWN')
 
 C     Formatted output - ISOHACK - for ISO model.
       open(52, file='PHOTOCHEM/OUTPUT/ISOin.dist',status='UNKNOWN')
