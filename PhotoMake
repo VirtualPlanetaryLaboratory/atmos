@@ -18,15 +18,10 @@ PLATFORM = mac
 FC = gfortran
 
 #debugging version
-#CFLAG = -g -fno-automatic -ftrapv -fbounds-check -O
-#FCFLAG = -g -fno-automatic -Wuninitialized -fbounds-check -O -ftrapv
-#FCFLAG = -g -I. -fno-automatic -Wuninitialized -fbounds-check -O -ftrapv -Wall
-FCFLAG = -g -I. -fno-automatic -Wuninitialized -fbounds-check -O -ftrapv -Wall
-#FCFLAG = -O3 -I. -fno-automatic -ftree-vectorize -fdefault-integer-8 -fdefault-real-8
 #FCFLAG = -g -fno-automatic -Wuninitialized -fbounds-check -O -ftrapv -Wall -I. -fdefault-integer-8 -fdefault-real-8
 
 #optimized (EWS - USE THIS FOR FAST CODE)
-#FCFLAG = -O3 -fno-automatic -ftree-vectorize -fdefault-integer-8 -fdefault-real-8 -I.
+FCFLAG = -O3 -fno-automatic -ftree-vectorize -fdefault-integer-8 -fdefault-real-8 -I.
 #FCFLAG = -O3 -fno-automatic -ftree-vectorize -fdefault-integer-8 -fdefault-real-8 -I. -ffpe-trap=invalid
 
 
@@ -36,9 +31,6 @@ FCFLAG = -g -I. -fno-automatic -Wuninitialized -fbounds-check -O -ftrapv -Wall
 # Main files
 MAIN =PhotoMain
 EXECUTABLE = Photo.run
-
-#MAIN = ISO
-#EXECUTABLE = ISO
 
 
 
@@ -431,7 +423,6 @@ $(LINPACK)/$(SGTSL).o : $(LINPATH)/$(SGTSL).f
 clean :
 	rm $(OBJ)/*.o
 	rm $(EXECUTABLE)
-	@echo 'remember to change parameters.inc file if switching between ISO and normal'
 
 
 conclude :
