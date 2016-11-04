@@ -15,7 +15,10 @@ CLIMA/OBJECT_CLIMA/*
 PHOTOCHEM/*out*
 PHOTOCHEM/OBJECT_PHOT/*
 PHOTOCHEM/profile.pt
-PHOTOCHEM/INPUTFILES/parametersREGULAR.inc
+PHOTOCHEM/INPUTFILES/parameters.inc
+PHOTOCHEM/INPUTFILES/reactions.rx
+PHOTOCHEM/INPUTFILES/species.dat
+PHOTOCHEM/INPUTFILES/input_photochem.dat
 COUPLE/time_frak_photo.out
 COUPLE/mixing_ratios.dat
 COUPLE/fromPhoto2Clima.dat
