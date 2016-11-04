@@ -643,9 +643,17 @@ C   COMPUTE CONSERVATION OF SULFUR
 
       if(ISOTOPE.EQ.0) then 
       SO4LOS = TLOSS(LH2SO4) + TLOSS(LSO4AER)   ! these are redundant when taking accounts
-      S8LOS = 8.*(TLOSS(LS8) + TLOSS(LS8AER))   !TLOSS is rainout+deposition
-    !      S8LOS = 8.*TLOSS(LS8AER)   !TLOSS is rainout+deposition
-!are the above still correct and/or relevant?
+      S8LOS = 8.*TLOSS(LS8AER)   !TLOSS is rainout+deposition
+
+       ! OK SO4LOS/S8LOS are no longer useful I think. Check this at somepoint
+       ! if the are, should but a test for LS8 here just in case anyone needs to bring back 
+       ! S8 in the gas phase (most of us just go S4+S4 -> S8AER without bothering with S8 gas
+       ! but there is a heritage code for S8 gas phase condensation. This is only really needed for high temperatures
+       ! anyway - if that is back and this is useful, might need to add 8.*TLOSS(LS8) to the above
+
+
+
+
       endif
 
       print 177,  Sloss,Spro,SO4LOS,S8LOS,Srain, difference

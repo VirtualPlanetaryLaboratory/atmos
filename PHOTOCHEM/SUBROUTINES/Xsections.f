@@ -3982,15 +3982,9 @@ c Quantum yields and reactions depend on wavelength and presence of hydrocarbons
 
       DO iw = 1, nw
          if (wl(iw).eq.1216) then  !ack hardcoded wavelength
-c            qy=0.24
-c            qy2=0.25
-c            qy3=0.51
-
-c TEMP MC
-            qy = 0.5
-            qy2 = 0.5
-
-c TEMP MC
+            qy=0.24
+            qy2=0.25
+            qy3=0.51
          else  !first reaction dominates everywhere but Ly a
           qy=1.0
           qy2=0.0
@@ -4000,7 +3994,7 @@ c TEMP MC
          DO i = 1, nz
               sq(jn,i,iw) = yg1(iw)*qy
               sq(jn+1,i,iw) = yg1(iw)*qy2
-c              sq(jn+2,i,iw) = yg1(iw)*qy3
+              sq(jn+2,i,iw) = yg1(iw)*qy3
          ENDDO
       ENDDO
       endif  !end option 1
@@ -4013,8 +4007,8 @@ c      print *, jn, photolabel
       photolabel(jn)='PCH4_CH3'
       jn=jn+1
 
-c      photolabel(jn)='PCH4_3CH2'
-c      jn=jn+1
+      photolabel(jn)='PCH4_3CH2'
+      jn=jn+1
 
       RETURN
       END
