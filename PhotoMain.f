@@ -482,80 +482,80 @@ C      Model Parameters (AGL, IO2,INO, LGRID, etc)
 C      REACTION FILE
       open(9, file='PHOTOCHEM/INPUTFILES/reactions.rx',status='OLD')
 C      CODE OUTPUT
-      open(14, file='PHOTOCHEM/out.out',status='UNKNOWN')
+      open(14, file='PHOTOCHEM/OUTPUT/out.out',status='UNKNOWN')
 C      FORMATTED INPUT
       open(17, file='PHOTOCHEM/in.dist',status='OLD')
 C      FORMATTED OUTPUT
-      open(18, file='PHOTOCHEM/out.dist',status='UNKNOWN')
+      open(18, file='PHOTOCHEM/OUTPUT/out.dist',status='UNKNOWN')
 C      TERSE OUTPUT
-      open(19, file='PHOTOCHEM/out.terse',status='UNKNOWN')
+      open(19, file='PHOTOCHEM/OUTPUT/out.terse',status='UNKNOWN')
 C      PARTIAL OUTPUT OF MIXING RATIOS
-      open(67, file='PHOTOCHEM/profile.pt',status='UNKNOWN')
+      open(67, file='PHOTOCHEM/OUTPUT/profile.pt',status='UNKNOWN')
 C      HYDROCARBONS
-      open(68, file='PHOTOCHEM/hcaer.out',status='UNKNOWN')
+      open(68, file='PHOTOCHEM/OUTPUT/hcaer.out',status='UNKNOWN')
 C      OTHER HYDROCARBONS
-      open(69, file='PHOTOCHEM/hcaer2.out',status='UNKNOWN')
+      open(69, file='PHOTOCHEM/OUTPUT/hcaer2.out',status='UNKNOWN')
 C      VERY TERSE OUTPUT
-      open(21, file='PHOTOCHEM/out.trs',status='UNKNOWN')
+      open(21, file='PHOTOCHEM/OUTPUT/out.trs',status='UNKNOWN')
 C      TIME OUTPUTS
-      open(23, file='PHOTOCHEM/out.time',status='UNKNOWN')
-      open(24, file='PHOTOCHEM/out.tim',status='UNKNOWN')
+      open(23, file='PHOTOCHEM/OUTPUT/out.time',status='UNKNOWN')
+      open(24, file='PHOTOCHEM/OUTPUT/out.tim',status='UNKNOWN')
 C-AVB  Final Output for P, T, Z and mixingratios
-      open(255, file='PHOTOCHEM/PTZ_MixingOut.dat')
+      open(255, file='PHOTOCHEM/OUTPUT/PTZ_MixingOut.dat')
 c-mc
 C     redox output - eventually combine into out.trs
-      open(25, file='PHOTOCHEM/out.redox',status='UNKNOWN')
+      open(25, file='PHOTOCHEM/OUTPUT/out.redox',status='UNKNOWN')
 C     Temporary output file for looking at convergence
 C         in the reverse Euler iteration
-      open(26, file='PHOTOCHEM/out.converge',status='UNKNOWN')
+      open(26, file='PHOTOCHEM/OUTPUT/out.converge',status='UNKNOWN')
 C     Printing out relevant SO2 photolysis pieces
 C           between 190-220 as MIF signature
-      open(27, file='PHOTOCHEM/out.so2',status='UNKNOWN')
+      open(27, file='PHOTOCHEM/OUTPUT/out.so2',status='UNKNOWN')
 C     Reaction rates,reactions,species,densities,rate constants
-      open(28, file='PHOTOCHEM/out.rates',status='UNKNOWN')
+      open(28, file='PHOTOCHEM/OUTPUT/out.rates',status='UNKNOWN')
 C     FOLLOWING ARE CROSS SECTIONS, HEIGHT GRID, WAVELENGTH GRID:
       open(29, file='PHOTOCHEM/out.xsec',status='UNKNOWN')
-      open(30, file='PHOTOCHEM/out.gridz',status='UNKNOWN')
-      open(31, file='PHOTOCHEM/out.gridw',status='UNKNOWN')
+      open(30, file='PHOTOCHEM/OUTPUT/out.gridz',status='UNKNOWN')
+      open(31, file='PHOTOCHEM/OUTPUT/out.gridw',status='UNKNOWN')
 
 c-mc  unit 33 reserved for wavelength grids...
 
-      open(41, file='PHOTOCHEM/out.rad',status='UNKNOWN')
+      open(41, file='PHOTOCHEM/OUTPUT/out.rad',status='UNKNOWN')
 C     File below should contain TATLTUAE
-      open(42, file='PHOTOCHEM/out.finalden',status='UNKNOWN')
+      open(42, file='PHOTOCHEM/OUTPUT/out.finalden',status='UNKNOWN')
 C     Number densities at each timestep
-      open(43, file='PHOTOCHEM/out.densities',status='UNKNOWN')
+      open(43, file='PHOTOCHEM/OUTPUT/out.densities',status='UNKNOWN')
 C     Total production and loss at steady state
-      open(44, file='PHOTOCHEM/out.prod',status='UNKNOWN')
+      open(44, file='PHOTOCHEM/OUTPUT/out.prod',status='UNKNOWN')
 C     Fluxes
-      open(45, file='PHOTOCHEM/out.flux',status='UNKNOWN')
+      open(45, file='PHOTOCHEM/OUTPUT/out.flux',status='UNKNOWN')
 C     tau=1 (at final step) in out.tau
-      open(48, file='PHOTOCHEM/out.tau',status='UNKNOWN')
+      open(48, file='PHOTOCHEM/OUTPUT/out.tau',status='UNKNOWN')
 C      Some model parameters
-      open(49, file='PHOTOCHEM/out.params',status='UNKNOWN')
+      open(49, file='PHOTOCHEM/OUTPUT/out.params',status='UNKNOWN')
 C      NGE and L2 are normally between start and finish
-      open(50, file='PHOTOCHEM/out.error',status='UNKNOWN')
+      open(50, file='PHOTOCHEM/OUTPUT/out.error',status='UNKNOWN')
 C      TP/FLOW for chlorine species,nitrate, adn sulfate
       open(51, file='PHOTOCHEM/out.cl',status='UNKNOWN')
 
 C     Formatted output - ISOHACK - for ISO model.
-      open(52, file='PHOTOCHEM/ISOin.dist',status='UNKNOWN')
+      open(52, file='PHOTOCHEM/OUTPUT/ISOin.dist',status='UNKNOWN')
 C     Formatted output - ISOHACK - for ISO model.
-      open(53, file='PHOTOCHEM/ISOinert.dist',status='UNKNOWN')
+      open(53, file='PHOTOCHEM/OUTPUT/ISOinert.dist',status='UNKNOWN')
 
 C     For testing O2 prates with various grid sizes
-      open(58, file='PHOTOCHEM/out.O2prates',status='UNKNOWN')
+      open(58, file='PHOTOCHEM/OUTPUT/out.O2prates',status='UNKNOWN')
 C        rainggc out - ISOHACK
-      open(59, file='PHOTOCHEM/out.raingc',status='UNKNOWN')
+      open(59, file='PHOTOCHEM/OUTPUT/out.raingc',status='UNKNOWN')
 
 !c-mc 60 and 61 are opened below after LGRID is read in
 
 C      lower boundary fluxes (not including rainout)
-       open(62, file='PHOTOCHEM/out.flow',status='UNKNOWN')
+       open(62, file='PHOTOCHEM/OUTPUT/out.flow',status='UNKNOWN')
 C      Haze optical depths
-       open(63, file='PHOTOCHEM/out.od',status='UNKNOWN')
+       open(63, file='PHOTOCHEM/OUTPUT/out.od',status='UNKNOWN')
 C      Haze TOA and sur rpar
-       open(73, file='PHOTOCHEM/out.rp',status='UNKNOWN')
+       open(73, file='PHOTOCHEM/OUTPUT/out.rp',status='UNKNOWN')
 
 
 C - This file gives the input needed for SMART - radiative transfer code
@@ -567,10 +567,10 @@ c     &          status='UNKNOWN')
 
 C - Seperating the out.dist file into seperate files
 
-       open(70, file='PHOTOCHEM/out.chem', status='UNKNOWN')
-       open(66, file='PHOTOCHEM/out.strctr', status='UNKNOWN')
-       open(71, file='PHOTOCHEM/out.aersol', status='UNKNOWN')
-       open(72, file='PHOTOCHEM/out.tridag', status='UNKNOWN')
+       open(70, file='PHOTOCHEM/OUTPUT/out.chem', status='UNKNOWN')
+       open(66, file='PHOTOCHEM/OUTPUT/out.strctr', status='UNKNOWN')
+       open(71, file='PHOTOCHEM/OUTPUT/out.aersol', status='UNKNOWN')
+       open(72, file='PHOTOCHEM/OUTPUT/out.tridag', status='UNKNOWN')
 
 
 C - other model parameters read in from input_photochem.dat
@@ -608,10 +608,10 @@ C - other model parameters read in from input_photochem.dat
       close(231)
 
 C     NO photolysis rates output
-      if (LGRID.EQ.0) open(60, file='PHOTOCHEM/out.NOprates',
+      if (LGRID.EQ.0) open(60, file='PHOTOCHEM/OUTPUT/out.NOprates',
      &                         status='UNKNOWN')
 C    Wavelength specific SO2 photorates on HR grid
-      if (LGRID.EQ.1) open(61, file='PHOTOCHEM/out.so2HR',
+      if (LGRID.EQ.1) open(61, file='PHOTOCHEM/OUTPUT/out.so2HR',
      &                         status='UNKNOWN')
 
 
@@ -1101,9 +1101,6 @@ C gna - we need to make it so that T = T_new
          print *, T(1)
       ENDIF
       if (NP.gt.0) then
-        print*,'Warning: NP = 0, so no particles are being' 
-        print*,'assumed in this model. Proceed with caution...'
-        print*,'(NP=0 to be used in giant planet templates only.)'
         fmtstr='(  E17.8)'
         write(fmtstr(2:3),'(I2)')NP*3
 
@@ -1119,7 +1116,11 @@ C gna - we need to make it so that T = T_new
         do i=1,nz
           read(17,fmtstr)  (PARTICLES(i,j),j=1,np)
         enddo
-      endif
+       endif
+      else
+        print*,'Warning: NP = 0, so no particles are being' 
+        print*,'assumed in this model. Proceed with caution...'
+        print*,'(NP=0 to be used in giant planet templates only.)'
       endif
 
 
