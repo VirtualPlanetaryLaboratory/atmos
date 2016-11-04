@@ -150,7 +150,7 @@ S2        O         S         SO                  2BODY      1.1E-11     0.     
 HS        H2CO      H2S       HCO                 2BODY      1.7E-11     0.          800.0                                                                                          ! DeMore et al. [1992]. Different than Mark's constant.
 S2        HV        S         S                   PHOTS      1.00
 S2        HV        S2                            PHOTS      0.00                                                                                                                   !  <- reaction rate zero'd out in Jim's code. Should we ditch this?
-H2SO4     HV        SO2       OH        OH        PHOTS      1.00                                                                                                                   
+H2SO4     HV        SO2       OH        OH        PHOTS      1.00
 SO3       HV        SO2       O                   PHOTS      1.00
 SO21      M         SO23      M                   2BODY      1.0E-12     0.          0.0                                                                                            ! Turco et al. [1982]
 SO21      M         SO2       M                   2BODY      1.0E-11     0.          0.0                                                                                            ! Turco et al. [1982]
@@ -188,7 +188,7 @@ S4        HV        S2        S2                  PHOTS      1.00
 S3        HV        S2        S                   PHOTS      1.00
 NH        NO        N2        O         H         2BODY      4.9E-11     0.          0.0                                                                                            ! DeMore et al. [1992]
 NH        O         N         OH                  2BODY      1.E-11      0.          0.0                                                                                            ! Kasting [1982]
-NH        HV        N         H                   PHOTO      1.00
+NH        HV        N         H                   PHOTS      1.00
 CH21      O2        H2CO      O                   WEIRD                                                                                                                             !  why are these here if unused?
 CH23      O2        H2CO      O                   WEIRD                                                                                                                             !  why are these here if unused?
 C2H2      HV        C2H       H                   PHOTO      0.06
