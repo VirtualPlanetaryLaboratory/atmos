@@ -45,7 +45,7 @@
       character*11 photolabel
       character*10 reac1, reac2, prod1, prod2, prod3
       character*5 label
-      character*60 xsname, qyname
+      character*70 xsname, qyname
       character*25 reacs, prods
 
       character*60 line
@@ -185,7 +185,7 @@
           CALL addpnt(x3,y3,kdata,n3,x3(n3)*(1.+deltax),zero)
           CALL addpnt(x3,y3,kdata,n3,            biggest,zero)
           !inter2 is used for discrete points -> bins
-          CALL inter2(nw+1,wavl,yg3,n3,x3,y3,ierr)   
+          CALL inter2(nw+1,wavl,yg3,n3,x3,y3,ierr)
           IF (ierr .NE. 0) THEN
             WRITE(*,*) ierr,' ***Something wrong in XS_Standard*** '
             STOP
@@ -272,14 +272,14 @@
       REAL*8 tlev(NZ)
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
       ! qy is uninterpolated qy, x2 is wavelength from qy file
-      REAL*8, allocatable :: qy (:), x2 (:) 
+      REAL*8, allocatable :: qy (:), x2 (:)
       INTEGER i, iw, kdata, temps, jn, labnum
       INTEGER ierr, ios
       INTEGER stat
       INTEGER n1 ! number of lines of data
       character*8 species
       CHARACTER*11 plab, photolabel
-      CHARACTER*60 qyname
+      CHARACTER*70 qyname
       CHARACTER*5 tempA, tempB, tempC
       integer ta, tb, tc
       REAL*8 m, x, b
@@ -315,7 +315,7 @@
 ! Get QY
         allocate(qy(kdata))
         allocate(x2(kdata))
-  
+
         i = 1
         stat = 0
         do while(i <= n1)
@@ -323,22 +323,22 @@
           i = i + 1
         enddo
         close(13)
-  
+
 ! QY GRID WORK
 ! adding quantum yield points and interpolating them to yq1
-  
+
         CALL addpnt(x2,qy,kdata,n1,x2(1)*(1.-deltax),zero)
         CALL addpnt(x2,qy,kdata,n1,               zero,zero)
         CALL addpnt(x2,qy,kdata,n1,x2(n1)*(1.+deltax),zero)
         CALL addpnt(x2,qy,kdata,n1,            biggest,zero)
         !inter2 is used for discrete points -> bins
-        CALL inter2(nw+1,wl,yq1,n1,x2,qy,ierr)   
+        CALL inter2(nw+1,wl,yq1,n1,x2,qy,ierr)
         IF (ierr .NE. 0) THEN
           print*, "FAILED IN QY"
           WRITE(*,*) ierr, ' ***Something wrong in XS_Standard*** '
           STOP
         ENDIF
-  
+
 ! sq work
         if(temps <= 1) then
           DO iw = 1, nw
@@ -348,9 +348,9 @@
           ENDDO
         else if(temps == 2) then
           ! Remove the K and put tempA into integer ta
-          read(tempA(1:len_trim(tempA)-1), *) ta 
+          read(tempA(1:len_trim(tempA)-1), *) ta
           read(tempB(1:len_trim(tempB)-1), *) tb
-  
+
           DO iw = 1, nw ! interpolated vector range
             DO i = 1, nz ! tlev range
               if(tlev(i) <= ta) then
@@ -367,10 +367,10 @@
           ENDDO
         else
           ! Remove the K and put tempA into integer ta
-          read(tempA(1:len_trim(tempA)-1), *) ta 
+          read(tempA(1:len_trim(tempA)-1), *) ta
           read(tempB(1:len_trim(tempB)-1), *) tb
           read(tempC(1:len_trim(tempC)-1), *) tc
-  
+
           DO iw = 1, nw
             DO i = 1, nz
               if(tlev(i) <= ta) then
@@ -391,16 +391,16 @@
             enddo
           enddo
         endif
-  
+
 ! photolabel
         write(plab, '(a, a, i1)') 'P',trim(species)//'_',labnum
         photolabel(jn) = plab
         jn = jn + 1
-  
+
         DEALLOCATE(x2)
         DEALLOCATE(qy)
 
-      endif  
+      endif
 
       RETURN
       END SUBROUTINE
