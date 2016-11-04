@@ -255,19 +255,19 @@ C
        TAUEXTTOTAL = TAUEXTTOTAL + TAUEXT(IL)
        TAUASTOTAL = TAUASTOTAL + TAUAS(IL)
        ENDDO
-       PRINT *, '***************************'
-       PRINT *, 'TAUEXTTOTALVIS'
-       PRINT *, TAUEXTTOTAL
-       PRINT *, 'TAUASTOTALVIS'
-       PRINT *, TAUASTOTAL
-       TAUAABSTOTAL = TAUEXTTOTAL - TAUASTOTAL
-       PRINT *, 'TAUAABSTOTALVIS'
-       PRINT *, TAUAABSTOTAL
-       PRINT *, 'QEXTVIS      OMG0A      ALT'
+      ! PRINT *, '***************************'
+      ! PRINT *, 'TAUEXTTOTALVIS'
+      ! PRINT *, TAUEXTTOTAL
+      ! PRINT *, 'TAUASTOTALVIS'
+      ! PRINT *, TAUASTOTAL
+        TAUAABSTOTAL = TAUEXTTOTAL - TAUASTOTAL
+      ! PRINT *, 'TAUAABSTOTALVIS'
+      ! PRINT *, TAUAABSTOTAL
+      ! PRINT *, 'QEXTVIS      OMG0A      ALT'
 C       DO IL=1,NLAYERS
-       PRINT *, QEXT(I,IL), OMG0A(I,IL), ALT(IL) 
+      ! PRINT *, QEXT(I,IL), OMG0A(I,IL), ALT(IL) 
 C       ENDDO 
-      PRINT *, '***************************'
+     ! PRINT *, '***************************'
        ENDIF
 C
 
