@@ -21,11 +21,12 @@ FC = gfortran
 #CFLAG = -g -fno-automatic -ftrapv -fbounds-check -O
 #FCFLAG = -g -fno-automatic -Wuninitialized -fbounds-check -O -ftrapv
 #FCFLAG = -g -I. -fno-automatic -Wuninitialized -fbounds-check -O -ftrapv -Wall
+FCFLAG = -g -I. -fno-automatic -Wuninitialized -fbounds-check -O -ftrapv -Wall
 #FCFLAG = -O3 -I. -fno-automatic -ftree-vectorize -fdefault-integer-8 -fdefault-real-8
 #FCFLAG = -g -fno-automatic -Wuninitialized -fbounds-check -O -ftrapv -Wall -I. -fdefault-integer-8 -fdefault-real-8
 
 #optimized (EWS - USE THIS FOR FAST CODE)
-FCFLAG = -O3 -fno-automatic -ftree-vectorize -fdefault-integer-8 -fdefault-real-8 -I.
+#FCFLAG = -O3 -fno-automatic -ftree-vectorize -fdefault-integer-8 -fdefault-real-8 -I.
 #FCFLAG = -O3 -fno-automatic -ftree-vectorize -fdefault-integer-8 -fdefault-real-8 -I. -ffpe-trap=invalid
 
 
@@ -206,7 +207,6 @@ $(OBJ)/$(RATESWASP12B).o : 	$(SUBPATH)/$(RATESWASP12B).f $(INC)/parameters.inc \
 			$(BLOK)/PHOTABLOK.inc $(BLOK)/RBLOK.inc
 	$(FC) $(FCFLAG) -c $(SUBPATH)/$(RATESWASP12B).f
 	mv $(RATESWASP12B).o $(OBJ)
-  
 
 $(OBJ)/$(RAIN).o : 	$(SUBPATH)/$(RAIN).f $(INC)/parameters.inc \
                         $(BLOK)/PHOTABLOK.inc $(BLOK)/BBLOK.inc \

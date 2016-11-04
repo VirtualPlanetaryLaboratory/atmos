@@ -233,7 +233,7 @@ CH23      S         HCS       H                 2BODY     1.E-11      0.        
 HS        HCS       H2S       CS                2BODY     2.0E-11     0.         0.                              ! Same as HS + HCO -> H2S + CO
 CH4       HV        CH21      H2                PHOTO
 CH4       HV        CH3       H                 PHOTO     !must follow CH4 + HV -> CH21 + H2 (this reac only goes at Ly a)
-CH4       HV        CH23      H         H       PHOTO     !must follow CH4 + HV -> CH3 + H (this reac only goes at Ly a) - and only in HC code
+CH4       HV        CH23      H         H       PHOTO     !must follow CH4 + HV -> CH3 + H (this reac only goes at Ly a)
 C         OH        CO        H                 2BODY     4.E-11      0.         0.                              ! Giguere and Huebner [1978]
 C         H2        CH23                        WEIRD                                                            ! Zahnle [1986]
 C         O2        CO        O                 2BODY     3.3E-11     0.         0.                              ! Donovan and Hussain [1970]

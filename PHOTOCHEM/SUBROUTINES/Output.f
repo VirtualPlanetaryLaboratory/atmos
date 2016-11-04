@@ -123,7 +123,8 @@ corig      TAUAER(NP+1) = 0.
          R = RPAR(I,J)           
 !this should be the extinction efficiency at some wavelength - presumably visible? why 0.6?
 !c-mab reconfigured this loop cause there was a bug previously...
-         IF (J.LT.3) TAUAER(J) = TAUAER(J) + 0.6*3.14159*R*R*AERSOL(I,J)*DZ(I) !S8 VIS (0.6)
+         IF (J.LT.3) TAUAER(J) = TAUAER(J) + 
+     &                           0.6*3.14159*R*R*AERSOL(I,J)*DZ(I) !S8 VIS (0.6)
          IF (J.EQ.2) TAUAER(J+1) = TAUAER(J+1) +  !c-mab Hold S8(UV) in tauaer3
      2     1.2*3.14159*R*R*AERSOL(I,J)*DZ(I)
 !so 1.2 is somehow Qext of S8 in the UV? - don't we have these all as 2?
@@ -380,7 +381,7 @@ c it fails -
 c-mab abstracted by looping over species where atomsH ne 0
       flux_H = 0.0
       do i=1,NZ-1
-        do j=1,NSP
+        do j=1,NQ1   !note
           if(atomsH(j).gt.0.0) then 
 c-mab then only sum for species that contain H for a given layer
         	flux_H(i) = flux_H(i) + atomsH(j)*FLUXO(j,i)

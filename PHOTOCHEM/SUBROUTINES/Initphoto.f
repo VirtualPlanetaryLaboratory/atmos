@@ -92,6 +92,6 @@ c         print *, photospec(i),ISPEC(INT(photospec(i))),j
        CALL XS(ISPEC(INT(photospec(i))),nw,wavl,wav,T,DEN,j,sq,
      $         columndepth,zy,IO2)         
        enddo   
-
+c       stop
       RETURN
       END
