@@ -396,7 +396,7 @@ Cc-mc USOLPREV(NQ,NZ) added for second order reverse Euler calculations
       DIMENSION TA(NZ),TB(NZ),TC(NZ),TY(NZ)
       dimension PRES_bar(NZ)
 
-      integer rhOcount, rhHcount, rhCcount, rhScount, rhNcount, rhCLcount
+      integer rhOcount,rhHcount,rhCcount,rhScount,rhNcount,rhCLcount
 c      dimension atomsO(NSP2),atomsH(NSP2),atomsC(NSP2)
 c      dimension atomsN(NSP2),atomsCL(NSP2),atomsS(NSP2)
 
@@ -502,17 +502,6 @@ C      TIME OUTPUTS
       open(24, file='PHOTOCHEM/out.tim',status='UNKNOWN')
 C-AVB  Final Output for P, T, Z and mixingratios
       open(255, file='PHOTOCHEM/PTZ_MixingOut.dat')
-
-c The next four files are used only when this model is coupled
-C           with the climate model (ICOUPLE=1)
-C   To be used as input for the climate model (coupling)
-      open(90, file='COUPLE/hcaer.photoout.out',status='UNKNOWN')
-      open(84, file='COUPLE/fromPhoto2Clima.dat',
-     &         status='OLD')
-      open(116, file='COUPLE/fromClima2Photo.dat')
-      open(117, file='COUPLE/mixing_ratios.dat')
-      open(118, file='COUPLE/fromClima2Photo_works.dat')
-
 c-mc
 C     redox output - eventually combine into out.trs
       open(25, file='PHOTOCHEM/out.redox',status='UNKNOWN')
@@ -570,11 +559,11 @@ C      Haze TOA and sur rpar
 
 
 C - This file gives the input needed for SMART - radiative transfer code
-
-       open(159, file='photochem_smart/photchem/photfile.pt',
-     &          status='UNKNOWN')
-       open(164, file='photochem_smart/atm/tag.atm',
-     &          status='UNKNOWN')
+c-mab: Commenting out smart inputs for now. (11/4/2016) 
+c       open(159, file='photochem_smart/photchem/photfile.pt',
+c     &          status='UNKNOWN')
+c       open(164, file='photochem_smart/atm/tag.atm',
+c     &          status='UNKNOWN')
 
 C - Seperating the out.dist file into seperate files
 
@@ -624,6 +613,25 @@ C     NO photolysis rates output
 C    Wavelength specific SO2 photorates on HR grid
       if (LGRID.EQ.1) open(61, file='PHOTOCHEM/out.so2HR',
      &                         status='UNKNOWN')
+
+
+
+c The next four files are used only when this model is coupled
+C           with the climate model (ICOUPLE=1)
+C   To be used as input for the climate model (coupling)
+      if (ICOUPLE.EQ.1) then
+       open(90, file='COUPLE/hcaer.photoout.out',status='UNKNOWN')
+       open(84, file='COUPLE/fromPhoto2Clima.dat', status='OLD')
+       open(116, file='COUPLE/fromClima2Photo.dat')
+       open(117, file='COUPLE/mixing_ratios.dat')
+       open(118, file='COUPLE/fromClima2Photo_works.dat')
+      endif
+
+
+
+
+
+
 
 C - READ IN SPECIES NAMES, ATOMIC NUMBERS, AND BOUNDARY CONDITIONS
 
@@ -1373,6 +1381,8 @@ c      TSTOP = 1.E14
       TSTOP = 1.E17
 C     AVB changed to 1 for Earth+CL debugging
       NSTEPS = 10000
+c-mab: nsteps = 1 recommended for initial model debugging
+c      NSTEPS = 1
 C     for standalone mode this should probably be the default
 C      ICOUPLE = 1
 
@@ -3113,7 +3123,7 @@ C     But in other parts of photochem, N2 is of the total,
 C     not excluding CO2, so we only change it here. 9/8/2015
 C-gna clima can't currently cope with NO2 and having it is screwing it up
 C WARNING
-         FNO2=USOL(LNO2,1)/1.0E60
+         FNO2=USOL(LNO2,1)*1.0e-60
          JCOLD=JTROP
 
          WRITE(117,102) FAR, FCH4, FC2H6, FCO2,
