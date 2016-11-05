@@ -409,22 +409,6 @@ c      dimension atomsN(NSP2),atomsCL(NSP2),atomsS(NSP2)
 
 
 
-C ISOHACK
-c  The first one is for standard model
-C ISOHACK- This is being hardcoded to also include
-C          -the HCAER species with the particles
-      parameter(NISO=15,NQI=NQ+NISO,NPISO=0,NISOSL=7)
-c This is for biogenic sulfur
-C This is hardcoded to include the HCAER species with the particles
-c      parameter(NISO=19,NQI=NQ+NISO,NPISO=0,NISOSL=7)
-
-
-C number of sulfur species in the model  !ISOHACK
-      parameter(NPN=NISO+NPISO+NISOSL)
-C OK - this was used in the initial testing of the ISOTOPE code (where S* = S)
-c      dimension USOLISO(NSP-NPN-2,NZ)
-      dimension USOLISO(NSP,NZ)
-
 c for sgbco testing (to get at Jacobian condition number)
 c      real*8 RCOND
 c      real*8 WORK(neq)
@@ -448,7 +432,6 @@ C     !can go away when MSCAT does WARNING DO WE NEED THIS COMMENT
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/SULBLK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/SATBLK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
-      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/ISOBLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/comPRESS1.inc'
 
 
@@ -461,11 +444,6 @@ C                       -WARNING do we need can go away comment?
       DATA CI/9.5733223454, 25.6329561486, 21.0996530827,
      2  3.9584969228/
       DATA NUML,NUMP/NSP*0,NSP*0/
-
-C    !Isotope flag Below
-      ISOTOPE=0
-C    !use 32S (i.e. the dominant isotope)
-      ISOS=32
 
 c OPEN FILES
 
