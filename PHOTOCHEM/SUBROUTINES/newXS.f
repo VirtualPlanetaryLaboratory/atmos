@@ -53,7 +53,7 @@
       character*5 dumtemp, tempA, tempB, tempC
 
 ! Open reactions.rx and find current species
-
+      print*, "Current Species in XS:  "//species
       open(12, file='PHOTOCHEM/INPUTFILES/reactions.rx', status='OLD')
       ! skip header
       read(12, *)

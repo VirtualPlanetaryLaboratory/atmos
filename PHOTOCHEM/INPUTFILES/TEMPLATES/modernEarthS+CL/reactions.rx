@@ -281,8 +281,8 @@ CL        O3        CLO       O2                  2BODY      2.30E-11    0.     
 CLO       NO        NO2       CL                  2BODY      6.40E-12    0.         -290.0                                                                                          ! JPL-06
 CLO       SO        CL        SO2                 2BODY      2.80E-11    0.          0.0                                                                                            ! JPL-06
 O1D       HCL       H         CLO                 2BODY      3.75E-11    0.          0.0                                                                                            
-CLO       HV        O1D       CL                  PHOTO                                                                                                                             
-CLO       HV        O         CL                  PHOTO                                                                                                                             !  this line must follow CLO+hv->O1D+CL 
+CLO       HV        CL        O1D                 PHOTO                                                                                                                             
+CLO       HV        CL        O                   PHOTO                                                                                                                             !  this line must follow CLO+hv->O1D+CL 
 HOCL      HV        OH        CL                  PHOTO                                                                                                                             
 O1D       CL2       CLO       CL                  2BODY      2.025E-10   0.          0.0                                                                                            ! JPL-06 QY of 0.75 against 2.7e-10
 O1D       CL2       CL2       O                   2BODY      6.75E-11    0.          0.0                                                                                            ! JPL-06 QY of 0.25 against 2.7e-10
