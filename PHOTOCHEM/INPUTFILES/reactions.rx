@@ -303,8 +303,8 @@ CLO       O3        OCLO      O2                  2BODY      1.0E-12     0.     
 CLO       CLO       CLOO      CL                  2BODY      3.00E-11    0.          2450.0                                                                                         ! JPL-06
 CLO       CLO       OCLO      CL                  2BODY      3.5E-13     0.          1370.0                                                                                         ! JPL-06
 SO        OCLO      SO2       CLO                 2BODY      1.90E-12    0.          0.0                                                                                            ! JPL-06 (uncertain)
-CLOO      HV        CLO       O                   PHOTO                                                                                                                             
-OCLO      HV        CLO       O                   PHOTO                                                                                                                             
+CLOO      HV        O         CLO                 PHOTO                                                                                                                             
+OCLO      HV        O         CLO                 PHOTO                                                                                                                             
 CL        NO3       CLO       NO2                 2BODY      2.4E-11     0.          0.0                                                                                            ! JPL-06
 NO3       CLO       CLOO      NO2                 2BODY      4.7E-13     0.          0.0                                                                                            ! JPL-06
 CL        NO2       CLONO                         3BODY      1.3D-30     2.00        0.          0.          0.          1.0D-10     1.00        0.          0.          0.         ! JPL-06
