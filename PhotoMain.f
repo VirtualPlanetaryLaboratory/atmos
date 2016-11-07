@@ -527,14 +527,8 @@ C      NGE and L2 are normally between start and finish
 C      TP/FLOW for chlorine species,nitrate, adn sulfate
       open(51, file='PHOTOCHEM/out.cl',status='UNKNOWN')
 
-C     Formatted output - ISOHACK - for ISO model.
-      open(52, file='PHOTOCHEM/ISOin.dist',status='UNKNOWN')
-C     Formatted output - ISOHACK - for ISO model.
-      open(53, file='PHOTOCHEM/ISOinert.dist',status='UNKNOWN')
-
 C     For testing O2 prates with various grid sizes
       open(58, file='PHOTOCHEM/out.O2prates',status='UNKNOWN')
-C        rainggc out - ISOHACK
       open(59, file='PHOTOCHEM/out.raingc',status='UNKNOWN')
 
 !c-mc 60 and 61 are opened below after LGRID is read in
@@ -2517,12 +2511,11 @@ C the triadiagonal species to make the budgets work out.
         do i=NQ+1,NQ1
           SR(I)=0.
             do j=1,JTROP
-C      ACK - all particles raining out like H2SO4 !ISOHACK
+C      ACK - all particles raining out like H2SO4 
               SR(I) = SR(I)+ RAINGC(LH2SO4,J)*PARTICLES(J,i-nq)
      $                *DEN(J)*DZ(J)
             enddo
 C-ACK hardcoded turbulent diffusion velocity
-C-ISOHACK - will need to change in ISO
             PHIDEP(I)=(WFALL(1,i-nq)+vturb)* PARTICLES(1,i-nq)*DEN(1)
             TLOSS(I) = SR(I) + PHIDEP(I)
 C     in general SR>>PHIDEP for particles,by about 100X
@@ -2818,158 +2811,6 @@ C   Print tridag into another file .tridag
         enddo
        endif
       ENDIF
-C write out formatted ISOin.dist file
-C - ISOHACK!
-      fac=1.0
-
-      IROW = 10  !num columns in .dist file
-      LR = NISO/IROW + 1
-      RL = FLOAT(NISO)/IROW + 1
-      DIF = RL - LR
-      IF (DIF.LT.0.001) LR = LR - 1
-C
-
-      DO L=1,LR
-C   Requires isotopic species to be at the end of species.dat list
-       K1 = 1 + (L-1)*IROW +NQ-NISO-2
-C   this needs to be re-written to just grab 'S' species or something
-C   right now it works if the all the S are at the end AND
-C   two hydrocarbon particles are in the last two spots  WARNING
-       K2 = K1 + IROW - 1
-c       print *, k1,k2, ISPEC(k1),ISPEC(k2)
-       IF (L.lt.LR) then
-        write(52, 880) ((USOL(k,i),K=K1,K2),i=1,nz)
-       ELSE
-C   temp hack - this needs to be re-written somehow WARNING
-          K2 = NQ-2
-c       print *, 'final k2',k2,ISPEC(k2)
-C   this only occurs if NQ is a multiple of 10
-          if (K2-K1 .EQ. 9) then
-            write(52, 880) ((USOL(k,i),K=K1,K2),i=1,nz)
-C   if not, need to generate a dynamic format statement
-          else
-           fmtstr='(  E17.8)'
-C   OK for one character as this should always be <10
-           write(fmtstr(2:3),'(I1)')K2-K1+1
-           write(52, fmtstr) ((USOL(k,i),K=K1,K2),i=1,nz)
-          endif
-       ENDIF
-      enddo
-
-      IF (NP.GT.0) then
-C this final one is CO2 number density
-        write (52,881) (T(i),EDD(i),DEN(i),O3(i), SL(LCO2,i),i=1,nz)
-C  WARNING (NSP-1) hardcoding to LCO2 is only valid for terrestrial cases.
-
-        fmtstr='(  E17.8)'
-        write(fmtstr(2:3),'(I2)')NP*3
-        do i=1,nz
-         write(52,fmtstr) (AERSOL(i,j)*fac,j=1,NP),
-     $    (WFALL(i,j)*fac,j=1,NP),(RPAR(i,j)*fac,j=1,NP)
-        enddo
-
-       if(USETD.EQ.1) then
-        fmtstr='(  E17.8)'
-        write(fmtstr(2:3),'(I2)')NP
-        do i=1,nz
-        write(52,fmtstr) (PARTICLES(i,j)*fac,j=1,np)
-        enddo
-       endif
-      ENDIF
-
-C - write out file with all the inert species...
-C  the commented version was for the TESTING code where (S*=S)
-c$$$      fac=1.0
-c$$$      do i=1,nsp
-c$$$       do j=1,nz
-c$$$         if (i.le.NQ) then
-C   used in testing ISOTOPE script (where S*=S)
-c$$$           skip= index(ISPEC(i),'S')
-c$$$           if (skip.ge.1) then
-c$$$             if(j.eq.1)print *, 'tempL skipping ISO inert loop',ISPEC(i)
-c$$$           else
-c$$$              if(j.eq.1)print *, 'loading',i,ISPEC(I)
-c$$$            USOLISO(i,j)=USOL(i,j) !load up major species
-c$$$           endif
-c$$$         endif
-C    load up particles   (skipped in ISOTOPE testing mode)
-c$$$c         if (i.gt.NQ .and. i.le.NQ1) USOLISO(i,j)=PARTICLES(j,i-NQ)
-c$$$         if (i.gt.NQ1 .and. i.le.NSP-2) then
-c$$$            ind=i-NISO-NP                            !temp
-c$$$            if(i.eq.NQ1+1)idex=ind
-c$$$            if(j.eq.1)print *, i,ind, ISPEC(i)
-c$$$           skip = index(ISPEC(i),'S')
-c$$$           if (skip.ge.1) then
-c$$$              if(j.eq.1) print *, 'temp skipping SL  ',ISPEC(i)
-c$$$            else
-c$$$            if(j.eq.1)print *, 'loading',idex,ISPEC(i)
-c$$$c            USOLISO(i,j)= SL(i,j)/den(j) ! load up short-lived and inert
-c$$$             USOLISO(idex,j)= SL(i,j)/den(j) ! temp
-c$$$             if(j.eq.NZ)idex=idex+1
-c$$$            endif
-c$$$
-c$$$
-c$$$         endif
-c$$$       enddo
-c$$$      enddo
-
-
-      fac=1.0
-      do i=1,nsp
-       do j=1,nz
-C  if there are tri-diagonal species
-C       (causes a gfortran warning about loop over nothing...) WARNING
-         if (i.gt.NQ .and. i.le.NQ1) then
-C   load up particles   (skipped in ISOTOPE testing mode)
-          USOLISO(i,j)=PARTICLES(j,i-NQ)
-         else
-          USOLISO(i,j)= SL(i,j)/den(j)
-         endif
-c         if(j.eq.1) print *, ISPEC(i),USOLISO(i,j)
-       enddo
-      enddo
-C The above should load mixing ratios of all species,particles,
-C  and short-lived species (in the order of species.dat) into USOLISO
-
-
-
-C original versions
-c      NXXX=NSP-NPN-2
-c      print *, NXXX,NSP,NPN
-C full up version
-c      NXXX=NSP-2
-C also send CO2 and N2
-      NXXX=NSP
-
-C  num columns in .dist file
-      IROW = 10
-      LR = (NXXX)/IROW + 1
-      RL = FLOAT(NXXX)/IROW + 1
-      DIF = RL - LR
-      IF (DIF.LT.0.001) LR = LR - 1
-C
-
-      DO L=1,LR
-       K1 = 1 + (L-1)*IROW
-       K2 = K1 + IROW - 1
-       IF (L.lt.LR) then
-        write(53, 880) ((USOLISO(k,i),K=K1,K2),i=1,nz)
-       ELSE
-          K2 = NXXX
-C     this only occurs if NQ is a multiple of 10
-          if (K2-K1 .EQ. 9) then
-            write(53, 880) ((USOLISO(k,i),K=K1,K2),i=1,nz)
-C      if not, need to generate a dynamic format statement
-          else
-           fmtstr='(  E17.8)'
-C       OK for one character as this should always be <10
-           write(fmtstr(2:3),'(I1)')K2-K1+1
-           write(53, fmtstr) ((USOLISO(k,i),K=K1,K2),i=1,nz)
-          endif
-       ENDIF
-      enddo
-
-C End ISO HACK
 
 c New abstracted photorates printout
 
