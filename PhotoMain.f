@@ -1,4 +1,4 @@
-            PROGRAM TOTCtester
+            PROGRAM PhotoMain
 c
 ccc test test
 c I am attempting to abtract this so we can have an Earth/Mars switch
