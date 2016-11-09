@@ -42,32 +42,34 @@ c   heights
            scale_H(j,i) = BKMG * TAV*WT/mass(j)
         enddo
 
-      if (PLANET .EQ. 'EARTH') then 
-        bHN2(i) = 2.7E19*(TAV/200.)**0.75   ! correct for N2
-        bH2N2(i) = 1.4E19*(TAV/200.)**0.75  ! correct for N2
-c       bXN2(i) = 4.0D18*(TAV/200.)**0.75
-      else if (PLANET .EQ. 'MARS') then
-        bHN2(i) = 0.8*1.8*1.4E19*(TAV/200.)**0.75  ! correct for CO2
-        bH2N2(i) = 0.8*1.4E19*(TAV/200.)**0.75  ! correct for CO2
-c       bXN2(i) = 4.0D18*(TAV/200.)**0.75
-      else if (PLANET .EQ. 'DRY') then ! assume O2-dominated - this is the same as N2 for now
-        bHN2(i) = 2.7E19*(TAV/200.)**0.75   ! correct for N2
-        bH2N2(i) = 1.4E19*(TAV/200.)**0.75  ! correct for N2
-c       bXN2(i) = 4.0D18*(TAV/200.)**0.75
-      else if (PLANET .EQ. 'WASP12B') then 
-! assuming the "air" composition here is whatever went to the WT (H2 + HE)
-! The general form for b here is from DI = b/n expression in Kopparapu et al. 2012 work
-! (b has a A*T^(n) form for terrestrial gases in Chapter 5. 
-! A and n are not presently established for giant planets...
-       do j=1,NQ
-      	bX1X2(j,i) = 1.52E18*(1./mass(j) + 1./WT)**0.5*(TAV**0.5)
-       enddo 
-! Note: Only works properly if diffusion expressions are updated in 
-! TOTCtester and output.f for this scenario as well      
-      endif   
-
-
-
+       if (FH2.LT.0.50) then
+c-mab: One of the below options to be used for terrestrial planets.
+        if(PLANET .EQ. 'EARTH') then 
+         bHN2(i) = 2.7E19*(TAV/200.)**0.75   ! correct for N2
+         bH2N2(i) = 1.4E19*(TAV/200.)**0.75  ! correct for N2
+c        bXN2(i) = 4.0D18*(TAV/200.)**0.75
+        else if (PLANET .EQ. 'MARS') then
+         bHN2(i) = 0.8*1.8*1.4E19*(TAV/200.)**0.75  ! correct for CO2
+         bH2N2(i) = 0.8*1.4E19*(TAV/200.)**0.75  ! correct for CO2
+c        bXN2(i) = 4.0D18*(TAV/200.)**0.75
+        else if (PLANET .EQ. 'DRY') then ! assume O2-dominated - this is the same as N2 for now
+         bHN2(i) = 2.7E19*(TAV/200.)**0.75   ! correct for N2
+         bH2N2(i) = 1.4E19*(TAV/200.)**0.75  ! correct for N2
+c        bXN2(i) = 4.0D18*(TAV/200.)**0.75
+        endif
+c-mab: Should we put an error check for cases that don't fall above or below?
+c-mab: What are we doing for Titan?
+       else
+c-mab: Proceed with this loop for giant planets instead...
+c-mab: transferring the "b" portion of the "DI" expression from Ravi's version since DI = b/n
+c-mab: where b is the binary molecular diffusion parameter and DI is the diffusion coefficient
+c-mab: got relation from Jim's new book Chapter 5.
+! (b has a constant*T^(some power) form for terrestrial gases in Chapter 5. Not established for giant planets?_?)
+        do j=1,NQ
+      	 bX1X2(j,i) = 1.52E18*(1./mass(j) + 1./WT)**0.5*(TAV**0.5)
+        enddo 
+! Note: there will be a separate expression in output.f for this scenario as well
+       endif   
       enddo
       
       H_atm(nz) = BKMG * TAV
@@ -75,23 +77,26 @@ c       bXN2(i) = 4.0D18*(TAV/200.)**0.75
         scale_H(j,NZ) = BKMG * T(NZ)*WT/mass(j)
       enddo
 
-      if (PLANET .EQ. 'EARTH') then 
-      bHN2(nz) = 2.7E19*(T(nz)/200.)**0.75   ! correct for N2
-      bH2N2(nz) = 1.4E19*(T(nz)/200.)**0.75  ! correct for N2
-c     bXN2(nz) = 4.0D18*(T(nz)/200.)**0.75
-      else if (PLANET .EQ. 'MARS') then
-      bHN2(nz) = 0.8*1.8*1.4E19*(T(nz)/200.)**0.75  ! correct for CO2
-      bH2N2(nz) = 0.8*1.4E19*(T(nz)/200.)**0.75     ! correct for CO2
-c     bXN2(nz) = 4.0D18*(T(nz)/200.)**0.75
-      else if (PLANET .EQ. 'DRY') then ! assume O2-dominated - this is the same as N2 for now
-        bHN2(i) = 2.7E19*(TAV/200.)**0.75   ! correct for N2
-        bH2N2(i) = 1.4E19*(TAV/200.)**0.75  ! correct for N2
-c       bXN2(i) = 4.0D18*(TAV/200.)**0.75
-      else if (PLANET .EQ. 'WASP12B') then !see notes from previous loop on this
-       do j=1,NQ
-      	bX1X2(j,nz) = 1.52E18*(1./mass(j) + 1./WT)**0.5*(T(nz)**0.5)
-       enddo       
-      endif    
+       if (FH2.LT.0.50) then
+c-mab: One of the below options to be used for terrestrial planets.
+        if(PLANET .EQ. 'EARTH') then 
+         bHN2(nz) = 2.7E19*(T(nz)/200.)**0.75   ! correct for N2
+         bH2N2(nz) = 1.4E19*(T(nz)/200.)**0.75  ! correct for N2
+c        bXN2(nz) = 4.0D18*(T(nz)/200.)**0.75
+        else if (PLANET .EQ. 'MARS') then
+         bHN2(nz) = 0.8*1.8*1.4E19*(T(nz)/200.)**0.75  ! correct for CO2
+         bH2N2(nz) = 0.8*1.4E19*(T(nz)/200.)**0.75     ! correct for CO2
+c        bXN2(nz) = 4.0D18*(T(nz)/200.)**0.75
+        else if (PLANET .EQ. 'DRY') then ! assume O2-dominated - this is the same as N2 for now
+         bHN2(i) = 2.7E19*(TAV/200.)**0.75   ! correct for N2
+         bH2N2(i) = 1.4E19*(TAV/200.)**0.75  ! correct for N2
+c        bXN2(i) = 4.0D18*(TAV/200.)**0.75
+        endif
+       else !see notes from previous loop on this
+        do j=1,NQ
+      	 bX1X2(j,nz) = 1.52E18*(1./mass(j) + 1./WT)**0.5*(T(nz)**0.5)
+        enddo 
+       endif    !output.f impacted  
 
 
 
