@@ -7,7 +7,17 @@
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/AERBLK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/CBLOK.inc'
       NZ1 = NZ - 1
-      WT = FO2*32. + FCO2*44. + FAR*40.+ (1.-FO2-FCO2-FAR)*28.     !assuming the O2,CO2,N2,and AR are the major species (identical computation in DENSTY)
+      IF (FH2.GT.0.50) THEN
+c-mab: Recomputing FH2 with the most major species VMR = (1-everything major) method:
+        FH2  = (1.0-FHE-FH2O-FCO-FCO2-FCH4)
+c-mab: (Note: DENSTY.f is missing the x4 in HE in that version.)
+	WT = FH2*2.0 + FHE*4.0 !From Ravi's version DIFCO...
+        print*,'DIFCO: WT for H2/HE dominated atmosphere....'      
+      ELSE
+c-mab: assuming the O2,CO2,N2,and AR are the major species (identical computation in DENSTY)
+      	WT = FO2*32. + FCO2*44. + FAR*40.+ (1.-FO2-FCO2-FAR)*28.
+        print*,'DIFCO: WT for N2/O2 dominated atmosphere....'      
+      ENDIF
       BKMG = 1.38E-16/(1.67E-24*WT*G)    !a good pressure
 C
 C ***** DK(I) = K*N AT GRID STEP I+1/2 *****
