@@ -110,8 +110,8 @@ C
      2  E10.3,2X,'S2 =',E10.3,2X,'S4 =',E10.3,2X,'S8 =',E10.3)
       endif
 
-      
-      IF (NP.GT.0) THEN !mab FOR THE FIRST TWO PARTICLES (ASSUMED SULPHATE AND S8 IN HARDCODING ORDER)
+c-mab FOR THE FIRST TWO PARTICLES (ASSUMED SULPHATE AND S8 IN HARDCODING ORDER)      
+      IF (NP.GT.0) THEN
        DO J=1,NP
 !ack hardcoding to retain Kevin's original scheme  
 !where tauaer 2 and 3 were both for elemental sulfur
@@ -362,8 +362,15 @@ C
 c water is not conserved.  should this be jtrop or jtrop + 1?
       FLOW(LH2O) = FLUXO(LH2O,jtrop)   ! jim had 11 hard-wired
       CON(LH2O) = TP(LH2O) - TL(LH2O) + FLOW(LH2O) - FUP(LH2O)
+c-mab disabling FLUXO of water assignment to 0.0 for giants based on WT.
+c-mab This is something I'm trying to move from a planet-based if loop.
+c-mab Most solar system gas giants have a mwt of <3.0 and terrestrials > 20.0
+c-mab Using wt of methane - 16.0 as a distinction here
+c-mab (May change later after input soliciation)
+      IF (WT.LT.16.0) THEN
       DO 6 I=1,jtrop-1   ! jim had 10 hard wired... its not zero
    6  FLUXO(LH2O,I) = 0.
+      ENDIF
 c there are issues here -    
 
 

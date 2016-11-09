@@ -1281,11 +1281,11 @@ c      do i=136,NZ
 c       edd(i)=1.3*edd(i)
 c      enddo
 
-      CALL DENSTY(FO2,poop3)
+      CALL DENSTY
       CALL RATES
 C    computes diffusion coefficents (K*N) and binary
 C          diffusion coefficents for H and H2
-      CALL DIFCO(FO2)
+      CALL DIFCO
       IF(PLANET.NE.'WASP12B')CALL PHOTSATRAT(JTROP,H2O)
       IF(PLANET.EQ.'WASP12B')THEN
       	DO I=1,NZ
@@ -1358,7 +1358,8 @@ C      here is a fix for now  WARNING
 
 
 
-      IF (PLANET .eq. 'EARTH') CALL LTNING(FO2)
+      IF (PLANET .eq. 'EARTH') CALL LTNING
+c-mab: Lightning should only be called for FO2-significant planets
 C     !makes table of vapor pressures for H2O and H2SO4
       CALL AERTAB
       NZ1 = NZ - 1

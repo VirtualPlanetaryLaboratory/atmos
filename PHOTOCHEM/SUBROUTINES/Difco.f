@@ -1,4 +1,4 @@
-      SUBROUTINE DIFCO(FO2)
+      SUBROUTINE DIFCO
       INCLUDE 'PHOTOCHEM/INPUTFILES/parameters.inc'
       implicit real*8(A-H,O-Z)
       real*8 mass

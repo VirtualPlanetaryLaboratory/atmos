@@ -1,4 +1,4 @@
-      SUBROUTINE DENSTY(FO2,poop3)
+      SUBROUTINE DENSTY
       INCLUDE 'PHOTOCHEM/INPUTFILES/parameters.inc'
       implicit real*8(A-H,O-Z)
       real*8  mass
@@ -27,7 +27,7 @@ c-mc      DZ = Z(2) - Z(1)   !ACK
 
       T0 = T(1) + (T(1)-T(2))/2.
       HA = ROVERM*0.5*(T0 + T(1))/G0
-      P1 = P0 *1e6 * poop3 * EXP(-0.5*DZ(1)/HA)
+      P1 = P0 *1e6 * EXP(-0.5*DZ(1)/HA)
       DEN(1) = P1/(BK*T(1))
 C
 C ***** FIND DENSITY FROM HYDROSTATIC EQUILIBRIUM *****
