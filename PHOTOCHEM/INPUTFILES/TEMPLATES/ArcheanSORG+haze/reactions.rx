@@ -232,7 +232,7 @@ C2H5CHO   HV        C2H5      HCO                 PHOTO      1.00
 C3H3      HV        C3H2      H                   PHOTO      1.00
 CH3C2H    HV        C3H3      H                   PHOTO      0.40
 CH3C2H    HV        C3H2      H2                  PHOTO      0.15
-CH3C2H    HV        CH3       C2H                 PHOTO      0.02
+CH3C2H    HV        C2H       CH3                 PHOTO      0.02
 CH2CCH2   HV        C3H3      H                   PHOTO      0.40
 CH2CCH2   HV        C3H2      H2                  PHOTO      0.15
 CH2CCH2   HV        C2H2      CH23                PHOTO      0.06
