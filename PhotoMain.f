@@ -661,7 +661,7 @@ C         This loads the "Lnumbers" for ease of use later in the code
             call LNUM(ISPEC(isP),iSP)
 C             Return to previous line in species.dat file
               backspace 4
-C  read in atmoic number data,NEVER use LC,LH,LN,LO,LS as placeholders
+C  read in atmoic number data, NEVER use LC,LH,LN,LO,LS as placeholders
 C  as they mean something else...
               read(4,*) AX,AX,LA,LB,LD,LE,LF,LM
 
@@ -691,6 +691,7 @@ C             lower boundary flux
                SMFLUX(iLL)=YYY
                VEFF0(iLL)=ZZZ
 C      CO2 only works as fixed mixing ratio. This could be handled better.
+C-mab: What does above comment mean? It is NOT fixed/inert in my giant templates...
                if (species.EQ.'CO2') FCO2=YY
 
             endif
@@ -704,6 +705,7 @@ C              Reads in fixed mixing ratios
 C            Hardcoding woohoo! need to do N2 as well WARNING
                if (species.EQ.'HE') FHE=XX
                if (species.EQ.'CO2') FCO2=XX
+               if (species.EQ.'N2') FN2=XX
             endif
 
             if (SPECTYPE.EQ.'TD')iTD=iTD+1
@@ -1179,10 +1181,6 @@ c          print *, i, ISPEC(i)
 c       enddo
 c       stop
 
-c make any changes WARNING
-C     -use this to change pressure (from KZ mars code)
-       poop3 = 1./1.!*10.**1.94
-
 c       print *,USOL(LO2,1),2**ch4mult,2.0**ch4mult,
 c     $       USOL(LO2,1)/(2.0**ch4mult)
 
@@ -1220,7 +1218,15 @@ C     FO2 = ground level O2 mixing ratio used in heritage calculations
       LTIMES = 0
 C      ZY = 50. why was this ever hardcoded? :(  In input_photochem.dat now
 C   fill up a heritage constant, eventually this should be purged. WARNING
+c-mab: These values are needed for molecular weight computation in DIFCO, DENSTY, PHOTO.
       FO2 = USOL(LO2,1)
+c-mab: Initializing these additional things below for use in giant planet template.
+      FCO = USOL(LCO,1)
+      FH2O = USOL(LH2O,1)
+      FH = USOL(LH,1)
+      FOH = USOL(LOH,1)
+      FCH4 = USOL(LCH4,1)
+
 
 
 C  CALL below sets up vertical grid
@@ -1228,7 +1234,8 @@ C  CALL below sets up vertical grid
 
 C   height index for the tropopause (-1 given the staggered grid)
 C      the 1 in the second postion tells minloc to return a scalar
-      JTROP=minloc(Z,1, Z .ge. ztrop)-1
+c-mab: JTROP is set to a constant value in planet.dat for the giant templates...
+      IF (PLANET.NE.'WASP12B')JTROP=minloc(Z,1, Z .ge. ztrop)-1
 
 
 
@@ -1286,7 +1293,11 @@ c       edd(i)=1.3*edd(i)
 c      enddo
 
       CALL DENSTY
-      CALL RATES
+      IF (NEWSPEC.GE.0) CALL RATES
+      IF (NEWSPEC.GE.0) PRINT*, "CALLING RATES..."
+      IF (NEWSPEC.LT.0) CALL RATESWASP12B
+      IF (NEWSPEC.LT.0) PRINT*, "CALLING RATESWASP12B..."
+
 C    computes diffusion coefficents (K*N) and binary
 C          diffusion coefficents for H and H2
       CALL DIFCO
@@ -1335,15 +1346,18 @@ C      !diff lim flux
       endif
 
 !gna - added coupling stuff for water here (just below tropopause)
-      do J=1,JTROP
-       IF(ICOUPLE.eq.0) THEN
-C     !sets H2O to relative humidity in troposphere
-       USOL(LH2O,J) = H2O(J)
-       ELSE
+c-mab: Executing this only for terrestrial planets based on FH2 prevalance.
+      IF (FH2.LT.0.50) THEN
+       do J=1,JTROP
+        IF(ICOUPLE.eq.0) THEN
+C sets H2O to relative humidity in troposphere
+         USOL(LH2O,J) = H2O(J)
+        ELSE
 C     !set to h2o from clima if coupling on
-       USOL(LH2O,J) = water(J)
-       ENDIF
-      enddo
+         USOL(LH2O,J) = water(J)
+        ENDIF
+       enddo
+      ENDIF
 
 C  it's having mega problems for low h2o profiles for cold surface environments
 C      here is a fix for now  WARNING
@@ -2261,10 +2275,13 @@ c-mc I don't get this. If the code works right, it shouldn't change.
 c-mc and conversly if the code doesn't work right, it should be fixed...
 c-mc test this at some point down the road WARNING
 
+C-mab: Foregoing this for giant planets since we don't fudge the values above...
+      IF(FH2.LT.0.50) THEN
       DO 4 J=1,JTROP
         USOL(LH2O,J) = H2O(J)
 c       USOL(LS8,J) = S8S(J)
    4  CONTINUE
+      ENDIF
 
 c      do i=1,nq
 c       do j=1,nz
@@ -2529,7 +2546,7 @@ C     print this to terminal
 
 C
 C   COMPUTE ATMOSPHERIC OXIDATION STATE
-c   what follows needs work - WARINING
+c   what follows needs work - WARNING
       DO 42 I=1,NQ
       SR(I) = 0.
       DO 43 J=1,JTROP
@@ -3074,10 +3091,11 @@ C ack - hardcoded O1D rate number (OK as long as O+O follows O+O1D, which is OK)
        enddo
 
 C print out rainout rates
+       IF (NAQ.GT.0) THEN
        do i=1,nq
            write(59, *) (RAINGC(i,j),j=1,jtrop)
        enddo
-
+       ENDIF
 
        JNO=minloc(photoreac,1,ISPEC(INT(photoreac)).eq.'NO    ')
 
@@ -3120,8 +3138,9 @@ C     e.g., if the atmosphere is 99% N2 and 1% CO2, then the CO2 fraction is
 C     0.01 and N2 should be set to 1, because it is 100% of noncondensibles.
 C     In practice, N2 should be = (1 - [everything but CO2]).
          FO2=USOL(LO2,1)
-         IF(PLANET.NE.'WASP12B')FH2=USOL(LH2,1)
-C     Since H2 is major for giant planets, we do (1 - everything) for them.
+C-mab: Using presence of HE in template to decide if H2 should be reset as below.
+         IF(FHE.LE.0.0)FH2=USOL(LH2,1)
+C-mab: Since H2 is major for giant planets, we do (1 - everything) for them.
 C     But in other parts of photochem, N2 is of the total,
 C     not excluding CO2, so we only change it here. 9/8/2015
 C-gna clima can't currently cope with NO2 and having it is screwing it up
@@ -3153,7 +3172,8 @@ C      endif
 C 351  FORMAT (1PE10.3, 1PE12.3, 1PE12.3)
 
 
-      print*,"TOTCTESTER.F completed..."
+      print*,"PhotoMain run completed...."
+      print*,"See PHOTOCHEM/OUTPUT/ directory for the output files."
 
         STOP
 C    error in reactions
