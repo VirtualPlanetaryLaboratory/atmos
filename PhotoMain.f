@@ -24,6 +24,10 @@ c - and attempting to take it away...
 c - g77 will no longer work as there are some F90 built-ins being used
 c see makefile for compilation syntax
 
+c-mab: November 2016: New functioning templates are: 
+c-mab: Titan, Mars, Hot Jupiter Wasp12b, ModernEarth+CL
+c-mab: See documentation for template developer list.
+
 cc
 
 c-mc
