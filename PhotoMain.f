@@ -1384,7 +1384,7 @@ C     !makes table of vapor pressures for H2O and H2SO4
       HA = HSCALE(NZ)
 C     The count of calls to rainout
       NRAIN = 0
-C     why the hell is Kevin starting at the Planck time? WARNING
+C     Why is Kevin starting at the Planck time below ?_? WARNING
 c orig      DT = 1.E-15
       DT = 1.E-6
       DTINV = 1./DT

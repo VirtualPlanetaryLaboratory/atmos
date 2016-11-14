@@ -57,14 +57,10 @@ c            print *, i, ISPEC(I),' inert densities'
           enddo
          enddo   
       endif
-
-     
 !do the last 4 inert species that are the same in both codes
       do J=1,NZ
 
- 
-
-        if(ISPEC(NSP-1).eq.'CO2') D(LCO2,J) = FCO2 * DEN(J) !if CO2 is inert, place above N2 in list (hardcoded position for CO2/N2 (NSP-1/NSP)
+       if(ISPEC(NSP-1).eq.'CO2') D(LCO2,J) = FCO2 * DEN(J) !if CO2 is inert, place above N2 in list (hardcoded position for CO2/N2 (NSP-1/NSP)
 c N2-defined as the "rest" of the density after subtracting Ar, CO2 and O2 (mab: do we want to add anything else?)
        if(ISOTOPE.EQ.0) D(NSP,J) = (1. - USOL(LO2,J) - FCO2 - FAR 
      2  - FCO)* DEN(J)    
@@ -75,6 +71,12 @@ c N2-defined as the "rest" of the density after subtracting Ar, CO2 and O2 (mab:
 
        D(NSP1,J) = 1.           ! HV has density of 1 for photorate calculations
        D(NSP2,J) = DEN(J)       ! M - background density for three body reactions
+       
+       
+       IF(PLANET.EQ.'WASP12B') THEN
+       	D(LHE,J) = FHE * DEN(J) ! Assuming He is always inert
+       ENDIF
+
       enddo
 
     
@@ -468,10 +470,10 @@ c      mol/cm^3/s * cm ->  mol/cm^2/s (i.e. RAT is in height integrated flux uni
 
 c-mab: Below is bebugging help...
 c-mab: Uncomment below to get the integrated rates at the end of each time step N
-C      print*,'Integrated Rates	J:'
-C      DO L=1,NR
-C      	print*, RAT(L),L
-C      ENDDO  
+      print*,'Integrated Rates	J:'
+      DO L=1,NR
+      	print*, RAT(L),L
+      ENDDO  
       DO 8 I=1,NQ1
       XLG(I) = YL(I,1)
       DO 8 J=1,NZ
