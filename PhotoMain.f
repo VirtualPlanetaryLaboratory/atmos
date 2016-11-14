@@ -1465,8 +1465,37 @@ c     enddo
 c  for H and H2
 c  lower boundary condition
 
-C  diff limited flux implemented as effusion velocity
-      if (mbound(LH2).eq.0) then
+      if(PLANET.EQ.'WASP12B') then
+       do k=1,NQ
+       if(mbound(i).eq.0) then
+        DU(k,1) = DU(k,1) + bX1X2(k,1)/Den(1)/DZ(1)**2
+        ADU(k,1) = bX1X2(k,1)/Den(1)/DZ(1)/2.*
+     6      (1./scale_H(k,1)-1./H_atm(1))
+c upper boundary condition
+        DL(k,NZ) = DL(k,NZ) + bX1X2(k,nz1)/Den(nz)/DZ(NZ)**2
+        ADL(k,NZ) = -bX1X2(k,nz1)/Den(nz)/DZ(nz)/2.*
+     6      (1./scale_H(k,nz1)-1./H_atm(nz1))
+c  unused...
+        DD(k,1) = DU(k,1)
+        ADD(k,1) = -ADU(k,1)
+
+c interior grid points   ?fixed 8-13-05
+        do j=2,nz1
+            DU(k,j) = DU(k,j) + bX1X2(k,j)/Den(j)/DZ(j)**2
+            ADU(k,j) = bX1X2(k,j)/Den(j)/DZ(j)/2.*
+     6            (1./scale_H(k,j)-1./H_atm(j))
+            DL(k,j) = DL(k,j) + bX1X2(k,j-1)/Den(j)/DZ(j)**2
+            ADL(k,j) = -bX1X2(k,j-1)/Den(j)/DZ(j)/2.*
+     6            (1./scale_H(k,j-1)-1./H_atm(j-1))
+            DD(k,j) = DU(k,j) + DL(k,j)
+            ADD(k,j) = -ADU(k,j) - ADL(k,j)
+        enddo
+       endif
+       enddo      
+     
+      else
+       if (mbound(LH2).eq.0) then   
+c diff limited flux implemented as effusion velocity
         DU(LH,1) = DU(LH,1) + bHN2(1)/Den(1)/DZ(1)**2
         ADU(LH,1) = bHN2(1)/Den(1)/DZ(1)/2.*
      6      (1./scale_H(LH,1)-1./H_atm(1))
@@ -1480,7 +1509,7 @@ c upper boundary condition
         DL(LH2,NZ) = DL(LH2,NZ) + bH2N2(nz1)/Den(nz)/DZ(NZ)**2
         ADL(LH2,NZ) = -bH2N2(nz1)/Den(nz)/DZ(NZ)/2.*
      6      (1./scale_H(LH2,nz1)-1./H_atm(nz1))
-c  unused.
+c  unused....
         DD(LH,1) = DU(LH,1)
         ADD(LH,1) = -ADU(LH,1)
         DD(LH2,1) = DU(LH2,1)
@@ -1505,8 +1534,8 @@ c interior grid points   fixed 8-13-05
             DD(LH2,j) = DU(LH2,j) + DL(LH2,j)
             ADD(LH2,j) = -ADU(LH2,j) - ADL(LH2,j)
         enddo
-C     end molecular diffusion for H and H2 loop
-      endif
+       endif  !end molecular diffusion for H and H2 loop
+      endif !End loop with planet-based distinction
 
 
 
@@ -1693,7 +1722,7 @@ c-mab Time-dependent boundary conditions for particles set to 0
 
 
 c estimate CO2 photolysis above the top of the grid
-C     and return CO + O to the upper grid point
+C and return CO + O to the upper grid point
 c NOTE: this behavior is turned on and off by setting MBOUND=2 in species.dat
 
 c (now above)   JCO2=minloc(photoreac,1,ISPEC(INT(photoreac)).eq.'CO2    ')
