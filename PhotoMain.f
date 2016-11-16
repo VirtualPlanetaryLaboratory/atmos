@@ -1401,14 +1401,15 @@ C     AVB changed to 1 for Earth+CL debugging
 
       PRINT*,' '
       PRINT*,'Do you want to run for a single time step only (NSTEPS=1)'
-      PRINT*,'instead of till convergence (NSTEPS=10000)?'
-      CALL prompt('Note: Default=n; use this for debugging. (y/n?):')
+      PRINT*,'instead of till convergence (NSTEPS=10000)? [Note:'
+      CALL prompt('Default=n, i.e. use if debugging only.] (y/n?):')
       READ(5,2)buffer
 2     FORMAT(a)
-      if(buffer(1:3).eq.'yes'.or.buffer(1:1).eq.'y') then
-       NSTEPS = 1
+      if(buffer(1:3).eq.'yes'.or.buffer(1:3).eq.'YES'.
+     &      or.buffer(1:1).eq.'y'.or.buffer(1:1).eq.'Y') then
+       NSTEPS = 1 !To run a single time step only without convergence
       else 
-       NSTEPS = 10000
+       NSTEPS = 10000 !the default, to allow converging runs
       endif
             
 c-mab: nsteps = 1 recommended for initial model debugging
@@ -3231,22 +3232,23 @@ C    error in reactions
       END
       
       SUBROUTINE PROMPT(CHAR)
-c-mab: PROMPT: simply sends prompts to terminal
+c-mab: PROMPT: sends a prompt input (CHAR) to terminal from this routine.
+c-mab: Use this to be able to pass inputs mid-routine.
 
       INTEGER L
       CHARACTER*(*) CHAR
       DO 100 L=LEN(CHAR),1,-1
       IF(CHAR(L:L).NE.' ')THEN
         IF(CHAR(L:L).EQ.':')THEN
-          WRITE(*,10) CHAR(1:L)
-10      FORMAT(' ',A,$)
+          WRITE(*,12) CHAR(1:L)
+ 12       format(' ',a,$)
          ELSE
-          WRITE(*,11) CHAR(1:L)
-11        FORMAT(' ',A,' :',$)
+          WRITE(*,13) CHAR(1:L)
+ 13       format(' ',a,' :',$)
           END IF
         RETURN
        END IF
-100   CONTINUE
+ 100  CONTINUE
       RETURN
       END
 

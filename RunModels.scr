@@ -29,7 +29,7 @@ cd $true_path
 pwd
 
 echo -e '\n'
-echo -n 'Would you like to compile PHOTOCHEM (y/n)? '
+echo -n 'Would you like to compile PHOTOCHEM (y/n)?:'
  read recompile
   if [ "$recompile" == "y" -o "$recompile" == 'Y' ]
    then
@@ -37,14 +37,14 @@ echo -n 'Would you like to compile PHOTOCHEM (y/n)? '
        make '-f' 'PhotoMake'
   fi
 echo -e '\n'
-echo -n 'Would you like to run PHOTOCHEM (y/n)'
+echo -n 'Would you like to run PHOTOCHEM (y/n)?:'
   read run_photo
   if [ "$run_photo" == "y" -o "$run_photo" == 'Y' ]
    then             
        ./'Photo.run'
   fi
 echo -e '\n'
-echo -n 'Would you like to recompile CLIMA? (y/n?)'
+echo -n 'Would you like to recompile CLIMA (y/n)?:'
 read recompile
  if [ "$recompile" == "y" -o "$recompile" == 'Y' ]
  then
@@ -52,7 +52,7 @@ read recompile
      make '-f' 'ClimaMake'
  fi 
 echo -e '\n'
-echo -n 'Would you like to run CLIMA (y/n)? '
+echo -n 'Would you like to run CLIMA (y/n)?:'
 read run_clima
 if [ "$run_clima" == "y" -o "$run_clima" == 'Y' ]
 then
