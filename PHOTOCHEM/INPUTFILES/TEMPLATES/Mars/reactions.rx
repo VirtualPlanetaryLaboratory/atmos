@@ -138,7 +138,7 @@ HS        H2CO      H2S       HCO                 2BODY      0.          0.     
 SO2       HV        SO21                          PHOTS      0.00                                                                                                                   ! this line must follow SO2+hv->SO+O
 SO2       HV        SO23                          PHOTS      0.00                                                                                                                   ! this line must follow SO2+hv->SO21        
 S2        HV        S         S                   PHOTS      1.00                                                                                                                   
-H2SO4     HV        SO2       OH        OH        PHOTO      0.                                                                                                                     
+H2SO4     HV        SO2       OH        OH        PHOTS      0.                                                                                                                     
 SO3       HV        SO2       O                   PHOTS      1.00                                                                                                                   
 SO21      HV        SO23                          2BODY      1.0E-12     0.          0.0                                                                                            ! Turco et al. [1982] (HV=M)
 SO21      HV        SO2                           2BODY      1.0E-11     0.          0.0                                                                                            ! Turco et al. [1982] (HV=M)
