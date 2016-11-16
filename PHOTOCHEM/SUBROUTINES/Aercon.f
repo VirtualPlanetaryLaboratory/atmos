@@ -7,7 +7,6 @@
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PHOTABLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/SATBLK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/SULBLK.inc'
-      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/ISOBLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/NBLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/BBLOK.inc'
 
@@ -23,11 +22,7 @@ C
       one = 1.0
       
       do J=1,NZ
-       if (ISOTOPE.EQ.0) then  
         PH2OL(J) = LOG(USOL(LH2O,J)*P(J))
-       else
-        PH2OL(J) = LOG(UINERT(LH2O-Loff,J)*P(J))  
-       endif   
       enddo
 
       DO 2 J=1,NZ
@@ -53,7 +48,6 @@ C   FIND THE SATURATION MIXING RATIO OF S8
       PLOG10 = (11.664 - 5166./T(J)) * 0.981
       PSATS8 = 10.**PLOG10 * 1.013/760.
       S8S(J) = PSATS8/P(J)
-      if(ISOTOPE.EQ.1) S8S(J)=S8S(J)*8.
       enddo
 C
       RETURN

@@ -11,3 +11,7 @@ If you are planning on doing any of these, add your name by the end of the list,
 -remove unnecessary files from version control and update .gitingore
 
 -standardize the file units on the read statements in PhotoMain.f (and propogate through all read/writes)
+
+-take out changeL in dochem
+
+-F90!

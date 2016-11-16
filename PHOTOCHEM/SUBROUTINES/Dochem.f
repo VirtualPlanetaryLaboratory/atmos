@@ -16,7 +16,6 @@
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/SATBLK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/SULBLK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/RRATS.inc'
-      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/ISOBLOK.inc'
       COMMON/LifeTime/TAUO2,TAUCH4,TAUSO2
 
 C
@@ -45,33 +44,17 @@ c         if(j.eq.1)print *, i, ISPEC(I),' particle densities'
           D(I,J) = PARTICLES(J,I-NQ)* DEN(J)   !gets particles if using tri-diag
         endif   
        enddo
-      enddo  
-
- 
-! compute densities for INERT species in ISOTOPE code
-      if (ISOTOPE.EQ.1) then
-         do I=NQ1+NSHORT+1, NSP-2   !loop over INERT species
-c            print *, i, ISPEC(I),' inert densities'
-          do J=1,NZ
-             D(I,J) = UINERT(I-Loff,J)*DEN(J)
-          enddo
-         enddo   
-      endif
-
+      enddo   
      
-!do the last 4 inert species that are the same in both codes
+!now do the last 4 inert species that are the same in both codes
       do J=1,NZ
 
  
 
-        if(ISPEC(NSP-1).eq.'CO2') D(LCO2,J) = FCO2 * DEN(J) !if CO2 is inert, place above N2 in list (hardcoded position for CO2/N2 (NSP-1/NSP)
+        if(ISPEC(NSP-1).eq.'CO2') D(LCO2,J) = FCO2 * DEN(J) !if CO2 is inert, place above N2 in list (ACK - hardcoded position for CO2/N2 (NSP-1/NSP)
 
-       if(ISOTOPE.EQ.0) D(NSP,J) = (1. - USOL(LO2,J) - FCO2 - FAR 
-     2  - FCO)* DEN(J)    ! N2 -defined as the "rest" of the density - wrong as it ignores Argon, CO, etc.
+       D(NSP,J) = (1. - USOL(LO2,J) - FCO2 - FAR - FCO)* DEN(J)    ! N2 -defined as the "rest" of the density - wrong as it ignores Argon, CO, etc.
 
-      if(ISOTOPE.EQ.1) D(NSP,J)=(1.-UINERT(LO2-Loff,J)-FCO2 - FAR 
-     2  - FCO) * DEN(J)  ! N2 -defined as the "rest" of the density - wrong as it ignores Argon
-     
 
        D(NSP1,J) = 1.           ! HV has density of 1 for photorate calculations
        D(NSP2,J) = DEN(J)                         ! M - background density for three body reactions
@@ -151,11 +134,9 @@ C ***** LONG-LIVED SPECIES CHEMISTRY *****
 c         print *, I,ISPEC(I),' long-lived'
       CALL CHEMPL(D,XP,XL,I)
 
-      if (ISOTOPE.EQ.0) then
        if (ISPEC(I).EQ.'O2')   TAUO2 = 1/XL(1)
        if (ISPEC(I).EQ.'CH4') TAUCH4 = 1/XL(1)
        if (ISPEC(I).EQ.'SO2') TAUSO2 = 1/XL(1)
-      endif
 
 
       DO  J=1,NZ
@@ -214,7 +195,6 @@ c         if (ISPEC(I).EQ.'SO4AER') YL(I,J) = YL(I,J) + RAINGC(LH2SO4,J)
 C   ZERO OUT H2O TERMS IN THE TROPOSPHERE AND INCLUDE LIGHTNING
 C   PRODUCTION OF NO AND O2
 
-      if (ISOTOPE.EQ.0) then   !skip the next little bit for the ISOTOPE code as all this stuff is inert...
       changeL = 1        !mc temp var for testing lightning changes versus OLD JFK method
                          !changeL=1 uses new code, changeL=0 uses old code
       
@@ -283,6 +263,7 @@ c-mc
 
          endif
 
+
 c        stop
 c-end 3-20-06 addition
 
@@ -309,19 +290,13 @@ c       RHCOLD = 0.10  ! Jim had 0.1 ?  my standard is 0.4  <-Kevin words (mc - 
         FVAL(LH2O,J) = FVAL(LH2O,J) - CONDEN(J)
   13  CONTINUE
 
-      endif  !end skip loop for isotope code
+
 
 C
 C   H2SO4 CONDENSATION
 
-      if (ISOTOPE.EQ.0) then
        LL=LH2SO4
        LLA=LSO4AER
-      else
-       LL=LH2SXO4
-       LLA=LSXO4AER
-      endif
-
   
       DO 14 J=1,NZ
       CONSO4(J) = CONFAC * (USOL(LL,J) - H2SO4S(J))
@@ -349,15 +324,9 @@ C   S8 CONDENSATION (this is needed if we every want to deal with 'hot air' - s8
 
       if (skipS8.eq.0) then 
   
-      if(ISOTOPE.EQ.0) then
        LL=LS8
        LLA=LS8AER
-      else
-       LL=LSXS7
-       LLA=LSXS7AER
-      endif
 
- 
       CONFC2 = 1.E-2   !whats this?  CONFAC = 1.6E-5   whatever that is
 
       DO  J=1,NZ  !(fixes an error in our earlier codes where S8 didn't condense in the troposphere)
@@ -432,20 +401,11 @@ C
       RELH(J) = D(LH2O,J)/DEN(J)/H2OSAT(J)  !this gets H2O mixing ratio in a more general way
       O3COL = O3COL + D(LO3,J)*DZ(J)
 
-      if(ISOTOPE.EQ.0) then
        H2SCOL = H2SCOL + D(LH2S,J)*DZ(J)
        SO2COL = SO2COL + D(LSO2,J)*DZ(J)
        S2COL = S2COL + D(LS2,J)*DZ(J)
        S4COL = S4COL + D(LS4,J)*DZ(J)
 c       S8COL = S8COL + D(LS8,J)*DZ(J)   !ACK need to deal if S8 in gas phase
-      else
-       H2SCOL = H2SCOL + D(LH2SX,J)*DZ(J)
-       SO2COL = SO2COL + D(LSXO2,J)*DZ(J)
-       S2COL = S2COL + D(LSXS,J)*DZ(J)
-       S4COL = S4COL + D(LSXS3,J)*DZ(J)
-c       S8COL = S8COL + D(LSXS7,J)*DZ(J)  !ACK need to deal if S8 in gas phase
-      endif   
-
 
       enddo
 C

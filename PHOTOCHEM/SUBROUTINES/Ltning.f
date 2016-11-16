@@ -12,7 +12,6 @@ c-mc 4-29-06  it conserves redox now and is only as wrong as chamedies, which is
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/BBLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/LTBLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/NBLOK.inc'
-      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/ISOBLOK.inc'
 
 C
 C     THIS SUBROUTINE CALCULATES LIGHTNING PRODUCTION RATES FOR O2
@@ -30,17 +29,11 @@ C     EQUILIBRIUM CONSTANTS AT 3500 K
 c      Pbar = P0/1.013E6   !converting from pascals to bars
       Pbar = P0/1.013   !converting from pascals to bars
       
-      if (ISOTOPE.EQ.0) then
-       FCO = USOL(LCO,1) 
-       PH2O = USOL(LH2O,1) * Pbar
-       PH2 = USOL(LH2,1) * Pbar   ! I am having problems here if PH2 gets too big
+      FCO = USOL(LCO,1) 
+      PH2O = USOL(LH2O,1) * Pbar
+      PH2 = USOL(LH2,1) * Pbar   ! I am having problems here if PH2 gets too big
+      PCH4 = USOL(LCH4,1) * Pbar
 
-       PCH4 = USOL(LCH4,1) * Pbar
-      else 
-       FCO=UINERT(LCO-Loff,1)
-       PH2O = UINERT(LH2O-Loff,1) * Pbar
-       PH2 = UINERT(LH2-Loff,1) * Pbar   
-      endif
      
      
       FH2O = PH2O /PBAR

@@ -2150,7 +2150,7 @@ c-orig        ELSEIF(I.EQ.LSO4AER .AND. J.GT.J25) THEN
 c        IF (I.EQ.LSO4AER .AND. J.GT.J25) THEN
 
 !ACK - should return to this now that
-C      particles condensation is fixed up (ISOHACK AS well)
+C      particles condensation is fixed up 
 
 c      A less drastic measure
         IF (I.EQ.LSO4AER.AND. J.GT.J25) THEN
