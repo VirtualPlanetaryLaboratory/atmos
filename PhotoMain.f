@@ -379,6 +379,7 @@ C     NUMP(NSP) = NUMBER OF NON-ZERO ELEMENTS FOR EACH ROW OF IPROD
 C
       INCLUDE 'PHOTOCHEM/INPUTFILES/parameters.inc'
       implicit real*8(A-H,O-Z)
+      character*10 buffer
       CHARACTER*8 ISPEC, CHEMJ,SPECIES,SPECTYPE,REACTYPE,PLANET
       CHARACTER*20 string,fmtstr,fmtstr2
       real*8 mass
@@ -1397,7 +1398,19 @@ c      TSTOP = 1.E14
 
       TSTOP = 1.E17
 C     AVB changed to 1 for Earth+CL debugging
-      NSTEPS = 10000
+
+      PRINT*,' '
+      PRINT*,'Do you want to run for a single time step only (NSTEPS=1)'
+      PRINT*,'instead of till convergence (NSTEPS=10000)?'
+      CALL prompt('Note: Default=n; use this for debugging. (y/n?):')
+      READ(5,2)buffer
+2     FORMAT(a)
+      if(buffer(1:3).eq.'yes'.or.buffer(1:1).eq.'y') then
+       NSTEPS = 1
+      else 
+       NSTEPS = 10000
+      endif
+            
 c-mab: nsteps = 1 recommended for initial model debugging
 c      NSTEPS = 1
 C     for standalone mode this should probably be the default
@@ -3215,6 +3228,26 @@ C    error in reactions
         PRINT 301,IERR
  301    FORMAT(//1X,'ERROR IN REACTION ',I3)
         STOP
+      END
+      
+      SUBROUTINE PROMPT(CHAR)
+c-mab: PROMPT: simply sends prompts to terminal
+
+      INTEGER L
+      CHARACTER*(*) CHAR
+      DO 100 L=LEN(CHAR),1,-1
+      IF(CHAR(L:L).NE.' ')THEN
+        IF(CHAR(L:L).EQ.':')THEN
+          WRITE(*,10) CHAR(1:L)
+10      FORMAT(' ',A,$)
+         ELSE
+          WRITE(*,11) CHAR(1:L)
+11        FORMAT(' ',A,' :',$)
+          END IF
+        RETURN
+       END IF
+100   CONTINUE
+      RETURN
       END
 
 
