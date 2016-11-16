@@ -1277,10 +1277,15 @@ c       edd(i)=1.3*edd(i)
 c      enddo
 
       CALL DENSTY
-      IF (NEWSPEC.GE.0) CALL RATES
-      IF (NEWSPEC.GE.0) PRINT*, "CALLING RATES..."
-      IF (NEWSPEC.LT.0) CALL RATESWASP12B
-      IF (NEWSPEC.LT.0) PRINT*, "CALLING RATESWASP12B..."
+
+c-mab: Note: Loop below is temporary....
+      IF (PLANET.EQ.'WASP12B') THEN
+	CALL RATESWASP12B
+        PRINT*, "CALLING RATESWASP12B..."
+      ELSE
+        CALL RATES
+        PRINT*, "CALLING RATES..." 
+      ENDIF
 
 C    computes diffusion coefficents (K*N) and binary
 C          diffusion coefficents for H and H2
