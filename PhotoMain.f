@@ -603,8 +603,6 @@ C - other model parameters read in from input_photochem.dat
       IF(IDEBUG.eq.1) print *, "HCDENS =",HCDENS
       READ(231,*)AA, ICOUPLE
       IF(IDEBUG.eq.1) print *, "ICOUPLE =",ICOUPLE
-      READ(231,*)AA, NEWSPEC
-      IF(IDEBUG.eq.1) print *, "NEWSPEC =",NEWSPEC
       READ(231,*)AA, ihztype
       IF(IDEBUG.eq.1) print *, "IHZTYPE =",ihztype
       READ(231,*)AA, ZY
