@@ -470,16 +470,16 @@ c      mol/cm^3/s * cm ->  mol/cm^2/s (i.e. RAT is in height integrated flux uni
 
 c-mab: Below is bebugging help...
 c-mab: Uncomment below to get the integrated rates at the end of each time step N
-      print*,'Integrated Rates	J:'
-      DO L=1,NR
-      	print*, RAT(L),L
-      ENDDO  
-      DO 8 I=1,NQ1
-      XLG(I) = YL(I,1)
-      DO 8 J=1,NZ
-      TP(I) = TP(I) + YP(I,J)*DZ(J)
-      TL(I) = TL(I) + YL(I,J)*D(I,J)*DZ(J)
-   8  CONTINUE
+C      print*,'Integrated Rates	J:'
+C      DO L=1,NR
+C      	print*, RAT(L),L
+C      ENDDO  
+C      DO 8 I=1,NQ1
+C      XLG(I) = YL(I,1)
+C      DO 8 J=1,NZ
+C      TP(I) = TP(I) + YP(I,J)*DZ(J)
+C      TL(I) = TL(I) + YL(I,J)*D(I,J)*DZ(J)
+C   8  CONTINUE
 C
       RETURN
       END
