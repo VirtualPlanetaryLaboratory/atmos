@@ -1,0 +1,104 @@
+#!/bin/bash
+
+temp_path='PHOTOCHEM/INPUTFILES/TEMPLATES/'
+temp_path2='CLIMA/IO/TEMPLATES/'
+temp_path3='CLIMA/IO/'
+RED='\033[0;31m'
+GREEN='\032[0;31m'
+NC='\033[0m' # No Color
+
+clear
+echo "***************** THIS IS A TEST. THIS IS ONLY A TEST ****************"
+echo "This script will automatically run your code for each of the *working*"
+echo "templates. It will run the code once for each of these templates, and"
+echo "check the results from prior runs of each template. It will flag cases"
+echo "where the code doesn't compile, crashes, or doesn't converge."
+echo "**********************************************************************"
+echo " "
+echo "You will need to be in your top folder for atmos, not a subfolder."
+echo "Your current folder is $(pwd)."
+echo ""
+echo "Your PHOTOCHEM has these templates:"
+ls $temp_path
+true_path=$(pwd)
+
+# find all the templates and copy/compile/run/test each one
+cd $temp_path
+for folder in `find . -type d -maxdepth 1 -mindepth 1 | sed 's|./||'`; do
+  cd $true_path
+  cd $temp_path
+  echo $folder
+  # copy files
+#  echo $(pwd)
+  cd $folder
+  echo $(pwd)
+  echo "Copying files from ${temp_path}${folder}."
+  cp 'in.dist' '../../..' #> ${true_path}/${folder}.log
+  cp 'input_photchem.dat' '../..' #>> ${true_path}/${folder}.log 2>&1
+  cp 'reactions.rx' '../..' #>> ${true_path}/${folder}.log 2>&1
+  cp 'parameters.inc' '../..' #>> ${true_path}/${folder}.log 2>&1
+  cp 'species.dat' '../..' #>> ${true_path}/${folder}.log 2>&1
+  cp 'PLANET.dat' '../..' #>> ${true_path}/${folder}.log 2>&1
+  echo "Finished copying photochem templates over for ${folder} run!"
+  cd $true_path
+
+  # *** PHOTOCHEM tests ***
+  #compile photochemistry code
+  echo "Compiling ${folder}"
+  make '-f' 'PhotoMake' 'clean' >> ${folder}.log 2>&1
+  if make '-f' 'PhotoMake' >> ${folder}.log 2>&1; then
+    printf "${folder} compiled!"
+  else
+    printf "${folder} did not compile! Something is wrong. Quitting."
+    exit 1
+  fi
+
+  # run photochemistry code
+  echo ${folder} > RunModel.txt
+  echo "y" >> RunModel.txt
+  echo "y" >> RunModel.txt
+  echo "n" >> RunModel.txt
+  echo "n" >> RunModel.txt
+  echo "Running ${folder}....... Please wait. This might take a while."
+  echo "If you need to peek take a look at ${folder}.out.out"
+  if ./'Photo.run' >& ${folder}.out.out; then
+    echo "${folder} run complete! Output stored in ${folder}.out.out"
+  else
+    echo "${folder} run did NOT complete! Something is worng. Quitting."
+    exit 1
+  fi
+  echo ""
+  echo ""
+
+  # test outputs
+  # FOR LATER
+
+#  # *** CLIMA tests ***
+
+#  # copy files
+#  cd $true_path
+#  echo "folder path is $folder_path2"
+#  if [ -d "$folder_path2" ]; then
+#    cd $folder_path2
+#    echo "folder path is now $(pwd)"
+#    cp 'input_clima.dat' '../..' && echo "Copied input_clima.dat from $(pwd)"
+#  fi
+#  cd $true_path
+#  if [ ! -d "$folder_path2" ]; then
+#    echo "folder path is now $(pwd)"
+#    cd $temp_path3
+#    echo "!!WARNING!!: no clima template exists for $folder. Copying GENERIC version."
+#    echo "This will *probably* cause problems for you. Check the file manually to see if you want the options set in it."
+#    cp 'DEFAULT_input_clima.dat' 'input_clima.dat' && echo "Copied GENERIC input_clima.dat to  $(pwd ../..)"
+#  fi
+#  echo 'Finished copying clima templates over'
+#  cd $true_path
+#  pwd
+
+#  # compile climate code
+#  make '-f' 'ClimaMake' 'clean'
+
+#  # run climate code
+#  ./'Clima.run'
+
+done
