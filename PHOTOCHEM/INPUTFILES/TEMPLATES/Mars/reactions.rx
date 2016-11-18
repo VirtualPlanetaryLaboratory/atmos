@@ -23,7 +23,7 @@ O1D       N2        O         N2                  2BODY      2.15E-11    0.     
 O1D       O2        O         O2                  2BODY      3.3E-11     0.         -55.0                                                                                           ! JPL-11
 O2        HV        O         O1D                 PHOTP      1.00                                                                                                                   !
 O2        HV        O         O                   PHOTP      1.00                                                                                                                   !  this line must follow O2+hv->O+O1D
-H2O       HV        H         OH                  PHOTO      1.00                                                                                                                   
+H2O       HV        H         OH                  PHOTO      1.00
 O3        HV        O2        O1D                 PHOTP      1.00
 O3        HV        O2        O                   PHOTP      1.00                                                                                                                   !  this line must follow O3+hv->O2+O1D
 H2O2      HV        OH        OH                  PHOTP      1.00
@@ -50,6 +50,8 @@ H2CO      O         HCO       OH                  2BODY      3.4E-11     0.     
 H2O2      O         OH        HO2                 2BODY      1.4E-12     0.          2000.0                                                                                         ! JPL-11
 HO2       HV        OH        O                   PHOTS      1.00
 CH4       HV        CH21      H2                  PHOTO      1.00                                                                                                                   ! SHAWN seems to think there should be 3 channels here - needs research
+CH4       HV        CH3       H                   PHOTO                                        !must follow CH4 + HV -> CH21 + H2 (this reac only goes at Ly a)
+CH4       HV        CH23      H         H         PHOTO                                        !must follow CH4 + HV -> CH3 + H (this reac only goes at Ly a)
 C2H6      HV        CH23      CH23      H2        PHOTO                                                                                                                             !  (IN PLACE OF C2H2 AND C2H4)
 C2H6      HV        CH4       CH21                PHOTO                                                                                                                             !  this line must follow C2H6+hv->CH23+CH23+H2
 HNO2      HV        NO        OH                  2BODY      1.7E-03     0.          0.0
@@ -270,8 +272,8 @@ CL        O3        CLO       O2                  2BODY      2.30E-11    0.     
 CLO       NO        NO2       CL                  2BODY      6.40E-12    0.         -290.0                                                                                          ! JPL-11
 CLO       SO        CL        SO2                 2BODY      2.80E-11    0.          0.0                                                                                            ! JPL-11
 O1D       HCL       H         CLO                 2BODY      3.75E-11    0.          0.0
-CLO       HV        O1D       CL                  PHOTO
-CLO       HV        O         CL                  PHOTO                                                                                                                             !  this line must follow CLO+hv->O1D+CL
+CLO       HV        CL        O1D                 PHOTO
+CLO       HV        CL        O                   PHOTO                                                                                                                             !  this line must follow CLO+hv->O1D+CL
 HOCL      HV        OH        CL                  PHOTO
 O1D       CL2       CLO       CL                  2BODY      2.025E-10   0.          0.0                                                                                            ! JPL-11 QY of 0.75 against 2.7e-10
 O1D       CL2       CL2       O                   2BODY      6.75E-11    0.          0.0                                                                                            ! JPL-11 QY of 0.25 against 2.7e-10
@@ -299,8 +301,8 @@ CLO       O3        OCLO      O2                  2BODY      1.0E-12     0.     
 CLO       CLO       CLOO      CL                  2BODY      3.00E-11    0.          2450.0                                                                                         ! JPL-11
 CLO       CLO       OCLO      CL                  2BODY      3.5E-13     0.          1370.0                                                                                         ! JPL-11
 SO        OCLO      SO2       CLO                 2BODY      1.90E-12    0.          0.0                                                                                            ! JPL-11, 298K (uncertain)
-CLOO      HV        CLO       O                   PHOTO
-OCLO      HV        CLO       O                   PHOTO
+CLOO      HV        O         CLO                 PHOTO
+OCLO      HV        O         CLO                 PHOTO
 CL        NO3       CLO       NO2                 2BODY      2.4E-11     0.          0.0                                                                                            ! JPL-11
 NO3       CLO       CLOO      NO2                 2BODY      4.7E-13     0.          0.0                                                                                            ! JPL-11
 CLOO      M         CL        O2                  2BODY      2.8E-10     0.          1820.0
