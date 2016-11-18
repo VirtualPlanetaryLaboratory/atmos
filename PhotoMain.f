@@ -951,7 +951,7 @@ c           print *, jrcount,i,JCHEM(1,i),(CHEMJ(m,i),m=1,5)
 !            endif
 
 ! Loop photospec, if species at JCHEM(1, i) has already been seen
-! then set newphot to false           
+! then set newphot to false
            do while(m <= ks)
               if(JCHEM(1, i).eq.photospec(m)) then
                   newphot = .FALSE.
@@ -1126,7 +1126,7 @@ C gna - we need to make it so that T = T_new
       enddo
       endif
 
-      
+
       do K=1,NQ
        VDEP(K) = VDEP0(K)
        VEFF(K) = VEFF0(K)
@@ -1345,17 +1345,17 @@ C     !set to h2o from clima if coupling on
 
 C  it's having mega problems for low h2o profiles for cold surface environments
 C      here is a fix for now  WARNING
-       IF(T(1).lt.260) THEN
-          print *, 'scaling water'
-
-        DO J=1, NZ
-        READ(118,*) alt_dontuse(J), T_dontuse(J), water_fix(J)
-        END DO
-        close(118)
-        do J=1,JTROP
-        USOL(LH2O,J) = water_fix(J)
-        enddo
-        endif
+c       IF(T(1).lt.260) THEN
+c          print *, 'scaling water'
+c
+c        DO J=1, NZ
+c        READ(118,*) alt_dontuse(J), T_dontuse(J), water_fix(J)
+c        END DO
+c        close(118)
+c        do J=1,JTROP
+c        USOL(LH2O,J) = water_fix(J)
+c        enddo
+c        endif
 
 
 
