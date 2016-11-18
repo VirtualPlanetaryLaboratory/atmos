@@ -1,7 +1,7 @@
-Reactants           Products                      Type      Alpha_0     Beta_0      Gamma_0     F_0         g_0         Alpha_inf   Beta_inf    Gamma_inf   F_inf       g_inf       Comments    
+Reactants           Products                      Type      Alpha_0     Beta_0      Gamma_0     F_0         g_0         Alpha_inf   Beta_inf    Gamma_inf   F_inf       g_inf       Comments
 H2O       O1D       OH        OH                  2BODY      1.63E-10    0.         -60.0                                                                                           ! JPL-11
 H2        O1D       OH        H                   2BODY      1.2E-10     0.          0.0                                                                                            ! JPL-11
-H2        O         OH        H                   WEIRD                                                                                                                             !  Low T fit NIST 05 
+H2        O         OH        H                   WEIRD                                                                                                                             !  Low T fit NIST 05
 H2        OH        H2O       H                   2BODY      2.8E-12     0.          1800.0                                                                                         ! JPL-11
 H         O3        OH        O2                  2BODY      1.4E-10     0.          470.0                                                                                          ! JPL-11
 H         O2        HO2                           3BODY      4.4D-32     1.3D0       0.          0.          0.          7.5D-11    -0.2         0.          0.          0.         ! JPL-11 (see also H+SO+M->HSO+M)
@@ -13,7 +13,7 @@ OH        HO2       H2O       O2                  2BODY      4.8E-11     0.     
 OH        O3        HO2       O2                  2BODY      1.7E-12     0.          940.0                                                                                          ! JPL-11
 HO2       O         OH        O2                  2BODY      3.0E-11     0.         -200.0                                                                                          ! JPL-11
 HO2       O3        OH        O2        O2        2BODY      1.0E-14     0.          490.0                                                                                          ! JPL-11
-HO2       HO2       H2O2      O2                  WEIRD                                                                                                                             !  JPL-02                      
+HO2       HO2       H2O2      O2                  WEIRD                                                                                                                             !  JPL-02
 H2O2      OH        HO2       H2O                 2BODY      1.8E-12     0.          0.0                                                                                            ! JPL-11
 O         O         O2                            WEIRD                                                                                                                             !  NIST 05 low Temp in N2.  Its 2x bigger in H2 or O2 and 12X smaller in Ar.No sign of CO2.
 O         O2        O3                            3BODY      6.D-34      2.4D0       0.          0.          0.          3.E-11      0.D0        0.          0.          0.         ! JPL-11
@@ -21,41 +21,41 @@ O         O3        O2        O2                  2BODY      8.0E-12     0.     
 OH        OH        H2O       O                   2BODY      1.8E-12     0.          0.0                                                                                            ! JPL-11
 O1D       N2        O         N2                  2BODY      2.15E-11    0.         -110.0                                                                                          ! JPL-11
 O1D       O2        O         O2                  2BODY      3.3E-11     0.         -55.0                                                                                           ! JPL-11
-O2        HV        O         O1D                 PHOTP      1.00                                                                                                                   ! 
+O2        HV        O         O1D                 PHOTP      1.00                                                                                                                   !
 O2        HV        O         O                   PHOTP      1.00                                                                                                                   !  this line must follow O2+hv->O+O1D
 H2O       HV        H         OH                  PHOTO      1.00                                                                                                                   
-O3        HV        O2        O1D                 PHOTP      1.00                                                                                                                   
+O3        HV        O2        O1D                 PHOTP      1.00
 O3        HV        O2        O                   PHOTP      1.00                                                                                                                   !  this line must follow O3+hv->O2+O1D
-H2O2      HV        OH        OH                  PHOTP      1.00                                                                                                                   
-CO2       HV        CO        O                   PHOTO      1.00                                                                                                                   
+H2O2      HV        OH        OH                  PHOTP      1.00
+CO2       HV        CO        O                   PHOTO      1.00
 CO2       HV        CO        O1D                 PHOTO      1.00                                                                                                                   !  this line must follow CO2+hv->CO+O
-CO        OH        CO2       H                   WEIRD                                                                                                                             !  JPL-02                                                     
-CO        O         CO2                           WEIRD                                                                                                                             !  I use NIST 05 for 257-277 K                                         
-H         CO        HCO                           WEIRD                                                                                                                             !  I use NIST 05 for 333-1000 K, theory                                          
+CO        OH        CO2       H                   WEIRD                                                                                                                             !  JPL-02
+CO        O         CO2                           WEIRD                                                                                                                             !  I use NIST 05 for 257-277 K
+H         CO        HCO                           WEIRD                                                                                                                             !  I use NIST 05 for 333-1000 K, theory
 H         HCO       H2        CO                  2BODY      1.8E-10     0.          0.0                                                                                            ! NIST 2005 (duplicated below for H + HCS -> H2 + CS), up to date 2012
 HCO       HCO       H2CO      CO                  2BODY      4.5E-11     0.          0.0                                                                                            ! NIST 2005, up to date 2012
 OH        HCO       H2O       CO                  2BODY      1.7E-10     0.          0.0                                                                                            ! NIST 2005 - not too certain, up to date 2012
 O         HCO       H         CO2                 2BODY      5.0E-11     0.          0.0                                                                                            ! NIST 2005 (duplicated below for S + HCS -> H + CS2), up to date 2012
 O         HCO       OH        CO                  2BODY      5.0E-11     0.          0.0                                                                                            ! NIST 2005 (duplicated below for S + HCS -> HS + CS), up to date 2012
-H2CO      HV        H2        CO                  PHOTO      0.00                                                                                                                   !  quantum yields computed in Xsection.f                                                           
+H2CO      HV        H2        CO                  PHOTO      0.00                                                                                                                   !  quantum yields computed in Xsection.f
 H2CO      HV        HCO       H                   PHOTO      0.00                                                                                                                   !  this line must follow H2CO+hv->H2+CO
 HCO       HV        H         CO                  2BODY      1.0E-02     0.          0.0                                                                                            ! Pinto et al. [1980] (note this is photolysis treated as 2BODY) !Shawn doesn't have this
 H2CO      H         H2        HCO                 WEIRD                                                                                                                             !  I'll figure out a better comment when I figure out how to do weird's better
-H         H         H2                            WEIRD                                                                                                                             !  Tsang and Hampson [1986]  (COMMENT IS WRONG...)  !SHAWN              
+H         H         H2                            WEIRD                                                                                                                             !  Tsang and Hampson [1986]  (COMMENT IS WRONG...)  !SHAWN
 HCO       O2        HO2       CO                  2BODY      5.2E-12     0.          0.0                                                                                            ! JPL-11
 H2CO      OH        H2O       HCO                 2BODY      5.5E-12     0.         -125.0                                                                                          ! JPL-11
-H         OH        H2O                           WEIRD                                                                                                                             !  McEwan and Phillips [1975]  (COMMENT IS WRONG)                                               
+H         OH        H2O                           WEIRD                                                                                                                             !  McEwan and Phillips [1975]  (COMMENT IS WRONG)
 OH        OH        H2O2                          3BODY      6.9D-31     1.0         0.          0.          0.          2.6D-11     0.0         0.          0.          0.         ! JPL-11
 H2CO      O         HCO       OH                  2BODY      3.4E-11     0.          1600.0                                                                                         ! JPL-11
 H2O2      O         OH        HO2                 2BODY      1.4E-12     0.          2000.0                                                                                         ! JPL-11
-HO2       HV        OH        O                   PHOTS      1.00                                                                                                                   
-CH4       HV        CH21      H2                  PHOTO      1.00                                                                                                                   ! SHAWN seems to think there should be 3 channels here - needs research                                                        
+HO2       HV        OH        O                   PHOTS      1.00
+CH4       HV        CH21      H2                  PHOTO      1.00                                                                                                                   ! SHAWN seems to think there should be 3 channels here - needs research
 C2H6      HV        CH23      CH23      H2        PHOTO                                                                                                                             !  (IN PLACE OF C2H2 AND C2H4)
 C2H6      HV        CH4       CH21                PHOTO                                                                                                                             !  this line must follow C2H6+hv->CH23+CH23+H2
-HNO2      HV        NO        OH                  2BODY      1.7E-03     0.          0.0                                                                                            
-HNO3      HV        NO2       OH                  PHOTT      1.00                                                                                                                   
-NO        HV        N         O                   PHOTP      0.00                                                                                                                   ! NO is handled differently from other species. prate computed in main loop.                                                                                           
-NO2       HV        NO        O                   PHOTT                                                                                                                             
+HNO2      HV        NO        OH                  2BODY      1.7E-03     0.          0.0
+HNO3      HV        NO2       OH                  PHOTT      1.00
+NO        HV        N         O                   PHOTP      0.00                                                                                                                   ! NO is handled differently from other species. prate computed in main loop.
+NO2       HV        NO        O                   PHOTT
 CH4       OH        CH3       H2O                 2BODY      2.45E-12    0.          1775.0                                                                                         ! JPL-11
 CH4       O1D       CH3       OH                  2BODY      1.31E-10    0.          0.0                                                                                            ! JPL-11
 CH4       O1D       H2CO      H2                  2BODY      9.00E-12    0.          0.0                                                                                            ! JPL-11
@@ -73,8 +73,8 @@ CH3       H         CH4                           3BODY      1.0D-28     1.80   
 CH3       HCO       CH4       CO                  2BODY      2.0E-10     0.          0.0                                                                                            ! NIST quotes Hampson/Garvin at 2e-10; actual measurements 4.4e-11 (duplicated below for CH3 + HCS - > CH4 + CS), up to date 2012
 CH3       HNO       CH4       NO                  WEIRD                                                                                                                             ! comment is wrong NIST gives 1961 expt rate at 833<T<913.  Kevin picked the activation
 CH3       H2CO      CH4       HCO                 WEIRD                                                                                                                             !  put an apporpriate comment here at some point  (kevin uses NIST 2005)
-H         NO        HNO                           WEIRD                                                                                                                             !  Hampson and Garvin [1977]                                         
-N         N         N2                            WEIRD                                                                                                                             !  NIST 2005   
+H         NO        HNO                           WEIRD                                                                                                                             !  Hampson and Garvin [1977]
+N         N         N2                            WEIRD                                                                                                                             !  NIST 2005
 N         O2        NO        O                   2BODY      1.5E-12     0.          3600.0                                                                                         ! JPL-11
 N         OH        NO        H                   2BODY      3.8E-11     0.         -85.0                                                                                           ! NIST 2005 - low temp, up to date 2012
 N         NO        N2        O                   2BODY      2.1E-11     0.         -100.0                                                                                          ! JPL-11
@@ -88,7 +88,7 @@ NO2       H         NO        OH                  2BODY      4.E-10      0.     
 HNO3      OH        H2O       NO2       O         WEIRD                                                                                                                             !  JPL-06     !in Kevin's code (without NO3) this goes to H2O+NO2+O                     !temp
 HCO       NO        HNO       CO                  2BODY      1.3E-11     0.          0.0                                                                                            ! NIST 2005 , up to date 2012
 HNO       HV        NO        H                   2BODY      1.7E-03     0.          0.0                                                                                            ! Cox [1974] (photo treated as two body - does HNO xsection exist?)
-H         HNO       H2        NO                  WEIRD                                                                                                                             !  Baulch et al. [1973] (THIS COMMENT IS WRONG)                                         
+H         HNO       H2        NO                  WEIRD                                                                                                                             !  Baulch et al. [1973] (THIS COMMENT IS WRONG)
 O         HNO       OH        NO                  2BODY      3.8E-11     0.          0.0                                                                                            ! NIST 2005, up to date 2012
 OH        HNO       H2O       NO                  2BODY      5.E-11      0.          0.0                                                                                            ! NIST 2005, up to date 2012
 HNO2      OH        H2O       NO2                 2BODY      1.8E-11     0.          390.0                                                                                          ! JPL-11
@@ -106,12 +106,12 @@ C2H5      OH        CH3       HCO       H2        2BODY      4.0E-11     0.     
 C2H5      HCO       C2H6      CO                  2BODY      1.E-10      0.          0.0                                                                                            ! NIST quotes Hampson/Garvin at 2e-10. KZ slowed this a bit, 2e-10 is still up to date 2012
 C2H5      HNO       C2H6      NO                  WEIRD                                                                                                                             !  comment is wrong (right for 2body)Estimated. NIST gives 1961 expt rate at 833<T<913.  KZ picked the activation
 C2H5      O2        CH3       HCO       OH        3BODY      1.5D-28     3.00        0.          0.          0.          8.0D-12     0.00        0.          0.          0.         ! JPL-11, but the product listed is C2H5O2
-SO        HV        S         O                   PHOTS      1.00                                                                                                                   
-H2S       HV        HS        H                   PHOTS      1.00                                                                                                                   
-SO2       HV        SO        O                   PHOTS      0.00                                                                                                                   ! SO2 quantum yields calculated in XS_SO2                                                                                                    
+SO        HV        S         O                   PHOTS      1.00
+H2S       HV        HS        H                   PHOTS      1.00
+SO2       HV        SO        O                   PHOTS      0.00                                                                                                                   ! SO2 quantum yields calculated in XS_SO2
 SO        O2        O         SO2                 2BODY      1.25E-13    0.          2190.0                                                                                         ! JPL-11
 SO        HO2       SO2       OH                  2BODY      0.0E-11     0.          0.0                                                                                            ! Kasting [1990] use 2.8e-11. KZ:old rate 2.3E-11 was high. no information. - ZEROED!
-SO        O         SO2                           WEIRD                                                                                                                             !  NIST 2005 
+SO        O         SO2                           WEIRD                                                                                                                             !  NIST 2005
 SO        OH        SO2       H                   2BODY      2.7E-11     0.         -335.0                                                                                          ! JPL-11
 SO2       OH        HSO3                          3BODY      3.3D-31     4.30        0.          0.          0.          1.6D-12     0.0         0.          0.          0.         ! JPL-11
 SO2       O         SO3                           3BODY      1.8D-33    -2.0         0.          0.          0.          4.2D-14    -1.8         0.          0.          0.         ! JPL-11
@@ -132,14 +132,14 @@ S         HCO       HS        CO                  2BODY      1.0E-11     0.     
 S         HO2       HS        O2                  2BODY      5.0E-12     0.          0.0                                                                                            ! Kasting [1990] uses 1.5e-11 KZ: no information
 S         HO2       SO        OH                  2BODY      5.0E-12     0.          0.0                                                                                            ! Kasting [1990] uses 1.5e-11 KZ: no information
 S         S         S2                            WEIRD                                                                                                                             ! at some point put a better comment here
-S2        OH        HSO       S                   2BODY      0.          0.          0.0                                                                                            
+S2        OH        HSO       S                   2BODY      0.          0.          0.0
 S2        O         S         SO                  2BODY      1.7E-11     0.          0.0                                                                                            ! NIST 2012
 HS        H2CO      H2S       HCO                 2BODY      0.          0.          0.0                                                                                            ! KZ:no information, an unlikely abstraction CH3 + H2CO -> CH4 + HCO is very slow (Shawn has fast)
 SO2       HV        SO21                          PHOTS      0.00                                                                                                                   ! this line must follow SO2+hv->SO+O
-SO2       HV        SO23                          PHOTS      0.00                                                                                                                   ! this line must follow SO2+hv->SO21        
-S2        HV        S         S                   PHOTS      1.00                                                                                                                   
-H2SO4     HV        SO2       OH        OH        PHOTS      0.                                                                                                                     
-SO3       HV        SO2       O                   PHOTS      1.00                                                                                                                   
+SO2       HV        SO23                          PHOTS      0.00                                                                                                                   ! this line must follow SO2+hv->SO21
+S2        HV        S         S                   PHOTS      1.00
+H2SO4     HV        SO2       OH        OH        PHOTS      0.
+SO3       HV        SO2       O                   PHOTS      1.00
 SO21      HV        SO23                          2BODY      1.0E-12     0.          0.0                                                                                            ! Turco et al. [1982] (HV=M)
 SO21      HV        SO2                           2BODY      1.0E-11     0.          0.0                                                                                            ! Turco et al. [1982] (HV=M)
 SO21      HV        SO23      HV                  2BODY      1.5E+03     0.          0.0                                                                                            ! Turco et al. [1982] (quenching)
@@ -161,7 +161,7 @@ S         CO2       SO        CO                  2BODY      0.0E-20     0.     
 SO        HO2       HSO       O2                  2BODY      0.          0.          0.0                                                                                            ! no information - zeroed and remove someday?
 SO        HCO       HSO       CO                  2BODY      5.2E-12     0.          0.0                                                                                            ! no info: assumed same as HCO + O2 -> HO2 + CO
 H         SO        HSO                           3BODY      4.4D-32     1.3D0       0.          0.          0.          7.5D-11    -0.2         0.          0.          0.         ! JPL-11 !Assumed same as H+O2+M->HO2+M
-HSO       HV        HS        O                   PHOTS      1.00                                                                                                                   !  note - we use the HO2 cross section for HSO                                       
+HSO       HV        HS        O                   PHOTS      1.00                                                                                                                   !  note - we use the HO2 cross section for HSO
 HSO       OH        H2O       SO                  2BODY      3.0E-11     0.          0.0                                                                                            ! Kasting [1990] assumes same as OH + HO2 -> H2O + O2, KZ says no information
 HSO       H         HS        OH                  2BODY      2.0E-11     0.          0.0                                                                                            ! Kasting [1990] Assumed same as H+HO2->OH+OH: QY of 0.90 against rate of 8.1E-11 KZ estimate
 HSO       H         H2        SO                  2BODY      1.E-11      0.          0.0                                                                                            ! Kasting [1990] Assumed same as H+HO2->H2+O2: QY of 0.08 against rate of 8.1E-11, KZ estimate
@@ -176,19 +176,19 @@ S4        HV        S2        S2                  PHOTS      1.00               
 S3        HV        S2        S                   PHOTS      0.00                                                                                                                   ! note - we use the S2 cross section for S3
 S8        HV        S4        S4                  PHOTS      0.00                                                                                                                   ! ficticious reaction using the cross section for the linear S8 molecule (prate set to 0 in Photo)
 S8        HV        S4        S4                  PHOTS      0.00                                                                                                                   ! this line must follow the S8L reaction - also a fake reaction using the XS for the ring S8 molecule
-S8        HV        S4        S4                  PHOTS      0.00                                                                                                                   ! this line must follow the S8R reaction - this is the "real" reaction, prate set in Photo 
+S8        HV        S4        S4                  PHOTS      0.00                                                                                                                   ! this line must follow the S8R reaction - this is the "real" reaction, prate set in Photo
 H         OCS       CO        HS                  2BODY      9.10E-12    0.          1940.0                                                                                         ! NIST 2012
 HS        CO        OCS       H                   2BODY      4.15E-14    0.          7650.0                                                                                         ! NIST, 1995 reference, up to date 2012
 O         OCS       CO        SO                  2BODY      2.1E-11     0.          2200.0                                                                                         ! JPL-11
 O         OCS       S         CO2                 2BODY      8.3E-11     0.          5530.0                                                                                         ! NIST 2012
 CO        O1D       CO        O                   2BODY      7.00E-11    0.          0.0                                                                                            ! NIST **not what NIST says
-CO        O1D       CO2                           WEIRD                                                                                                                             !  reported but no sign of density dependence?  needs research 
+CO        O1D       CO2                           WEIRD                                                                                                                             !  reported but no sign of density dependence?  needs research
 OCS       S         CO        S2                  2BODY      1.50E-12    0.          1830.0                                                                                         ! NIST best at low T, up to date 2012
 OCS       OH        CO2       HS                  2BODY      1.10E-13    0.          1200.0                                                                                         ! JPL-11
-S         CO        OCS                           WEIRD                                                                                                                             ! essentially the same rate as O+CO+M -> CO2 + M  (but confused about a factor of 3)                         
-OCS       HV        CO        S                   PHOTS      0.72                                                                                                                   
+S         CO        OCS                           WEIRD                                                                                                                             ! essentially the same rate as O+CO+M -> CO2 + M  (but confused about a factor of 3)
+OCS       HV        CO        S                   PHOTS      0.72
 H2S       HO2       H2O       HSO                 2BODY      0.0         0.          0.0                                                                                            ! reportedly measured (5e-12)- dicey I think! - see NIST 2012
-OCS       S         OCS2                          WEIRD                                                                                                                             
+OCS       S         OCS2                          WEIRD
 OCS2      S         OCS       S2                  2BODY      2.00E-11    0.          0.0                                                                                            ! NIST 2012 reports 4.1e4 in who knows what units! so I'm guessing this means fast
 S3        O         S2        SO                  2BODY      0.          0.          0.0                                                                                            ! Is 0.*1.1E-11 in Kevin's mars model..so I just zeroed out here
 S4        O         S3        SO                  2BODY      0.          0.          0.0                                                                                            ! Is 0.*1.1E-11 in Kevin's mars model..so I just zeroed out here
@@ -196,57 +196,57 @@ OCS2      CO        OCS       OCS                 2BODY      3.00E-12    0.     
 CO2       O1D       CO2       O                   2BODY      7.5e-11     0.         -115.0                                                                                          ! JPL-11
 O3        O1D       O2        O2                  2BODY      1.2e-10     0.          0.0                                                                                            ! JPL-11
 O3        O1D       O2        O         O         2BODY      1.2e-10     0.          0.0                                                                                            ! JPL-11
-HO2       NO2       HNO4                          3BODY      2.0D-31     3.40        0.          0.          0.          2.9D-12     1.10        0.          0.          0.         ! JPL-11
-OH        HNO4      H2O       O2        NO2       2BODY      1.3E-12     0.         -380.0                                                                                          ! JPL-11
-O         HNO4      NO2       O2        OH        2BODY      7.8e-11     0.          3400.0                                                                                         ! JPL-11
-HNO4      HV        HO2       NO2                 PHOTO                                                                                                                             
-HNO4      H         HNO3      OH                  2BODY      2.4e-14     0.          0.0                                                                                            ! NIST 2012
+HO2       NO2       HO2NO2                        3BODY      2.0D-31     3.40        0.          0.          0.          2.9D-12     1.10        0.          0.          0.         ! JPL-11
+OH        HO2NO2    H2O       O2        NO2       2BODY      1.3E-12     0.         -380.0                                                                                          ! JPL-11
+O         HO2NO2    NO2       O2        OH        2BODY      7.8e-11     0.          3400.0                                                                                         ! JPL-11
+HO2NO2    HV        HO2       NO2                 PHOTO
+HO2NO2    H         HNO3      OH                  2BODY      2.4e-14     0.          0.0                                                                                            ! NIST 2012
 O         NO3       O2        NO2                 2BODY      1.00E-11    0.          0.0                                                                                            ! JPL-11
 HO2       NO3       OH        NO2       O2        2BODY      3.50E-12    0.          0.0                                                                                            ! JPL-11, 298 K
 NO        NO3       NO2       NO2                 2BODY      1.50E-11    0.         -170.0                                                                                          ! JPL-11
 O         NO2       NO3                           3BODY      2.5D-31     1.80        0.          0.          0.          2.2D-11     0.70        0.          0.          0.         ! JPL-11
 OH        NO3       HO2       NO2                 2BODY      2.20E-11    0.          0.0                                                                                            ! JPL-11, 298 K
-NO3       HV        NO        O2                  PHOTT                                                                                                                             
+NO3       HV        NO        O2                  PHOTT
 NO3       HV        NO2       O                   PHOTT                                                                                                                             !  this line must follow NO3+hv->NO+O2
-N         HO2       NO        OH                  2BODY      2.2E-11     0.          0.0                                                                                            
-O         N2O5      NO2       NO2       O2        2BODY      3.0E-16     0.          0.0                                                                                            
-NO2       NO3       N2O5                          3BODY      2.0D-30     4.4         0.          0.          0.          1.4D-12     0.7         0.          0.          0.         
+N         HO2       NO        OH                  2BODY      2.2E-11     0.          0.0
+O         N2O5      NO2       NO2       O2        2BODY      3.0E-16     0.          0.0
+NO2       NO3       N2O5                          3BODY      2.0D-30     4.4         0.          0.          0.          1.4D-12     0.7         0.          0.          0.
 N2O5      M         NO3       NO2                 WEIRD                                                                                                                             ! IUPAC
-NO2       NO3       NO        NO2       O2        2BODY      4.5E-14     0.          1260.0                                                                                         
-NO2       O3        NO3       O2                  2BODY      1.2E-13     0.          2450.0                                                                                         
-NO3       NO3       NO2       NO2       O2        2BODY      8.5E-13     0.          2450.0                                                                                         
-N2O5      HV        NO3       NO2                 PHOTS                                                                                                                             
+NO2       NO3       NO        NO2       O2        2BODY      4.5E-14     0.          1260.0
+NO2       O3        NO3       O2                  2BODY      1.2E-13     0.          2450.0
+NO3       NO3       NO2       NO2       O2        2BODY      8.5E-13     0.          2450.0
+N2O5      HV        NO3       NO2                 PHOTS
 N2O5      HV        NO3       NO        O         PHOTS                                                                                                                             !  this line must follow N2O5+hv->NO3+NO2
 N         NO2       N2O       O                   2BODY      5.80E-12    0.         -220.0                                                                                          ! JPL-11
-O1D       N2        N2O                           WEIRD                                                                                                                             
+O1D       N2        N2O                           WEIRD
 O1D       N2O       N2        O2                  2BODY      4.63E-11    0.         -20.0                                                                                           ! JPL-11
 O1D       N2O       NO        NO                  2BODY      7.25E-11    0.         -20.0                                                                                           ! JPL-11
-N2O       HV        N2        O1D                 PHOTP                                                                                                                             
+N2O       HV        N2        O1D                 PHOTP
 NO        CH3O      HNO       H2CO                WEIRD                                                                                                                             ! IUPAC worksheet - 2 body with the 300/T form... (yuk 123)
 NO2       CH3O      H2CO      HNO2                2BODY      1.10E-11    0.          1200.0                                                                                         ! JPL-11
 O1D       CH4       CH3O      H                   2BODY      3.5E-11     0.          0.0                                                                                            ! JPL-11
 CH3O      O2        H2CO      HO2                 2BODY      3.9E-14     0.          900.0                                                                                          ! JPL-11
 NO        CH3O      CH3ONO                        3BODY      2.30D-29    2.8         0.          0.          0.          3.80D-11    0.6         0.          0.          0.         ! JPL-11
 NO2       CH3O      CH3ONO2                       WEIRD                                                                                                                             ! IUPAC -06 (yuk 129)
-O3        CH3ONO    CH3ONO2   O2                  2BODY      6.76E-13    0.          5315.0                                                                                         
+O3        CH3ONO    CH3ONO2   O2                  2BODY      6.76E-13    0.          5315.0
 CH3ONO    M         CH3O      NO                  WEIRD                                                                                                                             ! NIST 1988 Theory (300K-1500K) 1st order reaction
-OH        CH3ONO2   CH2ONO2   H2O                 2BODY      8.00E-13    0.          1000.0                                                                                         
-CH2ONO2   O2        H2CO      NO2       O2        2BODY      1.00E-10    0.          0.0                                                                                            
-NO2       CH3O2     CH3O2NO2                      WEIRD                                                                                                                             !  IUAPC-06 (yuk 131)  
+OH        CH3ONO2   CH2ONO2   H2O                 2BODY      8.00E-13    0.          1000.0
+CH2ONO2   O2        H2CO      NO2       O2        2BODY      1.00E-10    0.          0.0
+NO2       CH3O2     CH3O2NO2                      WEIRD                                                                                                                             !  IUAPC-06 (yuk 131)
 CH3O2NO2  M         CH3O2     NO2                 WEIRD                                                                                                                             ! IUPAC
-CH3O2NO2  HV        CH3O2     NO2                 PHOTO                                                                                                                             
-OH        CH3OH     CH3O      H2O                 2BODY      2.90E-12    0.          345.0                                                                                          
-O         HNO3      OH        NO3                 2BODY      3.0E-17     0.          0.0                                                                                            
-HO2       NO2       HNO2      O2                  2BODY      5.00E-16    0.          0.0                                                                                            
-NO        CH3O2     CH3O      NO2                 2BODY      2.80E-12    0.         -300.0                                                                                          
-CH3O2     CH3O2     CH3O      CH3O      O2        2BODY      7.40E-13    0.          520.0                                                                                          
-CH3       O2        CH3O2                         3BODY      4.00D-31    3.6         0.          0.          0.          1.20D-12   -1.1         0.          0.          0.         
-CH3O2     CH3O2     H2CO      CH3OH     O2        2BODY      1.03E-13    0.         -365.0                                                                                          
-HO2       CH3O2     CH3OOH    O2                  2BODY      4.10E-13    0.         -750.0                                                                                          
-OH        CH3OOH    CH2OOH    H2O                 2BODY      2.12E-12    0.         -190.0                                                                                          
-OH        CH3OOH    CH3O2     H2O                 2BODY      3.18E-12    0.         -190.0                                                                                          
+CH3O2NO2  HV        CH3O2     NO2                 PHOTO
+OH        CH3OH     CH3O      H2O                 2BODY      2.90E-12    0.          345.0
+O         HNO3      OH        NO3                 2BODY      3.0E-17     0.          0.0
+HO2       NO2       HNO2      O2                  2BODY      5.00E-16    0.          0.0
+NO        CH3O2     CH3O      NO2                 2BODY      2.80E-12    0.         -300.0
+CH3O2     CH3O2     CH3O      CH3O      O2        2BODY      7.40E-13    0.          520.0
+CH3       O2        CH3O2                         3BODY      4.00D-31    3.6         0.          0.          0.          1.20D-12   -1.1         0.          0.          0.
+CH3O2     CH3O2     H2CO      CH3OH     O2        2BODY      1.03E-13    0.         -365.0
+HO2       CH3O2     CH3OOH    O2                  2BODY      4.10E-13    0.         -750.0
+OH        CH3OOH    CH2OOH    H2O                 2BODY      2.12E-12    0.         -190.0
+OH        CH3OOH    CH3O2     H2O                 2BODY      3.18E-12    0.         -190.0
 CH2OOH    M         OH        H2CO                WEIRD                                                                                                                             ! Vaghjinai et al. 1989 (via NIST) as 1st order -(yuk 278) has 1e-10 as 2body
-CH3OOH    HV        CH3O      OH                  PHOTO                                                                                                                             
+CH3OOH    HV        CH3O      OH                  PHOTO
 O         HCL       OH        CL                  2BODY      1.00E-11    0.          3300.0                                                                                         ! JPL-11 (this is really slow)
 OH        HCL       H2O       CL                  2BODY      1.80E-12    0.          250.0                                                                                          ! JPL-11, updated JPL 2011
 HO2       CL        HCL       O2                  2BODY      1.40E-11    0.         -270.0                                                                                          ! JPL-11 (other branch is OH + CLO), updated JPL 2011
@@ -255,10 +255,10 @@ CL        H2O2      HCL       HO2                 2BODY      1.10E-11    0.     
 CL        CH4       HCL       CH3                 2BODY      7.30E-12    0.          1280.0                                                                                         ! JPL-11
 CL        H2CO      HCL       HCO                 2BODY      8.10E-11    0.          30.0                                                                                           ! JPL-11
 CL        C2H6      HCL       C2H5                2BODY      7.20E-11    0.          70.0                                                                                           ! JPL-11
-O1D       HCL       O         HCL                 2BODY      1.50E-11    0.          0.0                                                                                            
-O1D       HCL       OH        CL                  2BODY      9.75E-11    0.          0.0                                                                                            
+O1D       HCL       O         HCL                 2BODY      1.50E-11    0.          0.0
+O1D       HCL       OH        CL                  2BODY      9.75E-11    0.          0.0
 CL        H2S       HCL       HS                  2BODY      3.70E-11    0.         -210.0                                                                                          ! JPL-11
-HCL       HV        H         CL                  PHOTO                                                                                                                             
+HCL       HV        H         CL                  PHOTO
 O         CLO       CL        O2                  2BODY      2.80E-11    0.         -85.0                                                                                           ! JPL-11
 O         HOCL      OH        CLO                 2BODY      1.70E-13    0.          0.0                                                                                            ! JPL-11
 OH        CLO       CL        HO2                 2BODY      7.40E-12    0.         -270.0                                                                                          ! JPL-11
@@ -269,20 +269,20 @@ HO2       CLO       HOCL      O2                  2BODY      2.60E-12    0.     
 CL        O3        CLO       O2                  2BODY      2.30E-11    0.          200.0                                                                                          ! JPL-11
 CLO       NO        NO2       CL                  2BODY      6.40E-12    0.         -290.0                                                                                          ! JPL-11
 CLO       SO        CL        SO2                 2BODY      2.80E-11    0.          0.0                                                                                            ! JPL-11
-O1D       HCL       H         CLO                 2BODY      3.75E-11    0.          0.0                                                                                            
-CLO       HV        O1D       CL                  PHOTO                                                                                                                             
-CLO       HV        O         CL                  PHOTO                                                                                                                             !  this line must follow CLO+hv->O1D+CL 
-HOCL      HV        OH        CL                  PHOTO                                                                                                                             
+O1D       HCL       H         CLO                 2BODY      3.75E-11    0.          0.0
+CLO       HV        O1D       CL                  PHOTO
+CLO       HV        O         CL                  PHOTO                                                                                                                             !  this line must follow CLO+hv->O1D+CL
+HOCL      HV        OH        CL                  PHOTO
 O1D       CL2       CLO       CL                  2BODY      2.025E-10   0.          0.0                                                                                            ! JPL-11 QY of 0.75 against 2.7e-10
 O1D       CL2       CL2       O                   2BODY      6.75E-11    0.          0.0                                                                                            ! JPL-11 QY of 0.25 against 2.7e-10
 OH        CL2       HOCL      CL                  2BODY      2.60E-12    0.          1100.0                                                                                         ! JPL-11
 CL        HOCL      CL2       OH                  2BODY      3.23E-12    0.          130.0                                                                                          ! JPL-11 (total rate of 3.4e-12 ,95% for products CL2 + OH)
 CL        HOCL      HCL       CLO                 2BODY      1.70E-13    0.          130.0                                                                                          ! JPL-11 (second branch of above)
 CLO       CLO       CL2       O2                  2BODY      1.00E-12    0.          1590.0                                                                                         ! JPL-11 (branch 1 of 3)
-CL2       HV        CL        CL                  PHOTT                                                                                                                             
+CL2       HV        CL        CL                  PHOTT
 CH2O2     M         CO        H2O                 WEIRD                                                                                                                             !  IUPAC-06 thermal decomp
-OH        CH3OH     CH2OH     H2O                 2BODY      2.42E-12    0.          345.0                                                                                          
-CH2OH     O2        H2CO      HO2                 2BODY      9.10E-12    0.          0.0                                                                                            
+OH        CH3OH     CH2OH     H2O                 2BODY      2.42E-12    0.          345.0
+CH2OH     O2        H2CO      HO2                 2BODY      9.10E-12    0.          0.0
 CL        CH3ONO2   CH2ONO2   HCL                 2BODY      1.30E-11    0.          1200.0                                                                                         ! JPL-11 products assumed
 CL        CH3O2     HCL       CH2O2               2BODY      8.0E-11     0.          0.0                                                                                            ! JPL-11 branches uncertain - spliting 1.6E-10 equally
 CL        CH3O2     CLO       CH3O                2BODY      8.0E-11     0.          0.0                                                                                            ! JPL-11 branches uncertain - spliting 1.6E-10 equally
@@ -299,45 +299,45 @@ CLO       O3        OCLO      O2                  2BODY      1.0E-12     0.     
 CLO       CLO       CLOO      CL                  2BODY      3.00E-11    0.          2450.0                                                                                         ! JPL-11
 CLO       CLO       OCLO      CL                  2BODY      3.5E-13     0.          1370.0                                                                                         ! JPL-11
 SO        OCLO      SO2       CLO                 2BODY      1.90E-12    0.          0.0                                                                                            ! JPL-11, 298K (uncertain)
-CLOO      HV        CLO       O                   PHOTO                                                                                                                             
-OCLO      HV        CLO       O                   PHOTO                                                                                                                             
+CLOO      HV        CLO       O                   PHOTO
+OCLO      HV        CLO       O                   PHOTO
 CL        NO3       CLO       NO2                 2BODY      2.4E-11     0.          0.0                                                                                            ! JPL-11
 NO3       CLO       CLOO      NO2                 2BODY      4.7E-13     0.          0.0                                                                                            ! JPL-11
-CLOO      M         CL        O2                  2BODY      2.8E-10     0.          1820.0                                                                                         
+CLOO      M         CL        O2                  2BODY      2.8E-10     0.          1820.0
 CL        NO2       CLONO                         3BODY      1.3D-30     2.00        0.          0.          0.          1.0D-10     1.00        0.          0.          0.         ! JPL-11
 O         CLONO2    O2        CLONO               2BODY      3.6E-12     0.          840.0                                                                                          ! JPL-11 (no JPL recomendation on products - using Yuk's)
 OH        CLONO2    HOCL      NO3                 2BODY      6.0E-13     0.          330.0                                                                                          ! JPL-11 spliiting rec rate of 1.2e-12 equally between two channels (following Yuk)
 OH        CLONO2    CLO       HNO3                2BODY      6.0E-13     0.          330.0                                                                                          ! JPL-11 spliiting rec rate of 1.2e-12 equally between two channels (following Yuk)
 CL        CLONO2    CL2       NO3                 2BODY      6.5E-12     0.         -135.0                                                                                          ! JPL-11
 CLO       NO2       CLONO2                        3BODY      1.8D-31     3.40        0.          0.          0.          1.5D-11     1.90        0.          0.          0.         ! JPL-11 (high pressure rate uncertain)
-CLONO     HV        CL        NO2                 PHOTO                                                                                                                             
-CLONO2    HV        CL        NO3                 PHOTT                                                                                                                             
-CLONO2    HV        CLO       NO2                 PHOTT                                                                                                                             !  this line must follow CLONO2+hv->CL+NO3 
+CLONO     HV        CL        NO2                 PHOTO
+CLONO2    HV        CL        NO3                 PHOTT
+CLONO2    HV        CLO       NO2                 PHOTT                                                                                                                             !  this line must follow CLONO2+hv->CL+NO3
 CL        NO        CLNO                          WEIRD                                                                                                                             ! 3 body but no high pressure limit given (can I fold this into tbdy?))
 CL        CLNO      NO        CL2                 2BODY      5.8E-11     0.         -100.0                                                                                          ! JPL-11
 CL        NO2       CLNO2                         3BODY      1.8D-31     2.00        0.          0.          0.          1.0D-10     1.00        0.          0.          0.         ! JPL-11
 OH        CLNO2     HOCL      NO2                 2BODY      2.4E-12     0.          1250.0                                                                                         ! JPL-11
-CLNO2     HV        CL        NO2                 PHOTO                                                                                                                             
-CLNO      HV        CL        NO                  PHOTO                                                                                                                             
-CLO       CH3O2     CH3OCL    O2                  2BODY      1.65E-12    0.          115.0                                                                                          
-CLO       CH3O2     CLOO      CH3O                2BODY      1.65E-12    0.          115.0                                                                                          
-OH        CH3OCL    HOCL      CH3O                2BODY      2.50E-12    0.          370.0                                                                                          
-CH3OCL    HV        CH3O      CL                  PHOTO                                                                                                                             
-CL        HNO4      CLO       HNO3                2BODY      1.0E-13     0.          0.0                                                                                            
-O         CL2O      CLO       CLO                 2BODY      2.7E-11     0.          530.0                                                                                          
-CL        CL2O      CL2       CLO                 2BODY      6.2E-11     0.         -130.0                                                                                          
+CLNO2     HV        CL        NO2                 PHOTO
+CLNO      HV        CL        NO                  PHOTO
+CLO       CH3O2     CH3OCL    O2                  2BODY      1.65E-12    0.          115.0
+CLO       CH3O2     CLOO      CH3O                2BODY      1.65E-12    0.          115.0
+OH        CH3OCL    HOCL      CH3O                2BODY      2.50E-12    0.          370.0
+CH3OCL    HV        CH3O      CL                  PHOTO
+CL        HO2NO2    CLO       HNO3                2BODY      1.0E-13     0.          0.0
+O         CL2O      CLO       CLO                 2BODY      2.7E-11     0.          530.0
+CL        CL2O      CL2       CLO                 2BODY      6.2E-11     0.         -130.0
 NO        CL2O2     CL2O      NO2                 2BODY      1.0E-15     0.          0.0                                                                                            !
-CL2O      HV        CL        CLO                 PHOTO                                                                                                                             
-CLO       CLO       CL2O2                         3BODY      1.6D-32     4.5         0.          0.          0.          3.0D-12     2.0         0.          0.          0.         
-CL        CL2O2     CL2       CLOO                2BODY      7.6E-11     0.          0.0                                                                                            
+CL2O      HV        CL        CLO                 PHOTO
+CLO       CLO       CL2O2                         3BODY      1.6D-32     4.5         0.          0.          0.          3.0D-12     2.0         0.          0.          0.
+CL        CL2O2     CL2       CLOO                2BODY      7.6E-11     0.          0.0
 CL2O2     M         CLO       CLO                 WEIRD                                                                                                                             ! IUPAC
-CL2O2     HV        CL        CLOO                PHOTO                                                                                                                             
+CL2O2     HV        CL        CLOO                PHOTO
 CL2O2     HV        CLO       CLO                 PHOTO                                                                                                                             !  this line must follow CL2O2+hv->CL+CLOO  - existence of this branch is uncertain
-O         OCLO      CLO3                          3BODY      2.90D-31    3.1         0.          0.          0.          8.3D-12     0.0         0.          0.          0.         
-O3        OCLO      CLO3      O2                  2BODY      2.1e-12     0.          4700.0                                                                                         
-CLO3      HV        CLO       O2                  PHOTO                                                                                                                             
+O         OCLO      CLO3                          3BODY      2.90D-31    3.1         0.          0.          0.          8.3D-12     0.0         0.          0.          0.
+O3        OCLO      CLO3      O2                  2BODY      2.1e-12     0.          4700.0
+CLO3      HV        CLO       O2                  PHOTO
 CLO       O2        CLO3                          WEIRD                                                                                                                             ! yuk 214 - temporarily zeroed
 O3        CL        CLO3                          WEIRD                                                                                                                             ! Simonaitis 1975
 OH        CLO3      HCLO4                         2BODY      2.0e-12     0.          0.0                                                                                            ! Simonatitis 1975 (estimated) ACK - temporarily changing
 CLO       CLO3      CL2O4                         WEIRD                                                                                                                             ! Xu and Lin 2003
-CL2O4     HV        CLOO      OCLO                PHOTO                                                                                                                             
+CL2O4     HV        CLOO      OCLO                PHOTO
