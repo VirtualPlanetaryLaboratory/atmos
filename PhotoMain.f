@@ -24,7 +24,7 @@ c - and attempting to take it away...
 c - g77 will no longer work as there are some F90 built-ins being used
 c see makefile for compilation syntax
 
-c-mab: November 2016: New functioning templates are: 
+c-mab: November 2016: New functioning templates are:
 c-mab: Titan, Mars, Hot Jupiter Wasp12b, ModernEarth+CL
 c-mab: See documentation for template developer list.
 
@@ -564,7 +564,7 @@ C      Haze TOA and sur rpar
 
 
 C - This file gives the input needed for SMART - radiative transfer code
-c-mab: Commenting out smart inputs for now. (11/4/2016) 
+c-mab: Commenting out smart inputs for now. (11/4/2016)
 c       open(159, file='photochem_smart/photchem/photfile.pt',
 c     &          status='UNKNOWN')
 c       open(164, file='photochem_smart/atm/tag.atm',
@@ -630,7 +630,7 @@ C   To be used as input for the climate model (coupling)
        open(116, file='COUPLE/fromClima2Photo.dat', status='UNKNOWN')
        open(117, file='COUPLE/mixing_ratios.dat', status='UNKNOWN')
 !       open(118, file='COUPLE/fromClima2Photo_works.dat', status='UNKNOWN')
-    
+
 
 
 C - READ IN SPECIES NAMES, ATOMIC NUMBERS, AND BOUNDARY CONDITIONS
@@ -1103,7 +1103,7 @@ C gna - we need to make it so that T = T_new
         enddo
        endif
       else
-        print*,'Warning: NP = 0, so no particles are being' 
+        print*,'Warning: NP = 0, so no particles are being'
         print*,'assumed in this model. Proceed with caution...'
         print*,'(NP=0 to be used in giant planet templates only.)'
       endif
@@ -1282,7 +1282,7 @@ c-mab: Note: Loop below is temporary....
         PRINT*, "CALLING RATESWASP12B..."
       ELSE
         CALL RATES
-        PRINT*, "CALLING RATES..." 
+        PRINT*, "CALLING RATES..."
       ENDIF
 
 C    computes diffusion coefficents (K*N) and binary
@@ -1348,17 +1348,17 @@ C     !set to h2o from clima if coupling on
 
 C  it's having mega problems for low h2o profiles for cold surface environments
 C      here is a fix for now  WARNING
-       IF(T(1).lt.260) THEN
-          print *, 'scaling water'
+c       IF(T(1).lt.260) THEN
+c          print *, 'scaling water'
 
-        DO J=1, NZ
-        READ(118,*) alt_dontuse(J), T_dontuse(J), water_fix(J)
-        END DO
-        close(118)
-        do J=1,JTROP
-        USOL(LH2O,J) = water_fix(J)
-        enddo
-        endif
+c        DO J=1, NZ
+c        READ(118,*) alt_dontuse(J), T_dontuse(J), water_fix(J)
+c        END DO
+c        close(118)
+c        do J=1,JTROP
+c        USOL(LH2O,J) = water_fix(J)
+c        enddo
+c        endif
 
 
 
@@ -1394,12 +1394,12 @@ c2     FORMAT(a)
 c      if(buffer(1:3).eq.'yes'.or.buffer(1:3).eq.'YES'.
 c     &      or.buffer(1:1).eq.'y'.or.buffer(1:1).eq.'Y') then
 c       NSTEPS = 1 !To run a single time step only without convergence
-c      else 
+c      else
 c       NSTEPS = 10000 !the default, to allow converging runs
 c      endif
 C      Default number of steps is 50,000. The code shouldn't take nearly this long to run except hot planets.
        NSTEPS = 50000
-            
+
 c-mab: nsteps = 1 recommended for initial model debugging
 c      NSTEPS = 1
 C     for standalone mode this should probably be the default
@@ -1493,10 +1493,10 @@ c interior grid points   ?fixed 8-13-05
             ADD(k,j) = -ADU(k,j) - ADL(k,j)
         enddo
        endif
-       enddo      
-     
+       enddo
+
       else
-       if (mbound(LH2).eq.0) then   
+       if (mbound(LH2).eq.0) then
 c diff limited flux implemented as effusion velocity
         DU(LH,1) = DU(LH,1) + bHN2(1)/Den(1)/DZ(1)**2
         ADU(LH,1) = bHN2(1)/Den(1)/DZ(1)/2.*
@@ -2876,7 +2876,7 @@ C     (NSP - 1), indicates (inert) CO2 density for terrestrial planets ONLY
 C     Print into another file .strctr
         write (66,881) (T(i),EDD(i),DEN(i),O3(i), SL(LCO2,i),i=1,nz)
 
-      IF (NP.GT.0) THEN 
+      IF (NP.GT.0) THEN
         fmtstr='(  E17.8)'
         write(fmtstr(2:3),'(I2)')NP*3
         do i=1,nz
@@ -3218,7 +3218,7 @@ C    error in reactions
  301    FORMAT(//1X,'ERROR IN REACTION ',I3)
         STOP
       END
-      
+
       SUBROUTINE PROMPT(CHAR)
 c-mab: PROMPT: sends a prompt input (CHAR) to terminal from this routine.
 c-mab: Use this to be able to pass inputs mid-routine.
@@ -3239,6 +3239,3 @@ c-mab: Use this to be able to pass inputs mid-routine.
  100  CONTINUE
       RETURN
       END
-
-
-
