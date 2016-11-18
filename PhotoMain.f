@@ -1384,19 +1384,21 @@ c      TSTOP = 1.E14
 
       TSTOP = 1.E17
 C     AVB changed to 1 for Earth+CL debugging
-
-      PRINT*,' '
-      PRINT*,'Do you want to run for a single time step only (NSTEPS=1)'
-      PRINT*,'instead of till convergence (NSTEPS=10000)? [Note:'
-      CALL prompt('Default=n, i.e. use if debugging only.] (y/n?):')
-      READ(5,2)buffer
-2     FORMAT(a)
-      if(buffer(1:3).eq.'yes'.or.buffer(1:3).eq.'YES'.
-     &      or.buffer(1:1).eq.'y'.or.buffer(1:1).eq.'Y') then
-       NSTEPS = 1 !To run a single time step only without convergence
-      else 
-       NSTEPS = 10000 !the default, to allow converging runs
-      endif
+c      Commenting this out for now. We may use this later - but likely not in the main FORTRAN code.
+c      PRINT*,' '
+c      PRINT*,'Do you want to run for a single time step only (NSTEPS=1)'
+c      PRINT*,'instead of till convergence (NSTEPS=10000)? [Note:'
+c      CALL prompt('Default=n, i.e. use if debugging only.] (y/n?):')
+c      READ(5,2)buffer
+c2     FORMAT(a)
+c      if(buffer(1:3).eq.'yes'.or.buffer(1:3).eq.'YES'.
+c     &      or.buffer(1:1).eq.'y'.or.buffer(1:1).eq.'Y') then
+c       NSTEPS = 1 !To run a single time step only without convergence
+c      else 
+c       NSTEPS = 10000 !the default, to allow converging runs
+c      endif
+C      Default number of steps is 50,000. The code shouldn't take nearly this long to run except hot planets.
+       NSTEPS = 50000
             
 c-mab: nsteps = 1 recommended for initial model debugging
 c      NSTEPS = 1
