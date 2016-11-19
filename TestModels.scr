@@ -40,32 +40,32 @@ for folder in `find . -type d -maxdepth 1 -mindepth 1 | sed 's|./||'`; do
             if cp 'PLANET.dat' '../..'; then
               echo "Finished copying photochem templates over for ${folder} run!"
             else
-              printf "${RED}${true_path}${folder}/PLANET.dat appears to be missing! Quitting.${NC}"
+              printf "${RED}${temp_path}${folder}/PLANET.dat appears to be missing! Quitting.${NC}"
               echo ""
               exit 1
             fi
           else
-            printf "${RED}${true_path}${folder}/species.dat appears to be missing! Quitting.${NC}"
+            printf "${RED}${temp_path}${folder}/species.dat appears to be missing! Quitting.${NC}"
             echo ""
             exit 1
           fi
         else
-          printf "${RED}${true_path}${folder}/parameters.inc appears to be missing! Quitting.${NC}"
+          printf "${RED}${temp_path}${folder}/parameters.inc appears to be missing! Quitting.${NC}"
           echo ""
           exit 1
         fi
       else
-        printf "${RED}${true_path}${folder}/reactions.rx appears to be missing! Quitting.${NC}"
+        printf "${RED}${temp_path}${folder}/reactions.rx appears to be missing! Quitting.${NC}"
         echo ""
         exit 1
       fi
     else
-      printf "${RED}${true_path}${folder}/input_photochem.dat appears to be missing! Quitting.${NC}"
+      printf "${RED}${temp_path}${folder}/input_photochem.dat appears to be missing! Quitting.${NC}"
       echo ""
       exit 1
     fi
   else
-    printf "${RED}${true_path}${folder}/in.dist appears to be missing! Quitting.${NC}"
+    printf "${RED}${temp_path}${folder}/in.dist appears to be missing! Quitting.${NC}"
     echo ""
     exit 1
   fi
@@ -94,8 +94,15 @@ for folder in `find . -type d -maxdepth 1 -mindepth 1 | sed 's|./||'`; do
   echo "Running ${folder}....... Please wait. This might take a while."
   echo "If you need to peek take a look at ${folder}.out.out"
   if ./'Photo.run' >& ${folder}.out.out; then
-    printf "${GREEN}${folder} run complete! Output stored in ${folder}.out.out${NC}"
-    echo ""
+    # Tests for non-convergence
+    NSTEPS=$(grep "NSTEPS =" PhotoMain.f | grep -vi c | sed 's/NSTEPS = //')
+    if grep "N =" ${folder}.out.out | grep ${NSTEPS}; then
+      printf "${RED}${folder} did not converge after ${NSTEPS}. Quitting. ${NC}"
+      echo "See ${folder}.out.out for model output to diagnose this."
+    else
+      printf "${GREEN}${folder} run complete in < ${NSTEPS} steps! Output stored in ${folder}.out.out${NC}"
+      echo ""
+    fi
   else
     printf "${RED}${folder} run did NOT complete! Something is worng. Quitting.${NC}"
     echo "See ${folder}.out.out for model output and error messages."
@@ -138,8 +145,8 @@ for folder in `find . -type d -maxdepth 1 -mindepth 1 | sed 's|./||'`; do
 
 done
 
-printf "${GREEN} Everything compiled and ran successfully!"
-echo "Note this script does not test for convergence."
-echo "It also does not test for accuracy."
-echo "But... at least it compiled and ran!${NC}"
+printf "${GREEN} Everything compiled and ran!${NC}"
+echo "Look above for ${RED} text${NC}, to make sure all models converged."
+echo "This script does not test for accuracy."
+echo "But... at least your templates compiled and ran!${NC}"
 echo ""

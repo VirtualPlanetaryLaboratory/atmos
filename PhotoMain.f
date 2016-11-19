@@ -1398,7 +1398,7 @@ c      else
 c       NSTEPS = 10000 !the default, to allow converging runs
 c      endif
 C      Default number of steps is 50,000. The code shouldn't take nearly this long to run except hot planets.
-       NSTEPS = 50000
+       NSTEPS = 9999
 
 c-mab: nsteps = 1 recommended for initial model debugging
 c      NSTEPS = 1
