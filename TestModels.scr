@@ -48,7 +48,7 @@ for folder in `find . -type d -maxdepth 1 -mindepth 1 | sed 's|./||'`; do
     printf "${GREEN}${folder} compiled!${NC}"
     echo ""
   else
-    printf "${RED}${folder} did not compile! Something is wrong. Quitting.${NC}
+    printf "${RED}${folder} did not compile! Something is wrong. Quitting.${NC}"
     echo "See ${folder}.log for compliation output and error messages."
     echo ""
     exit 1
