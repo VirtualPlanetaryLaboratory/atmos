@@ -3,10 +3,9 @@
 temp_path='PHOTOCHEM/INPUTFILES/TEMPLATES/'
 temp_path2='CLIMA/IO/TEMPLATES/'
 temp_path3='CLIMA/IO/'
-RED='\033[0;31m'
+RED='\033[0;31m' #Red
 NC='\033[0m' # No Color
-printf "I ${RED}love${NC} Stack Overflow\n"
-GREEN='\033[0;32m'
+GREEN='\033[0;32m' #Green
 
 clear
 echo "***************** THIS IS A TEST. THIS IS ONLY A TEST ****************"
@@ -31,13 +30,45 @@ for folder in `find . -type d -maxdepth 1 -mindepth 1 | sed 's|./||'`; do
   # copy files
   cd $folder
   echo "Copying files from ${temp_path}${folder}."
-  cp 'in.dist' '../../..' #> ${true_path}/${folder}.log
-  cp 'input_photchem.dat' '../..' #>> ${true_path}/${folder}.log 2>&1
-  cp 'reactions.rx' '../..' #>> ${true_path}/${folder}.log 2>&1
-  cp 'parameters.inc' '../..' #>> ${true_path}/${folder}.log 2>&1
-  cp 'species.dat' '../..' #>> ${true_path}/${folder}.log 2>&1
-  cp 'PLANET.dat' '../..' #>> ${true_path}/${folder}.log 2>&1
-  echo "Finished copying photochem templates over for ${folder} run!"
+  # This series of if/else statements copies files into the right place.
+  # They should also identify which (if any) files are missing.
+  if cp 'in.dist' '../../..'; then
+    if cp 'input_photchem.dat' '../..'; then
+      if cp 'reactions.rx' '../..'; then
+        if cp 'parameters.inc' '../..'; then
+          if cp 'species.dat' '../..'; then
+            if cp 'PLANET.dat' '../..'; then
+              echo "Finished copying photochem templates over for ${folder} run!"
+            else
+              printf "${RED}${true_path}${folder}/PLANET.dat appears to be missing! Quitting.${NC}"
+              echo ""
+              exit 1
+            fi
+          else
+            printf "${RED}${true_path}${folder}/species.dat appears to be missing! Quitting.${NC}"
+            echo ""
+            exit 1
+          fi
+        else
+          printf "${RED}${true_path}${folder}/parameters.inc appears to be missing! Quitting.${NC}"
+          echo ""
+          exit 1
+        fi
+      else
+        printf "${RED}${true_path}${folder}/reactions.rx appears to be missing! Quitting.${NC}"
+        echo ""
+        exit 1
+      fi
+    else
+      printf "${RED}${true_path}${folder}/input_photochem.dat appears to be missing! Quitting.${NC}"
+      echo ""
+      exit 1
+    fi
+  else
+    printf "${RED}${true_path}${folder}/in.dist appears to be missing! Quitting.${NC}"
+    echo ""
+    exit 1
+  fi
   cd $true_path
 
   # *** PHOTOCHEM tests ***
@@ -106,3 +137,9 @@ for folder in `find . -type d -maxdepth 1 -mindepth 1 | sed 's|./||'`; do
 #  ./'Clima.run'
 
 done
+
+printf "${GREEN} Everything compiled and ran successfully!"
+echo "Note this script does not test for convergence."
+echo "It also does not test for accuracy."
+echo "But... at least it compiled and ran!${NC}"
+echo ""
