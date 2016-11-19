@@ -4,8 +4,9 @@ temp_path='PHOTOCHEM/INPUTFILES/TEMPLATES/'
 temp_path2='CLIMA/IO/TEMPLATES/'
 temp_path3='CLIMA/IO/'
 RED='\033[0;31m'
-GREEN='\032[0;31m'
 NC='\033[0m' # No Color
+printf "I ${RED}love${NC} Stack Overflow\n"
+GREEN='\033[0;32m'
 
 clear
 echo "***************** THIS IS A TEST. THIS IS ONLY A TEST ****************"
@@ -27,11 +28,8 @@ cd $temp_path
 for folder in `find . -type d -maxdepth 1 -mindepth 1 | sed 's|./||'`; do
   cd $true_path
   cd $temp_path
-  echo $folder
   # copy files
-#  echo $(pwd)
   cd $folder
-  echo $(pwd)
   echo "Copying files from ${temp_path}${folder}."
   cp 'in.dist' '../../..' #> ${true_path}/${folder}.log
   cp 'input_photchem.dat' '../..' #>> ${true_path}/${folder}.log 2>&1
@@ -47,9 +45,12 @@ for folder in `find . -type d -maxdepth 1 -mindepth 1 | sed 's|./||'`; do
   echo "Compiling ${folder}"
   make '-f' 'PhotoMake' 'clean' >> ${folder}.log 2>&1
   if make '-f' 'PhotoMake' >> ${folder}.log 2>&1; then
-    printf "${folder} compiled!"
+    printf "${GREEN}${folder} compiled!${NC}"
+    echo ""
   else
-    printf "${folder} did not compile! Something is wrong. Quitting."
+    printf "${RED}${folder} did not compile! Something is wrong. Quitting.${NC}
+    echo "See ${folder}.log for compliation output and error messages."
+    echo ""
     exit 1
   fi
 
@@ -62,9 +63,12 @@ for folder in `find . -type d -maxdepth 1 -mindepth 1 | sed 's|./||'`; do
   echo "Running ${folder}....... Please wait. This might take a while."
   echo "If you need to peek take a look at ${folder}.out.out"
   if ./'Photo.run' >& ${folder}.out.out; then
-    echo "${folder} run complete! Output stored in ${folder}.out.out"
+    printf "${GREEN}${folder} run complete! Output stored in ${folder}.out.out${NC}"
+    echo ""
   else
-    echo "${folder} run did NOT complete! Something is worng. Quitting."
+    printf "${RED}${folder} run did NOT complete! Something is worng. Quitting.${NC}"
+    echo "See ${folder}.out.out for model output and error messages."
+    echo ""
     exit 1
   fi
   echo ""
