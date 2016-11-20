@@ -57,24 +57,26 @@ c            print *, i, ISPEC(I),' inert densities'
           enddo
          enddo   
       endif
-
-     
 !do the last 4 inert species that are the same in both codes
       do J=1,NZ
 
- 
-
-        if(ISPEC(NSP-1).eq.'CO2') D(LCO2,J) = FCO2 * DEN(J) !if CO2 is inert, place above N2 in list (hardcoded position for CO2/N2 (NSP-1/NSP)
-
+       if(ISPEC(NSP-1).eq.'CO2') D(LCO2,J) = FCO2 * DEN(J) !if CO2 is inert, place above N2 in list (hardcoded position for CO2/N2 (NSP-1/NSP)
+c N2-defined as the "rest" of the density after subtracting Ar, CO2 and O2 (mab: do we want to add anything else?)
        if(ISOTOPE.EQ.0) D(NSP,J) = (1. - USOL(LO2,J) - FCO2 - FAR 
-     2  - FCO)* DEN(J)    ! N2 -defined as the "rest" of the density - wrong as it ignores Argon, CO, etc.
+     2  - FCO)* DEN(J)    
 
       if(ISOTOPE.EQ.1) D(NSP,J)=(1.-UINERT(LO2-Loff,J)-FCO2 - FAR 
-     2  - FCO) * DEN(J)  ! N2 -defined as the "rest" of the density - wrong as it ignores Argon
+     2  - FCO) * DEN(J) 
      
 
        D(NSP1,J) = 1.           ! HV has density of 1 for photorate calculations
-       D(NSP2,J) = DEN(J)                         ! M - background density for three body reactions
+       D(NSP2,J) = DEN(J)       ! M - background density for three body reactions
+       
+       
+       IF(PLANET.EQ.'WASP12B') THEN
+       	D(LHE,J) = FHE * DEN(J) ! Assuming He is always inert
+       ENDIF
+
       enddo
 
     
@@ -218,9 +220,12 @@ C   PRODUCTION OF NO AND O2
       changeL = 1        !mc temp var for testing lightning changes versus OLD JFK method
                          !changeL=1 uses new code, changeL=0 uses old code
       
-      JT1 = JTROP + 1          ! same as NH1
+c-mab: Let's NOT zero-out the H2O terms or include lightning for giant templates...
+c-mab: (Basing this one on FH2-based distinction...)
+      IF(FH2.LT.0.50) THEN
+       JT1 = JTROP + 1          ! same as NH1
   
-      DO 5 J=1,JTROP
+       DO 5 J=1,JTROP
         FVAL(LH2O,J) = 0.
         YP(LH2O,J) = 0.
         YL(LH2O,J) = 0.
@@ -287,6 +292,7 @@ c        stop
 c-end 3-20-06 addition
 
    5  CONTINUE
+      ENDIF
 
 
 
@@ -384,9 +390,7 @@ c       print *, j, USOL(LL,J),S8S(J),(USOL(LL,J) - S8S(J))
       endif  !end S8 skip loop
 
       endif  !end normal operation loop (i.e. if IDO = 0 or 1)
-    
 
-c      stop
 
 C
 c what is this?  its hardwired for case where O3 is trace
@@ -470,12 +474,12 @@ C      print*,'Integrated Rates	J:'
 C      DO L=1,NR
 C      	print*, RAT(L),L
 C      ENDDO  
-      DO 8 I=1,NQ1
-      XLG(I) = YL(I,1)
-      DO 8 J=1,NZ
-      TP(I) = TP(I) + YP(I,J)*DZ(J)
-      TL(I) = TL(I) + YL(I,J)*D(I,J)*DZ(J)
-   8  CONTINUE
+C      DO 8 I=1,NQ1
+C      XLG(I) = YL(I,1)
+C      DO 8 J=1,NZ
+C      TP(I) = TP(I) + YP(I,J)*DZ(J)
+C      TL(I) = TL(I) + YL(I,J)*D(I,J)*DZ(J)
+C   8  CONTINUE
 C
       RETURN
       END

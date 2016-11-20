@@ -91,6 +91,6 @@ C read in relevant cross sections and set the Jnumbers,photospec,and photolabel
        CALL newXS(ISPEC(INT(photospec(i))),nw,wavl,wav,T,DEN,j,sq,
      $         columndepth,zy,IO2)         
        enddo   
-
+c       stop
       RETURN
       END

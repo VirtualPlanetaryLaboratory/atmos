@@ -110,8 +110,8 @@ C
      2  E10.3,2X,'S2 =',E10.3,2X,'S4 =',E10.3,2X,'S8 =',E10.3)
       endif
 
-      
-      IF (NP.GT.0) THEN !mab FOR THE FIRST TWO PARTICLES (ASSUMED SULPHATE AND S8 IN HARDCODING ORDER)
+c-mab FOR THE FIRST TWO PARTICLES (ASSUMED SULPHATE AND S8 IN HARDCODING ORDER)      
+      IF (NP.GT.0) THEN
        DO J=1,NP
 !ack hardcoding to retain Kevin's original scheme  
 !where tauaer 2 and 3 were both for elemental sulfur
@@ -123,7 +123,8 @@ corig      TAUAER(NP+1) = 0.
          R = RPAR(I,J)           
 !this should be the extinction efficiency at some wavelength - presumably visible? why 0.6?
 !c-mab reconfigured this loop cause there was a bug previously...
-         IF (J.LT.3) TAUAER(J) = TAUAER(J) + 0.6*3.14159*R*R*AERSOL(I,J)*DZ(I) !S8 VIS (0.6)
+         IF (J.LT.3) TAUAER(J) = TAUAER(J) + 
+     &                           0.6*3.14159*R*R*AERSOL(I,J)*DZ(I) !S8 VIS (0.6)
          IF (J.EQ.2) TAUAER(J+1) = TAUAER(J+1) +  !c-mab Hold S8(UV) in tauaer3
      2     1.2*3.14159*R*R*AERSOL(I,J)*DZ(I)
 !so 1.2 is somehow Qext of S8 in the UV? - don't we have these all as 2?
@@ -361,8 +362,15 @@ C
 c water is not conserved.  should this be jtrop or jtrop + 1?
       FLOW(LH2O) = FLUXO(LH2O,jtrop)   ! jim had 11 hard-wired
       CON(LH2O) = TP(LH2O) - TL(LH2O) + FLOW(LH2O) - FUP(LH2O)
+c-mab disabling FLUXO of water assignment to 0.0 for giants based on WT.
+c-mab This is something I'm trying to move from a planet-based if loop.
+c-mab Most solar system gas giants have a mwt of <3.0 and terrestrials > 20.0
+c-mab Using wt of methane - 16.0 as a distinction here
+c-mab (May change later after input soliciation)
+      IF (WT.LT.16.0) THEN
       DO 6 I=1,jtrop-1   ! jim had 10 hard wired... its not zero
    6  FLUXO(LH2O,I) = 0.
+      ENDIF
 c there are issues here -    
 
 
@@ -380,7 +388,7 @@ c it fails -
 c-mab abstracted by looping over species where atomsH ne 0
       flux_H = 0.0
       do i=1,NZ-1
-        do j=1,NSP
+        do j=1,NQ1   !note
           if(atomsH(j).gt.0.0) then 
 c-mab then only sum for species that contain H for a given layer
         	flux_H(i) = flux_H(i) + atomsH(j)*FLUXO(j,i)
@@ -642,9 +650,17 @@ C   COMPUTE CONSERVATION OF SULFUR
 
       if(ISOTOPE.EQ.0) then 
       SO4LOS = TLOSS(LH2SO4) + TLOSS(LSO4AER)   ! these are redundant when taking accounts
-      S8LOS = 8.*(TLOSS(LS8) + TLOSS(LS8AER))   !TLOSS is rainout+deposition
-    !      S8LOS = 8.*TLOSS(LS8AER)   !TLOSS is rainout+deposition
-!are the above still correct and/or relevant?
+      S8LOS = 8.*TLOSS(LS8AER)   !TLOSS is rainout+deposition
+
+       ! OK SO4LOS/S8LOS are no longer useful I think. Check this at somepoint
+       ! if the are, should but a test for LS8 here just in case anyone needs to bring back 
+       ! S8 in the gas phase (most of us just go S4+S4 -> S8AER without bothering with S8 gas
+       ! but there is a heritage code for S8 gas phase condensation. This is only really needed for high temperatures
+       ! anyway - if that is back and this is useful, might need to add 8.*TLOSS(LS8) to the above
+
+
+
+
       endif
 
       print 177,  Sloss,Spro,SO4LOS,S8LOS,Srain, difference

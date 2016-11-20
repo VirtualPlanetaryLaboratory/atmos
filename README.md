@@ -2,7 +2,7 @@
 
 This README would normally document whatever steps are necessary to get your application up and running.
 
-### What is this repository for? ###
+#### What is this repository for? ####
 
 This is a coupled photochemistry-climate code. This model leverages
 the work by the Kasting, Zahnle, and Catling groups and represents an
@@ -17,17 +17,3 @@ The model development was supported by NASA Astrobiology Institute's  Virtual Pl
 
 ### [What does the converged output looks like?](https://bitbucket.org/ravikopparapu/output-examples/wiki/Converged%20Output%20Examples) ###
 
-
-### Contribution guidelines ###
-
-* Writing tests
-
-* Code review
-
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-
-* Other community or team contact

@@ -18,21 +18,18 @@ folder_path=$temp_path$folder
 folder_path2=$temp_path2$folder
 
 cd $folder_path
-cp 'in.dist' '../../..' && echo "Copied in.dist to $(pwd ../../..)"
-cp 'input_photchem.dat' '../..' && echo "Copied input_photchem.dat to $(pwd ../..)"
-cp 'ISOreactions.rx' '../..' && echo "Copied ISOreactions.rx to $(pwd ../..)"
-cp 'reactions.rx' '../..' && echo "Copied reactions.rx to $(pwd ../..)"
-cp 'parameters.inc' '../..' && echo "Copied parameters.inc to $(pwd ../..)"
-cp 'species.dat' '../..' && echo "Copied species.dat to $(pwd ../..)"
-cp 'PLANET.dat' '../..' && echo "Copied PLANET.dat to $(pwd ../..)"
-cp 'ISOparameters.inc' '../..' && echo "Copied ISOparameters.inc to $(pwd ../..)"
-cp 'parametersREGULAR.inc' '../..' && echo "Copied parametersREGULAR.in to $(pwd ../..)"
+cp 'in.dist' '../../..' && echo "Copied in.dist from $(pwd ../../..)"
+cp 'input_photchem.dat' '../..' && echo "Copied input_photchem.dat from $(pwd ../..)"
+cp 'reactions.rx' '../..' && echo "Copied reactions.rx from $(pwd ../..)"
+cp 'parameters.inc' '../..' && echo "Copied parameters.inc from $(pwd ../..)"
+cp 'species.dat' '../..' && echo "Copied species.dat from $(pwd ../..)"
+cp 'PLANET.dat' '../..' && echo "Copied PLANET.dat from $(pwd ../..)"
 echo 'Finished copying photochem templates over'
 cd $true_path
 pwd
 
 echo -e '\n'
-echo -n 'Would you like to compile PHOTOCHEM (y/n)? '
+echo -n 'Would you like to compile PHOTOCHEM (y/n)?:'
  read recompile
   if [ "$recompile" == "y" -o "$recompile" == 'Y' ]
    then
@@ -40,14 +37,14 @@ echo -n 'Would you like to compile PHOTOCHEM (y/n)? '
        make '-f' 'PhotoMake'
   fi
 echo -e '\n'
-echo -n 'Would you like to run PHOTOCHEM (y/n)'
+echo -n 'Would you like to run PHOTOCHEM (y/n)?:'
   read run_photo
   if [ "$run_photo" == "y" -o "$run_photo" == 'Y' ]
    then             
        ./'Photo.run'
   fi
 echo -e '\n'
-echo -n 'Would you like to recompile CLIMA? (y/n?)'
+echo -n 'Would you like to recompile CLIMA (y/n)?:'
 read recompile
  if [ "$recompile" == "y" -o "$recompile" == 'Y' ]
  then
@@ -55,7 +52,7 @@ read recompile
      make '-f' 'ClimaMake'
  fi 
 echo -e '\n'
-echo -n 'Would you like to run CLIMA (y/n)? '
+echo -n 'Would you like to run CLIMA (y/n)?:'
 read run_clima
 if [ "$run_clima" == "y" -o "$run_clima" == 'Y' ]
 then

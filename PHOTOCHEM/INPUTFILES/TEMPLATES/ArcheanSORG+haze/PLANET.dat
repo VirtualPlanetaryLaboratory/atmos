@@ -6,7 +6,7 @@
 6.371E8  = R0    Radius of Earth  - this times 0.53 for Mars (verify)
 1.013    = P0  = surface pressure of modern Earth in atm ( 0.0063 for Mars)
 EARTH    = PLANET  string naming the planet for extra changes (MARS is the only other option for the moment)
-0.0      = TIMEGA - time in Ga, for modifying the solar flux
+2.7      = TIMEGA - time in Ga, for modifying the solar flux
 0        = IRESET
 13       = msun
 0        = IHZSCALE
@@ -26,8 +26,9 @@ choices for msun (these numbers are from photgrid.f)
       msun = 18    !K2V
       msun = 19    !F2V
       msun = 76    !GJ876
-
-
+      msun = 20    !M8V
+      msun = 21    !M5V
+      msun = 22    !G0V star for wasp12b (first Hot Jupiter model)
 
 11    = JTROP, Grid layer marking the tropopause height, depends on ZTROP and DELZ
 1.0E5 = DELZ, Height of each atm layer - Earth=1.0E5, Mars=2.0E5 (cm)

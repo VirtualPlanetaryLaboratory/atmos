@@ -58,7 +58,16 @@ c- this used only if INO=0
       pCO2=FCO2
 
 
-      WT = pO2*32. + pCO2*44. + (1.-pO2-pCO2)*28. + 0.4   !(g) mean molar mass
+c-mab: Like DENSTY & DIFCO, WT expression based on H2 mixing ratio...
+      IF(FH2.GT.0.50) THEN
+       FH2  = (1.0-FHE-FH2O-FCO-FCO2-FCH4)
+C        print*,"(PHOTO)FH2,FHE,FCO2,FCO,FH2O,FH,FOH,FCH4",
+C     .             FH2,FHE,FCO2,FCO,FH2O,FH,FOH,FCH4
+       WT   =  pCO2*44. + FH2*2. +  FCO*28. + FH2O*18. + FCH4*16. +
+     .        (1.-FH2-FCO2-FCO-FH2O-FCH4) ! Last term For Helium
+      ELSE
+       WT = pO2*32. + pCO2*44. + (1.-pO2-pCO2)*28. + 0.4 !(g) mean molar mass
+      ENDIF
       RMG = RGAS/(WT*G)           !gm cm^2/s^2/mol/K  / g *s^2/cm ->  cm/mol/K
 
 c-mc allows for high CO2 and O2, but forces N2 to decrease if CO2 increases.  Wrong as CO2 gets large

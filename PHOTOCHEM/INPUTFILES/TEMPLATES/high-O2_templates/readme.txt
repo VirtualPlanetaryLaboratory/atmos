@@ -19,3 +19,7 @@ Oxidized species have a 0 deposition velocity.
 in.dist close to convergence.
 
 -EWS - updated 09/18/2015 (eschwiet@uw.edu)
+
+03/04/2016: Updated in.dist to correct for earlier code error - EWS (eschwiet@uw.edu)
+03/14/2016: Updated species.dat, parameters.inc, and in.dist to correct for NR (no significant effect),
+            and redox calc error from Tri-diag species. 

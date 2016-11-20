@@ -50,6 +50,8 @@ H2CO      O         HCO       OH                  2BODY      3.4E-11     0.     
 H2O2      O         OH        HO2                 2BODY      1.4E-12     0.          2000.0                                                                                         ! JPL-02
 HO2       HV        OH        O                   PHOTS                                                                                                                             
 CH4       HV        CH21      H2                  PHOTO                                                                                                                             
+CH4       HV        CH3       H                   PHOTO                                                                                                                             !must follow CH4 + HV -> CH21 + H2 (this reac only goes at Ly a)
+CH4       HV        CH23      H         H         PHOTO                                                                                                                             !must follow CH4 + HV -> CH3 + H (this reac only goes at Ly a)
 C2H6      HV        CH23      CH23      H2        PHOTO                                                                                                                             !  (IN PLACE OF C2H2 AND C2H4)
 C2H6      HV        CH4       CH21                PHOTO                                                                                                                             !  this line must follow C2H6+hv->CH23+CH23+H2
 HNO2      HV        NO        OH                  2BODY      1.7E-3      0.          0.0                                                                                            
@@ -271,6 +273,7 @@ O1D       HCL       OH        CL                  2BODY      9.75E-11    0.     
 CL        H2S       HCL       HS                  2BODY      3.70E-11    0.         -210.0                                                                                          ! JPL-06
 HCL       HV        H         CL                  PHOTO                                                                                                                             
 O         CLO       CL        O2                  2BODY      2.80E-11    0.         -85.0                                                                                           ! JPL-06
+O         CLO       OCLO                          WEIRD                                                                                                                             ! Zhu and Lin 2003
 O         HOCL      OH        CLO                 2BODY      1.70E-13    0.          0.0                                                                                            ! JPL-06
 OH        CLO       CL        HO2                 2BODY      7.40E-12    0.         -270.0                                                                                          ! JPL-06
 OH        CLO       HCL       O2                  2BODY      6.00E-13    0.         -230.0                                                                                          ! JPL-06
@@ -364,5 +367,7 @@ CLO3      HV        CLO       O2                  PHOTO
 OH        CLO3      HCLO4                         2BODY      2.0e-12     0.          0.0                                                                                            ! Simonatitis 1975 (estimated) ACK - temporarily changing
 CLO       O2        CLO3                          WEIRD                                                                                                                             ! yuk 214 - temporarily zeroed
 CLO       CLO3      CL2O4                         WEIRD                                                                                                                             ! Xu and Lin 2003
+CLO       CLO3      CLOO      OCLO                WEIRD                                                                                                                             !Xu and Lin 2003 (slow)
+CLO       CLO3      OCLO      OCLO                WEIRD                                                                                                                             !Xu and Lin 2003 (slow)
 CL2O4     HV        CLOO      OCLO                PHOTO                                                                                                                             
 O3        CL        CLO3                          WEIRD                                                                                                                             ! Simonaitis 1975

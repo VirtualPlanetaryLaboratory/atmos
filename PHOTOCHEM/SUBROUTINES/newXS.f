@@ -173,6 +173,7 @@
           CALL addpnt(x2,y2,kdata,n2,            biggest,zero)
           !inter2 is used for discrete points -> bins
           CALL inter2(nw+1,wavl,yg2,n2,x2,y2,ierr)
+
           IF (ierr .NE. 0) THEN
             WRITE(*,*) ierr,' ***Something wrong in XS_Standard*** '
             STOP
@@ -186,6 +187,7 @@
           CALL addpnt(x3,y3,kdata,n3,            biggest,zero)
           !inter2 is used for discrete points -> bins
           CALL inter2(nw+1,wavl,yg3,n3,x3,y3,ierr)
+
           IF (ierr .NE. 0) THEN
             WRITE(*,*) ierr,' ***Something wrong in XS_Standard*** '
             STOP
@@ -401,7 +403,6 @@
         DEALLOCATE(qy)
 
       endif
-
       RETURN
       END SUBROUTINE
 

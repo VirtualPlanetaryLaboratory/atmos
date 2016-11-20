@@ -113,7 +113,7 @@
      .                7.590e-12*T(I)**4-1.292e-08*T(I)**3+
      .                4.162e-06*T(I)**2 + 0.03122*T(I) - 3.704
 
-         HH298C(I) = HH298C(I)/1000.0d0
+         HH298C(I) = HH298C(I)/1000.0e0
 
 !*******************************************************************
 ! For 'O'
@@ -125,12 +125,12 @@
      .               -4.314e-11*T(I)**4 + 1.054e-07*T(I)**3
      .               -0.0001482*T(I)**2 + 0.1318*T(I) + 132.5
 
-         HH298(LO,I) = HH298(LO,I)/1000.0d0
+         HH298(LO,I) = HH298(LO,I)/1000.0e0
 !*******************************************************************
 ******
 ! FOR O2 
 ! T(I)= 700-2000 K
-         if( (T(I) >=700.0d0) .and. (T(I) <=2000.0d0))then
+         if( (T(I) >=700.0E0) .and. (T(I) <=2000.0E0))then
              coeff(1) = 30.03235
              coeff(2) = 8.772972
              coeff(3) = -3.988133
@@ -138,8 +138,8 @@
              coeff(5) = -0.741599
              coeff(6) = -11.32468
              coeff(7) = 236.1663
-             coeff(8) = 0.0d0
-         else if(T(I)>2000.0d0)then
+             coeff(8) = 0.0E0
+         else if(T(I)>2000.0E0)then
 !T(I) = 2000-6000 K
              coeff(1) = 20.91111
              coeff(2) = 10.72071
@@ -158,7 +158,7 @@
 **********
 ! FOR H2O
 !  TEMP = 500-1700 K
-       if( (T(I) >=500.0d0) .and. (T(I) <=1700.0d0))then
+       if( (T(I) >=500.0E0) .and. (T(I) <=1700.0E0))then
              coeff(1) = 30.09200
              coeff(2) = 6.832514
              coeff(3) = 6.793435
@@ -169,7 +169,7 @@
              coeff(8) = -241.8264
 
 !   TEMP = 1700-6000 K
-        else if(T(I)>1700.0d0)then
+        else if(T(I)>1700.0E0)then
              coeff(1) = 41.96426
              coeff(2) = 8.622053
              coeff(3) = -1.499780
@@ -203,7 +203,7 @@
 ! FOR OH
 
 ! Temp = 298-1300 K
-       if( (T(I) >=298.0d0) .and. (T(I) <=1300.0d0))then
+       if( (T(I) >=298.0E0) .and. (T(I) <=1300.0E0))then
           coeff(1) = 32.27768
           coeff(2) = -11.36291
           coeff(3) = 13.60545
@@ -214,7 +214,7 @@
           coeff(8) = 38.98706
 
 ! Temp = 1300-6000 K
-       else if(T(I)>1300.0d0)then
+       else if(T(I)>1300.0E0)then
           coeff(1) = 28.74701
           coeff(2) = 4.714489
           coeff(3) = -0.814725
@@ -232,7 +232,7 @@
 ! FOR CO2
 
 ! Temp = 298-1200 K
-        if( (T(I) >=298.0d0) .and. (T(I) <=1200.0d0))then
+        if( (T(I) >=298.0E0) .and. (T(I) <=1200.0E0))then
             coeff(1) = 24.99735
             coeff(2) = 55.18696
             coeff(3) = -33.69137
@@ -243,7 +243,7 @@
             coeff(8) = -393.5224
 
 ! Temp = 1200-6000 K
-        else if(T(I)>1200.0d0)then
+        else if(T(I)>1200.0E0)then
             coeff(1) = 58.16639
             coeff(2) = 2.720074
             coeff(3) = -0.492289
@@ -261,7 +261,7 @@
 ! FOR CO
 
 ! Temp = 298-1300 K
-       if( (T(I) >=298.0d0) .and. (T(I) <=1300.0d0))then
+       if( (T(I) >=298.0E0) .and. (T(I) <=1300.0E0))then
             coeff(1) =  25.56759
             coeff(2) =  6.096130
             coeff(3) =  4.054656
@@ -272,7 +272,7 @@
             coeff(8) =  -110.5271
 
 !Temp = 1300-6000 K
-        else if(T(I)>1300.0d0)then
+        else if(T(I)>1300.0E0)then
             coeff(1) = 35.15070  
             coeff(2) = 1.300095
             coeff(3) =  -0.205921
@@ -289,7 +289,7 @@
 !*******************************************************************
 ! FOR HCO
 ! Temp = 298-1200
-        if( (T(I) >=298.0d0) .and. (T(I) <=1200.0d0))then
+        if( (T(I) >=298.0E0) .and. (T(I) <=1200.0E0))then
              coeff(1) = 21.13803
              coeff(2) = 40.43610
              coeff(3) = -14.71337
@@ -300,7 +300,7 @@
              coeff(8) = 43.51402
 
 !Temp = 1200-6000
-        else if(T(I)>1200.0d0)then
+        else if(T(I)>1200.0E0)then
              coeff(1) = 52.79371
              coeff(2) = 2.666155
              coeff(3) = -0.392339
@@ -317,7 +317,7 @@
 ! FOR H2CO
 
 !Temp = 298-1200 K
-        if( (T(I) >=298.0d0) .and. (T(I) <=1200.0d0))then
+        if( (T(I) >=298.0E0) .and. (T(I) <=1200.0E0))then
             coeff(1) = 5.193767
             coeff(2) = 93.23249
             coeff(3) = -44.85457
@@ -328,7 +328,7 @@
             coeff(8) = -115.8972
 
 !Temp = 1200 - 6000 K
-         else if(T(I)>1200.0d0)then
+         else if(T(I)>1200.0E0)then
             coeff(1) = 71.35268
             coeff(2) = 6.174497
             coeff(3) = -1.191090
@@ -346,7 +346,7 @@
 ! FOR CH4
 
 ! Temp = 298 - 1300 K
-        if( (T(I) >=298.0d0) .and. (T(I) <=1300.0d0))then
+        if( (T(I) >=298.0E0) .and. (T(I) <=1300.0E0))then
              coeff(1) = -0.703029
              coeff(2) = 108.4773
              coeff(3) = -42.52157
@@ -357,7 +357,7 @@
              coeff(8) = -74.87310
 
 ! Temp = 1300 - 6000 K
-        else if(T(I)>1300.0d0)then
+        else if(T(I)>1300.0E0)then
              coeff(1) = 85.81217
              coeff(2) = 11.26467
              coeff(3) = -2.114146
@@ -391,7 +391,7 @@
      .                 -2.713e-18*T(I)**6 + 1.674e-14*T(I)**5
      .                 -6.143e-11*T(I)**4+1.382e-07*T(I)**3
      .                 -1.958e-04*T(I)**2 + 0.2114*T(I) + 144.7
-        HH298(LCH3,I) = HH298(LCH3,I)/1000.0D0
+        HH298(LCH3,I) = HH298(LCH3,I)/1000.0E0
 !*******************************************************************
 ! FOR CH3OH
         coeff(1) =  -5.828e-26
@@ -413,13 +413,13 @@
      .                 -1.367e-11*T(I)**4+3.725e-08*T(I)**3
      .                 -8.041e-05*T(I)**2 + 0.1788*T(I) + 192.8
 
-        HH298(LCH3OH,I) = HH298(LCH3OH,I)/1000.0d0
+        HH298(LCH3OH,I) = HH298(LCH3OH,I)/1000.0E0
 
 !*******************************************************************
 ! FOR CH
 
 ! Temp = 298 - 1100 K
-       if( (T(I) >=298.0d0) .and. (T(I) <=1100.0d0))then
+       if( (T(I) >=298.0E0) .and. (T(I) <=1100.0E0))then
             coeff(1) = 32.94210
             coeff(2) = -16.71056
             coeff(3) = 24.18595
@@ -430,7 +430,7 @@
             coeff(8) = 594.1280
 
 ! Temp = 1100 - 6000 K
-       else if(T(I)>1100.0d0)then
+       else if(T(I)>1100.0E0)then
             coeff(1) = 30.15367
             coeff(2) = 8.455112
             coeff(3) = -1.969644
@@ -448,7 +448,7 @@
 ! FOR CH23
 
 ! Temp = 298 - 1400 K
-      if( (T(I) >=298.0d0) .and. (T(I) <=1400.0d0))then
+      if( (T(I) >=298.0E0) .and. (T(I) <=1400.0E0))then
              coeff(1) = 31.96823
              coeff(2) = 6.783603
              coeff(3) = 12.51890
@@ -459,7 +459,7 @@
              coeff(8) = 386.3924
 
 ! Temp = 1400 - 6000 K
-       else if(T(I)>1400.0d0)then
+       else if(T(I)>1400.0E0)then
              coeff(1) = 51.55901
              coeff(2) = 3.876975
              coeff(3) = -0.649608
@@ -479,7 +479,7 @@
 ! FOR H2
 
 !Temp = 298-1000 K
-        if( (T(I) >=298.0d0) .and. (T(I) <=1000.0d0))then
+        if( (T(I) >=298.0E0) .and. (T(I) <=1000.0E0))then
              coeff(1) = 33.066178
              coeff(2) = -11.363417
              coeff(3) = 11.432816
@@ -491,7 +491,7 @@
 
 
 !Temp = 1000-2500 K
-        else if( (T(I)>1000.0d0) .and. (T(I) <=2500.0d0))then
+        else if( (T(I)>1000.0E0) .and. (T(I) <=2500.0E0))then
              coeff(1) = 18.563083
              coeff(2) = 12.257357
              coeff(3) = -2.859786
@@ -520,28 +520,28 @@
 
 !*******************************************************************
 ! Nothing for O1D
-         coeff(1) = 0.0d0
-         coeff(2) = 0.0d0
-         coeff(3) = 0.0d0
-         coeff(4) = 0.0d0
-         coeff(5) = 0.0d0
-         coeff(6) = 0.0d0
-         coeff(7) = 0.0d0
-         coeff(8) = 0.0d0
+         coeff(1) = 0.0E0
+         coeff(2) = 0.0E0
+         coeff(3) = 0.0E0
+         coeff(4) = 0.0E0
+         coeff(5) = 0.0E0
+         coeff(6) = 0.0E0
+         coeff(7) = 0.0E0
+         coeff(8) = 0.0E0
          call shomate(coeff,df,S_ent,T,i,NZ)
          HH298(LO1D,I) = df
          So(LO1D,I)    = S_ent
 
 !*******************************************************************
 ! Nothing for CH21
-         coeff(1) = 0.0d0
-         coeff(2) = 0.0d0
-         coeff(3) = 0.0d0
-         coeff(4) = 0.0d0
-         coeff(5) = 0.0d0
-         coeff(6) = 0.0d0
-         coeff(7) = 0.0d0
-         coeff(8) = 0.0d0
+         coeff(1) = 0.0E0
+         coeff(2) = 0.0E0
+         coeff(3) = 0.0E0
+         coeff(4) = 0.0E0
+         coeff(5) = 0.0E0
+         coeff(6) = 0.0E0
+         coeff(7) = 0.0E0
+         coeff(8) = 0.0E0
 !         call shomate(coeff,df,S_ent,T,i,NZ)
 !         HH298(16,I) = df
 !         So(16,I)    = S_ent
@@ -573,7 +573,7 @@
      .                   -3.622e-11*T(I)**4+9.241e-08*T(I)**3
      .                   -0.0001592*T(I)**2 + 0.2251*T(I) + 189.1
 
-           HH298(LH2COH,I) = HH298(LH2COH,I)/1000.0d0
+           HH298(LH2COH,I) = HH298(LH2COH,I)/1000.0E0
 
 !*******************************************************************
 ! FOR C
@@ -605,7 +605,7 @@
      .                    coeff(5)*T(I)**4+coeff(6)*T(I)**3+
      .                    coeff(7)*T(I)**2 + coeff(8)*T(I) -10210.0
      
-           HH298(LCH3O,I) = HH298(LCH3O,I)/1000.0d0
+           HH298(LCH3O,I) = HH298(LCH3O,I)/1000.0E0
 
            So(LCH3O,I) = -3.068e-27*T(I)**8+ 8.627e-23*T(I)**7 +
      .                 (-1.030e-18*T(I)**6) + 6.838e-15*T(I)**5+
@@ -620,122 +620,122 @@
 
 ! Since the element is 'O2', Divide HH298 by 2
           Df_Ho(LO,I) = Df_Ho298(LO) + HH298(LO,I) - (HH298(LO2,I)
-     .                  /2.0d0)
-          Df_Go(LO,I) = Df_Ho(LO,I)*1000.0d0 - T(I)*(So(LO,I) - 
-     .                 (So(LO2,I)/2.0d0))
+     .                  /2.0E0)
+          Df_Go(LO,I) = Df_Ho(LO,I)*1000.0E0 - T(I)*(So(LO,I) - 
+     .                 (So(LO2,I)/2.0E0))
 
 
 ! Enthalpy of formation for element 'O2' is zero
-          Df_Ho(LO2,I) = 0.0d0  
-          Df_Go(LO2,I) = 0.0d0
+          Df_Ho(LO2,I) = 0.0E0  
+          Df_Go(LO2,I) = 0.0E0
 
 
 ! For 'H2O', divide 'O2' by 2 and not element 'H2' by 2 because
 ! there are two hydrogen .
           Df_Ho(LH2O,I) = Df_Ho298(LH2O) + HH298(LH2O,I)
-     .                 - ( HH298(LH2,I) + (HH298(LO2,I)/2.0d0) )
-          Df_Go(LH2O,I) = Df_Ho(LH2O,I)*1000.0d0 - T(I)*(So(LH2O,I) - 
-     .                 (So(LH2,I) + (So(LO2,I)/2.0d0)))
+     .                 - ( HH298(LH2,I) + (HH298(LO2,I)/2.0E0) )
+          Df_Go(LH2O,I) = Df_Ho(LH2O,I)*1000.0E0 - T(I)*(So(LH2O,I) - 
+     .                 (So(LH2,I) + (So(LO2,I)/2.0E0)))
 
 
 ! For 'H', element is 'H2', so divide by 2
-          Df_Ho(LH,I) = Df_Ho298(LH) + HH298(LH,I)-(HH298(LH2,I)/2.0d0)
-          Df_Go(LH,I) = Df_Ho(LH,I)*1000.0d0 - T(I)*(So(LH,I) -
-     .                 (So(LH2,I)/2.0d0))
+          Df_Ho(LH,I) = Df_Ho298(LH) + HH298(LH,I)-(HH298(LH2,I)/2.0E0)
+          Df_Go(LH,I) = Df_Ho(LH,I)*1000.0E0 - T(I)*(So(LH,I) -
+     .                 (So(LH2,I)/2.0E0))
                
 
 
 ! For 'OH', divide HH298 by 2 for both O2 & H2
           Df_Ho(LOH,I) = Df_Ho298(LOH) + HH298(LOH,I) -( 
-     .                   (HH298(LO2,I)/2.0d0) + (HH298(LH2,I)/2.0d0))
-          Df_Go(LOH,I) = Df_Ho(LOH,I)*1000.0d0 - T(I)*(So(LOH,I) - 
-     .                 ((So(LO2,I)/2.0d0) + (So(LH2,I)/2.0d0)))
+     .                   (HH298(LO2,I)/2.0E0) + (HH298(LH2,I)/2.0E0))
+          Df_Go(LOH,I) = Df_Ho(LOH,I)*1000.0E0 - T(I)*(So(LOH,I) - 
+     .                 ((So(LO2,I)/2.0E0) + (So(LH2,I)/2.0E0)))
  
 
 ! For 'CO2', do not divide element 'O2' by 2 because 'CO2' has two
 ! atoms.
           Df_Ho(LCO2,I) = Df_Ho298(LCO2) + HH298(LCO2,I) - 
      .                 (HH298C(I) + HH298(LO2,I))
-          Df_Go(LCO2,I) = Df_Ho(LCO2,I)*1000.0d0 - T(I)*(So(LCO2,I) - 
+          Df_Go(LCO2,I) = Df_Ho(LCO2,I)*1000.0E0 - T(I)*(So(LCO2,I) - 
      .                 (SoC(I) + So(LO2,I)))
      
 ! For 'CO', divide element 'O2' by 2
           Df_Ho(LCO,I) = Df_Ho298(LCO) + HH298(LCO,I) - (HH298C(I) + 
-     .                 (HH298(LO2,I)/2.0d0))
-           Df_Go(LCO,I) = Df_Ho(LCO,I)*1000.0d0 - T(I)*(So(LCO,I) -
-     .                  ((So(LO2,I)/2.0d0) + SoC(I)) )
+     .                 (HH298(LO2,I)/2.0E0))
+           Df_Go(LCO,I) = Df_Ho(LCO,I)*1000.0E0 - T(I)*(So(LCO,I) -
+     .                  ((So(LO2,I)/2.0E0) + SoC(I)) )
 
 
 ! For 'HCO'  
            Df_Ho(LHCO,I) = Df_Ho298(LHCO) + HH298(LHCO,I) - 
-     .                     ((HH298(LH2,I)/2.0d0)+
-     .                  HH298C(I)   +  (HH298(LO2,I)/2.0d0))
-           Df_Go(LHCO,I) = Df_Ho(LHCO,I)*1000.0d0 - T(I)*(So(LHCO,I) -
-     .                  ( (So(LH2,I)/2.0d0)+SoC(I) + 
-     .                  (So(LO2,I)/2.0d0) ) )
+     .                     ((HH298(LH2,I)/2.0E0)+
+     .                  HH298C(I)   +  (HH298(LO2,I)/2.0E0))
+           Df_Go(LHCO,I) = Df_Ho(LHCO,I)*1000.0E0 - T(I)*(So(LHCO,I) -
+     .                  ( (So(LH2,I)/2.0E0)+SoC(I) + 
+     .                  (So(LO2,I)/2.0E0) ) )
 
 
 
 ! For 'H2CO'
             Df_Ho(LH2CO,I) = Df_Ho298(LH2CO) + HH298(LH2CO,I) 
      .                       - (HH298(LH2,I) +
-     .                   HH298C(I) + (HH298(LO2,I)/2.0d0))
-            Df_Go(LH2CO,I) = Df_Ho(LH2CO,I)*1000.0d0 - T(I)
+     .                   HH298C(I) + (HH298(LO2,I)/2.0E0))
+            Df_Go(LH2CO,I) = Df_Ho(LH2CO,I)*1000.0E0 - T(I)
      .                       *(So(LH2CO,I) - 
-     .                     (So(LH2,I) + SoC(I) + (So(LO2,I)/2.0d0)) )
+     .                     (So(LH2,I) + SoC(I) + (So(LO2,I)/2.0E0)) )
 
  
 
 ! For 'CH4'
             Df_Ho(LCH4,I) = Df_Ho298(LCH4) + HH298(LCH4,I) 
      .                      -(HH298C(I) + 
-     .                      2.00d0*HH298(LH2,I))
-            Df_Go(LCH4,I) = Df_Ho(LCH4,I)*1000.0d0 - T(I)
+     .                      2.00E0*HH298(LH2,I))
+            Df_Go(LCH4,I) = Df_Ho(LCH4,I)*1000.0E0 - T(I)
      .                      *(So(LCH4,I) - 
-     .                      (SoC(I) + 2.0d0*So(LH2,I)) )
+     .                      (SoC(I) + 2.0E0*So(LH2,I)) )
 
 
 ! For 'CH3'
             Df_Ho(LCH3,I) = Df_Ho298(LCH3) + HH298(LCH3,I) 
      .                      -(HH298C(I) + 
-     .                      1.50d0*HH298(LH2,I))
-            Df_Go(LCH3,I) = Df_Ho(LCH3,I)*1000.0d0 - 
+     .                      1.50E0*HH298(LH2,I))
+            Df_Go(LCH3,I) = Df_Ho(LCH3,I)*1000.0E0 - 
      .                      T(I)*(So(LCH3,I) - 
-     .                    (SoC(I) + 1.50d0*So(LH2,I) ))
+     .                    (SoC(I) + 1.50E0*So(LH2,I) ))
 
 
 ! For 'CH3OH'
              Df_Ho(LCH3OH,I) = Df_Ho298(LCH3OH) + HH298(LCH3OH,I)
      .                         -(HH298C(I) + 
-     .                         2.00d0*HH298(LH2,I)+ 
-     .                         (HH298(LO2,I)/2.0d0))
-             Df_Go(LCH3OH,I) =     Df_Ho(LCH3OH,I)*1000.0d0 - 
+     .                         2.00E0*HH298(LH2,I)+ 
+     .                         (HH298(LO2,I)/2.0E0))
+             Df_Go(LCH3OH,I) =     Df_Ho(LCH3OH,I)*1000.0E0 - 
      .                         T(I)*(So(LCH3OH,I) - 
-     .                         (SoC(I)+ 2.0d0*So(LH2,I) 
-     .                         + (So(LO2,I)/2.0d0)))
+     .                         (SoC(I)+ 2.0E0*So(LH2,I) 
+     .                         + (So(LO2,I)/2.0E0)))
 
 
 ! For 'CH'
              Df_Ho(LCH,I) = Df_Ho298(LCH) + HH298(LCH,I) -(HH298C(I) + 
-     .                     (HH298(LH2,I)/2.0d0))
-             Df_Go(LCH,I) = Df_Ho(LCH,I)*1000.0d0 - T(I)*(So(LCH,I) - 
-     .                     (SoC(I) + (So(LH2,I)/2.0d0)) )
+     .                     (HH298(LH2,I)/2.0E0))
+             Df_Go(LCH,I) = Df_Ho(LCH,I)*1000.0E0 - T(I)*(So(LCH,I) - 
+     .                     (SoC(I) + (So(LH2,I)/2.0E0)) )
 
 
 ! For 'CH23'
              Df_Ho(LCH23,I) = Df_Ho298(LCH23) + HH298(LCH23,I) 
      .                       -(HH298C(I) + HH298(LH2,I))
-             Df_Go(LCH23,I) = Df_Ho(LCH23,I)*1000.0d0 - 
+             Df_Go(LCH23,I) = Df_Ho(LCH23,I)*1000.0E0 - 
      .                       T(I)*(So(LCH23,I) - 
      .                     (SoC(I) + So(LH2,I)) )
 
 ! For 'H2'
-             Df_Ho(LH2,I) = 0.0d0
-             Df_Go(LH2,I) = 0.0d0
+             Df_Ho(LH2,I) = 0.0E0
+             Df_Go(LH2,I) = 0.0E0
 
 ! For 'O1D'
-             Df_Ho(LO1D,I) = 0.0d0
-             Df_Go(LO1D,I) = 0.0d0
+             Df_Ho(LO1D,I) = 0.0E0
+             Df_Go(LO1D,I) = 0.0E0
          
 
 
@@ -743,7 +743,7 @@
 
              Df_Ho(LCH21,I) = Df_Ho298(LCH21) + HH298(LCH21,I)
      .                        -(HH298C(I) +  HH298(LH2,I))
-             Df_Go(LCH21,I) = Df_Ho(LCH21,I)*1000.0d0 - 
+             Df_Go(LCH21,I) = Df_Ho(LCH21,I)*1000.0E0 - 
      .                        T(I)*(So(LCH21,I) -
      .                     (SoC(I) + So(LH2,I)) )
 
@@ -752,25 +752,25 @@
 ! For 'H2COH'
              Df_Ho(LH2COH,I) = Df_Ho298(LH2COH) + HH298(LH2COH,I)
      .                         - (HH298C(I) +
-     .                        1.50d0*HH298(LH2,I)+ (HH298(LO2,I)/2.0d0))
-             Df_Go(LH2COH,I) = Df_Ho(LH2COH,I)*1000.0d0 - 
+     .                        1.50E0*HH298(LH2,I)+ (HH298(LO2,I)/2.0E0))
+             Df_Go(LH2COH,I) = Df_Ho(LH2COH,I)*1000.0E0 - 
      .                         T(I)*(So(LH2COH,I) -
-     .                         (SoC(I) + 1.50d0*So(LH2,I) + 
-     .                         (So(LO2,I)/2.0d0)))
+     .                         (SoC(I) + 1.50E0*So(LH2,I) + 
+     .                         (So(LO2,I)/2.0E0)))
      
 ! For 'C'
              Df_Ho(LC,I) = Df_Ho298(LC) + HH298(LC,I) - HH298C(I)
-             Df_Go(LC,I) = Df_Ho(LC,I)*1000.0d0 - T(I)*(So(LC,I) - 
+             Df_Go(LC,I) = Df_Ho(LC,I)*1000.0E0 - T(I)*(So(LC,I) - 
      .                     (SoC(I)) ) 
 
 ! For 'CH3O'
              Df_Ho(LCH3O,I) = Df_Ho298(LCH3O) + HH298(LCH3O,I)
      .                        - (HH298C(I) + 
-     .                     1.50d0*HH298(LH2,I)+ (HH298(LO2,I)/2.0d0))
-             Df_Go(LCH3O,I) = Df_Ho(LCH3O,I)*1000.0d0 - 
+     .                     1.50E0*HH298(LH2,I)+ (HH298(LO2,I)/2.0E0))
+             Df_Go(LCH3O,I) = Df_Ho(LCH3O,I)*1000.0E0 - 
      .                        T(I)*(So(LCH3O,I) - 
-     .                        (SoC(I) + 1.50d0*So(LH2,I) 
-     .                        + (So(LO2,I)/2.0d0)))
+     .                        (SoC(I) + 1.50E0*So(LH2,I) 
+     .                        + (So(LO2,I)/2.0E0)))
       enddo
 
 *****************************************************************
@@ -821,7 +821,7 @@ C COMPUTE TWO BODY REACTION RATES
            !PRINT*, "J,a0,a1,tn0,tn1,e0,e1 = ",J,a0,a1,tn0,tn1,e0,e1
            do I=1,NZ
             A(J,I)=a0*(T(I)/298.)**tn0*EXP(-e0/T(I))   !two body reaction rates
-!!            A(5,I)=0.350E-12*(T(I)/298.0d0)**( 0.267E+01)
+!!            A(5,I)=0.350E-12*(T(I)/298.0E0)**( 0.267E+01)
 !!     .       *exp(-0.316E+04/T(I))
             !IF(I.EQ.1)print*,'J, A(NZ=1) (2body rxn)',J,A(J,I)
             IF(J.EQ.151)A(J,I)=0.0
@@ -909,11 +909,14 @@ C     .        J,,akeq,a0,akr0,a1,akri,DG,A(J,I)
            !IF (I.EQ.1) print*,'J,akeq,DG',J,akeq,DG               
              !print*,'J,A (hardcoded)',J,A(J,I)
              IF(JCHEM(4,J).EQ.0) THEN
-              A(J,I)=(A(J-1,I)/akeq)*(PFAC/(kB*T(I)))**(-1) !IMPORTANT! Read the comments below.
+              A(J,I)=(A(J-1,I)/(DEN(I)*akeq))*(PFAC/(kB*T(I)))**(-1) !IMPORTANT! Read the comments below.
              ELSE
-              A(J,I)=A(J-1,I)*(PFAC/(kB*T(I)))/akeq !IMPORTANT! Read the comments below.
+              A(J,I)=A(J-1,I)*(PFAC/(kB*T(I)))/(DEN(I)*akeq) !IMPORTANT! Read the comments below.
+
              !A(J,I)=A(J-1,I)/akeq !IMPORTANT! Read the comments below.
              ENDIF
+             
+c-mab: DEN(I) not originally in A for 3BACK in Ravi's, added to reconcile with Atmos conventions.
              
 C             IF(I.EQ.50) print*,
 C     .    'J, A(highestP) (3body back rxn to above w/ PFAC)',J,A(J,50)
@@ -961,22 +964,23 @@ C           PRINT*,"J, Products = ",J,CHEMJ(3,J),CHEMJ(4,J)
         subroutine shomate(coeff,df,S_ent,T,i,NZ)
        real *8 df,S_ent,coeff(8),T(NZ)
 
-       T(i) = T(i)/1000.0d0
+       T(i) = T(i)/1000.0E0
 
        df = coeff(1)*T(i) + coeff(2)*(T(i)**2/2.0) + 
-     .      coeff(3)*(T(i)**3/3.0d0) +
-     .      coeff(4)*(T(i)**4/4.0d0) - (coeff(5)/T(i)) 
+     .      coeff(3)*(T(i)**3/3.0E0) +
+     .      coeff(4)*(T(i)**4/4.0E0) - (coeff(5)/T(i)) 
      .      + coeff(6) - coeff(8)
 
        S_ent = coeff(1)*log(T(i)) + coeff(2)*T(i) +
-     .         coeff(3)*(T(I)**2/2.0d0) +
-     .         coeff(4)*(T(I)**3/3.0d0) - 
-     .         (coeff(5)/(2.0d0*T(I)**2)) + coeff(7)
+     .         coeff(3)*(T(I)**2/2.0E0) +
+     .         coeff(4)*(T(I)**3/3.0E0) - 
+     .         (coeff(5)/(2.0E0*T(I)**2)) + coeff(7)
 
-        T(i) = T(i)*1000.0d0
+        T(i) = T(i)*1000.0E0
         end
                      
         FUNCTION TBDYR(A0,AI,CN,CM,E0,EI,T,D)
+        real*8 tbdyr
           B0 = A0*(300./T)**CN*exp(-E0/T)
           BI = AI*(300./T)**CM*exp(-EI/T)
 !          print *,'a0 = ',a0,'ai = ',ai

@@ -44,7 +44,7 @@ cccccccccccccccccccccccccccccc  r a y l e i g h  ccccccccccccccccccccccc
       dimension volmix(10,NZ),ncomp(NZ),icomp(10,NZ),SIGR2(NZ)
 
 c       depolarization factors for air, co2, n2, o2 (young, 1980)
-      data delta/0.02790e0,0.0780e0,0.0210d0,0.0580d0,0.0000,0.0000/
+      data delta/0.02790e0,0.0780e0,0.0210e0,0.0580e0,0.0000,0.0000/
 
 c***    wavelength dependence coefficients for the refractive index
 c       (allen, 1964) (note: wavelengths must be in microns)
