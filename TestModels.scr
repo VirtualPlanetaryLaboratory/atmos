@@ -19,7 +19,7 @@ echo "You will need to be in your top folder for atmos, not a subfolder."
 echo "Your current folder is $(pwd)."
 echo ""
 echo "Your PHOTOCHEM has these templates:"
-ls $temp_path
+ls $temp_path --hide=*.*
 true_path=$(pwd)
 
 # find all the templates and copy/compile/run/test each one

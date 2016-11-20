@@ -9,7 +9,7 @@ echo "This script imports PHOTOCHEM & CLIMA templates from a template file."
 echo "You will need to be in your top folder for atmos, not a subfolder."
 echo "Your current folder is $(pwd)."
 echo "Your PHOTOCHEM has these templates:"
-ls $temp_path
+ls $temp_path --hide=*.*
 true_path=$(pwd)
 echo -n "Enter the folder title (NOT THE PATH) and press [ENTER]: "
 read folder
