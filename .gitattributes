@@ -2,6 +2,6 @@
 * text
 # Unset object and executable files so they are NOT converted
 *.o -text
-*.run -text
+*.scr -text
 # Any file recognized as a text file will be automatically converted
 * text=auto
