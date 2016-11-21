@@ -1205,6 +1205,9 @@ c-mab: These values are needed for molecular weight computation in DIFCO, DENSTY
 c-mab: Initializing these additional things below for use in giant planet template.
       FCO = USOL(LCO,1)
       FH2O = USOL(LH2O,1)
+      FH2 = USOL(LH2,1)
+      if(FH2.gt.0.50)FH2 = (1.0-FHE-FH2O-FCO-FCO2-FCH4) !do (1-everything)
+c-mab: Note: this last adjustment only necessary if LBC = 1 for H2.
       FH = USOL(LH,1)
       FOH = USOL(LOH,1)
       FCH4 = USOL(LCH4,1)
