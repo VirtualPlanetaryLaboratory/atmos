@@ -2611,7 +2611,7 @@ C following section run every three timesteps and printed to out.out
 C Oxidation state stuff commented out for now.
 
       write(14, 100) N,EMAX,ISPEC(IS),ZMAX,UMAX,RMAX,DT,TIME
- 100  FORMAT(1X,'N =',I4,2X,'EMAX =',1PE9.2,' FOR ',A8,
+ 100  FORMAT(1X,'N =',I5,2X,'EMAX =',1PE9.2,' FOR ',A8,
      2  'AT Z =',E9.2,1X,'U =',E9.2,1X,'RHS =',E9.2,
      3  2X,'DT =',E9.2,2X,'TIME =',E9.2)
 C     print this to terminal
