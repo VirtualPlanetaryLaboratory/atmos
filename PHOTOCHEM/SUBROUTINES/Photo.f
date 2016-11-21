@@ -349,11 +349,11 @@ c              if (Z(i)/1e5.eq.107.5) print *, ispec(j)
                  icomp(ncomp(i),i)=4
               else if (ISPEC(j).eq.'H2') then
                  ncomp(i)=ncomp(i)+1
-                 volmix(ncomp(i),i)=SL(j,i)/DEN(i)
+                 volmix(ncomp(i),i) = FH2 !should matter for gas giants only
                  icomp(ncomp(i),i)=5
               else if (ISPEC(j).eq.'HE') then
                  ncomp(i)=ncomp(i)+1
-                 volmix(ncomp(i),i)=SL(j,i)/DEN(i)
+                 volmix(ncomp(i),i) = FHE !should matter for gas giants only
                  icomp(ncomp(i),i)=6
               else
                  if(FH2.LT.0.5) then
