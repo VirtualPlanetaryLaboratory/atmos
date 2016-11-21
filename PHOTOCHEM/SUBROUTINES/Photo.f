@@ -60,11 +60,11 @@ c- this used only if INO=0
 
 c-mab: Like DENSTY & DIFCO, WT expression based on H2 mixing ratio...
       IF(FH2.GT.0.50) THEN
-       FH2  = (1.0-FHE-FH2O-FCO-FCO2-FCH4)
+       FH2  = (1.0-FHE-FH2O-FH-FOH-FCO-FCO2-FCH4)
 C        print*,"(PHOTO)FH2,FHE,FCO2,FCO,FH2O,FH,FOH,FCH4",
 C     .             FH2,FHE,FCO2,FCO,FH2O,FH,FOH,FCH4
        WT   =  pCO2*44. + FH2*2. +  FCO*28. + FH2O*18. + FCH4*16. +
-     .        (1.-FH2-FCO2-FCO-FH2O-FCH4) ! Last term For Helium
+     .        FH + (1.-FH2-FCO2-FCO-FH-FH2O-FCH4)*4.0 ! Last term For Helium
       ELSE
        WT = pO2*32. + pCO2*44. + (1.-pO2-pCO2)*28. + 0.4 !(g) mean molar mass
       ENDIF

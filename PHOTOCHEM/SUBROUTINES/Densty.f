@@ -36,8 +36,8 @@ c-mab: For error checking
 C this is bad because CO and O can be important up high.
 C (but maybe this doesn't really matter)
       ELSE
-        FH2  = (1.0-FHE-FH2O-FCO-FCO2-FCH4) !assumed major species
 c-mab: For error checking
+        FH2  = (1.0-FHE-FH2O-FH-FOH-FCO-FCO2-FCH4)
         if(FAR.ne.0.)then
          print*,"FAR =",FAR
          print*,"Warning: FAR should NOT exist in this template."

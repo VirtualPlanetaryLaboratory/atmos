@@ -9,7 +9,7 @@
       NZ1 = NZ - 1
       IF (FH2.GT.0.50) THEN
 c-mab: Recomputing FH2 with the most major species VMR = (1-everything major) method:
-        FH2  = (1.0-FHE-FH2O-FCO-FCO2-FCH4)
+        FH2  = (1.0-FHE-FH2O-FH-FOH-FCO-FCO2-FCH4)
 c-mab: (Note: DENSTY.f is missing the x4 in HE in that version.)
 	WT = FH2*2.0 + FHE*4.0 !From Ravi's version DIFCO...
         print*,'DIFCO: WT for H2/HE dominated atmosphere....'      
