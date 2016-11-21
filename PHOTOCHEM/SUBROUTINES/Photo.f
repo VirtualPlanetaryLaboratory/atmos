@@ -398,7 +398,20 @@ c             endif
 
        endif   !end case for Rayleigh loop
 
+!!!!       
+c-mab: The adjustment below is required to enable WASP12B convergence...
+c-mab: We know this as the difference between the RAYLEIGH() in 
+c-mab: Kopparapu et. al 2012 version and the one here was a factor of (1e-16) 
+c-mab: exact.... so I believe a wavelength^4 unit conversion might be the issue here.
+c-mab: (The RAYLEIGH() in the other version also did not have depolarization).
+c-mab: Will remove or change this upon incurring a smoother solution :).
 
+       if(PLANET.EQ.'WASP12B') then
+            do I=1,NZ
+       		 SIGR(I) = SIGR(I)*1e-16
+            enddo
+       endif
+!!!! 
 
        if (IO2 .EQ. 1) then   !re-compute O2 cross section via exponential sums
         if(PLANET.EQ.'WASP12B') then !ignore sum calculation entirely
