@@ -59,7 +59,7 @@ C-mab: Uncomment below for debugging
 C        print*,"FH2,FHE,FCO2,FCO,FH2O,FH,FOH,FCH4",
 C     .             FH2,FHE,FCO2,FCO,FH2O,FH,FOH,FCH4
  
-        WT = FH2*2.0 + FHE +  FCO*28.0 + FH2O*18.0 + FH + FCH4*16.0 
+        WT = FH2*2.0 + FHE*4 +  FCO*28.0 + FH2O*18.0 + FH + FCH4*16.0 
      .             + FCO2*44.0 
 c=mab: Review above expression prior to release
 
