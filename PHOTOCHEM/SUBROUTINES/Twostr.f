@@ -79,7 +79,11 @@ corig   TAUG(N) = TAUA + TAUSG(N)
   
       taua=0.0
        do j=1,kj
-          taua = taua + sq(j,i,LL)*absorbers(j,i)
+          IF(PLANET.EQ.'WASP12B') THEN
+           if(j.lt.9)taua = taua + sq(j,i,LL)*absorbers(j,i)
+          ELSE
+           taua = taua + sq(j,i,LL)*absorbers(j,i)
+          ENDIF   
        enddo   
 
       TAUG(N) = TAUA*DEN(I)*DZ(I) + TAUSG(N)
@@ -143,7 +147,8 @@ C   Avoid letting W0 equal exactly 1.
       TAU(N)=TAUG(N) + TAUP(N) 
       !w0 = total scattering/total extinction
       W0(N) = (TAUSG(N) + TAUSP(N))/TAU(N)  
-      W0(N) = AMIN1(W0(N), 0.999)
+      W0(N) = AMIN1(W0(N), 0.99999) 
+c-mab: Was "0.999" before - extra 99s needed for WASP12B convergence
 
       !GFT is still bottom to top, so needs a switch
       I= NZP1 - N  
