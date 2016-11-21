@@ -367,7 +367,7 @@ c-mab This is something I'm trying to move from a planet-based if loop.
 c-mab Most solar system gas giants have a mwt of <3.0 and terrestrials > 20.0
 c-mab Using wt of methane - 16.0 as a distinction here
 c-mab (May change later after input soliciation)
-      IF (WT.LT.16.0) THEN
+      IF (WT.GT.16.0) THEN
       DO 6 I=1,jtrop-1   ! jim had 10 hard wired... its not zero
    6  FLUXO(LH2O,I) = 0.
       ENDIF
