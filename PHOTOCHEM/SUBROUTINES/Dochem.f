@@ -73,7 +73,9 @@ c N2-defined as the "rest" of the density after subtracting Ar, CO2 and O2 (mab:
        D(NSP2,J) = DEN(J)       ! M - background density for three body reactions
        
        
+c-mab: Reassignments to work with Kopparapu et. al. 2012 RATES() schemes
        IF(PLANET.EQ.'WASP12B') THEN
+        D(NSP2,J) = 1.     ! setting to 1.00 for M for wasp12b coding mechanism
        	D(LHE,J) = FHE * DEN(J) ! Assuming He is always inert
        ENDIF
 
@@ -432,6 +434,8 @@ C
   11  CONTINUE
 C
 
+      IF(FH2.LT.0.50) THEN
+c-mab: Disabling below for the giant planet template(s).
       DO J=1,NZ
       RELH(J) = D(LH2O,J)/DEN(J)/H2OSAT(J)  !this gets H2O mixing ratio in a more general way
       O3COL = O3COL + D(LO3,J)*DZ(J)
@@ -451,7 +455,8 @@ c       S8COL = S8COL + D(LSXS7,J)*DZ(J)  !ACK need to deal if S8 in gas phase
       endif   
 
 
-      enddo
+      ENDDO
+      ENDIF
 C
       DO 12 L=1,NR
       M = JCHEM(1,L)         !identifies first reactant of equation L
