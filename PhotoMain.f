@@ -2273,8 +2273,47 @@ c         USOL(I,J) = USOL(I,J) + RHS(K)
         ELSEIF(I.EQ.LS4) THEN
                      USOL(I,J) = USOL(I,J) + RHS(K)
 
+        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LO2) THEN !!!!!! Ignoring O2 entirely right now for hot jupi to get it to converge quickly
+!!!! btw this was kept disabled in Ravi's CURRENT version of main
+                     USOL(I,J) = USOL(I,J) + RHS(K)
+C        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LO2) THEN
+C        	IF(J.GT.21.AND.J.LT.71) THEN !!! Using this to ignore only PARTS of O2, i.e. more carefully, than entiety of O2 (above this)
+C                     USOL(I,J) = USOL(I,J) + RHS(K)
+C            ENDIF
+!!!!!!!!!!!! The conditions below are necessary to make WASP12B converge !!!!  
+c-mab: These from trial/error + Kopparapu et al. 2012 code.
+c-mab: For the solar system templates, all species have the same USOL = 1e-20 limit.
+c-mab: Similar species-specific conditions may be necessary to get future templates to converge.
+c-mab: This is temporary till we can find a "cleaner" solution.                   
+        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LH2CO .AND. J.GT. 61) THEN
+                     USOL(I,J) = USOL(I,J) + RHS(K)
+        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LH2COH .AND. J.GT. 35) THEN
+                     USOL(I,J) = USOL(I,J) + RHS(K)
+        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LCH .AND. J.GT. 31) THEN
+                     USOL(I,J) = USOL(I,J) + RHS(K)
+        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LCH23 .AND. J.GT. 31) THEN
+                     USOL(I,J) = USOL(I,J) + RHS(K)
+        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LCH3 .AND. J.GT. 50) THEN
+                     USOL(I,J) = USOL(I,J) + RHS(K)
+        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LCH4 .AND. J.GT. 56) THEN
+                     USOL(I,J) = USOL(I,J) + RHS(K)
+C        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LH2O .AND. J.GT. 75) THEN  !!!! btw this was kept disabled in Ravi's CURRENT version of main
+C                     USOL(I,J) = USOL(I,J) + RHS(K) !!! Incorporating this in this version actually slightly increased convergence time
+C        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LCO2) THEN  !!!! btw this was kept disabled in Ravi's CURRENT version of main
+C                     USOL(I,J) = USOL(I,J) + RHS(K)  !(PS - woah ignoring CO2 entirely? Really? - disabling this actually slightly increased convergence as well, more than H2O alone did)
+        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LCH3OH .AND. J.GT. 10) THEN
+                     USOL(I,J) = USOL(I,J) + RHS(K)
+C        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LO .AND. J.GT. 60) THEN !!!! btw this was kept disabled in Ravi's CURRENT version of main
+C                     USOL(I,J) = USOL(I,J) + RHS(K)
+        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LC .AND. J.GT. 60) THEN
+                     USOL(I,J) = USOL(I,J) + RHS(K)
+        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LCH3O .AND. J.GT. 50) THEN
+                     USOL(I,J) = USOL(I,J) + RHS(K)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-        ELSEIF (USOL(I,J).LT. 1.E-20) THEN
+        !!!!ELSEIF (USOL(I,J).LT. 1.E-15) THEN !TEMPORARILY DISABLING THIS ALTOGETHER TO USE RAVI'S CONDITIONS DIRECTLY
+        ELSEIF(PLANET.NE.'WASP12B'.AND.USOL(I,J).LT. 1.E-20) THEN !DEFAULT ATMOS CONDITION -- USING FOR NON HOT JUP PLANETS
+
 c-orig        IF (USOL(I,J).LT. 1.E-20) THEN
 c        IF (USOL(I,J).LT. 1.E-22) THEN
 c        ELSEIF (USOL(I,J).LT. 1.E-22) THEN
