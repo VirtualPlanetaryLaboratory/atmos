@@ -797,7 +797,7 @@ c-mc rate constant units are cm^3/mol/s
  !for 2body cases, A1,n1 and E1 are padded in as 0's (not used in computation).
   !In other words, in the the existing reaction.rx, this needs to be updated (by 0 padding).
   ! Format statement changed by W.S.
- 667    FORMAT(60X, 6(E12.3))
+ 667    FORMAT(60X, 3(E12.3), 24X, 3(E12.3))
         ! skip reactions header
         read(9, *)
 
@@ -937,7 +937,7 @@ C             IF(I.EQ.50) print*,'ARAVI = ',ARAVI
            ENDDO
 C           PRINT*," " 
      
-          else if (REACTYPE(J) .EQ. 'PHOTO') then
+          else if (REACTYPE(J)(1:4) .EQ. 'PHOT') then
            read (9,*)
 C           PRINT*, "J, Reactants = ",J,CHEMJ(1,J),CHEMJ(2,J)
 C           PRINT*,"J, Products = ",J,CHEMJ(3,J),CHEMJ(4,J)                    
