@@ -1,0 +1,5 @@
+Rates.f has had format changes made to it, to read reactions.rx files that had been
+formatted based off of the KIDA database(http://kida.obs.u-bordeaux1.fr/). Please look
+at the png file: new_reactions.rx_formatting.png, which is in the subroutine help folder.
+Reactions.rx now needs a header that matches the header in the .png file and the new
+formatting rules are in rates.f
