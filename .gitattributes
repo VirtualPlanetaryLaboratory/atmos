@@ -4,5 +4,6 @@
 *.* text
 # Make sure runners keep LF endings
 *.scr eol=lf
-# Dont touch objects!
+# Dont touch objects! (try not to push run files in the first place)
 *.o binary
+*.run binary
