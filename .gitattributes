@@ -2,8 +2,8 @@
 * text=auto
 # Set everything to text
 *.* text
-# Make sure runners keep LF endings
-*.scr eol=lf
+# Make sure shell scripts keep LF endings
+*.sh eol=lf
 # Dont touch objects! (try not to push run files in the first place)
 *.o binary
 *.run binary
