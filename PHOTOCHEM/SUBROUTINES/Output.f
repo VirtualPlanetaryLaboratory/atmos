@@ -1169,6 +1169,8 @@ c-mab: Format below abstracted to work for all templates.
        write(35,fmtheadstr) (ISPEC(k),K=1,NQ) !headers
        write(35,fmtdatastr) !PTZ + final output LL mixing ratios
      &          (P(i),T(i),Z(i),(USOL(k,i),K=1,NQ),i=1,nz)
+c-mab: Another file with all the final output species fluxes. (to be added)
+       write(255,*),"Placeholder for master....will be added later."
 
       RETURN
       END

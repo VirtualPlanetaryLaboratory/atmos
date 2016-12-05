@@ -156,7 +156,32 @@ expects from the parameter NEWSPEC in input_photochem.dat. Change it from
 0 to 1. 
 
 ***
+PROBLEM: You ran RunModels.sh to replace your input files with a different template, but 
+cannot run without re-compiling code first... You get an error regarding reactions.rx:
 
+Would you like to compile PHOTOCHEM (y/n)?:n
+
+Would you like to run PHOTOCHEM (y/n)?:y
+At line 783 of file PhotoMain.f (unit = 9, file = 'PHOTOCHEM/INPUTFILES/reactions.rx')
+Fortran runtime error: End of file
+
+Error termination. Backtrace:
+#0  0x12081e729
+#1  0x12081f3f5
+#2  0x12081fb59
+#3  0x1208e7f8b
+#4  0x1208e8527
+#5  0x1208e55c3
+#6  0x1208ea5b4
+#7  0x1208e7b19
+#8  0x109fb5482
+#9  0x10a011ade
+
+SOLUTION: Since some of the output files we're writing have dynamic format
+statements that depend on the particular template's parameters.inc values,
+always re-compile (select y) when using a different template! (12/16 MAB)
+
+***
 PROBLEM: You get this error in Photochem:
 Fortran runtime error: Array reference out of bounds for array 'z', lower bound of dimension 1 exceeded (0 < 1)
 

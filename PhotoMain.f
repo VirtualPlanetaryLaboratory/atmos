@@ -509,8 +509,8 @@ C      VERY TERSE OUTPUT
 C      TIME OUTPUTS
       open(23, file='PHOTOCHEM/OUTPUT/out.time',status='UNKNOWN')
       open(24, file='PHOTOCHEM/OUTPUT/out.tim',status='UNKNOWN')
-C-AVB  Final Output for P, T, Z and mixingratios
-      open(255, file='PHOTOCHEM/OUTPUT/PTZ_MixingOut.dat')
+C-AVB,MAB  Final Output for P, T, Z and species fluxes (to be added)
+      open(255, file='PHOTOCHEM/OUTPUT/PTZ_out.flux')
 c-mc
 C     redox output - eventually combine into out.trs
       open(25, file='PHOTOCHEM/OUTPUT/out.redox',status='UNKNOWN')
