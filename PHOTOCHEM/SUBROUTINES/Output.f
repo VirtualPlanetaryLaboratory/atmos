@@ -3,7 +3,8 @@
       implicit real*8(A-H,O-Z)
       real*8 mass
       CHARACTER*8 ISPEC,REACTYPE,PLANET,CHEMJ
-      CHARACTER*20 fmtstr
+      CHARACTER*20 fmtstr,fmtdatastr
+      CHARACTER*60 fmtheadstr
 
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PHOTABLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/BBLOK.inc'
@@ -1149,12 +1150,25 @@ c- screen output for chlorine stuf
      $ FLOW(LHNO3),FLOW(LHNO4),SO4LOS,USOL(LHCL,1)
       endif
 
-
-
-
-
-
-
+c-mab:"Human readable" input and output mixing ratio profiles + P,T,Z:
+c-mab: Format below abstracted to work for all templates. 
+      fmtdatastr='(1X,1P000E10.3)'!3 0's reserved assuming NQ < 1000 always
+      fmtheadstr='(4X,"PRESS",5X,"TEMP",6X,"ALT",7X,0  (A8,2X))'
+       if(NQ.lt.100) then
+        write(fmtdatastr(8:9),'(I2)')NQ+3 !3 for P, T & Z columns
+        write(fmtheadstr(36:37),'(I2)')NQ
+       else
+        write(fmtdatastr(7:9),'(I3)')NQ+3 !allowing NQ with 3 digits
+        write(fmtheadstr(35:37),'(I3)')NQ
+       endif
+        !print*,'fmtdatastr=',fmtdatastr
+        !print*,'fmtheadstr =',fmtheadstr
+       write(34,fmtheadstr) (ISPEC(k),K=1,NQ) !headers
+       write(34,fmtdatastr)  !PTZ + input LL mixing ratios
+     &          (P(i),T(i),Z(i),(USOLORIG(k,i),K=1,NQ),i=1,nz)
+       write(35,fmtheadstr) (ISPEC(k),K=1,NQ) !headers
+       write(35,fmtdatastr) !PTZ + final output LL mixing ratios
+     &          (P(i),T(i),Z(i),(USOL(k,i),K=1,NQ),i=1,nz)
 
       RETURN
       END

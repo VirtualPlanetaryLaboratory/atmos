@@ -492,6 +492,10 @@ C      FORMATTED INPUT
       open(17, file='PHOTOCHEM/in.dist',status='OLD')
 C      FORMATTED OUTPUT
       open(18, file='PHOTOCHEM/OUTPUT/out.dist',status='UNKNOWN')
+      open(34, file='PHOTOCHEM/PTZ_mixingratios_in.dist',
+     &          status='UNKNOWN')
+      open(35, file='PHOTOCHEM/OUTPUT/PTZ_mixingratios_out.dist',
+     &          status='UNKNOWN')
 C      TERSE OUTPUT
       open(19, file='PHOTOCHEM/OUTPUT/out.terse',status='UNKNOWN')
 C      PARTIAL OUTPUT OF MIXING RATIOS
@@ -1294,7 +1298,7 @@ C          diffusion coefficents for H and H2
       IF(PLANET.NE.'WASP12B')CALL PHOTSATRAT(JTROP,H2O)
       IF(PLANET.EQ.'WASP12B')THEN
       	DO I=1,NZ
-      		P(I)=PRESS(I)
+      		P(I)=(1e-6)*PRESS(I)
       	ENDDO
       ENDIF
 C    IDO=-1, fill up SL for accurate calculation on first timestep

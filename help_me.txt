@@ -192,6 +192,9 @@ Photochemical Model:
   the out.dist into in.dist -> Perturb the quantity some more -> run the model -> out.dist
   to in.dist -> again and again until you reach the target region of parameter space. 
   Sorry, I know this sucks. :(
+- You can now plot from PHOTOCHEM/PTZ_mixingratios_in.dat & PHOTOCHEM/OUTPUT/PTZ_mixingratios_out.dat,
+  where the pressure, temperature, altitude and mixing ratios (see headers) of all long-lived species,
+  in your most recently ran template, are tabulated in a human-readable style. (Added by MAB, 12/16)
 
 Climate Model:
 - What's NSTEPS in CLIMA/IO/input_clima.dat set to?  Is it unreasonably high?
