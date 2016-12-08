@@ -20,6 +20,7 @@ temp_path3='CLIMA/IO/'
 RED='\033[0;31m' #Red
 NC='\033[0m' # No Color
 GREEN='\033[0;32m' #Green
+YELLOW='\033[0;33m'
 true_path=$(pwd)
 
 # *** Initial messages to user ***
@@ -36,7 +37,7 @@ echo "Your current folder is $(pwd)."
 echo ""
 echo "Your PHOTOCHEM has these templates:"
 ls $temp_path
-
+echo ""
 # *** Initiate loop for testing ***
 # Find all the templates and copy/compile/run/test each one
 cd $temp_path
@@ -54,7 +55,8 @@ for folder in `find . -type d -maxdepth 1 -mindepth 1 | sed 's|./||'`; do
         if cp 'parameters.inc' '../..'; then
           if cp 'species.dat' '../..'; then
             if cp 'PLANET.dat' '../..'; then
-              echo "Finished copying photochem templates over for ${folder} run!"
+              printf "${GREEN}${folder}Finished copying photochem templates over for ${folder} run!${NC}"
+              echo ""
             else
               printf "${RED}${temp_path}${folder}/PLANET.dat appears to be missing! Quitting.${NC}"
               echo ""
@@ -109,27 +111,36 @@ for folder in `find . -type d -maxdepth 1 -mindepth 1 | sed 's|./||'`; do
   echo "n" >> RunModel.txt
   echo "n" >> RunModel.txt
   echo "Running ${folder}....... Please wait. This might take a while."
-  echo "If you need to peek take a look at ${folder}.out.out"
+  echo "If you need to peek take a look at ${folder}.out.out."
   if ./'Photo.run' >& ${folder}.out.out; then
     # Tests for non-convergence
-    NSTEPS=$(grep "NSTEPS =" PhotoMain.f | grep -vi c | sed 's/NSTEPS = //')
-    if grep "N =" ${folder}.out.out | grep ${NSTEPS}; then
+    echo "Here is information from your last time step:"
+    echo $(grep "N =" ${folder}.out.out | tail -n 1)
+    NSTEPS=$(grep "NSTEPS =" PhotoMain.f | grep -vi c | sed 's/NSTEPS = //' | sed 's/ //g')
+    if grep "N =" ${folder}.out.out | grep ${NSTEPS} >/dev/null 2>&1; then
       # In this case, the code took too long to run.
       # We flag this case, but do not stop the script.
       printf "${RED}${folder} did not converge after ${NSTEPS} steps!${NC}"
+      echo ""
       echo "See ${folder}.out.out for model output to diagnose this."
+      echo "Please DO NOT submit your code changes until resolving this issue."
+    elif grep "N =" ${folder}.out.out | grep 500 >/dev/null 2>&1; then
+      printf "${YELLOW}${folder} run complete in > 500 steps... This means your model did not converge very quicly.${NC}"
+      echo ""
+      echo "See ${folder}.out.out for model output to diagnose this."
+      echo "Please DO NOT submit your code changes until resolving this issue."
     else
-      printf "${GREEN}${folder} run complete in < ${NSTEPS} steps! Output stored in ${folder}.out.out${NC}"
+      printf "${GREEN}${folder} run complete in < 500 steps! Output stored in ${folder}.out.out${NC}"
       echo ""
     fi
   else
     # In this case, the model crashed before completion.
     printf "${RED}${folder} run did NOT complete! Something is worng. Quitting.${NC}"
     echo "See ${folder}.out.out for model output and error messages."
+    echo "Please DO NOT submit your code changes until resolving this issue."
     echo ""
     exit 1
   fi
-  echo ""
   echo ""
 
   # *** Test photochem outputs ***
@@ -165,7 +176,7 @@ done
 
 printf "${GREEN}Everything compiled and ran!${NC}"
 echo ""
-printf "Look above for ${RED}red text${NC}, to make sure all models converged."
+printf "Look above for ${RED}red text${NC} and ${YELLOW}yellow text${NC}, to make sure all models converged."
 echo ""
 echo "This script does not test for accuracy."
 echo "But... at least your templates compiled and ran! (And converged?)${NC}"
