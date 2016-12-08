@@ -6,6 +6,7 @@
 **/*.exe
 **/*.o
 **/*.so
+**/*.pyc
 **/Photo.run
 **/Clima.run
 Photo.run
@@ -24,6 +25,7 @@ COUPLE/time_frak_photo.out
 COUPLE/mixing_ratios.dat
 COUPLE/fromPhoto2Clima.dat
 COUPLE/coupling_params.out
+COUPLE/hcaer.photoout.out
 photochem_smart/atm/tag.atm
 photochem_smart/photchem/photfile.pt
 
@@ -67,7 +69,6 @@ photochem_smart/photchem/photfile.pt
 **/.Trashes
 **/ehthumbs.db
 **/Thumbs.db
-**/fort.*
 
 # Model Output Files #
 ######################
