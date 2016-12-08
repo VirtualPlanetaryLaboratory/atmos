@@ -21,6 +21,8 @@ PHOTOCHEM/INPUTFILES/parameters.inc
 PHOTOCHEM/INPUTFILES/reactions.rx
 PHOTOCHEM/INPUTFILES/species.dat
 PHOTOCHEM/INPUTFILES/input_photochem.dat
+PHOTOCHEM/INPUTFILES/PLANET.dat
+PHOTOCHEM/INPUTFILES/input_photchem.dat
 COUPLE/time_frak_photo.out
 COUPLE/mixing_ratios.dat
 COUPLE/fromPhoto2Clima.dat
@@ -74,6 +76,5 @@ photochem_smart/photchem/photfile.pt
 ######################
 **/out.*
 **/fort.*
-**/*.dat
 **/*.tab
 **/*.dist
