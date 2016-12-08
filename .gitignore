@@ -7,16 +7,18 @@
 **/*.o
 **/*.so
 **/*.pyc
-**/Photo.run
-**/Clima.run
 Photo.run
 Clima.run
 PHOTOCHEM/OBJECTFILES/*
 CLIMA/OBJECT_CLIMA/*
-PHOTOCHEM/*out*
 PHOTOCHEM/OBJECT_PHOT/*
+
+# Runtime I/O files for Atmos models #
+#####################################
+PHOTOCHEM/OUTPUT/*
 PHOTOCHEM/profile.pt
 PHOTOCHEM/in.dist
+PHOTOCHEM/PTZ_mixingratios_in.dist
 PHOTOCHEM/INPUTFILES/parameters.inc
 PHOTOCHEM/INPUTFILES/reactions.rx
 PHOTOCHEM/INPUTFILES/species.dat
@@ -31,15 +33,28 @@ COUPLE/hcaer.photoout.out
 photochem_smart/atm/tag.atm
 photochem_smart/photchem/photfile.pt
 
+# Fortran detritus #
+####################
+**/fort.*  
+# note fort. files indicate user error. something is writing to a file unit that hasn't been opened. so if you see fort.### files, why not be a good citizen and find/remove the resulting write statement rather than ignore them...
+
+
+
+# Model Output Files #
+######################
+**/*.tab
+#not exactly sure why this is here. There are some .tab files, but they are all checked in. revisit me at some point.
+
+
 # Hitran linelists should never be added (they are big!) #
-############
+##########################################################
 **/.par
 *.par
 */*.par
 */*/*.par
 
-#junk emacs files
-############
+#junk emacs files#
+##################
 **/*~
 **/*#
 
@@ -71,10 +86,3 @@ photochem_smart/photchem/photfile.pt
 **/.Trashes
 **/ehthumbs.db
 **/Thumbs.db
-
-# Model Output Files #
-######################
-**/out.*
-**/fort.*
-**/*.tab
-**/*.dist
