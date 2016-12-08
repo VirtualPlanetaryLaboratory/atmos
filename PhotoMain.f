@@ -633,8 +633,6 @@ C   To be used as input for the climate model (coupling)
        open(84, file='COUPLE/fromPhoto2Clima.dat', status='UNKNOWN')
        open(116, file='COUPLE/fromClima2Photo.dat', status='UNKNOWN')
        open(117, file='COUPLE/mixing_ratios.dat', status='UNKNOWN')
-!       open(118, file='COUPLE/fromClima2Photo_works.dat', status='UNKNOWN')
-
 
 
 C - READ IN SPECIES NAMES, ATOMIC NUMBERS, AND BOUNDARY CONDITIONS
@@ -1352,22 +1350,6 @@ C     !set to h2o from clima if coupling on
         ENDIF
        enddo
       ENDIF
-
-C  it's having mega problems for low h2o profiles for cold surface environments
-C      here is a fix for now  WARNING
-c       IF(T(1).lt.260) THEN
-c          print *, 'scaling water'
-
-c        DO J=1, NZ
-c        READ(118,*) alt_dontuse(J), T_dontuse(J), water_fix(J)
-c        END DO
-c        close(118)
-c        do J=1,JTROP
-c        USOL(LH2O,J) = water_fix(J)
-c        enddo
-c        endif
-
-
 
 
       IF (PLANET .eq. 'EARTH') CALL LTNING
