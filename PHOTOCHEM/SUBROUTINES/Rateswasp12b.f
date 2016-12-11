@@ -903,12 +903,15 @@ C     .        J,,akeq,a0,akr0,a1,akri,DG,A(J,I)
            !IF (I.EQ.1) print*,'J,akeq,DG',J,akeq,DG               
              !print*,'J,A (hardcoded)',J,A(J,I)
              IF(JCHEM(4,J).EQ.0) THEN
-              A(J,I)=(A(J-1,I)/akeq)*(PFAC/(kB*T(I)))**(-1) !IMPORTANT! Read the comments below.
+c-mab: I have a reservation about this. I believe original scheme is missing a DEN factor consideration....
+c-mab: Perhaps we should switch order of the forward and backward?
+              A(J,I)=(A(J-1,I)/akeq)*(DEN(I))**(-1) !IMPORTANT! Read the comments below.
              ELSE
-              A(J,I)=A(J-1,I)*(PFAC/(kB*T(I)))/akeq !IMPORTANT! Read the comments below.
+              A(J,I)=A(J-1,I)*(DEN(I))/akeq !IMPORTANT! Read the comments below.
+
              !A(J,I)=A(J-1,I)/akeq !IMPORTANT! Read the comments below.
              ENDIF
-             
+                         
 C             IF(I.EQ.50) print*,
 C     .    'J, A(highestP) (3body back rxn to above w/ PFAC)',J,A(J,50)
 C             IF(I.EQ.50) print*,'ARAVI = ',ARAVI

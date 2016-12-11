@@ -311,8 +311,8 @@ PRO run_coupled, rmix=rmix, flux=flux, ADLEO=ADLEO, spherical=spherical, dirpath
 
                     spawn, "mkdir "+dirpath+"IO/"+runfolder+"/"                    
                     spawn, "./TOTCdev"                   
-                    spawn, "cp PHOTOCHEM/out.out "+dirpath+"IO/"+runfolder+"/out"+strtrim(outcounter,1)+".out"
-                    spawn, "cp PHOTOCHEM/out.dist PHOTOCHEM/in.dist"
+                    spawn, "cp PHOTOCHEM/OUTPUT/out.out "+dirpath+"IO/"+runfolder+"/out"+strtrim(outcounter,1)+".out"
+                    spawn, "cp PHOTOCHEM/OUTPUT/out.dist PHOTOCHEM/in.dist"
                     spawn, "cp PHOTOCHEM/profile.pt "+dirpath+"IO/"+runfolder+"/profile"+strtrim(outcounter,1)+".pt"
                     spawn, "cp PHOTOCHEM/hcaer.out "+dirpath+"IO/"+runfolder+"/hcaer"+strtrim(outcounter,1)+".pt"
                     spawn, "cp COUPLE/fromPhoto2Clima.dat "+dirpath+"IO/"+runfolder+"/fromPhoto2Clima.dat"+strtrim(outcounter,1)+".dat"
@@ -341,8 +341,8 @@ PRO run_coupled, rmix=rmix, flux=flux, ADLEO=ADLEO, spherical=spherical, dirpath
                        outcounter = outcounter + 1
                        imacounter = imacounter + 1
                        spawn, "./TOTCdev"
-                       spawn, "cp PHOTOCHEM/out.out "+dirpath+"IO/"+runfolder+"/out"+strtrim(outcounter,1)+".out"
-                       spawn, "cp PHOTOCHEM/out.dist PHOTOCHEM/in.dist"
+                       spawn, "cp PHOTOCHEM/OUTPUT/out.out "+dirpath+"IO/"+runfolder+"/out"+strtrim(outcounter,1)+".out"
+                       spawn, "cp PHOTOCHEM/OUTPUT/out.dist PHOTOCHEM/in.dist"
                        spawn, "cp PHOTOCHEM/profile.pt "+dirpath+"IO/"+runfolder+"/profile"+strtrim(outcounter,1)+".pt"
                        spawn, "cp PHOTOCHEM/hcaer.out "+dirpath+"IO/"+runfolder+"/hcaer"+strtrim(outcounter,1)+".out"
                        spawn, "cp COUPLE/fromPhoto2Clima.dat "+dirpath+"IO/"+runfolder+"/fromPhoto2Clima.dat"+strtrim(outcounter,1)+".dat"

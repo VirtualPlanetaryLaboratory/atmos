@@ -52,12 +52,20 @@ c         if(j.eq.1)print *, i, ISPEC(I),' particle densities'
  
 
         if(ISPEC(NSP-1).eq.'CO2') D(LCO2,J) = FCO2 * DEN(J) !if CO2 is inert, place above N2 in list (ACK - hardcoded position for CO2/N2 (NSP-1/NSP)
-
-       D(NSP,J) = (1. - USOL(LO2,J) - FCO2 - FAR - FCO)* DEN(J)    ! N2 -defined as the "rest" of the density - wrong as it ignores Argon, CO, etc.
+c N2-defined as the "rest" of the density after subtracting Ar, CO2 and O2 (mab: do we want to add anything else?)
+       D(NSP,J) = (1. - USOL(LO2,J) - FCO2 - FAR - FCO)* DEN(J) 
 
 
        D(NSP1,J) = 1.           ! HV has density of 1 for photorate calculations
-       D(NSP2,J) = DEN(J)                         ! M - background density for three body reactions
+       D(NSP2,J) = DEN(J)       ! M - background density for three body reactions
+       
+       
+c-mab: Reassignments to work with Kopparapu et. al. 2012 RATES() schemes
+       IF(PLANET.EQ.'WASP12B') THEN
+        D(NSP2,J) = 1.     ! setting to 1.00 for M for wasp12b coding mechanism
+       	D(LHE,J) = FHE * DEN(J) ! Assuming He is always inert
+       ENDIF
+
       enddo
 
     
@@ -198,9 +206,12 @@ C   PRODUCTION OF NO AND O2
       changeL = 1        !mc temp var for testing lightning changes versus OLD JFK method
                          !changeL=1 uses new code, changeL=0 uses old code
       
-      JT1 = JTROP + 1          ! same as NH1
+c-mab: Let's NOT zero-out the H2O terms or include lightning for giant templates...
+c-mab: (Basing this one on FH2-based distinction...) !mc - could we use the PLANET variable here?
+      IF(FH2.LT.0.50) THEN
+       JT1 = JTROP + 1          ! same as NH1
   
-      DO 5 J=1,JTROP
+       DO 5 J=1,JTROP
         FVAL(LH2O,J) = 0.
         YP(LH2O,J) = 0.
         YL(LH2O,J) = 0.
@@ -263,11 +274,11 @@ c-mc
 
          endif
 
-
 c        stop
 c-end 3-20-06 addition
 
    5  CONTINUE
+      ENDIF   !end hot jupiter skip loop
 
 
 
@@ -289,7 +300,6 @@ c       RHCOLD = 0.10  ! Jim had 0.1 ?  my standard is 0.4  <-Kevin words (mc - 
         CONDEN(J) = CONFAC * (USOL(LH2O,J) - H2OCRT)   !this is saved in SATBLK to be printed out in output file - wont be missed in ISOCODE
         FVAL(LH2O,J) = FVAL(LH2O,J) - CONDEN(J)
   13  CONTINUE
-
 
 
 C
@@ -353,9 +363,7 @@ c       print *, j, USOL(LL,J),S8S(J),(USOL(LL,J) - S8S(J))
       endif  !end S8 skip loop
 
       endif  !end normal operation loop (i.e. if IDO = 0 or 1)
-    
 
-c      stop
 
 C
 c what is this?  its hardwired for case where O3 is trace
@@ -397,6 +405,8 @@ C
   11  CONTINUE
 C
 
+      IF(FH2.LT.0.50) THEN
+c-mab: Disabling below for the giant planet template(s).
       DO J=1,NZ
       RELH(J) = D(LH2O,J)/DEN(J)/H2OSAT(J)  !this gets H2O mixing ratio in a more general way
       O3COL = O3COL + D(LO3,J)*DZ(J)
@@ -407,7 +417,9 @@ C
        S4COL = S4COL + D(LS4,J)*DZ(J)
 c       S8COL = S8COL + D(LS8,J)*DZ(J)   !ACK need to deal if S8 in gas phase
 
-      enddo
+
+      ENDDO
+      ENDIF   !end hot jupiter skip loop
 C
       DO 12 L=1,NR
       M = JCHEM(1,L)         !identifies first reactant of equation L

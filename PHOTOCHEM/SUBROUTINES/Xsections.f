@@ -3952,6 +3952,13 @@ c     1)Kevin's photo.dat data
 
       option=1
       
+      HJtest=0 !HOT JUPITER TEST
+      do i=1,nsp
+C         print*,i,ISPEC(i)
+         if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
+      enddo 
+
+C         print*,"HJtest",HJtest
       if (option.eq.1) then  !Kevin's data
       OPEN(UNIT=kin,
      &  file='PHOTOCHEM/DATA/XSECTIONS/CH4/CH4_zahnle.abs',
@@ -3970,7 +3977,11 @@ c     1)Kevin's photo.dat data
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      IF (HJtest.eq.1) THEN
+      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      ELSE
+      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      ENDIF 
 
 
       IF (ierr .NE. 0) THEN
@@ -3982,9 +3993,11 @@ c Quantum yields and reactions depend on wavelength and presence of hydrocarbons
 
       DO iw = 1, nw
          if (wl(iw).eq.1216) then  !ack hardcoded wavelength
+c-mab: November 2016: Switched qy2 and qy3 values from original due to comparison with a previous person.
+c-mab: A discussion within the GSFC group (following discrepancy with Kopparapu et al 2012 code) suggested they must've gotten switched somewhere accidentally? 
             qy=0.24
-            qy2=0.25
-            qy3=0.51
+            qy2=0.51
+            qy3=0.25
          else  !first reaction dominates everywhere but Ly a
           qy=1.0
           qy2=0.0

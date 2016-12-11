@@ -58,7 +58,16 @@ c- this used only if INO=0
       pCO2=FCO2
 
 
-      WT = pO2*32. + pCO2*44. + (1.-pO2-pCO2)*28. + 0.4   !(g) mean molar mass
+c-mab: Like DENSTY & DIFCO, WT expression based on H2 mixing ratio...
+      IF(FH2.GT.0.50) THEN
+       FH2  = (1.0-FHE-FH2O-FH-FOH-FCO-FCO2-FCH4)
+C        print*,"(PHOTO)FH2,FHE,FCO2,FCO,FH2O,FH,FOH,FCH4",
+C     .             FH2,FHE,FCO2,FCO,FH2O,FH,FOH,FCH4
+       WT   =  pCO2*44. + FH2*2. +  FCO*28. + FH2O*18. + FCH4*16. +
+     .        FH + (1.-FH2-FCO2-FCO-FH-FH2O-FCH4)*4.0 ! Last term For Helium
+      ELSE
+       WT = pO2*32. + pCO2*44. + (1.-pO2-pCO2)*28. + 0.4 !(g) mean molar mass
+      ENDIF
       RMG = RGAS/(WT*G)           !gm cm^2/s^2/mol/K  / g *s^2/cm ->  cm/mol/K
 
 c-mc allows for high CO2 and O2, but forces N2 to decrease if CO2 increases.  Wrong as CO2 gets large
@@ -340,11 +349,11 @@ c              if (Z(i)/1e5.eq.107.5) print *, ispec(j)
                  icomp(ncomp(i),i)=4
               else if (ISPEC(j).eq.'H2') then
                  ncomp(i)=ncomp(i)+1
-                 volmix(ncomp(i),i)=SL(j,i)/DEN(i)
+                 volmix(ncomp(i),i) = FH2 !should matter for gas giants only
                  icomp(ncomp(i),i)=5
               else if (ISPEC(j).eq.'HE') then
                  ncomp(i)=ncomp(i)+1
-                 volmix(ncomp(i),i)=SL(j,i)/DEN(i)
+                 volmix(ncomp(i),i) = FHE !should matter for gas giants only
                  icomp(ncomp(i),i)=6
               else
                  if(FH2.LT.0.5) then
@@ -389,7 +398,20 @@ c             endif
 
        endif   !end case for Rayleigh loop
 
+!!!!       
+c-mab: The adjustment below is required to enable WASP12B convergence...
+c-mab: We know this as the difference between the RAYLEIGH() in 
+c-mab: Kopparapu et. al 2012 version and the one here was a factor of (1e-16) 
+c-mab: exact.... so I believe a wavelength^4 unit conversion might be the issue here.
+c-mab: (The RAYLEIGH() in the other version also did not have depolarization).
+c-mab: Will remove or change this upon incurring a smoother solution :).
 
+       if(PLANET.EQ.'WASP12B') then
+            do I=1,NZ
+       		 SIGR(I) = SIGR(I)*1e-16
+            enddo
+       endif
+!!!! 
 
        if (IO2 .EQ. 1) then   !re-compute O2 cross section via exponential sums
         if(PLANET.EQ.'WASP12B') then !ignore sum calculation entirely

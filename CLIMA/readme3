@@ -1,3 +1,0 @@
-The files in this folder are set up to do Mars climate calculations. The current goal is to create a program that can handle vertical profiles of NO2. The model starts from a version created by Mike & Will in which NO2 is assumed constant with altitude.
-
-Currently, both CH4 and C2H6 are zeroed out of the loop in ir.f. So, only H2O, CO2, and NO2 are included.

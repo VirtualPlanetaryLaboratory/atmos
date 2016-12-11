@@ -3,7 +3,8 @@
       implicit real*8(A-H,O-Z)
       real*8 mass
       CHARACTER*8 ISPEC,REACTYPE,PLANET,CHEMJ
-      CHARACTER*20 fmtstr
+      CHARACTER*20 fmtstr,fmtdatastr
+      CHARACTER*60 fmtheadstr
 
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PHOTABLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/BBLOK.inc'
@@ -110,8 +111,8 @@ C
      2  E10.3,2X,'S2 =',E10.3,2X,'S4 =',E10.3,2X,'S8 =',E10.3)
       endif
 
-      
-      IF (NP.GT.0) THEN !mab FOR THE FIRST TWO PARTICLES (ASSUMED SULPHATE AND S8 IN HARDCODING ORDER)
+c-mab FOR THE FIRST TWO PARTICLES (ASSUMED SULPHATE AND S8 IN HARDCODING ORDER)      
+      IF (NP.GT.0) THEN
        DO J=1,NP
 !ack hardcoding to retain Kevin's original scheme  
 !where tauaer 2 and 3 were both for elemental sulfur
@@ -362,8 +363,15 @@ C
 c water is not conserved.  should this be jtrop or jtrop + 1?
       FLOW(LH2O) = FLUXO(LH2O,jtrop)   ! jim had 11 hard-wired
       CON(LH2O) = TP(LH2O) - TL(LH2O) + FLOW(LH2O) - FUP(LH2O)
+c-mab disabling FLUXO of water assignment to 0.0 for giants based on WT.
+c-mab This is something I'm trying to move from a planet-based if loop.
+c-mab Most solar system gas giants have a mwt of <3.0 and terrestrials > 20.0
+c-mab Using wt of methane - 16.0 as a distinction here
+c-mab (May change later after input soliciation)
+      IF (WT.GT.16.0) THEN
       DO 6 I=1,jtrop-1   ! jim had 10 hard wired... its not zero
    6  FLUXO(LH2O,I) = 0.
+      ENDIF
 c there are issues here -    
 
 
@@ -1142,12 +1150,27 @@ c- screen output for chlorine stuf
      $ FLOW(LHNO3),FLOW(LHNO4),SO4LOS,USOL(LHCL,1)
       endif
 
-
-
-
-
-
-
+c-mab:"Human readable" input and output mixing ratio profiles + P,T,Z:
+c-mab: Format below abstracted to work for all templates. 
+      fmtdatastr='(1X,1P000E10.3)'!3 0's reserved assuming NQ < 1000 always
+      fmtheadstr='(4X,"PRESS",5X,"TEMP",6X,"ALT",7X,0  (A8,2X))'
+       if(NQ.lt.100) then
+        write(fmtdatastr(8:9),'(I2)')NQ+3 !3 for P, T & Z columns
+        write(fmtheadstr(36:37),'(I2)')NQ
+       else
+        write(fmtdatastr(7:9),'(I3)')NQ+3 !allowing NQ with 3 digits
+        write(fmtheadstr(35:37),'(I3)')NQ
+       endif
+        !print*,'fmtdatastr=',fmtdatastr
+        !print*,'fmtheadstr =',fmtheadstr
+       write(34,fmtheadstr) (ISPEC(k),K=1,NQ) !headers
+       write(34,fmtdatastr)  !PTZ + input LL mixing ratios
+     &          (P(i),T(i),Z(i),(USOLORIG(k,i),K=1,NQ),i=1,nz)
+       write(35,fmtheadstr) (ISPEC(k),K=1,NQ) !headers
+       write(35,fmtdatastr) !PTZ + final output LL mixing ratios
+     &          (P(i),T(i),Z(i),(USOL(k,i),K=1,NQ),i=1,nz)
+c-mab: Another file with all the final output species fluxes. (to be added)
+       write(255,*),"Placeholder for master....will be added later."
 
       RETURN
       END

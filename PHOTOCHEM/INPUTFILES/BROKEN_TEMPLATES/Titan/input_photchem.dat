@@ -1,20 +1,20 @@
 *** Set parameters for the high CO2/CH4 photochemical model ***
 * Write the number after the 11th space
-*2345678901Here      
+*2345678901Here
 
 AGL=       0.5
 ISEASON=   1
 IZYO2=     0
 LGRID=     0
-IO2=       0
+IO2=       1
 INO=       1
 EPSJ=      1.E-9
 PRONO=     1.E9
-frak=      0
+frak=      1
 HCDENS=    0.63
 ICOUPLE=   0
 monsize=   0
-ZY=	   50.
+ZY=        50.
 
 C ***** SET MODEL PARAMETERS *****
 C     AGL = DIURNAL AVERAGING FACTOR FOR PHOTORATES

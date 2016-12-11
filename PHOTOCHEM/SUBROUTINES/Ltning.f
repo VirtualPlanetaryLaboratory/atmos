@@ -1,4 +1,4 @@
-      SUBROUTINE LTNING(FO2)
+      SUBROUTINE LTNING
 c  3-21-06   This subroutine does not work
 c  it does not conserve redc  it needs to be replaced by something that isn't wrong
 c-mc 4-29-06  it conserves redox now and is only as wrong as chamedies, which is probably wrong...

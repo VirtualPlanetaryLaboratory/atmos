@@ -17,17 +17,3 @@ The model development was supported by NASA Astrobiology Institute's  Virtual Pl
 
 ### [What does the converged output looks like?](https://bitbucket.org/ravikopparapu/output-examples/wiki/Converged%20Output%20Examples) ###
 
-
-### Contribution guidelines ###
-
-* Writing tests
-
-* Code review
-
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-
-* Other community or team contact

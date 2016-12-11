@@ -1,4 +1,4 @@
-            PROGRAM TOTCtester
+            PROGRAM PhotoMain
 c
 ccc test test
 c I am attempting to abtract this so we can have an Earth/Mars switch
@@ -375,6 +375,7 @@ C     NUMP(NSP) = NUMBER OF NON-ZERO ELEMENTS FOR EACH ROW OF IPROD
 C
       INCLUDE 'PHOTOCHEM/INPUTFILES/parameters.inc'
       implicit real*8(A-H,O-Z)
+      character*10 buffer
       CHARACTER*8 ISPEC, CHEMJ,SPECIES,SPECTYPE,REACTYPE,PLANET
       CHARACTER*20 string,fmtstr,fmtstr2
       real*8 mass
@@ -396,7 +397,7 @@ Cc-mc USOLPREV(NQ,NZ) added for second order reverse Euler calculations
       DIMENSION TA(NZ),TB(NZ),TC(NZ),TY(NZ)
       dimension PRES_bar(NZ)
 
-      integer rhOcount, rhHcount, rhCcount, rhScount, rhNcount, rhCLcount
+      integer rhOcount,rhHcount,rhCcount,rhScount,rhNcount,rhCLcount
 c      dimension atomsO(NSP2),atomsH(NSP2),atomsC(NSP2)
 c      dimension atomsN(NSP2),atomsCL(NSP2),atomsS(NSP2)
 
@@ -460,100 +461,94 @@ C      Model Parameters (AGL, IO2,INO, LGRID, etc)
 C      REACTION FILE
       open(9, file='PHOTOCHEM/INPUTFILES/reactions.rx',status='OLD')
 C      CODE OUTPUT
-      open(14, file='PHOTOCHEM/out.out',status='UNKNOWN')
+      open(14, file='PHOTOCHEM/OUTPUT/out.out',status='UNKNOWN')
 C      FORMATTED INPUT
       open(17, file='PHOTOCHEM/in.dist',status='OLD')
 C      FORMATTED OUTPUT
-      open(18, file='PHOTOCHEM/out.dist',status='UNKNOWN')
+      open(18, file='PHOTOCHEM/OUTPUT/out.dist',status='UNKNOWN')
+      open(34, file='PHOTOCHEM/PTZ_mixingratios_in.dist',
+     &          status='UNKNOWN')
+      open(35, file='PHOTOCHEM/OUTPUT/PTZ_mixingratios_out.dist',
+     &          status='UNKNOWN')
 C      TERSE OUTPUT
-      open(19, file='PHOTOCHEM/out.terse',status='UNKNOWN')
+      open(19, file='PHOTOCHEM/OUTPUT/out.terse',status='UNKNOWN')
 C      PARTIAL OUTPUT OF MIXING RATIOS
-      open(67, file='PHOTOCHEM/profile.pt',status='UNKNOWN')
+      open(67, file='PHOTOCHEM/OUTPUT/profile.pt',status='UNKNOWN')
 C      HYDROCARBONS
-      open(68, file='PHOTOCHEM/hcaer.out',status='UNKNOWN')
+      open(68, file='PHOTOCHEM/OUTPUT/hcaer.out',status='UNKNOWN')
 C      OTHER HYDROCARBONS
-      open(69, file='PHOTOCHEM/hcaer2.out',status='UNKNOWN')
+      open(69, file='PHOTOCHEM/OUTPUT/hcaer2.out',status='UNKNOWN')
 C      VERY TERSE OUTPUT
-      open(21, file='PHOTOCHEM/out.trs',status='UNKNOWN')
+      open(21, file='PHOTOCHEM/OUTPUT/out.trs',status='UNKNOWN')
 C      TIME OUTPUTS
-      open(23, file='PHOTOCHEM/out.time',status='UNKNOWN')
-      open(24, file='PHOTOCHEM/out.tim',status='UNKNOWN')
-C-AVB  Final Output for P, T, Z and mixingratios
-      open(255, file='PHOTOCHEM/PTZ_MixingOut.dat')
-
-c The next four files are used only when this model is coupled
-C           with the climate model (ICOUPLE=1)
-C   To be used as input for the climate model (coupling)
-      open(90, file='COUPLE/hcaer.photoout.out',status='UNKNOWN')
-      open(84, file='COUPLE/fromPhoto2Clima.dat',
-     &         status='OLD')
-      open(116, file='COUPLE/fromClima2Photo.dat')
-      open(117, file='COUPLE/mixing_ratios.dat')
-      open(118, file='COUPLE/fromClima2Photo_works.dat')
-
+      open(23, file='PHOTOCHEM/OUTPUT/out.time',status='UNKNOWN')
+      open(24, file='PHOTOCHEM/OUTPUT/out.tim',status='UNKNOWN')
+C-AVB,MAB  Final Output for P, T, Z and species fluxes (to be added)
+      open(255, file='PHOTOCHEM/OUTPUT/PTZ_out.flux')
 c-mc
 C     redox output - eventually combine into out.trs
-      open(25, file='PHOTOCHEM/out.redox',status='UNKNOWN')
+      open(25, file='PHOTOCHEM/OUTPUT/out.redox',status='UNKNOWN')
 C     Temporary output file for looking at convergence
 C         in the reverse Euler iteration
-      open(26, file='PHOTOCHEM/out.converge',status='UNKNOWN')
+      open(26, file='PHOTOCHEM/OUTPUT/out.converge',status='UNKNOWN')
 C     Printing out relevant SO2 photolysis pieces
 C           between 190-220 as MIF signature
-      open(27, file='PHOTOCHEM/out.so2',status='UNKNOWN')
+      open(27, file='PHOTOCHEM/OUTPUT/out.so2',status='UNKNOWN')
 C     Reaction rates,reactions,species,densities,rate constants
-      open(28, file='PHOTOCHEM/out.rates',status='UNKNOWN')
+      open(28, file='PHOTOCHEM/OUTPUT/out.rates',status='UNKNOWN')
 C     FOLLOWING ARE CROSS SECTIONS, HEIGHT GRID, WAVELENGTH GRID:
-      open(29, file='PHOTOCHEM/out.xsec',status='UNKNOWN')
-      open(30, file='PHOTOCHEM/out.gridz',status='UNKNOWN')
-      open(31, file='PHOTOCHEM/out.gridw',status='UNKNOWN')
+      open(29, file='PHOTOCHEM/OUTPUT/out.xsec',status='UNKNOWN')
+      open(30, file='PHOTOCHEM/OUTPUT/out.gridz',status='UNKNOWN')
+      open(31, file='PHOTOCHEM/OUTPUT/out.gridw',status='UNKNOWN')
 
 c-mc  unit 33 reserved for wavelength grids...
 
-      open(41, file='PHOTOCHEM/out.rad',status='UNKNOWN')
+      open(41, file='PHOTOCHEM/OUTPUT/out.rad',status='UNKNOWN')
 C     File below should contain TATLTUAE
-      open(42, file='PHOTOCHEM/out.finalden',status='UNKNOWN')
+      open(42, file='PHOTOCHEM/OUTPUT/out.finalden',status='UNKNOWN')
 C     Number densities at each timestep
-      open(43, file='PHOTOCHEM/out.densities',status='UNKNOWN')
+      open(43, file='PHOTOCHEM/OUTPUT/out.densities',status='UNKNOWN')
 C     Total production and loss at steady state
-      open(44, file='PHOTOCHEM/out.prod',status='UNKNOWN')
+      open(44, file='PHOTOCHEM/OUTPUT/out.prod',status='UNKNOWN')
 C     Fluxes
-      open(45, file='PHOTOCHEM/out.flux',status='UNKNOWN')
+      open(45, file='PHOTOCHEM/OUTPUT/out.flux',status='UNKNOWN')
 C     tau=1 (at final step) in out.tau
-      open(48, file='PHOTOCHEM/out.tau',status='UNKNOWN')
+      open(48, file='PHOTOCHEM/OUTPUT/out.tau',status='UNKNOWN')
 C      Some model parameters
-      open(49, file='PHOTOCHEM/out.params',status='UNKNOWN')
+      open(49, file='PHOTOCHEM/OUTPUT/out.params',status='UNKNOWN')
 C      NGE and L2 are normally between start and finish
-      open(50, file='PHOTOCHEM/out.error',status='UNKNOWN')
+      open(50, file='PHOTOCHEM/OUTPUT/out.error',status='UNKNOWN')
 C      TP/FLOW for chlorine species,nitrate, adn sulfate
-      open(51, file='PHOTOCHEM/out.cl',status='UNKNOWN')
+      open(51, file='PHOTOCHEM/OUTPUT/out.cl',status='UNKNOWN')
 
 C     For testing O2 prates with various grid sizes
-      open(58, file='PHOTOCHEM/out.O2prates',status='UNKNOWN')
-      open(59, file='PHOTOCHEM/out.raingc',status='UNKNOWN')
+      open(58, file='PHOTOCHEM/OUTPUT/out.O2prates',status='UNKNOWN')
+C        rainggc out - ISOHACK
+      open(59, file='PHOTOCHEM/OUTPUT/out.raingc',status='UNKNOWN')
 
 !c-mc 60 and 61 are opened below after LGRID is read in
 
 C      lower boundary fluxes (not including rainout)
-       open(62, file='PHOTOCHEM/out.flow',status='UNKNOWN')
+       open(62, file='PHOTOCHEM/OUTPUT/out.flow',status='UNKNOWN')
 C      Haze optical depths
-       open(63, file='PHOTOCHEM/out.od',status='UNKNOWN')
+       open(63, file='PHOTOCHEM/OUTPUT/out.od',status='UNKNOWN')
 C      Haze TOA and sur rpar
-       open(73, file='PHOTOCHEM/out.rp',status='UNKNOWN')
+       open(73, file='PHOTOCHEM/OUTPUT/out.rp',status='UNKNOWN')
 
 
 C - This file gives the input needed for SMART - radiative transfer code
-
-       open(159, file='photochem_smart/photchem/photfile.pt',
-     &          status='UNKNOWN')
-       open(164, file='photochem_smart/atm/tag.atm',
-     &          status='UNKNOWN')
+c-mab: Commenting out smart inputs for now. (11/4/2016)
+c       open(159, file='photochem_smart/photchem/photfile.pt',
+c     &          status='UNKNOWN')
+c       open(164, file='photochem_smart/atm/tag.atm',
+c     &          status='UNKNOWN')
 
 C - Seperating the out.dist file into seperate files
 
-       open(70, file='PHOTOCHEM/out.chem', status='UNKNOWN')
-       open(66, file='PHOTOCHEM/out.strctr', status='UNKNOWN')
-       open(71, file='PHOTOCHEM/out.aersol', status='UNKNOWN')
-       open(72, file='PHOTOCHEM/out.tridag', status='UNKNOWN')
+       open(70, file='PHOTOCHEM/OUTPUT/out.chem', status='UNKNOWN')
+       open(66, file='PHOTOCHEM/OUTPUT/out.strctr', status='UNKNOWN')
+       open(71, file='PHOTOCHEM/OUTPUT/out.aersol', status='UNKNOWN')
+       open(72, file='PHOTOCHEM/OUTPUT/out.tridag', status='UNKNOWN')
 
 
 C - other model parameters read in from input_photochem.dat
@@ -581,8 +576,6 @@ C - other model parameters read in from input_photochem.dat
       IF(IDEBUG.eq.1) print *, "HCDENS =",HCDENS
       READ(231,*)AA, ICOUPLE
       IF(IDEBUG.eq.1) print *, "ICOUPLE =",ICOUPLE
-      READ(231,*)AA, NEWSPEC
-      IF(IDEBUG.eq.1) print *, "NEWSPEC =",NEWSPEC
       READ(231,*)AA, ihztype
       IF(IDEBUG.eq.1) print *, "IHZTYPE =",ihztype
       READ(231,*)AA, ZY
@@ -591,11 +584,25 @@ C - other model parameters read in from input_photochem.dat
       close(231)
 
 C     NO photolysis rates output
-      if (LGRID.EQ.0) open(60, file='PHOTOCHEM/out.NOprates',
+      if (LGRID.EQ.0) open(60, file='PHOTOCHEM/OUTPUT/out.NOprates',
      &                         status='UNKNOWN')
 C    Wavelength specific SO2 photorates on HR grid
-      if (LGRID.EQ.1) open(61, file='PHOTOCHEM/out.so2HR',
+      if (LGRID.EQ.1) open(61, file='PHOTOCHEM/OUTPUT/out.so2HR',
      &                         status='UNKNOWN')
+
+
+
+c The next four files are used only when this model is coupled
+C           with the climate model (ICOUPLE=1)
+C   To be used as input for the climate model (coupling)
+!     gna - these next few lines should not just be when ICOUPLE = 1
+!     because the model needs to print coupling
+!     regardless of whether it's running in coupled mode
+       open(90, file='COUPLE/hcaer.photoout.out',status='UNKNOWN')
+       open(84, file='COUPLE/fromPhoto2Clima.dat', status='UNKNOWN')
+       open(116, file='COUPLE/fromClima2Photo.dat', status='UNKNOWN')
+       open(117, file='COUPLE/mixing_ratios.dat', status='UNKNOWN')
+
 
 C - READ IN SPECIES NAMES, ATOMIC NUMBERS, AND BOUNDARY CONDITIONS
 
@@ -612,11 +619,10 @@ C   counter for number of lines in species.dat file
 C   So the species.dat statements print only once
       iprint = 0
 
-C     ACK this will crash if species.dat is longer than 300 lines.
-C     Ignore comments in species.dat file
       do while (I.LT.300)
+C     Note: Below will crash if species.dat is longer than 300 lines.
          read(4,*, end=96) SPECIES,SPECTYPE
-         if (scan(species,'*').LT.1) then
+         if (scan(species,'*').LT.1) then  ! else ignore comments in species.dat file (lines that start with *)
             iSP=iSP+1
             ISPEC(iSP)=species
          !   print *, iSP, species
@@ -624,7 +630,7 @@ C         This loads the "Lnumbers" for ease of use later in the code
             call LNUM(ISPEC(isP),iSP)
 C             Return to previous line in species.dat file
               backspace 4
-C  read in atmoic number data,NEVER use LC,LH,LN,LO,LS as placeholders
+C  read in atmoic number data, NEVER use LC,LH,LN,LO,LS as placeholders
 C  as they mean something else...
               read(4,*) AX,AX,LA,LB,LD,LE,LF,LM
 
@@ -654,6 +660,7 @@ C             lower boundary flux
                SMFLUX(iLL)=YYY
                VEFF0(iLL)=ZZZ
 C      CO2 only works as fixed mixing ratio. This could be handled better.
+C-mab: What does above comment mean? It is NOT fixed/inert in my giant templates...
                if (species.EQ.'CO2') FCO2=YY
 
             endif
@@ -667,6 +674,7 @@ C              Reads in fixed mixing ratios
 C            Hardcoding woohoo! need to do N2 as well WARNING
                if (species.EQ.'HE') FHE=XX
                if (species.EQ.'CO2') FCO2=XX
+               if (species.EQ.'N2') FN2=XX
             endif
 
             if (SPECTYPE.EQ.'TD')iTD=iTD+1
@@ -685,23 +693,6 @@ C            Hardcoding woohoo! need to do N2 as well WARNING
          I=I+1
       enddo
 
-C     format for species name and type
- 203  FORMAT(A8,3X,A2)
-C     format for elemental counts
- 207  format(15X,6(I1,1X))
- 206  format(15X,6(I2,1X))
-C-mab     format for two-column elemental count
-C   FOLLOWING FORMATS BELOW ARE FOR BOUNDARY CONDITIONS
-      !Original boundary conditions
-C 208  format(30X,I1,5X,4(E7.1,1X),I1,6X,2(E7.1,1X))
- 208  format(30X,I1,5X,2(E8.2,1X),E9.3,1X,E7.1,1X,I1,6X,2(E7.1,1X))
- 210  format(30X,I1,5X,2(E7.1,1X),E9.3,1X,E7.1,1X,I1,6X,2(E7.1,1X))
- 211  format(30X,I1,5X,E8.2,1X,E11.2,1X,E9.3,1X,E7.1,1X,I1,6X,2E8.1)
-C  Above - 211 - added as boundary conditions for Hot Jupiters
-c 208  format(30X,I1,5X,2(E8.1),E9.3,1X,E7.1,1X,I1,6X,2(E7.1,1X))
-C     Format for INERT species boundary conditions
- 209  format(30X,E7.1)
- 212  format(30X,F7.5) !for INERT species boundary conditions
  96   CONTINUE
 
 c      stop
@@ -1065,9 +1056,6 @@ C gna - we need to make it so that T = T_new
          print *, T(1)
       ENDIF
       if (NP.gt.0) then
-        print*,'Warning: NP = 0, so no particles are being' 
-        print*,'assumed in this model. Proceed with caution...'
-        print*,'(NP=0 to be used in giant planet templates only.)'
         fmtstr='(  E17.8)'
         write(fmtstr(2:3),'(I2)')NP*3
 
@@ -1083,7 +1071,11 @@ C gna - we need to make it so that T = T_new
         do i=1,nz
           read(17,fmtstr)  (PARTICLES(i,j),j=1,np)
         enddo
-      endif
+       endif
+      else
+        print*,'Warning: NP = 0, so no particles are being'
+        print*,'assumed in this model. Proceed with caution...'
+        print*,'(NP=0 to be used in giant planet templates only.)'
       endif
 
 
@@ -1141,10 +1133,6 @@ c          print *, i, ISPEC(i)
 c       enddo
 c       stop
 
-c make any changes WARNING
-C     -use this to change pressure (from KZ mars code)
-       poop3 = 1./1.!*10.**1.94
-
 c       print *,USOL(LO2,1),2**ch4mult,2.0**ch4mult,
 c     $       USOL(LO2,1)/(2.0**ch4mult)
 
@@ -1172,7 +1160,6 @@ c      HCLFLUX=1.e8*o2mult
       enddo
 
 C ***** SET MODEL PARAMETERS *****
-C     ZY = SOLAR ZENITH ANGLE (IN DEGREES)
 C     LTIMES = COUNTER FOR PHOTORATE SUBROUTINE
 C     DT = INITIAL TIME STEP
 C     TSTOP = TIME AT WHICH CALCULATION IS TO STOP
@@ -1180,9 +1167,18 @@ C     NSTEPS = NUMBER OF TIME STEPS TO RUN (IF TSTOP IS NOT REACHED)
 C     FO2 = ground level O2 mixing ratio used in heritage calculations
 
       LTIMES = 0
-C      ZY = 50. why was this ever hardcoded? :(  In input_photochem.dat now
 C   fill up a heritage constant, eventually this should be purged. WARNING
+c-mab: These values are needed for molecular weight computation in DIFCO, DENSTY, PHOTO.
       FO2 = USOL(LO2,1)
+c-mab: Initializing these additional things below for use in giant planet template.
+      FCO = USOL(LCO,1)
+      FH2O = USOL(LH2O,1)
+      FH2 = USOL(LH2,1)
+      if(FH2.gt.0.50)FH2 = (1.0-FHE-FH2O-FCO-FCO2-FCH4) !do (1-everything)
+c-mab: Note: this last adjustment only necessary if LBC = 1 for H2.
+      FH = USOL(LH,1)
+      FOH = USOL(LOH,1)
+      FCH4 = USOL(LCH4,1)
 
 
 C  CALL below sets up vertical grid
@@ -1190,7 +1186,8 @@ C  CALL below sets up vertical grid
 
 C   height index for the tropopause (-1 given the staggered grid)
 C      the 1 in the second postion tells minloc to return a scalar
-      JTROP=minloc(Z,1, Z .ge. ztrop)-1
+c-mab: JTROP is set to a constant value in planet.dat for the giant templates...
+      IF (PLANET.NE.'WASP12B')JTROP=minloc(Z,1, Z .ge. ztrop)-1
 
 
 
@@ -1247,15 +1244,24 @@ c      do i=136,NZ
 c       edd(i)=1.3*edd(i)
 c      enddo
 
-      CALL DENSTY(FO2,poop3)
-      CALL RATES
+      CALL DENSTY
+
+c-mab: Note: Loop below is temporary....
+      IF (PLANET.EQ.'WASP12B') THEN
+	CALL RATESWASP12B
+        PRINT*, "CALLING RATESWASP12B..."
+      ELSE
+        CALL RATES
+        PRINT*, "CALLING RATES..."
+      ENDIF
+
 C    computes diffusion coefficents (K*N) and binary
 C          diffusion coefficents for H and H2
-      CALL DIFCO(FO2)
+      CALL DIFCO
       IF(PLANET.NE.'WASP12B')CALL PHOTSATRAT(JTROP,H2O)
       IF(PLANET.EQ.'WASP12B')THEN
       	DO I=1,NZ
-      		P(I)=PRESS(I)
+      		P(I)=(1e-6)*PRESS(I)
       	ENDDO
       ENDIF
 C    IDO=-1, fill up SL for accurate calculation on first timestep
@@ -1297,42 +1303,28 @@ C      !diff lim flux
       endif
 
 !gna - added coupling stuff for water here (just below tropopause)
-      do J=1,JTROP
-       IF(ICOUPLE.eq.0) THEN
-C     !sets H2O to relative humidity in troposphere
-       USOL(LH2O,J) = H2O(J)
-       ELSE
+c-mab: Executing this only for terrestrial planets based on FH2 prevalance.
+      IF (FH2.LT.0.50) THEN
+       do J=1,JTROP
+        IF(ICOUPLE.eq.0) THEN
+C sets H2O to relative humidity in troposphere
+         USOL(LH2O,J) = H2O(J)
+        ELSE
 C     !set to h2o from clima if coupling on
-       USOL(LH2O,J) = water(J)
-       ENDIF
-      enddo
-
-C  it's having mega problems for low h2o profiles for cold surface environments
-C      here is a fix for now  WARNING
-       IF(T(1).lt.260) THEN
-          print *, 'scaling water'
-
-        DO J=1, NZ
-        READ(118,*) alt_dontuse(J), T_dontuse(J), water_fix(J)
-        END DO
-        close(118)
-        do J=1,JTROP
-        USOL(LH2O,J) = water_fix(J)
-        enddo
-        endif
+         USOL(LH2O,J) = water(J)
+        ENDIF
+       enddo
+      ENDIF
 
 
-
-
-      IF (PLANET .eq. 'EARTH') CALL LTNING(FO2)
+      IF (PLANET .eq. 'EARTH') CALL LTNING
+c-mc: Lightning routine works for N2/CO2 atmospheres with variable O2
 C     !makes table of vapor pressures for H2O and H2SO4
       CALL AERTAB
       NZ1 = NZ - 1
       HA = HSCALE(NZ)
 C     The count of calls to rainout
       NRAIN = 0
-C     why the hell is Kevin starting at the Planck time? WARNING
-c orig      DT = 1.E-15
       DT = 1.E-6
       DTINV = 1./DT
       TIME = 0.
@@ -1344,7 +1336,25 @@ c      TSTOP = 1.E14
 
       TSTOP = 1.E17
 C     AVB changed to 1 for Earth+CL debugging
-      NSTEPS = 10000
+c      Commenting this out for now. We may use this later - but likely not in the main FORTRAN code.
+c-mc - I'd be happy for this to be turned on when IDEBUG=1
+c      PRINT*,' '
+c      PRINT*,'Do you want to run for a single time step only (NSTEPS=1)'
+c      PRINT*,'instead of till convergence (NSTEPS=10000)? [Note:'
+c      CALL prompt('Default=n, i.e. use if debugging only.] (y/n?):')
+c      READ(5,2)buffer
+c2     FORMAT(a)
+c      if(buffer(1:3).eq.'yes'.or.buffer(1:3).eq.'YES'.
+c     &      or.buffer(1:1).eq.'y'.or.buffer(1:1).eq.'Y') then
+c       NSTEPS = 1 !To run a single time step only without convergence
+c      else
+c       NSTEPS = 10000 !the default, to allow converging runs
+c      endif
+C      Default number of steps is 50,000. The code shouldn't take nearly this long to run except hot planets.
+       NSTEPS = 10000
+
+c-mab: nsteps = 1 recommended for initial model debugging
+c      NSTEPS = 1
 C     for standalone mode this should probably be the default
 C      ICOUPLE = 1
 
@@ -1410,8 +1420,37 @@ c     enddo
 c  for H and H2
 c  lower boundary condition
 
-C  diff limited flux implemented as effusion velocity
-      if (mbound(LH2).eq.0) then
+      if(PLANET.EQ.'WASP12B') then
+       do k=1,NQ
+       if(mbound(i).eq.0) then
+        DU(k,1) = DU(k,1) + bX1X2(k,1)/Den(1)/DZ(1)**2
+        ADU(k,1) = bX1X2(k,1)/Den(1)/DZ(1)/2.*
+     6      (1./scale_H(k,1)-1./H_atm(1))
+c upper boundary condition
+        DL(k,NZ) = DL(k,NZ) + bX1X2(k,nz1)/Den(nz)/DZ(NZ)**2
+        ADL(k,NZ) = -bX1X2(k,nz1)/Den(nz)/DZ(nz)/2.*
+     6      (1./scale_H(k,nz1)-1./H_atm(nz1))
+c  unused...
+        DD(k,1) = DU(k,1)
+        ADD(k,1) = -ADU(k,1)
+
+c interior grid points   ?fixed 8-13-05
+        do j=2,nz1
+            DU(k,j) = DU(k,j) + bX1X2(k,j)/Den(j)/DZ(j)**2
+            ADU(k,j) = bX1X2(k,j)/Den(j)/DZ(j)/2.*
+     6            (1./scale_H(k,j)-1./H_atm(j))
+            DL(k,j) = DL(k,j) + bX1X2(k,j-1)/Den(j)/DZ(j)**2
+            ADL(k,j) = -bX1X2(k,j-1)/Den(j)/DZ(j)/2.*
+     6            (1./scale_H(k,j-1)-1./H_atm(j-1))
+            DD(k,j) = DU(k,j) + DL(k,j)
+            ADD(k,j) = -ADU(k,j) - ADL(k,j)
+        enddo
+       endif
+       enddo
+
+      else
+       if (mbound(LH2).eq.0) then
+c diff limited flux implemented as effusion velocity
         DU(LH,1) = DU(LH,1) + bHN2(1)/Den(1)/DZ(1)**2
         ADU(LH,1) = bHN2(1)/Den(1)/DZ(1)/2.*
      6      (1./scale_H(LH,1)-1./H_atm(1))
@@ -1425,7 +1464,7 @@ c upper boundary condition
         DL(LH2,NZ) = DL(LH2,NZ) + bH2N2(nz1)/Den(nz)/DZ(NZ)**2
         ADL(LH2,NZ) = -bH2N2(nz1)/Den(nz)/DZ(NZ)/2.*
      6      (1./scale_H(LH2,nz1)-1./H_atm(nz1))
-c  unused.
+c  unused....
         DD(LH,1) = DU(LH,1)
         ADD(LH,1) = -ADU(LH,1)
         DD(LH2,1) = DU(LH2,1)
@@ -1450,8 +1489,8 @@ c interior grid points   fixed 8-13-05
             DD(LH2,j) = DU(LH2,j) + DL(LH2,j)
             ADD(LH2,j) = -ADU(LH2,j) - ADL(LH2,j)
         enddo
-C     end molecular diffusion for H and H2 loop
-      endif
+       endif  !end molecular diffusion for H and H2 loop
+      endif !End loop with planet-based distinction
 
 
 
@@ -1638,10 +1677,10 @@ c-mab Time-dependent boundary conditions for particles set to 0
 
 
 c estimate CO2 photolysis above the top of the grid
-C     and return CO + O to the upper grid point
-c NOTE: this behavior is turned on and off by setting MBOUND=2 in species.dat
+C and return CO + O to the upper grid point
+c NOTE: this behavior is turned on and off by setting MBOUND=2 for CO2 in species.dat
 
-c (now above)   JCO2=minloc(photoreac,1,ISPEC(INT(photoreac)).eq.'CO2    ')
+c   JCO2 already defined above
       JCO2_O1D = JCO2+1
       VCO2 = (prates(JCO2,NZ) + prates(JCO2_O1D,NZ)) * HA
       SMFLUX(LO) = - VCO2*CO2(NZ)*DEN(NZ)
@@ -2184,8 +2223,47 @@ c         USOL(I,J) = USOL(I,J) + RHS(K)
         ELSEIF(I.EQ.LS4) THEN
                      USOL(I,J) = USOL(I,J) + RHS(K)
 
+        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LO2) THEN !!!!!! Ignoring O2 entirely right now for hot jupi to get it to converge quickly
+!!!! btw this was kept disabled in Ravi's CURRENT version of main
+                     USOL(I,J) = USOL(I,J) + RHS(K)
+C        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LO2) THEN
+C        	IF(J.GT.21.AND.J.LT.71) THEN !!! Using this to ignore only PARTS of O2, i.e. more carefully, than entiety of O2 (above this)
+C                     USOL(I,J) = USOL(I,J) + RHS(K)
+C            ENDIF
+!!!!!!!!!!!! The conditions below are necessary to make WASP12B converge !!!!  
+c-mab: These from trial/error + Kopparapu et al. 2012 code.
+c-mab: For the solar system templates, all species have the same USOL = 1e-20 limit.
+c-mab: Similar species-specific conditions may be necessary to get future templates to converge.
+c-mab: This is temporary till we can find a "cleaner" solution.                   
+        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LH2CO .AND. J.GT. 61) THEN
+                     USOL(I,J) = USOL(I,J) + RHS(K)
+        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LH2COH .AND. J.GT. 35) THEN
+                     USOL(I,J) = USOL(I,J) + RHS(K)
+        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LCH .AND. J.GT. 31) THEN
+                     USOL(I,J) = USOL(I,J) + RHS(K)
+        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LCH23 .AND. J.GT. 31) THEN
+                     USOL(I,J) = USOL(I,J) + RHS(K)
+        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LCH3 .AND. J.GT. 50) THEN
+                     USOL(I,J) = USOL(I,J) + RHS(K)
+        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LCH4 .AND. J.GT. 56) THEN
+                     USOL(I,J) = USOL(I,J) + RHS(K)
+C        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LH2O .AND. J.GT. 75) THEN  !!!! btw this was kept disabled in Ravi's CURRENT version of main
+C                     USOL(I,J) = USOL(I,J) + RHS(K) !!! Incorporating this in this version actually slightly increased convergence time
+C        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LCO2) THEN  !!!! btw this was kept disabled in Ravi's CURRENT version of main
+C                     USOL(I,J) = USOL(I,J) + RHS(K)  !(PS - woah ignoring CO2 entirely? Really? - disabling this actually slightly increased convergence as well, more than H2O alone did)
+        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LCH3OH .AND. J.GT. 10) THEN
+                     USOL(I,J) = USOL(I,J) + RHS(K)
+C        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LO .AND. J.GT. 60) THEN !!!! btw this was kept disabled in Ravi's CURRENT version of main
+C                     USOL(I,J) = USOL(I,J) + RHS(K)
+        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LC .AND. J.GT. 60) THEN
+                     USOL(I,J) = USOL(I,J) + RHS(K)
+        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LCH3O .AND. J.GT. 50) THEN
+                     USOL(I,J) = USOL(I,J) + RHS(K)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-        ELSEIF (USOL(I,J).LT. 1.E-20) THEN
+        !!!!ELSEIF (USOL(I,J).LT. 1.E-15) THEN !TEMPORARILY DISABLING THIS ALTOGETHER TO USE RAVI'S CONDITIONS DIRECTLY
+        ELSEIF(PLANET.NE.'WASP12B'.AND.USOL(I,J).LT. 1.E-20) THEN !DEFAULT ATMOS CONDITION -- USING FOR NON HOT JUP PLANETS
+
 c-orig        IF (USOL(I,J).LT. 1.E-20) THEN
 c        IF (USOL(I,J).LT. 1.E-22) THEN
 c        ELSEIF (USOL(I,J).LT. 1.E-22) THEN
@@ -2220,10 +2298,13 @@ c-mc I don't get this. If the code works right, it shouldn't change.
 c-mc and conversly if the code doesn't work right, it should be fixed...
 c-mc test this at some point down the road WARNING
 
+C-mab: Foregoing this for giant planets since we don't fudge the values above...
+      IF(FH2.LT.0.50) THEN
       DO 4 J=1,JTROP
         USOL(LH2O,J) = H2O(J)
 c       USOL(LS8,J) = S8S(J)
    4  CONTINUE
+      ENDIF
 
 c      do i=1,nq
 c       do j=1,nz
@@ -2480,7 +2561,7 @@ C following section run every three timesteps and printed to out.out
 C Oxidation state stuff commented out for now.
 
       write(14, 100) N,EMAX,ISPEC(IS),ZMAX,UMAX,RMAX,DT,TIME
- 100  FORMAT(1X,'N =',I4,2X,'EMAX =',1PE9.2,' FOR ',A8,
+ 100  FORMAT(1X,'N =',I5,2X,'EMAX =',1PE9.2,' FOR ',A8,
      2  'AT Z =',E9.2,1X,'U =',E9.2,1X,'RHS =',E9.2,
      3  2X,'DT =',E9.2,2X,'TIME =',E9.2)
 C     print this to terminal
@@ -2488,7 +2569,7 @@ C     print this to terminal
 
 C
 C   COMPUTE ATMOSPHERIC OXIDATION STATE
-c   what follows needs work - WARINING
+c   what follows needs work - WARNING
       DO 42 I=1,NQ
       SR(I) = 0.
       DO 43 J=1,JTROP
@@ -2786,7 +2867,7 @@ C     (NSP - 1), indicates (inert) CO2 density for terrestrial planets ONLY
 C     Print into another file .strctr
         write (66,881) (T(i),EDD(i),DEN(i),O3(i), SL(LCO2,i),i=1,nz)
 
-      IF (NP.GT.0) THEN 
+      IF (NP.GT.0) THEN
         fmtstr='(  E17.8)'
         write(fmtstr(2:3),'(I2)')NP*3
         do i=1,nz
@@ -2880,10 +2961,11 @@ C ack - hardcoded O1D rate number (OK as long as O+O follows O+O1D, which is OK)
        enddo
 
 C print out rainout rates
+       IF (NAQ.GT.0) THEN
        do i=1,nq
            write(59, *) (RAINGC(i,j),j=1,jtrop)
        enddo
-
+       ENDIF
 
        JNO=minloc(photoreac,1,ISPEC(INT(photoreac)).eq.'NO    ')
 
@@ -2926,13 +3008,14 @@ C     e.g., if the atmosphere is 99% N2 and 1% CO2, then the CO2 fraction is
 C     0.01 and N2 should be set to 1, because it is 100% of noncondensibles.
 C     In practice, N2 should be = (1 - [everything but CO2]).
          FO2=USOL(LO2,1)
-         IF(PLANET.NE.'WASP12B')FH2=USOL(LH2,1)
-C     Since H2 is major for giant planets, we do (1 - everything) for them.
+C-mab: Using presence of HE in template to decide if H2 should be reset as below.
+         IF(FHE.LE.0.0)FH2=USOL(LH2,1)
+C-mab: Since H2 is major for giant planets, we do (1 - everything) for them.
 C     But in other parts of photochem, N2 is of the total,
 C     not excluding CO2, so we only change it here. 9/8/2015
 C-gna clima can't currently cope with NO2 and having it is screwing it up
 C WARNING
-         FNO2=USOL(LNO2,1)/1.0E60
+         FNO2=USOL(LNO2,1)*1.0e-60
          JCOLD=JTROP
 
          WRITE(117,102) FAR, FCH4, FC2H6, FCO2,
@@ -2959,7 +3042,8 @@ C      endif
 C 351  FORMAT (1PE10.3, 1PE12.3, 1PE12.3)
 
 
-      print*,"TOTCTESTER.F completed..."
+      print*,"PhotoMain run completed...."
+      print*,"See PHOTOCHEM/OUTPUT/ directory for the output files."
 
         STOP
 C    error in reactions
@@ -2974,5 +3058,23 @@ C    error in reactions
         STOP
       END
 
+      SUBROUTINE PROMPT(CHAR)
+c-mab: PROMPT: sends a prompt input (CHAR) to terminal from this routine.
+c-mab: Use this to be able to pass inputs mid-routine.
 
-
+      INTEGER L
+      CHARACTER*(*) CHAR
+      DO 100 L=LEN(CHAR),1,-1
+      IF(CHAR(L:L).NE.' ')THEN
+        IF(CHAR(L:L).EQ.':')THEN
+          WRITE(*,12) CHAR(1:L)
+ 12       format(' ',a,$)
+         ELSE
+          WRITE(*,13) CHAR(1:L)
+ 13       format(' ',a,' :',$)
+          END IF
+        RETURN
+       END IF
+ 100  CONTINUE
+      RETURN
+      END
