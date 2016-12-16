@@ -326,8 +326,6 @@ c     so this is repeated once for L<1754 and L>2041A and NK(L) times for 1754<L
          do i=1,nz
 
           SIGR(i) = SIGRAY(WAV(L)) * (1. + 1.5*pCO2)  !Old rayleigh cross section
-!note that SIGRAY is calculated in MSCAT. So it needs to stick around for a while. Or be moved into Twostr.f
-
 
        !set up new Rayleigh scattering vectors
          do j=1,NSP

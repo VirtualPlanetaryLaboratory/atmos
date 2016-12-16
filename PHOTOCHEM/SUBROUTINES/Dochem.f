@@ -179,9 +179,7 @@ c- there is a mix of two different codes here. In one, I took RAINGC , HEFF, and
 
 
 c         YL(I,J) = XL(J) + RAINGC(I,J)
-c         YL(I,J) = XL(J) + RAINGC(LH2SO4,J)   !back to original behavior (will need to tweak for isotope) !ISOHACK
-
-         YL(I,J) = XL(J)+ RAINGC(LH2SO4,J)   !back to original behavior (will need to tweak for isotope) !ISOHACK
+         YL(I,J) = XL(J)+ RAINGC(LH2SO4,J)
          YP(I,J) = XP(J)
 c         if (ISPEC(I).EQ.'SO4AER') YL(I,J) = YL(I,J) + RAINGC(LH2SO4,J)   
        enddo   
@@ -297,7 +295,7 @@ c       RHCOLD = 0.10  ! Jim had 0.1 ?  my standard is 0.4  <-Kevin words (mc - 
       DO 13 J=JT1,NZ
         H2OCRT = RHCOLD * H2OSAT(J)
         IF (USOL(LH2O,J) .LT. H2OCRT) GO TO 13
-        CONDEN(J) = CONFAC * (USOL(LH2O,J) - H2OCRT)   !this is saved in SATBLK to be printed out in output file - wont be missed in ISOCODE
+        CONDEN(J) = CONFAC * (USOL(LH2O,J) - H2OCRT)   !this is saved in SATBLK to be printed out in output file
         FVAL(LH2O,J) = FVAL(LH2O,J) - CONDEN(J)
   13  CONTINUE
 
@@ -344,7 +342,6 @@ c      DO 15 J=JT1,NZ  !(fixes an error in our earlier codes where S8 didn't con
 c      EVAPS8(J) = 0.!what is this? it appears to do nothing,and is printed out as 0 in the output file...
 
       CONS8(J) = CONFC2 * (USOL(LL,J) - S8S(J))
-!note that S8S is higher in the ISOTOPE CASE in order to make these budgets work out correctly
 
       IF (CONS8(J).gt.0.) then !dont allow artifical evaporation
 
@@ -373,7 +370,7 @@ c  7  O3(J) = D(LO3,J)/DEN(J)
 
 C ***** SAVE THESE DENSITIES FOR PRINTOUT *****
 c-mc and for allowing short-lived species to photolyze...?
-c-mc modifying to contain all species.  Will this affect the isotope model?
+c-mc modifying to contain all species.  
 ! orig      DO 9 I=NQ1,NSP   
       DO 9 I=1,NSP   
       DO 9 J=1,NZ
