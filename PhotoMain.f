@@ -433,6 +433,7 @@ C     !can go away when MSCAT does WARNING DO WE NEED THIS COMMENT
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/SULBLK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/SATBLK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
+      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/ISOBLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/comPRESS1.inc'
 
 
@@ -445,6 +446,11 @@ C                       -WARNING do we need can go away comment?
       DATA CI/9.5733223454, 25.6329561486, 21.0996530827,
      2  3.9584969228/
       DATA NUML,NUMP/NSP*0,NSP*0/
+
+C    !Isotope flag Below
+      ISOTOPE=0
+C    !use 32S (i.e. the dominant isotope)
+      ISOS=32
 
 c OPEN FILES
 
