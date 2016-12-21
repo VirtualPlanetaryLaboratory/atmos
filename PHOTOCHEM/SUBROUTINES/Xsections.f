@@ -3,8 +3,6 @@
       implicit real*8(A-H,O-Z)
       character*8 species
 
-      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/ISOBLOK.inc'
-
 * input
 !------- EWS - these are the variables that need to be declared here-------!
       dimension columndepth(KJ,NZ)  !testing this as an optional parameter 
@@ -26,7 +24,7 @@
       !T dependent - also unexplained factor of 1000. (but not using T-dependent data right now)
       IF(species.eq.'HNO3    ') CALL XS_HNO3(nw,wavl,T,j,sq) 
       ! the 0 is also an ISOHACK 
-      IF(species.eq.'HO2     ') CALL XS_HO2(nw,wavl,wav,j,sq,0,Ja)
+      IF(species.eq.'HO2     ') CALL XS_HO2(nw,wavl,wav,j,sq,Ja)
       !T-dependent (not in use)   
       IF(species.eq.'NO2     ') CALL XS_NO2(nw,wavl,T,j,sq)
       !T-dependent (not in use) 
@@ -98,98 +96,43 @@
      $                                     columndepth,zy,IO2)
       !returns  signo(I,L) for now 
       IF(species.eq.'NO      ') CALL XS_NO(T,DEN,j,columndepth)  
-      IF(species.eq.'SO      ') CALL XS_SO(nw,wavl,j,sq,ISOS)
-      IF(species.eq.'OCS     ') CALL XS_OCS(nw,wavl,j,sq,ISOS)
+      IF(species.eq.'SO      ') CALL XS_SO(nw,wavl,j,sq)
+      IF(species.eq.'OCS     ') CALL XS_OCS(nw,wavl,j,sq)
       !returns SO + O, SO21, SO23
-      IF(species.eq.'SO2     ') CALL XS_SO2(nw,wavl,j,sq,ISOS)
-      IF(species.eq.'SO3     ') CALL XS_SO3(nw,wavl,j,sq,ISOS)
-      IF(species.eq.'H2S     ') CALL XS_H2S(nw,wavl,j,sq,ISOS)
+      IF(species.eq.'SO2     ') CALL XS_SO2(nw,wavl,j,sq)
+      IF(species.eq.'SO3     ') CALL XS_SO3(nw,wavl,j,sq)
+      IF(species.eq.'H2S     ') CALL XS_H2S(nw,wavl,j,sq)
       !returns SS8L then SS8R
-      IF(species.eq.'S8      ') CALL XS_S8(nw,wavl,j,sq,ISOS)
+      IF(species.eq.'S8      ') CALL XS_S8(nw,wavl,j,sq)
       !note using HO2 cross section for HSO
-      IF(species.eq.'HSO     ') CALL XS_HO2(nw,wavl,wav,j,sq,ISOS,
-     $                                      Jb)
+      IF(species.eq.'HSO     ') CALL XS_HO2(nw,wavl,wav,j,sq,Jb)
       !note this contains an unphysical scaling factor
-      IF(species.eq.'S2      ') CALL XS_S2(nw,wavl,j,sq,ISOS,
-     $                                     Ja)
+      IF(species.eq.'S2      ') CALL XS_S2(nw,wavl,j,sq,Ja)
       !note using S2 cross section for S4
-      IF(species.eq.'S4      ') CALL XS_S2(nw,wavl,j,sq,ISOS,
-     $                                     Jb)
+      IF(species.eq.'S4      ') CALL XS_S2(nw,wavl,j,sq,Jb)
       !note using S2 cross section for S3
-      IF(species.eq.'S3      ') CALL XS_S2(nw,wavl,j,sq,ISOS,
-     $                                     Jc)
-
-!isotopic sulfur species start here (only significant changes are in XS_S2 and XS_SO2)
-!ffft - once the ISOS adds are complete, I don't need both calls, just an OR in one IF call. 
-
-      IF(species.eq.'SXO    ') CALL XS_SO(nw,wavl,j,sq,ISOS)
-      IF(species.eq.'OCSX   ') CALL XS_OCS(nw,wavl,j,sq,ISOS)
-      !returns SXO + O, SXO21, SXO23
-      IF(species.eq.'SXO2   ') CALL XS_SO2(nw,wavl,j,sq,ISOS)
-      IF(species.eq.'SXO3   ') CALL XS_SO3(nw,wavl,j,sq,ISOS)
-      IF(species.eq.'H2SX   ') CALL XS_H2S(nw,wavl,j,sq,ISOS)
-      !returns SS8L then SS8R
-      IF(species.eq.'SXS7   ') CALL XS_S8(nw,wavl,j,sq,ISOS)
-      !note using HO2 cross section for HSO
-      IF(species.eq.'HSXO   ') CALL XS_HO2(nw,wavl,wav,j,sq,ISOS,
-     $                                      Jb)
-      !note this contains an unphysical scaling factor 
-      IF(species.eq.'SXS    ') CALL XS_S2(nw,wavl,j,sq,ISOS,
-     $                                     Ja)
-      !note using S2 cross section for S4 - returns differnt quantum yeilds for SXS+S, S2+SX (see Pavlov 02)
-      IF(species.eq.'SXS3   ') CALL XS_S2(nw,wavl,j,sq,ISOS,
-     $                                     Jb) 
-      !note using S2 cross section for S3
-      IF(species.eq.'SXS2   ') CALL XS_S2(nw,wavl,j,sq,ISOS,
-     $                                     Jc)
-
-
+      IF(species.eq.'S3      ') CALL XS_S2(nw,wavl,j,sq,Jc)
 !sorg species
-      IF((species.eq.'CS2    ').OR.(species.eq.'CSXS   '))
-     $      CALL XS_CS2(nw,wavl,j,sq,ISOS)
-      IF((species.eq.'CH3SH  ').OR.(species.eq.'CH3SXH ')) 
-     $      CALL XS_CH3SH(nw,wavl,j,sq,ISOS)
+      IF(species.eq.'CS2    ') CALL XS_CS2(nw,wavl,j,sq)
+      IF(species.eq.'CH3SH  ') CALL XS_CH3SH(nw,wavl,j,sq)
 
 !below here there are calls to XS_simple.
-
-
-      IF((species.eq.'C2H6S  ').OR.(species.eq.'C2H6SX ')) CALL
-     & XS_simple(species,nw,wavl,j,sq)   
-      IF((species.eq.'C2H6S2 ').OR.(species.eq.'C2H6SXS')) CALL 
-     & XS_simple(species,nw,wavl,j,sq)
+      IF(species.eq.'C2H6S  ')CALL XS_simple(species,nw,wavl,j,sq)   
+      IF(species.eq.'C2H6S2 ')CALL XS_simple(species,nw,wavl,j,sq)
 
 !corg species
-      !OK
       IF(species.eq.'C2H2    ') CALL XS_C2H2(nw,wavl,j,sq) 
-
       IF(species.eq.'C2H4    ') CALL XS_C2H4(nw,wavl,j,sq,Ja)
-      ! shawn used C2H4 rate here  
-      IF(species.eq.'CH      ') CALL XS_C2H4(nw,wavl,j,sq,Jd)
-
-!shawn's use of C2H4 photorate
-!212 * 0.51     212       C2H4      HV        C2H2      H2
-!242 * 0.49     242       C2H4      HV        C2H2      H         H
-!246 * 1.0      246       CH        HV        C         H
-
-
-!243 * 0.34     243       C3H6      HV        C2H2      CH3       H
-!251 * 1.0      251       C3H3      HV        C3H2      H
-!258 * 0.57     258       C3H6      HV        CH2CCH2   H2
-!259 * 0.02     259       C3H6      HV        C2H4      CH23
-!260 * 0.05     260       C3H6      HV        C2H       CH4       H
-
-
+      IF(species.eq.'CH      ') CALL XS_C2H4(nw,wavl,j,sq,Jd) ! shawn used C2H4 rate here  
       IF(species.eq.'C3H8    ') CALL XS_C3H8(nw,wavl,j,sq)
-      IF(species.eq.'CH2CO   ') CALL 
-     & XS_simple(species,nw,wavl,j,sq)
-      IF(species.eq.'CH3CHO  ') CALL XS_CH3CHO(nw,wavl,j,sq)
-c      !shawn used C2H4 rate here with 0.57/0.02/0.05 quantum yields
+      IF(species.eq.'CH2CO   ') CALL XS_simple(species,nw,wavl,j,sq)
+      IF(species.eq.'CH3CHO  ') CALL XS_CH3CHO(nw,wavl,j,sq)  !shawn used C2H4 rate here with 0.57/0.02/0.05 quantum yields
       IF(species.eq.'C3H6    ') CALL XS_C3H6(nw,wavl,j,sq)
-      IF(species.eq.'C2H5CHO ') CALL 
-     & XS_simple(species,nw,wavl,j,sq)
-      IF(species.eq.'C3H3') CALL 
-c     !shawn used C2H4 rate here (check this xsection)
-     & XS_simple(species,nw,wavl,j,sq)
+      IF(species.eq.'C2H5CHO ') CALL XS_simple(species,nw,wavl,j,sq)
+
+!ISOCLEAN - leaving these as a final step, just in case the existing calls are messed up...
+
+      IF(species.eq.'C3H3') CALL XS_simple(species,nw,wavl,j,sq)    !shawn used C2H4 rate here (check this xsection)
       IF(species.eq.'CH3C2H') CALL XS_CH3C2H(nw,wavl,j,sq)
       IF(species.eq.'CH2CCH2') CALL XS_CH2CCH2(nw,wavl,j,sq)
 
@@ -201,190 +144,8 @@ c       CALL XS_CHOCHO(nw,wavl,wav,T,DEN,100,sq,101,102)  !ACK - hardcoded "J-nu
 
       RETURN
       END
-!-------------------------END UPDATED CALL FORMATTING--------------------------------!
-
-!------------------------BEGIN ORIGINAL CALL FORMATTING------------------------------!
-!!       EWS - !! or c!= originally commented
-
-!      !T dependent - also unexplained factor of 1000. (but not using T-dependent data right now)
-!      IF(species.eq.'HNO3    ') CALL XS_HNO3(nw,wavl,wav,T,DEN,j,sq) 
-!      ! the 0 is also an ISOHACK 
-!      IF(species.eq.'HO2     ') CALL XS_HO2(nw,wavl,wav,T,DEN,j,sq,0,Ja)
-!      !T-dependent (not in use)   
-!      IF(species.eq.'NO2     ') CALL XS_NO2(nw,wavl,wav,T,DEN,j,sq)
-!      !T-dependent (not in use) 
-!      IF(species.eq.'H2O2    ') CALL XS_H2O2(nw,wavl,wav,T,DEN,j,sq)
-!      !HAVEN"T INTEGRATED GRACES CODE
-!      IF(species.eq.'H2O     ') CALL XS_H2O(nw,wavl,wav,T,DEN,j,sq)
-!      !returns CO+O to j and CO+O1D j+3 !ACK hardcoded needs fixing.. 
-!      IF(species.eq.'CO2     ') CALL XS_CO2(nw,wavl,wav,T,DEN,j,sq)
-!      !returns H2, then HCO  
-!      IF(species.eq.'H2CO    ') CALL XS_H2CO(nw,wavl,wav,T,DEN,j,sq)
-!      !returns O2 + O(1D), then O2 + O(3P)
-!      IF(species.eq.'O3      ') CALL XS_O3(nw,wavl,wav,T,DEN,j,sq)
-!     IF(species.eq.'CH4     ') CALL XS_CH4(nw,wavl,wav,T,DEN,j,sq)
-!      !returns  2 (3)CH2 +H2 then CH4 + (1)CH2  
-!      IF(species.eq.'C2H6    ') CALL XS_C2H6(nw,wavl,wav,T,DEN,j,sq)
-!      !2 channels: NO + O2, NO2 + O
-!      !note NO3 is temperature dependent so would need to change if it does...
-!      IF(species.eq.'NO3     ') CALL XS_NO3(nw,wavl,wav,T,DEN,j,sq)
-!      !returns N2 + O1D
-!     IF(species.eq.'N2O     ') CALL XS_N2O(nw,wavl,wav,T,DEN,j,sq)
-!      !returns OH + CL
-!      IF(species.eq.'HOCL    ') CALL XS_HOCL(nw,wavl,wav,T,DEN,j,sq)
-!      !returns CL + CL (temp dependent)
-!      IF(species.eq.'CL2     ') CALL XS_CL2(nw,wavl,wav,T,DEN,j,sq)
-!      !returns CLO + O
-!     IF(species.eq.'CLOO    ') CALL XS_CLOO(nw,wavl,wav,T,DEN,j,sq)
-!      !returns CLO + O
-!      IF(species.eq.'OCLO    ') CALL XS_OCLO(nw,wavl,wav,T,DEN,j,sq)
-!      !returns CL + NO2
-!      IF(species.eq.'CLONO   ') CALL XS_CLONO(nw,wavl,wav,T,DEN,j,sq)
-!      !returns CL + NO
-!      IF(species.eq.'CLNO    ') CALL XS_CLNO(nw,wavl,wav,T,DEN,j,sq)
-!      !returns CL + NO2
-!      IF(species.eq.'CLNO2   ') CALL XS_CLNO2(nw,wavl,wav,T,DEN,j,sq)
-!      !returns HCO + CL (JPL calls this COHCL)  !products assumed from Yuk's model
-!      IF(species.eq.'CHCLO   ') CALL XS_CHCLO(nw,wavl,wav,T,DEN,j,sq)
-!      !returns CL + CH3  (temperature dependent!)
-!      !there is a far UV branch to H + CH2CL , but no JPL recomended cross section so ignored
-!      IF(species.eq.'CH3CL   ') CALL XS_CH3CL(nw,wavl,wav,T,DEN,j,sq)
-!      !returns CL + CCL3  (temperature dependent!)
-!      IF(species.eq.'CCL4    ') CALL XS_CCL4(nw,wavl,wav,T,DEN,j,sq)
-!      !returns CL + CL + CO 
-!      IF(species.eq.'COCL2   ') CALL XS_COCL2(nw,wavl,wav,T,DEN,j,sq)
-!      !returns CH3O2 + NO2 
-!      IF(species.eq.'CH3O2NO2') CALL XS_CH3O2NO2(nw,wavl,wav,T,DEN,j,sq)
-!      !returns CH3O + CL 
-!     IF(species.eq.'CH3OCL  ') CALL XS_CH3OCL(nw,wavl,wav,T,DEN,j,sq)
-!      IF(species.eq.'CH3OOH  ') CALL XS_CH3OOH(nw,wavl,wav,T,DEN,j,sq)
-!      !returns CL + O1D and CL + O
-!      IF(species.eq.'CLO     ') CALL XS_CLO(nw,wavl,wav,T,DEN,j,sq)
-!      !returns CL + NO3, then CLO + NO2 (temperature dependent!)
-!      IF(species.eq.'CLONO2  ') CALL XS_CLONO2(nw,wavl,wav,T,DEN,j,sq)
-!      !returns, HO2 + NO2, then OH + NO3
-!     IF(species.eq.'HO2NO2  ') CALL XS_HO2NO2(nw,wavl,wav,T,DEN,j,sq)
-!      !returns NO3 + NO2, then NO3 + NO + O  (temperature dependent!)
-!      IF(species.eq.'N2O5    ') CALL XS_N2O5(nw,wavl,wav,T,DEN,j,sq)
-!      !returns CL + CLOO, then CLO + CLO 
-!      IF(species.eq.'CL2O2   ') CALL XS_CL2O2(nw,wavl,wav,T,DEN,j,sq)
-!      !returns CL + CLO
-!      IF(species.eq.'CL2O    ') CALL XS_CL2O(nw,wavl,wav,T,DEN,j,sq)
-!      !returns CLO + O2  
-!      IF(species.eq.'CLO3    ') CALL XS_CLO3(nw,wavl,wav,T,DEN,j,sq)
-!      !returns CLOO + OCLO  
-!      IF(species.eq.'CL2O4   ') CALL XS_CL2O4(nw,wavl,wav,T,DEN,j,sq)
-!      !returns H + CL. 
-!      IF(species.eq.'HCL     ') CALL XS_HCL(nw,wavl,wav,T,DEN,j,sq)
-!      !returns O + O(1D) then O + O
-!      IF(species.eq.'O2      ') CALL XS_O2(nw,wavl,wav,T,DEN,j,sq,
-!     $                                     columndepth,zy,IO2)
-!     !returns  signo(I,L) for now 
-!      IF(species.eq.'NO      ') CALL XS_NO(nw,wavl,wav,T,DEN,j,sq,
-!     $                                     columndepth)  
-!      IF(species.eq.'SO      ') CALL XS_SO(nw,wavl,wav,T,DEN,j,sq,ISOS)
-!      IF(species.eq.'OCS     ') CALL XS_OCS(nw,wavl,wav,T,DEN,j,sq,ISOS)
-!      !returns SO + O, SO21, SO23
-!      IF(species.eq.'SO2     ') CALL XS_SO2(nw,wavl,wav,T,DEN,j,sq,ISOS)
-!      IF(species.eq.'SO3     ') CALL XS_SO3(nw,wavl,wav,T,DEN,j,sq,ISOS)
-!      IF(species.eq.'H2S     ') CALL XS_H2S(nw,wavl,wav,T,DEN,j,sq,ISOS)
-!     !returns SS8L then SS8R
-!      IF(species.eq.'S8      ') CALL XS_S8(nw,wavl,wav,T,DEN,j,sq,ISOS)
-!     !note using HO2 cross section for HSO
-!      IF(species.eq.'HSO     ') CALL XS_HO2(nw,wavl,wav,T,DEN,j,sq,ISOS,
-!     $                                      Jb)
-!      !note this contains an unphysical scaling factor
-!      IF(species.eq.'S2      ') CALL XS_S2(nw,wavl,wav,T,DEN,j,sq,ISOS,
-!     $                                     Ja)
-!     !note using S2 cross section for S4
-!      IF(species.eq.'S4      ') CALL XS_S2(nw,wavl,wav,T,DEN,j,sq,ISOS,
-!     $                                     Jb)
-!      !note using S2 cross section for S3
-!      IF(species.eq.'S3      ') CALL XS_S2(nw,wavl,wav,T,DEN,j,sq,ISOS,
-!     $                                     Jc)
-!
-!!isotopic sulfur species start here (only significant changes are in XS_S2 and XS_SO2)
-!!ffft - once the ISOS adds are complete, I don't need both calls, just an OR in one IF call. 
-!
-!      IF(species.eq.'SXO    ') CALL XS_SO(nw,wavl,wav,T,DEN,j,sq,ISOS)
-!      IF(species.eq.'OCSX   ') CALL XS_OCS(nw,wavl,wav,T,DEN,j,sq,ISOS)
-!      !returns SXO + O, SXO21, SXO23
-!      IF(species.eq.'SXO2   ') CALL XS_SO2(nw,wavl,wav,T,DEN,j,sq,ISOS)
-!      IF(species.eq.'SXO3   ') CALL XS_SO3(nw,wavl,wav,T,DEN,j,sq,ISOS)
-!      IF(species.eq.'H2SX   ') CALL XS_H2S(nw,wavl,wav,T,DEN,j,sq,ISOS)
-!     !returns SS8L then SS8R
-!      IF(species.eq.'SXS7   ') CALL XS_S8(nw,wavl,wav,T,DEN,j,sq,ISOS)
-!      !note using HO2 cross section for HSO
-!      IF(species.eq.'HSXO   ') CALL XS_HO2(nw,wavl,wav,T,DEN,j,sq,ISOS,
-!     $                                      Jb)
-!     !note this contains an unphysical scaling factor 
-!      IF(species.eq.'SXS    ') CALL XS_S2(nw,wavl,wav,T,DEN,j,sq,ISOS,
-!     $                                     Ja)
-!      !note using S2 cross section for S4 - returns differnt quantum yeilds for SXS+S, S2+SX (see Pavlov 02)
-!      IF(species.eq.'SXS3   ') CALL XS_S2(nw,wavl,wav,T,DEN,j,sq,ISOS,
-!     $                                     Jb) 
-!      !note using S2 cross section for S3
-!      IF(species.eq.'SXS2   ') CALL XS_S2(nw,wavl,wav,T,DEN,j,sq,ISOS,
-!     $                                     Jc)
-!
-!
-!!sorg species
-!      IF((species.eq.'CS2    ').OR.(species.eq.'CSXS   '))
-!     $      CALL XS_CS2(nw,wavl,wav,T,DEN,j,sq,ISOS)
-!      IF((species.eq.'CH3SH  ').OR.(species.eq.'CH3SXH ')) 
-!     $      CALL XS_CH3SH(nw,wavl,wav,T,DEN,j,sq,ISOS)
-!      IF((species.eq.'C2H6S  ').OR.(species.eq.'C2H6SX ')) CALL
-!     & XS_simple(species,nw,wavl,wav,T,DEN,j,sq)   
-!      IF((species.eq.'C2H6S2 ').OR.(species.eq.'C2H6SXS')) CALL 
-!     & XS_simple(species,nw,wavl,wav,T,DEN,j,sq)
-!
-!!corg species
-!      !OK
-!      IF(species.eq.'C2H2    ') CALL XS_C2H2(nw,wavl,wav,T,DEN,j,sq) 
-!
-!      IF(species.eq.'C2H4    ') CALL XS_C2H4(nw,wavl,wav,T,DEN,j,sq,Ja)
-!      ! shawn used C2H4 rate here  
-!      IF(species.eq.'CH      ') CALL XS_C2H4(nw,wavl,wav,T,DEN,j,sq,Jd)
-!
-!!shawn's use of C2H4 photorate
-!!212 * 0.51     212       C2H4      HV        C2H2      H2
-!!242 * 0.49     242       C2H4      HV        C2H2      H         H
-!!246 * 1.0      246       CH        HV        C         H
 
 
-!!243 * 0.34     243       C3H6      HV        C2H2      CH3       H
-!!251 * 1.0      251       C3H3      HV        C3H2      H
-!!258 * 0.57     258       C3H6      HV        CH2CCH2   H2
-!!259 * 0.02     259       C3H6      HV        C2H4      CH23
-!!260 * 0.05     260       C3H6      HV        C2H       CH4       H
-!
-!
-!      IF(species.eq.'C3H8    ') CALL XS_C3H8(nw,wavl,wav,T,DEN,j,sq)
-!      IF(species.eq.'CH2CO   ') CALL 
-!     & XS_simple(species,nw,wavl,wav,T,DEN,j,sq)
-!      IF(species.eq.'CH3CHO  ') CALL XS_CH3CHO(nw,wavl,wav,T,DEN,j,sq)
-!c      !shawn used C2H4 rate here with 0.57/0.02/0.05 quantum yields
-!      IF(species.eq.'C3H6    ') CALL XS_C3H6(nw,wavl,wav,T,DEN,j,sq)
-!      IF(species.eq.'C2H5CHO ') CALL 
-!     & XS_simple(species,nw,wavl,wav,T,DEN,j,sq)
-!      IF(species.eq.'C3H3') CALL 
-!c     !shawn used C2H4 rate here (check this xsection)
-!     & XS_simple(species,nw,wavl,wav,T,DEN,j,sq)
-!      IF(species.eq.'CH3C2H') CALL XS_CH3C2H(nw,wavl,wav,T,DEN,j,sq)
-!      IF(species.eq.'CH2CCH2') CALL XS_CH2CCH2(nw,wavl,wav,T,DEN,j,sq)
-!
-!c these are just here to remind us that these XS files exist
-!c       CALL XS_CL2O3(nw,wavl,wav,T,DEN,JCL2O3,sq)  !returns CLO + CLOO  (branch to CLO3??)  
-!
-!c       CALL XS_CHOCHO(nw,wavl,wav,T,DEN,100,sq,101,102)  !ACK - hardcoded "J-numbers" 
-!       !returns HCO + HCO, then H2 + CO + CO, then H2CO + CO  (never finished)
-!
-!      RETURN
-!      END
-
-!--------END ORIGINAL CALL FORMATING-------------------------------------------------------!
-       !EWS - airlev & wc not needed, not sure why it was there
-c      SUBROUTINE XS_HNO3(nw,wl,wc,tlev,airlev,jn,sq)
        SUBROUTINE XS_HNO3(nw,wl,tlev,jn,sq)
 
 !---------------------------------------------------------------------------------------!
@@ -568,9 +329,7 @@ c      print *, yg1
       RETURN
       END
 
-       !EWS - airlev and tlev not needed
-c      SUBROUTINE XS_HO2(nw,wl,wc,tlev,airlev,jn,sq,ISOS,jdum)
-       SUBROUTINE XS_HO2(nw,wl,wc,jn,sq,ISOS,jdum)
+       SUBROUTINE XS_HO2(nw,wl,wc,jn,sq,jdum)
 
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
@@ -608,7 +367,7 @@ c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reacti
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/DBLOK.inc'
       SAVE/PBLOK/
 * input
-      INTEGER nw,jn,jdum,ISOS
+      INTEGER nw,jn,jdum
       REAL*8 wl(nw+1), wc(nw) !EWS - wc used here
       !orig was kw, but don't see why this is needed once nw is defined by gridw.f 
       !could go back to kz if I ever want to have a variable altitude grid?
@@ -740,7 +499,6 @@ c      print *, yg1
 
       if(jdum.eq.1) then
         photolabel(jn)='PHSO'
-         if (ISOS.ge.33) photolabel(jn)='PHSXO' 
       endif   
 
       jn=jn+1
@@ -748,8 +506,6 @@ c      print *, yg1
       RETURN
       END
  
-       !EWS - airlev & wc not used for the below
-c      SUBROUTINE XS_NO2(nw,wl,wc,tlev,airlev,jn,sq)
        SUBROUTINE XS_NO2(nw,wl,tlev,jn,sq)
 
 *-----------------------------------------------------------------------------*
@@ -1258,9 +1014,7 @@ c      stop
       END
 
 
-       ! EWS - airlev, tlev, and wc not used
-c      SUBROUTINE XS_OCS(nw,wl,wc,tlev,airlev,jn,sq,ISOS)
-       SUBROUTINE XS_OCS(nw,wl,jn,sq,ISOS)
+       SUBROUTINE XS_OCS(nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for OCS photolysis  =*
@@ -1282,7 +1036,7 @@ c      SUBROUTINE XS_OCS(nw,wl,wc,tlev,airlev,jn,sq,ISOS)
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/DBLOK.inc'
       SAVE/PBLOK/
 * input
-      INTEGER nw,jn,ISOS
+      INTEGER nw,jn
       REAL*8 wl(nw+1) ! EWS - wc not needed (OCS)
 c      REAL*8 tlev(nz) ! EWS - not used
 c      REAL*8 airlev(nz) ! - EWS - not used
@@ -1361,20 +1115,14 @@ c Quantum yield (from Kevin's code - no reference)
       ENDDO
       endif  !end option 1
 
-      IF (ISOS.ge.33) then
-         photolabel(jn)='POCSX'
-      else  
          photolabel(jn)='POCS'
-      endif
 
       jn=jn+1
 
       RETURN
       END
 
-       ! EWS - airlev, tlev, and wc not used
-c      SUBROUTINE XS_SO3(nw,wl,wc,tlev,airlev,jn,sq,ISOS)
-       SUBROUTINE XS_SO3(nw,wl,jn,sq,ISOS)
+       SUBROUTINE XS_SO3(nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for SO3 photolysis  =*
@@ -1398,7 +1146,7 @@ c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reacti
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/DBLOK.inc'
       SAVE/PBLOK/
 * input
-      INTEGER nw,jn,ISOS
+      INTEGER nw,jn
       REAL*8 wl(nw+1) ! EWS - wc not needed (SO3)
 c      REAL*8 tlev(nz) ! EWS - not used
 c      REAL*8 airlev(nz) ! - EWS - not used
@@ -1480,11 +1228,7 @@ c Quantum yield (no reference nor research)
       ENDDO
       endif  !end option 1
 
-      IF (ISOS.ge.33) then
-         photolabel(jn)='PSXO3'
-      else  
          photolabel(jn)='PSO3'
-      endif
 
       jn=jn+1
 
@@ -1492,14 +1236,11 @@ c Quantum yield (no reference nor research)
       RETURN
       END
        
-       !EWS - airlev, tlev, and wc not used
-c      SUBROUTINE XS_S2(nw,wl,wc,tlev,airlev,jn,sq,ISOS,jdum)
-       SUBROUTINE XS_S2(nw,wl,jn,sq,ISOS,jdum)
+       SUBROUTINE XS_S2(nw,wl,jn,sq,jdum)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for S2 photolysis   =*
 *=         S2 + HV -> S + S                                                  =*
-*=  isotopic quantum yields for S3 ala Pavlov et al. 2002                    =*
 *=  Cross section:  From Kevin's photo.dat                                   =*  !UPDATE ME
 *=   NOTE - arbitrarily scaled by 6.53 as in Kevin's code --- WHY?
 *=  Quantum yield:  Assuming 1 with no research                              =*
@@ -1518,7 +1259,7 @@ c      SUBROUTINE XS_S2(nw,wl,wc,tlev,airlev,jn,sq,ISOS,jdum)
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/DBLOK.inc'
       SAVE/PBLOK/
 * input
-      INTEGER nw,jn,ISOS
+      INTEGER nw,jn
       REAL*8 wl(nw+1) ! EWS - wc not needed (S2)
 c      REAL*8 tlev(nz) ! EWS - not used
 c      REAL*8 airlev(nz) ! - EWS - not used
@@ -1603,51 +1344,24 @@ C   SCALE UP S2 CROSS SECTIONS TO OBTAIN CORRECT S2 LIFETIME UP HIGH
          ENDDO
       ENDDO
 
-      if (jdum.eq.2 .AND. ISOS.ge.33) then
-      DO iw = 1, nw
-         DO i = 1, nz
-              sq(jn,i,iw) = yg1(iw)*qy*scale*2./3.  !2/3 to SXS +S
-              sq(jn+1,i,iw) = yg1(iw)*qy*scale*1./3.  !1/3 to S2 + SX
-         ENDDO
-      ENDDO
-      endif
-
-
-
 
 
       endif  !end option 1
       
 c      print *, jn,photolabel
 
-      IF (ISOS.EQ.32) then
       if(jdum.eq.0) photolabel(jn)='PS2'
       if(jdum.eq.1) photolabel(jn)='PS4'
       if(jdum.eq.2) photolabel(jn)='PS3'
-      endif
-
-      IF (ISOS.ge.33) then
-      if(jdum.eq.0) photolabel(jn)='PSXS'
-      if(jdum.eq.1) photolabel(jn)='PSXS3'
-      if(jdum.eq.2) then 
-         photolabel(jn)='PSXS2_SXS'
-         photolabel(jn+1)='PSXS2_S2'
-      endif   
-      endif
 
       
-
       jn=jn+1
 
-      if (jdum.eq.2 .AND. ISOS.ge.33) jn=jn+1
-
-
+      
       RETURN
       END
       
-       !EWS - wc, tlev, and airlev not used
-c      SUBROUTINE XS_S8(nw,wl,wc,tlev,airlev,jn,sq,ISOS)
-       SUBROUTINE XS_S8(nw,wl,jn,sq,ISOS)
+       SUBROUTINE XS_S8(nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for S8  photolysis  =*
@@ -1672,7 +1386,7 @@ c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reacti
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/DBLOK.inc'
       SAVE/PBLOK/
 * input
-      INTEGER nw,jn,ISOS
+      INTEGER nw,jn
 c orig      REAL*8 wl(nw), wc(nw)   !orig was kw, but don't see why this is needed once nw is defined by gridw.f
       REAL*8 wl(nw+1) ! EWS - wc not needed (S8)
 
@@ -1805,15 +1519,12 @@ c        enddo
       endif      
 
       photolabel(jn)='PS8L'
-      if (ISOS.ge.33) photolabel(jn)='PSXS7L'
       jn=jn+1
 
       photolabel(jn)='PS8R'
-      if (ISOS.ge.33) photolabel(jn)='PSXS7R'
       jn=jn+1
 
       photolabel(jn)='PS8'
-      if (ISOS.ge.33) photolabel(jn)='PSXS7'
       jn=jn+1
 
       !so we are reserving sq(j+3)=0.0 for S8.
@@ -1822,9 +1533,7 @@ c        enddo
       RETURN
       END
 
-      !EWS - wc, tlev, and airlev not needed
-c      SUBROUTINE XS_H2S(nw,wl,wc,tlev,airlev,jn,sq,ISOS)
-       SUBROUTINE XS_H2S(nw,wl,jn,sq,ISOS)
+       SUBROUTINE XS_H2S(nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for H2S photolysis  =*
@@ -1849,7 +1558,7 @@ c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reacti
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/DBLOK.inc'
       SAVE/PBLOK/
 * input
-      INTEGER nw,jn,ISOS
+      INTEGER nw,jn
       REAL*8 wl(nw+1) ! EWS - wc not needed (H2S)
 c      REAL*8 tlev(nz) ! EWS - not used
 c      REAL*8 airlev(nz) ! - EWS - not used
@@ -1974,23 +1683,13 @@ c Quantum yield (no reference nor research)
       ENDDO
       endif  !end option 2
 
-
-
-
-
-      IF (ISOS.ge.33) then
-         photolabel(jn)='PH2SX'
-      else  
-         photolabel(jn)='PH2S'
-      endif
+      photolabel(jn)='PH2S'
 
       jn=jn+1
 
       RETURN
       END
 
-       !EWS - airlev and tlev not used
-c      subroutine XS_H2O(nw,wl,wc,tlev,airlev,jn,sq)
        SUBROUTINE XS_H2O(nw,wl,wc,jn,sq)
 !-----------------------------------------------------------------------------!
 !   purpose:                                                                  !
@@ -2269,9 +1968,7 @@ c Quantum yield (no reference nor research)
       END 
 c      end subroutine XS_H2O
 
-       !EWS - airlev, tlev, and wc not needed
-c      SUBROUTINE XS_SO(nw,wl,wc,tlev,airlev,jn,sq,ISOS)
-       SUBROUTINE XS_SO(nw,wl,jn,sq,ISOS)
+       SUBROUTINE XS_SO(nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for SO photolysis   =*
@@ -2295,7 +1992,7 @@ c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reacti
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/DBLOK.inc'
       SAVE/PBLOK/
 * input
-      INTEGER nw,jn,ISOS
+      INTEGER nw,jn
       REAL*8 wl(nw+1) ! EWS - wc not needed (SO)
 c      REAL*8 tlev(nz) ! EWS - not used
 c      REAL*8 airlev(nz) ! - EWS - not used
@@ -2378,19 +2075,14 @@ c Quantum yield (no reference nor research)
       ENDDO
       endif  !end option 1
 
-      IF (ISOS.ge.33) then
-         photolabel(jn)='PSXO'
-      else  
-        photolabel(jn)='PSO'
-      endif
+      photolabel(jn)='PSO'
+
 
       jn=jn+1
 
       RETURN
       END
 
-       !EWS - airlev, tlev, wc not needed
-c      SUBROUTINE XS_CO2(nw,wl,wc,tlev,airlev,jn,sq)
        SUBROUTINE XS_CO2(nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
@@ -2738,16 +2430,14 @@ c Quantum yields:  from Kevin's photo.dat file
       END
 
 
-       ! EWS - airlev, tlev, wc not used
-c      SUBROUTINE XS_SO2(nw,wl,wc,tlev,airlev,jn,sq,ISOS)
-       SUBROUTINE XS_SO2(nw,wl,jn,sq,ISOS)
+       SUBROUTINE XS_SO2(nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for SO2 photolysis  =*
 *=         SO2 + HV -> SO + O                                                =*
 *=         SO2 + HV -> SO21                                                  =*
 *=         SO2 + HV -> SO23                                                  =*
-*=  Cross section:  From Kevin's photo.dat                                   =*  !UPDATE ME
+*=  Cross section:  From Kevin's photo.dat or highres if LGRID=1             =*  
 *=  Quantum yield:  included in Kevin's cross sections                       =*
 *-----------------------------------------------------------------------------*
 *=  PARAMETERS:  see above subroutines                                       =*
@@ -2767,7 +2457,7 @@ c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reacti
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/DBLOK.inc'
       SAVE/PBLOK/
 * input
-      INTEGER nw,jn,ISOS
+      INTEGER nw,jn
       REAL*8 wl(nw+1) ! EWS - wc not needed (SO2)
 c      REAL*8 tlev(nz) ! EWS - not used
 c      REAL*8 airlev(nz) ! - EWS - not used
@@ -2778,7 +2468,6 @@ c      REAL*8 airlev(nz) ! - EWS - not used
 * data arrays
       INTEGER kdata,kdataHR
       PARAMETER(kdata=120,kdataHR=1200)
-c      PARAMETER(kdata=120,kdataHR=4200)  !for longward calculations
       INTEGER n1, n2,n3
       REAL*8 x1(kdata), x2(kdata), x3(kdata)
       REAL*8 y1(kdata), y2(kdata), y3(kdata)
@@ -2808,10 +2497,9 @@ c options
 c     1)Kevin's photo.dat data (for all three)
 c - note that these cross sections contain quantum yields...
 c - JPL -06 recommends looking at Hudson and Kieffer - 1975 natural stratosphere of 1974 CIAP monograph...
-c JPL -02 has some better comments (and reminds me that photodisaccosian only occurs to about 220...
-c - I will need something for quantum yields to do this carefully.
+c JPL -02 has some better comments - need quantum yields to do this carefully.
 
-c- I am going to hack in the reading of the high resolution data below.  This will eventually need to be sent as an option of some sort. For now, just using to read in and make plots... (also the various ISOTOPES will need to be read in...
+
 
 
       option=1 
@@ -2889,8 +2577,6 @@ c- note these are overwritten by higher resolution data below if LGRID=1
       ENDIF
 
 
-c      if (LGRID.eq.7) then   !temporarily keep SO2 on fine grid even if LGRID=2
-
       if (LGRID.eq.1) then   !on fine wavelength grid, use Danielache data
 
       newspec=1  !use Sebastian's corrected spectrum
@@ -2898,15 +2584,17 @@ c      if (LGRID.eq.7) then   !temporarily keep SO2 on fine grid even if LGRID=2
       if (newspec.eq.0) then
       OPEN(UNIT=kin,
      &  file='PHOTOCHEM/DATA/XSECTIONS/SO2/2007jd009695-ds01.txt',
-     &  STATUS='old')
+     &  STATUS='old') 
       n4 = 3360
+!the default used for the sulfur mif calculations in the 2013 paper - from Danielace 2012 JGR paper
       else
-!the default used for the sulfur mif calculations in the 2013 paper
+
       OPEN(UNIT=kin,file=
      & 'PHOTOCHEM/DATA/XSECTIONS
      &/SO2/data-non-systematic-errors-corrections.txt',
      &  STATUS='old')
       n4 = 1184
+!Seba said the published versions are incorrect and sent these along in 2013
 
 c longward1.txt is non-systematic + 2007data to 320nm
 c      OPEN(UNIT=kin,file=
@@ -2948,97 +2636,14 @@ c      n4 = 4159
       ENDDO
       CLOSE (kin)
 
+      print *, 'using high resolution SO2 cross section'
 
-      ISOORIG=ISOS !ISOHACK
-
-      ISOSKIP=0   !set this to 1 for testing 0 fractionation purposes only.
-
-      if (ISOSKIP.EQ.1) then
-       ISOS=32  !ISOHACK
-       print *, 'TESTING ALERT - USING ONLY 32S cross section despite'
-       print *,  'what is specified in the run file'
-       print *, 'this is only to test for zero fractionation'
-      endif
-
-      print *, 'using high resolution SO2 cross section for S',ISOS
-
-
-      uncertain=0
-c Need to reconsile random number generator with double precision. Need to try random_seed and random_number
-c      if (uncertain.eq.1) then
-c      !right here, we can add in an optional method to include uncertainty in cross-sections      
-c      print *,'testing uncertainity in XS_SO2'
-c      Intseed=7654321  !use a large odd number according to the fortran manual
-c      Iseed=Intseed+2*int(secnds(0.0)) !secnds is number of seconds since midnight (*2=even -> Iseed is odd)
-c      call srand(Iseed) ! initialize the random number generator
-!rand() returns a number in [0,1), so 2*rand()-1 gives us something in [-1,1) - general is (b-a)*rand()+a)
-c      do i=1,n4
-c         print *, y32(i),y32(i) + ydum1(i)*(2*rand()-1)
-c         print *, y33(i),y33(i) + ydum2(i)*(2*rand()-1)
-c         print *, y34(i),y34(i) + ydum3(i)*(2*rand()-1)
-
-!Uncertainity calculation #1 - randomnly distributed
-c         y32(i) = y32(i) + ydum1(i)*(2*rand()-1)
-c         y33(i) = y33(i) + ydum2(i)*(2*rand()-1)
-c         y34(i) = y34(i) + ydum3(i)*(2*rand()-1)
-
-!Uncertainity calculation#2 - maximally distributed (either -1,0,or 1 times uncertainity randomly added)
-c         y32(i) = y32(i) + ydum1(i)*anint(3*rand()-1.5)
-c         y33(i) = y33(i) + ydum2(i)*anint(3*rand()-1.5)
-c         y34(i) = y34(i) + ydum3(i)*anint(3*rand()-1.5)
-
-c      enddo
-c      endif
-
-
-      if(ISOS.eq.32) then
       CALL addpnt(x32,y32,kdataHR,n4,x32(1)*(1.-deltax),zero)  
       CALL addpnt(x32,y32,kdataHR,n4,               zero,zero)
       CALL addpnt(x32,y32,kdataHR,n4,x32(n1)*(1.+deltax),zero)
       CALL addpnt(x32,y32,kdataHR,n4,            biggest,zero)
       CALL inter2(nw+1,wl,ygnew,n4,x32,y32,0)   
-      endif
 
-      if(ISOS.eq.33) then
-      CALL addpnt(x33,y33,kdataHR,n5,x33(1)*(1.-deltax),zero)  
-      CALL addpnt(x33,y33,kdataHR,n5,               zero,zero)
-      CALL addpnt(x33,y33,kdataHR,n5,x33(n1)*(1.+deltax),zero)
-      CALL addpnt(x33,y33,kdataHR,n5,            biggest,zero)
-      CALL inter2(nw+1,wl,ygnew,n5,x33,y33,0)   
-      endif
-
-      if(ISOS.eq.34) then
-      CALL addpnt(x34,y34,kdataHR,n6,x34(1)*(1.-deltax),zero)  
-      CALL addpnt(x34,y34,kdataHR,n6,               zero,zero)
-      CALL addpnt(x34,y34,kdataHR,n6,x34(n1)*(1.+deltax),zero)
-      CALL addpnt(x34,y34,kdataHR,n6,            biggest,zero)
-      CALL inter2(nw+1,wl,ygnew,n6,x34,y34,0)   
-      endif
-
-!TEMP TEMP TEMP: - for testing shifted 32 only
-c$$$      if(ISOS.eq.33) then
-c$$$      CALL addpnt(x32,y32,kdataHR,n4,x32(1)*(1.-deltax),zero)  
-c$$$      CALL addpnt(x32,y32,kdataHR,n4,               zero,zero)
-c$$$      CALL addpnt(x32,y32,kdataHR,n4,x32(n1)*(1.+deltax),zero)
-c$$$      CALL addpnt(x32,y32,kdataHR,n4,            biggest,zero)
-c$$$      CALL inter2(nw+1,wl,ygnew,n4,x32,y32,0)   
-c$$$      ygnew=cshift(ygnew,-1)  !shift by 0.5 A
-c$$$      endif
-c$$$      if(ISOS.eq.34) then
-c$$$      CALL addpnt(x32,y32,kdataHR,n4,x32(1)*(1.-deltax),zero)  
-c$$$      CALL addpnt(x32,y32,kdataHR,n4,               zero,zero)
-c$$$      CALL addpnt(x32,y32,kdataHR,n4,x32(n1)*(1.+deltax),zero)
-c$$$      CALL addpnt(x32,y32,kdataHR,n4,            biggest,zero)
-c$$$      CALL inter2(nw+1,wl,ygnew,n4,x32,y32,0)   
-c$$$      ygnew=cshift(ygnew,-2)  !shift by 1.0 A
-c$$$      endif
-c$$$
-!TEMPTEMPTEMP
-
-
-
-      
-      ISOS=ISOORIG  !ISOHACK, although this can remain
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_SO2***'
@@ -3046,22 +2651,6 @@ c$$$
       ENDIF
 
 !assuming quantum yield of 1 for <220nm and 0 otherwise
-      longward=0  !ACK - a temporary hardcoding.  set to 1 to use Daneilache cross sections
-                  !from 220 to 330  (requires changing grid.f for high res use)
-
-      do i=1,nw
-c      print *, wl(i),yg1(i),yg2(i),ygnew(i)
-
-      if(wl(i).ge.1835. .AND. wl(i).le.2220.) yg1(i)=ygnew(i)   !original (commented out to make ~MODELS/PE/Longward3)
-c      if(wl(i).ge.1835. .AND. wl(i).le.2000.) yg1(i)=ygnew(i)    !ACK Halevy tester (along with new grid)
-
-      if (longward.eq.1) then
-        if(wl(i).ge.2220. .AND. wl(i).le.3175.) yg2(i)=ygnew(i)   !testing the SO2 photoexcitation bands
-      endif
-c      print *, wl(i),yg1(i),yg2(i),ygnew(i)
-
-      enddo
-
 
       endif  !end fine wavelength grid
 
@@ -3076,22 +2665,18 @@ c      print *, wl(i),yg1(i),yg2(i),ygnew(i)
 
 
       photolabel(jn)='PSO2'
-      if(ISOS.ge.33) photolabel(jn)='PSXO2'
       jn=jn+1
 
       photolabel(jn)='PSO2_SO21'
-      if(ISOS.ge.33) photolabel(jn)='PSXO2_SO21'
       jn=jn+1
 
       photolabel(jn)='PSO2_SO23'
-      if(ISOS.ge.33)photolabel(jn)='PSXO2_SO23'
       jn=jn+1
 
       RETURN
       END
 
-       !EWS - airlev & wc not used
-c      SUBROUTINE XS_O3(nw,wl,wc,tlev,airlev,jn,sq)
+
        SUBROUTINE XS_O3(nw,wl,tlev,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
@@ -7040,18 +6625,12 @@ c assuming Quantum yield is 1,
       RETURN
       END
 
-       !EWS - airlev, tlev, and wc not used
-c      SUBROUTINE XS_CS2(nw,wl,wc,tlev,airlev,jn,sq,ISOS)
-       SUBROUTINE XS_CS2(nw,wl,jn,sq,ISOS)
+       SUBROUTINE XS_CS2(nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for CS2 photolysis  =*
 *=         CS2 + HV -> CS + S                                                =*
 *=         CS2 + HV -> CS2X                                                  =*
-*=         Isotope code adds an additional reaction                          =*
-*=          CSXS + HV -> CSX + S  (1/2)                                      =*
-*=          CSXS + HV -> CS + SX  (1/2)                                      =*
-*=          CSXS + HV -> CSXSX                                               =*
 *=  Cross section:  From MPI database                                        =*
 *=  Quantum yield:  included in cross section file. 0/1                      =*
 *-----------------------------------------------------------------------------*
@@ -7066,7 +6645,7 @@ c      SUBROUTINE XS_CS2(nw,wl,wc,tlev,airlev,jn,sq,ISOS)
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
-      INTEGER nw,jn,ISOS
+      INTEGER nw,jn
       REAL*8 wl(nw+1) ! EWS - wc not needed (CS2)
 c      REAL*8 tlev(nz) ! EWS - not used
 c      REAL*8 airlev(nz) ! - EWS - not used
@@ -7159,44 +6738,23 @@ c     1)from MPI database
          ENDDO
       ENDDO
 
-      if (ISOS.ge.33) then
-      DO iw = 1, nw
-         DO i = 1, nz
-              sq(jn,i,iw) = yg1(iw)/2.    !1/2 to CSX +S
-              sq(jn+1,i,iw) = yg1(iw)/2.  !1/2 to CS + SX
-              sq(jn+2,i,iw) = yg2(iw)     !CS2 -> CS2X 
-         ENDDO
-      ENDDO
-      endif
-
       endif   ! end option 1
 
-      if (ISOS.eq.32) then
        photolabel(jn)='PCS2_CS'
        jn=jn+1
        photolabel(jn)='PCS2_CS2X'
        jn=jn+1
-      else
-       photolabel(jn)='PCSXS_CSX'
-       jn=jn+1
-       photolabel(jn)='PCSXS_SX'
-       jn=jn+1
-       photolabel(jn)='PCSXS_CSXSX'
-       jn=jn+1
-      endif
 
 
       RETURN
       END
 
-       !EWS - airlev, tlev, and wc not used
-c      SUBROUTINE XS_CH3SH(nw,wl,wc,tlev,airlev,jn,sq,ISOS)
-       SUBROUTINE XS_CH3SH(nw,wl,jn,sq,ISOS)
+       SUBROUTINE XS_CH3SH(nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for CH3SH photo.    =*
-*=           CH3SH + HV  ->  H + CH3S   (CH3SXH + HV -> H + CH3SX)           =*
-*=           CH3SH + HV  ->  HS + CH3   (CH3SXH + HV -> HSX + CH3)           =*
+*=           CH3SH + HV  ->  H + CH3S                                        =*
+*=           CH3SH + HV  ->  HS + CH3                                        =*
 *=  Cross section:  From MPI database                                        =*
 *=  Quantum yield:  Assuming Shawn's vals (0.93/0.07)                        =* <- Check me!
 *-----------------------------------------------------------------------------*
@@ -7210,7 +6768,7 @@ c      SUBROUTINE XS_CH3SH(nw,wl,wc,tlev,airlev,jn,sq,ISOS)
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
       SAVE/PBLOK/
 * input
-      INTEGER nw,jn,ISOS
+      INTEGER nw,jn
       REAL*8 wl(nw+1) ! EWS - wc not needed
 c      REAL*8 tlev(nz) ! EWS - not used
 c      REAL*8 airlev(nz) ! - EWS - not used
@@ -7279,18 +6837,14 @@ c Quantum yield (fix this) - sddg
       endif  !end option 1
 
       photolabel(jn)='PCH3SH_H'
-      if(ISOS.ge.33) photolabel(jn)='PCH3SXH_H'
       jn=jn+1
 
       photolabel(jn)='PCH3SH_HS'
-      if(ISOS.ge.33) photolabel(jn)='PCH3SXH_HSX'
       jn=jn+1
 
       RETURN
       END
 
-       !EWS - airlev, tlev, and wc not used
-c      SUBROUTINE XS_simple(species,nw,wl,wc,tlev,airlev,jn,sq)
        SUBROUTINE XS_simple(species,nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
@@ -7411,17 +6965,6 @@ c but for now, xs_simple is restricted to molecules with one channel.
          ENDDO
       ENDDO
 
-!for strange isotopic cases
-      if(species.eq.'C2H6SXS') then
-      DO iw = 1, nw
-         DO i = 1, nz
-c              sq(jn,i,iw) = 2.0*yg1(iw)*qy  !doubling rate due to symmetry of products
-         ENDDO
-      ENDDO
-      endif
-
-
-
       endif  !end option 1
 
       write(plab,'(a,a)') 'P',trim(species)
@@ -7434,8 +6977,6 @@ c              sq(jn,i,iw) = 2.0*yg1(iw)*qy  !doubling rate due to symmetry of p
       RETURN
       END
 
-       !EWS - airlev, tlev, and wc not used
-c      SUBROUTINE XS_CHOCHO(nw,wl,wc,tlev,airlev,jn,sq)
        SUBROUTINE XS_CHOCHO(nw,wl,jn,sq)
 *---------------------------------------------------------------------------------*
 *=  PURPOSE:                                                                     =*
@@ -7612,8 +7153,6 @@ c this is not finished, only used for interpolative purposes...
       RETURN
       END
 
-       !EWS - airlev, tlev, and wc not used
-c      SUBROUTINE XS_C2H2(nw,wl,wc,tlev,airlev,jn,sq)
        SUBROUTINE XS_C2H2(nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
@@ -7730,8 +7269,7 @@ c Quantum yields
       RETURN
       END
      
-       !EWS - airlev, tlev, and wc not used
-c      SUBROUTINE XS_CH3CHO(nw,wl,wc,tlev,airlev,jn,sq)
+
        SUBROUTINE XS_CH3CHO(nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
@@ -7832,8 +7370,6 @@ c Quantum yield (fix this)
       RETURN
       END
 
-       !EWS - airlev, tlev, and wc not used
-c      SUBROUTINE XS_C3H6(nw,wl,wc,tlev,airlev,jn,sq)
        SUBROUTINE XS_C3H6(nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
@@ -7945,8 +7481,7 @@ c Quantum yield (fix this)
       RETURN
       END
 
-       !EWS - airlev, tlev, and wc not used
-c      SUBROUTINE XS_CH3C2H(nw,wl,wc,tlev,airlev,jn,sq)
+
        SUBROUTINE XS_CH3C2H(nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
@@ -8053,8 +7588,6 @@ c Quantum yield (fix this)
       RETURN
       END
 
-       !EWS - airlev, tlev, and wc not used
-c      SUBROUTINE XS_CH2CCH2(nw,wl,wc,tlev,airlev,jn,sq)
        SUBROUTINE XS_CH2CCH2(nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
@@ -8160,8 +7693,7 @@ c Quantum yield (fix this)
       RETURN
       END
  
-       !EWS - airlev, tlev, and wc not used
-c      SUBROUTINE XS_C2H4(nw,wl,wc,tlev,airlev,jn,sq,Jdum)
+
        SUBROUTINE XS_C2H4(nw,wl,jn,sq,Jdum)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
@@ -8265,8 +7797,7 @@ c Quantum yield (fix this)
       RETURN
       END
 
-       !EWS - airlev, tlev, and wc not used
-c      SUBROUTINE XS_C3H8(nw,wl,wc,tlev,airlev,jn,sq)
+
        SUBROUTINE XS_C3H8(nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
@@ -8384,8 +7915,3 @@ c Quantum yields done in wl loop. diff at ly a then everywhere else
 
       RETURN
       END
-
-
-
-
-

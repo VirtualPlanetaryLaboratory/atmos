@@ -5,18 +5,12 @@
       real*8 mass
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PHOTABLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/RBLOK.inc'
-      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/ISOBLOK.inc'
       real*8 k0,kinf
 
 c-mc rate constant units are cm^3/mol/s
-
-      if (ISOTOPE.EQ.1) then
-       ! chemical reaction file
-       open(9, file='PHOTOCHEM/INPUTFILES/ISOreactions.rx',status='OLD')
-      else
        ! chemical reaction file
        open(9, file='PHOTOCHEM/INPUTFILES/reactions.rx',status='OLD')
-      endif
+
 
 667   FORMAT(58X,E9.2,3X,F8.2)            !for two body reaction rates
 668   FORMAT(58X,E9.2,3X,E9.2,2X,2F5.2)   !for three body reaction rates
@@ -111,9 +105,7 @@ c-mc the below are rate constants which don't fit in the 2BODY or 3BODY category
 
 !   CO + OH -> CO2 + H (also CS + HS -> CS2 + H)  !SORG
       if ((CHEMJ(1,J).EQ.'CO'.AND.CHEMJ(2,J).EQ.'OH') .OR.
-     $    (CHEMJ(1,J).EQ.'CS'.AND.CHEMJ(2,J).EQ.'HS') .OR.
-     $    (CHEMJ(1,J).EQ.'CSX'.AND.CHEMJ(2,J).EQ.'HS') .OR.
-     $    (CHEMJ(1,J).EQ.'CS'.AND.CHEMJ(2,J).EQ.'HSX')) THEN
+     $    (CHEMJ(1,J).EQ.'CS'.AND.CHEMJ(2,J).EQ.'HS')) THEN
        PATM = DEN(I)*1.38E-16*T(I)/1.013E6   !a good pressure
        A(J,I) = 1.5E-13 * (1. + 0.6*PATM)     !JPL-02
       endif
@@ -126,8 +118,7 @@ c-mc the below are rate constants which don't fit in the 2BODY or 3BODY category
 !gna - updated according to d-g 2011
 !   H + CO + M -> HCO + M (also H + CS + M -> HCS + M) !sorg
       if ((CHEMJ(1,J).EQ.'H'.AND.CHEMJ(2,J).EQ.'CO') .OR.
-     $    (CHEMJ(1,J).EQ.'H'.AND.CHEMJ(2,J).EQ.'CS') .OR.
-     $    (CHEMJ(1,J).EQ.'H'.AND.CHEMJ(2,J).EQ.'CSX')) THEN
+     $    (CHEMJ(1,J).EQ.'H'.AND.CHEMJ(2,J).EQ.'CS')) THEN
        A(J,I) = 2.0E-33*EXP(-850./T(I))*DEN(I)  ! I use NIST 05 for 333-1000 K, theory
       endif
 
@@ -194,51 +185,30 @@ c       A(J,I) = 1.25E-32                   !NIST 2005
       endif
 
 !   SO + O -> SO2
-      if ((CHEMJ(1,J).EQ.'SO'.AND.CHEMJ(2,J).EQ.'O') .OR.
-     $    (CHEMJ(1,J).EQ.'SXO'.AND.CHEMJ(2,J).EQ.'O') ) THEN
+      if (CHEMJ(1,J).EQ.'SO'.AND.CHEMJ(2,J).EQ.'O') THEN
        A(J,I) = 6.0E-31 * DEN(I)         ! NIST 2005 updated from D-G 2011 gna
-
-!ISOHACK - just for testing...
-       if (ISOTOPE.EQ.1) then
-c          print *, 'Hacked rate for SO+O->SO2',ISOS
-!these are totally made up and just for testing...
-!the intent is to test MDF along with MIF
-c          EPSILON=0.9897  !10.3 permil
-c         if (ISOS.EQ.34) EPSILON=0.980 ! 20 permil
-          EPSILON=1.0  !(for standard usage)
-          A(J,I) = 5.1E-31 * DEN(I)*EPSILON ! NIST 2005
-       endif
-
       endif
 
 !    S + S -> S2
-      if ((CHEMJ(1,J).EQ.'S'.AND.CHEMJ(2,J).EQ.'S') .OR.
-     $     (CHEMJ(1,J).EQ.'SX'.AND.CHEMJ(2,J).EQ.'S')) THEN
+      if (CHEMJ(1,J).EQ.'S'.AND.CHEMJ(2,J).EQ.'S') THEN
 c      A(J,I) = 1.2e-29 * DEN(I)   ! in H2S, but its much 1e4 slower in Ar
 c       A(J,I) = min(5.E-11, 3* A(JOO_O2,I))      ! reported rate is 3X larger for S+S in Ar than for O+O in Ar
 
        A(J,I) = 1.87E-33 * EXP(-206/T(I))*DEN(I) !updated from D-G 2011 gna
-       IF (CHEMJ(1,J).EQ.'SX') A(J,I)=A(J,I)*2    !doubling rate constant for "isotopic twin" reactions (Pavlov 02)
       endif
 
 !   S + S2 + M -> S3 + M
-      if ((CHEMJ(1,J).EQ.'S'.AND.CHEMJ(2,J).EQ.'S2') .OR.
-     $    (CHEMJ(1,J).EQ.'SX'.AND.CHEMJ(2,J).EQ.'S2') .OR.
-     $    (CHEMJ(1,J).EQ.'S'.AND.CHEMJ(2,J).EQ.'SXS')  ) THEN
+      if (CHEMJ(1,J).EQ.'S'.AND.CHEMJ(2,J).EQ.'S2') THEN
        A(J,I) = MIN(5.0E-11,2.5E-30*DEN(I)/5.E1)    ! NIST reported In CO2 with factor 5 error
       endif
 
 !    S2 + S2 + M -> S4 + M
-      if ((CHEMJ(1,J).EQ.'S2'.AND.CHEMJ(2,J).EQ.'S2') .OR.
-     $    (CHEMJ(1,J).EQ.'SXS'.AND.CHEMJ(2,J).EQ.'S2')) THEN
+      if (CHEMJ(1,J).EQ.'S2'.AND.CHEMJ(2,J).EQ.'S2') THEN
        A(J,I) = MIN(5.0E-11,2.5E-30*DEN(I)/1.E1)    ! NIST reported In CO2 with factor 5 error I'm taking lower bound
-       IF (CHEMJ(1,J).EQ.'SXS') A(J,I)=A(J,I)*2    !doubling rate constant for "isotopic twin" reactions (Pavlov 02)
       endif
 
 !     S + S3 + M -> S4 + M
-      if ((CHEMJ(1,J).EQ.'S'.AND.CHEMJ(2,J).EQ.'S3') .OR.
-     $    (CHEMJ(1,J).EQ.'SX'.AND.CHEMJ(2,J).EQ.'S3') .OR.
-     $    (CHEMJ(1,J).EQ.'S'.AND.CHEMJ(2,J).EQ.'SXS2') ) THEN
+      if (CHEMJ(1,J).EQ.'S'.AND.CHEMJ(2,J).EQ.'S3') THEN
        A(J,I) = MIN(5.0E-11,2.5E-30*DEN(I)/5.E1)    ! NIST reported In CO2 with factor 5 error
        !assumed rate equal to the S+S2 rate
       endif
@@ -246,21 +216,13 @@ c       A(J,I) = min(5.E-11, 3* A(JOO_O2,I))      ! reported rate is 3X larger f
 !     S4 + S4 + M -> S8 + M
 !       OR
 !     S4 + S4 -> S8AER
-      if ((CHEMJ(1,J).EQ.'S4'.AND.CHEMJ(2,J).EQ.'S4') .OR.
-     $    (CHEMJ(1,J).EQ.'SXS3'.AND.CHEMJ(2,J).EQ.'S4') ) THEN
+      if (CHEMJ(1,J).EQ.'S4'.AND.CHEMJ(2,J).EQ.'S4') THEN
        A(J,I) = MIN(5.0E-11,2.5E-30*DEN(I)/1.E1)    ! NIST reported In CO2 with factor 5 error I'm taking lower bound
        !assumed rate equal to S2+S2
-!       IF (CHEMJ(1,J).EQ.'SXS3') A(J,I)=A(J,I)*2    !doubling rate constant for "isotopic twin" reactions (Pavlov 02)
-
-       IF (CHEMJ(1,J).EQ.'SXS3') then
-          A(J,I)=A(J,I)*2       !doubling rate constant for "isotopic twin" reactions (Pavlov 02)
-c          print *, A(J,I),J
-       endif
       endif
 
 !     S + CO + M -> OCS + M
-      if ((CHEMJ(1,J).EQ.'S'.AND.CHEMJ(2,J).EQ.'CO') .OR.
-     $    (CHEMJ(1,J).EQ.'SX'.AND.CHEMJ(2,J).EQ.'CO')) THEN
+      if (CHEMJ(1,J).EQ.'S'.AND.CHEMJ(2,J).EQ.'CO') THEN
        A(J,I) = 1.*2.2E-33*EXP(-1780./T(I))*DEN(I)  ! no information
 c  I'm guessing that S + CO goes at about the same rate as O + CO
 c  with the same activation energy and a 3X bigger A factor
@@ -272,9 +234,7 @@ c-mc but yet factor of 1 out from, so this is the same as o+co
       endif
 
 !    OCS + S + M -> OCS2 + M   ! NIST 8.3e-33*Den in Ar
-      if ((CHEMJ(1,J).EQ.'OCS'.AND.CHEMJ(2,J).EQ.'S') .OR.
-     $    (CHEMJ(1,J).EQ.'OCSX'.AND.CHEMJ(2,J).EQ.'S') .OR.
-     $    (CHEMJ(1,J).EQ.'OCS'.AND.CHEMJ(2,J).EQ.'SX')) THEN
+      if (CHEMJ(1,J).EQ.'OCS'.AND.CHEMJ(2,J).EQ.'S') THEN
        A(J,I) = 8.3E-33*Den(i)     ! reduce by 1000 to turn it off
       endif
 
@@ -499,23 +459,15 @@ c       print *, I, A(J,I),Alow,Ainf,T(I),DEN(I)
 
 
 !   CS2 + S  ->  CS + S2  !SORG
-      if ((CHEMJ(1,J).EQ.'CS2'.AND.CHEMJ(2,J).EQ.'S') .OR.
-     $    (CHEMJ(1,J).EQ.'CSXS'.AND.CHEMJ(2,J).EQ.'S') .OR.
-     $    (CHEMJ(1,J).EQ.'CS2'.AND.CHEMJ(2,J).EQ.'SX')) THEN
-
-          if (CHEMJ(1,J).EQ.'CS2'.AND.CHEMJ(2,J).EQ.'S') factor=1.0
-          if (CHEMJ(3,J).EQ.'CSX'.AND.CHEMJ(4,J).EQ.'S2') factor=1/3.
-          if (CHEMJ(3,J).EQ.'CS'.AND.CHEMJ(4,J).EQ.'SXS') factor=2/3.
-
+      if (CHEMJ(1,J).EQ.'CS2'.AND.CHEMJ(2,J).EQ.'S') THEN
        ! Woiki et al 1995
-       A(J,I) = factor*1.9E-14 * EXP(-580./T(I)) * (T(I)/300.)**3.97
+       A(J,I) = 1.9E-14 * EXP(-580./T(I)) * (T(I)/300.)**3.97
       endif
 
 !   C2H6S + H ->  CH3SH + CH3  !SORG
 
-      if ((CHEMJ(1,J).EQ.'C2H6S'.AND.CHEMJ(2,J).EQ.'H'.AND. !3 needed because there is another C2H6S + H  2 body reaction in the table
-     $    CHEMJ(3,J).EQ.'CH3SH').OR. (CHEMJ(1,J).EQ.'C2H6SX'.AND.
-     $    CHEMJ(2,J).EQ.'H'.AND.CHEMJ(3,J).EQ.'CH3SXH')) THEN
+      if (CHEMJ(1,J).EQ.'C2H6S'.AND.CHEMJ(2,J).EQ.'H'.AND. !3 needed because there is another C2H6S + H  2 body reaction in the table
+     $    CHEMJ(3,J).EQ.'CH3SH') THEN
 
 
 !gna - possible mistake here: in D.-G. et al 2011  C2H6S + H ->  H2 + C2H4 + HS is listed with different reaction rate coefficients
@@ -526,9 +478,8 @@ c       print *, I, A(J,I),Alow,Ainf,T(I),DEN(I)
 
 !this used to be same as  C2H6S + H ->  CH3SH + CH3  !SORG but that is not what shawn has in 2011 paper table
 !   C2H6S + H ->  H2 + C2H4 + HS !HC   Theory. Zhang et al. [2005]. Produces C2H5S, which then can split into C2H4 + HS
-          if((CHEMJ(1,J).EQ.'C2H6S'.AND.CHEMJ(2,J).EQ.'H'.AND.
-     $    CHEMJ(3,J).EQ.'H2').or.(CHEMJ(1,J).EQ.'C2H6SX'.AND.
-     $    CHEMJ(2,J).EQ.'H'.AND.CHEMJ(3,J).EQ.'H2'))THEN
+          if(CHEMJ(1,J).EQ.'C2H6S'.AND.CHEMJ(2,J).EQ.'H'.AND.
+     $    CHEMJ(3,J).EQ.'H2') THEN
              A(J,I) = 8.34E-12 * EXP(-2212./T(I)) * (T(I)/300.)**1.60 ! theory - Zhang et al. 2005
           endif
 
@@ -662,14 +613,9 @@ c       print *, I, A(J,I),Alow,Ainf,T(I),DEN(I)
 !gna -- ordering was wrong of CHEMJ indices compared to reactions.rx for sorg template
 
 !   CH3S + HCS ->CS + CH3SH !SORG
-      if ((CHEMJ(2,J).EQ.'HCS'.AND.CHEMJ(1,J).EQ.'CH3S').OR.
-     $    (CHEMJ(1,J).EQ.'HCSX'.AND.CHEMJ(2,J).EQ.'CH3S').OR.
-     $    (CHEMJ(1,J).EQ.'HCS'.AND.CHEMJ(2,J).EQ.'CH3SX')) THEN
+      if (CHEMJ(2,J).EQ.'HCS'.AND.CHEMJ(1,J).EQ.'CH3S') THEN
 
          A(J,I) = 1.18E-12*EXP(-910./T(I))*(T(I)/300.)**0.65  !Liu et al. 2006 (via NIST)
-
-         if (CHEMJ(1,J).EQ.'HCSX'.OR.CHEMJ(2,J).EQ.'CH3SX')
-     $      A(J,I)=A(J,I)/2.   !halving of isotopic rate due to multiple channels
 
       endif
 

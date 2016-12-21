@@ -10,7 +10,6 @@
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/GBLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/NBLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/AERBLK.inc'
-      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/ISOBLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/DBLOK.inc'
 
       DIMENSION CUNING(NZ,NP),amass(NZ,NP),THERMSP(NZ,NP),
@@ -93,15 +92,11 @@ C
       DO 10 K=1,NP
 C   (1 = SULFATE, 2 = S8, 3 = HYDROCARBON, 4=HCAER2)
 
-       if (ISOTOPE.EQ.0) L = LSO4AER  !so using the sulfate aersol for all particles?
-       if (ISOTOPE.EQ.1) L = LSXO4AER  !so using the sulfate aersol for all particles?
-       
-       if(usetd.eq.1) then !Jim's code with particles in tri-diag uses H2SO4 rather than the aerosol
-        if (ISOTOPE.EQ.0) L = LH2SO4  !using h2so4 for all particles? (sure why not - it's infinite rainout...)
-        if (ISOTOPE.EQ.1) L = LH2SXO4  !using h2so4 for all particles?
-       endif 
-
-      if (ISOTOPE.EQ.0) then   !ISOHACK 
+       L = LSO4AER  !so using the sulfate aersol for all particles?
+              
+        if(usetd.eq.1) then !Jim's code with particles in tri-diag uses H2SO4 rather than the aerosol    
+          L = LH2SO4  !using h2so4 for all particles? (sure why not - it's infinite rainout...)
+        endif 
 
 C
 C-AP ESTIMATION OF THE AEROSOL FREE PATH LENGTH
@@ -198,8 +193,6 @@ C   DON'T ALLOW PARTICLES TO DECREASE IN SIZE AT LOW ALTITUDES
       J = NZ - I
    3  RPAR(J,K) = max(RPAR(J,K),RPAR(J+1,K))
 
-      endif !end iso skip loop   !unISOHACKING
-!CONVER needed in isotope code, but rpar should stay the same
 
 C
 C   COMPUTE PARTICLE-TO-GAS CONVERSION FACTORS AND DENSITIES
@@ -210,12 +203,12 @@ c- no hints in Shawn's code
         LL=NQ-NP+K  !ACK - assuming particles are last LL elements
         if (USETD.EQ.1) LL=K+NQ  !particles in tri-diag
 
-       if (LL.EQ.LS8AER.OR.LL.EQ.LSXS7AER) then
+       if (LL.EQ.LS8AER) then
          RHOP(I) = 2.07
          factor=2.03E7
        endif
 
-       if (LL.EQ.LSO4AER.OR.LL.EQ.LSXO4AER) then
+       if (LL.EQ.LSO4AER) then
          RHOP(I) = 1. + 0.8*FSULF(I)
          factor = 4.6E7*FSULF(I)
        endif
@@ -250,7 +243,6 @@ c - giada - factor is the NUMBER OF MOLECULES PER 0.1UM SPHERE (don't know why .
         
       enddo
 
-      if(ISOTOPE.EQ.0) then  !fall velocities should stay the same in isotope code
 C   NOW COMPUTE FALL VELOCITIES
       DO  J=1,NZ
       
@@ -275,7 +267,6 @@ C-AP  From Prupacher & Klett
       ENDIF
       enddo
 
-      endif !end ISOTOPE skip loop 
 
   10  CONTINUE
 

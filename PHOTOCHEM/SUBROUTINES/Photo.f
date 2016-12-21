@@ -27,7 +27,6 @@ c      real*8 temp(kj) !EWS - not used
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/RBLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/SBLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/NBLOK.inc'
-      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/ISOBLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/MBLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
 
@@ -49,13 +48,9 @@ c- this used only if INO=0
       RGAS = 8.3143E7             !erg/mol/K
 
 !compute mean molar mass (this could easily be abstracted so that N2 isn't hardcoded...
-!updating for isotopes, but keeping rest as status quo for now...
-      if(ISOTOPE.EQ.1) then
-       pO2=UINERT(LO2-Loff,1)
-      else
-       pO2=USOL(LO2,1)
-      endif
-      pCO2=FCO2
+
+      pO2=USOL(LO2,1)  !assumes atmosphere has O2 in it
+      pCO2=FCO2  !and CO2
 
 
 c-mab: Like DENSTY & DIFCO, WT expression based on H2 mixing ratio...
@@ -73,7 +68,7 @@ C     .             FH2,FHE,FCO2,FCO,FH2O,FH,FOH,FCH4
 c-mc allows for high CO2 and O2, but forces N2 to decrease if CO2 increases.  Wrong as CO2 gets large
 c-mc also makes one realize that fixed mixing ratio isn't the best way to approach high CO2 levels.
 c-mc can never get more than 1 bar. - taking CO2 to 0.5 increase mean molar mass to 36.4 (from 28.56 at 0.01)
-
+!the above could be pretty easily abstracted using the elemental numbers in species.dat file and molecular masses
 
       PI = 3.14159
       ZYR = ZY*PI/180.            ! note ZY is passed in subroutine call - solar angle in radians
@@ -220,23 +215,11 @@ c-mab  print*,'JNO',JNO !debugging for templates w/o NO photolysis
 
 !OK - i want to keep this as it is used to track wavelength dependence of photolysis
 !in fact, will probably need to expand this down the road.
-!for now, I just want to make sure it works for both the isotope and fine grid options...
 
        JSO2=minloc(photoreac,1,ISPEC(INT(photoreac)).eq.'SO2    ')
-       if (JSO2.EQ.0) then
-        JSO2=minloc(photoreac,1,ISPEC(INT(photoreac)).eq.'SXO2     ')
-       endif
-
-!so the above works if either SO2 or SXO2 has a photolysis reaction, but not if both (or neither) do
-!for now, I don't anticipate this occuring, so leaving it for now as one or the other will probably always be true
-
-!same goes for below
 
 ! a numbering scheme that works even if S8 isn't a species.  the key is to just not use JS8L,JS8R,JS8
        JS8L=minloc(photoreac,1,ISPEC(INT(photoreac)).eq.'S8     ')
-       if (JS8L.EQ.0) then
-        JS8L=minloc(photoreac,1,ISPEC(INT(photoreac)).eq.'SXS7   ')
-       endif
        JS8R=JS8L+1
        JS8=JS8L+2
 
@@ -246,6 +229,7 @@ C interpolate the optical properties from the Mie code onto the particle radii c
 C-AP Since all model is in cm we should convert RSTAND
 c-mc test test test
 cgna - uncommented why isn't it doing this still??
+c-mc: this was in the time-stepping loop, so in Alex's code it was doing it every timestep, so RSTAND --> O.  Bad bug this was
       !DO k=1,34
        !RSTAND(k) = RSTAND(k)/10000.
       !ENDDO
@@ -261,7 +245,7 @@ c       enddo
          L3 = 3 !EWS - removes compilation warning
       do L=L3,NP  !loop over hydrocarbon particles ONLY RIGHT now
       DO I=1,nw
-      DO J=1,NZ                                       !ISOHACK - i will need to interpolate the MIE parameters to the wavelength grid
+      DO J=1,NZ                                       
       DO k=1,33  !ACK - hardcoded num particles (probably OK - this is how the HC grid was computed)
 
          IF ((RPAR(J,L).GE.RSTAND(k)).and.(RPAR(J,L).LT.RSTAND(k+1)))
@@ -600,7 +584,7 @@ c orig      STAU=Z(MAXLOC(SALL,2, SALL .le. slev))/1e5   !original code not in l
          STAU=Z(INT(smax(L)))/1e5
       enddo
 
-      if(ISOTOPE.EQ.0) write(48,322) (STAU(L), L=1,nw) !write out tau=1 heights for the time-dependent codes
+      write(48,322) (STAU(L), L=1,nw) !write out tau=1 heights for the time-dependent codes
 
  322  format(118(F10.3))  !ACK a hardcoded wavelength grid
 
@@ -624,7 +608,7 @@ c so analysis programs can pick up on nz and nw
 
 
        do L=1,nw
-        if (ISOTOPE.EQ.0) write(31,*) wavl(L),wavu(L),wav(L)
+         write(31,*) wavl(L),wavu(L),wav(L)
          write(41,*), flux(L),relflux(L)
        enddo
        write(41,*) AM    !write out mu

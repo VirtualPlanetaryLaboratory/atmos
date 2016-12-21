@@ -5,7 +5,6 @@
       real*8 mass
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PHOTABLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/RBLOK.inc'
-      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/ISOBLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/NBLOK.inc'
       
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -776,13 +775,8 @@
 *****************************************************************
 c-mc rate constant units are cm^3/mol/s
 
-      if (ISOTOPE.EQ.1) then
-       ! chemical reaction file
-       open(9, file='PHOTOCHEM/INPUTFILES/ISOreactions.rx',status='OLD')
-      else
        ! chemical reaction file
        open(9, file='PHOTOCHEM/INPUTFILES/reactions.rx',status='OLD')
-      endif
  
   	print*,'Running rateswasp12b.f...'
   	

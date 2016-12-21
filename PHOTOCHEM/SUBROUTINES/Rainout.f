@@ -12,7 +12,6 @@
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/GBLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/NBLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/WBLOK.inc'
-      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/ISOBLOK.inc'
       DATA LSO2g,LH2COg,LSO2aq,LH2COaq,LHCO3_,LCO3_2,LHSO3_,
      1  LSO3_2,LH2COSO3,LOH_/1,2,3,4,5,6,7,8,9,10/
 
@@ -78,8 +77,6 @@ C   FIRST DEFINE RELEVANT CONSTANTS\
 
 
 
-c      if(ISOTOPE.EQ.0) then
-C
 C   MODIFY TEMPERATURE PROFILE TO DO AQUEOUS CHEMISTRY
       T_triple = 273.15
       DO 7 I=1,NH
@@ -102,25 +99,25 @@ c   lets play guess the units.  looks like mol/liter/atm
        if(ISPEC(J).EQ.'H')   H(J,I) = 0.
        if(ISPEC(J).EQ.'HCO') H(J,I) = 0. ! I think jim made this up
        if(ISPEC(J).EQ.'CH3') H(J,I) = 0.
-       if(ISPEC(J).EQ.'S'.OR.ISPEC(J).EQ.'SX')          H(J,I) = 0.
-       if(ISPEC(J).EQ.'S2'.OR.ISPEC(J).EQ.'SXS')        H(J,I) = 0.
-       if(ISPEC(J).EQ.'S4'.OR.ISPEC(J).EQ.'SXS3')       H(J,I) = 0.
-       if(ISPEC(J).EQ.'S8'.OR.ISPEC(J).EQ.'SXS7')       H(J,I) = 0.
+       if(ISPEC(J).EQ.'S')          H(J,I) = 0.
+       if(ISPEC(J).EQ.'S2')        H(J,I) = 0.
+       if(ISPEC(J).EQ.'S4')       H(J,I) = 0.
+       if(ISPEC(J).EQ.'S8')       H(J,I) = 0.
 !       if(ISPEC(J).EQ.'S8AER'.OR.ISPEC(J).EQ.'SXS7AER') H(J,I) = 0
       !infinite (CHECK THIS against PAVLOV/KEVIN)
-       if(ISPEC(J).EQ.'S8AER'.OR.ISPEC(J).EQ.'SXS7AER') H(J,I) = 7.E11
+       if(ISPEC(J).EQ.'S8AER') H(J,I) = 7.E11
        if(ISPEC(J).EQ.'HNO') H(J,I) = 7.E11
        ! I think jim made the below up
-       if(ISPEC(J).EQ.'HS'.OR.ISPEC(J).EQ.'HSX')        H(J,I) = 1.E5
+       if(ISPEC(J).EQ.'HS')        H(J,I) = 1.E5
        ! I think jim made the below up
-       if(ISPEC(J).EQ.'SO'.OR.ISPEC(J).EQ.'SXO')        H(J,I) = 1.9E-3
+       if(ISPEC(J).EQ.'SO')        H(J,I) = 1.9E-3
        ! updated, infinite
-       if(ISPEC(J).EQ.'SO3'.OR.ISPEC(J).EQ.'SXO3')      H(J,I) = 7.E11
-       if(ISPEC(J).EQ.'H2SO4'.OR.ISPEC(J).EQ.'H2SXO4')  H(J,I) = 7.E11
+       if(ISPEC(J).EQ.'SO3')      H(J,I) = 7.E11
+       if(ISPEC(J).EQ.'H2SO4')  H(J,I) = 7.E11
        ! I think jim made the below up
-       if(ISPEC(J).EQ.'HSO'.OR.ISPEC(J).EQ.'HSXO')      H(J,I) = 9.E3
+       if(ISPEC(J).EQ.'HSO')      H(J,I) = 9.E3
        !infinite for particle species 
-       if(ISPEC(J).EQ.'SO4AER'.OR.ISPEC(J).EQ.'SXO4AER')H(J,I) = 7.E11
+       if(ISPEC(J).EQ.'SO4AER')H(J,I) = 7.E11
        if(ISPEC(J).EQ.'HCAER') H(J,I) = 7.E11   !infinite for particle species 
        if(ISPEC(J).EQ.'HCAER2') H(J,I) = 7.E11   !infinite for particle species 
        if(ISPEC(J).EQ.'O2') H(J,I) = 1.3E-3* EXP(1500.*tfac) ! updated
@@ -129,7 +126,7 @@ c   lets play guess the units.  looks like mol/liter/atm
        if(ISPEC(J).EQ.'H2O2') H(J,I) = 8.3E4 * EXP(7400.*tfac) ! updated
        if(ISPEC(J).EQ.'H2') H(J,I) = 7.8E-4 * EXP(500.*tfac)  ! updated
        if(ISPEC(J).EQ.'CO') H(J,I) = 1.0E-3 * EXP(1300.*tfac)  ! updated
-       if(ISPEC(J).EQ.'H2CO') H(J,I) = 3.2E3 * EXP(6800.*tfac)  ! updated (note if changed update in ISOTOPE=1 loop below)
+       if(ISPEC(J).EQ.'H2CO') H(J,I) = 3.2E3 * EXP(6800.*tfac)  ! updated 
        if(ISPEC(J).EQ.'CH4') H(J,I) = 1.4E-3 * EXP(1600.*tfac)  ! updated
        if(ISPEC(J).EQ.'C2H6') H(J,I) = 1.9E-3 * EXP(2300.*tfac)  ! updated
        if(ISPEC(J).EQ.'NO') H(J,I) = 1.9E-3 * EXP(1500.*tfac)  ! updated
@@ -137,19 +134,19 @@ c   lets play guess the units.  looks like mol/liter/atm
        if(ISPEC(J).EQ.'HNO2') H(J,I) = 50. * EXP(4900.*tfac)  ! added, updated
        if(ISPEC(J).EQ.'HNO3') H(J,I) = 2.1e5 * EXP(8700.*tfac)  ! added, updated
        if(ISPEC(J).EQ.'HO2NO2') H(J,I) = 1.2e4* EXP(6900.*tfac)  ! added, updated
-       if(ISPEC(J).EQ.'H2S'.OR.ISPEC(J).EQ.'H2SX') H(J,I) = 
+       if(ISPEC(J).EQ.'H2S') H(J,I) = 
      $   0.1 * EXP(2000.*tfac) ! updated
-       if(ISPEC(J).EQ.'SO2'.OR.ISPEC(J).EQ.'SXO2') H(J,I) = 
+       if(ISPEC(J).EQ.'SO2') H(J,I) = 
      $   1.4 * EXP(2900.*tfac)  ! updated
-       if(ISPEC(J).EQ.'OCS'.OR.ISPEC(J).EQ.'OCSX') H(J,I) = 
+       if(ISPEC(J).EQ.'OCS') H(J,I) = 
      $   0.022 * EXP(2100.*tfac)  ! updated
-       if(ISPEC(J).EQ.'CH3SH'.OR.ISPEC(J).EQ.'CH3SXH') H(J,I) =
+       if(ISPEC(J).EQ.'CH3SH') H(J,I) =
      $    0.2 * EXP(2800.*tfac)  
-       if(ISPEC(J).EQ.'C2H6S'.OR.ISPEC(J).EQ.'C2H6SX') H(J,I) = 
+       if(ISPEC(J).EQ.'C2H6S') H(J,I) = 
      $    0.48 * EXP(3100.*tfac)  
-       if(ISPEC(J).EQ.'C2H6S2'.OR.ISPEC(J).EQ.'C2H6SXS') H(J,I) = 
+       if(ISPEC(J).EQ.'C2H6S2') H(J,I) = 
      $    0.96 * EXP(4000.*tfac)  
-       if(ISPEC(J).EQ.'CS2'.OR.ISPEC(J).EQ.'CSXS') H(J,I) = 
+       if(ISPEC(J).EQ.'CS2') H(J,I) = 
      $    0.055 * EXP(2800.*tfac)  
 c no info found for CS, CH3S, HCS. CO solubility is small, as is HCO, so 0's are probably OK. no info on CH3O either.
 
@@ -215,14 +212,8 @@ C     FIRST CALL
         X(LOH_) = R9(1)/HPLUS              !10
 C      print *, 'rain 4'
         
-        if (ISOTOPE.EQ.0) then
-           SO2g = USOL(LSO2,1)
-           SO2aq = H(LSO2,1)*SO2g
-        else
-           SO2g = UINERT(LSO2-Loff,1)
-c           SO2g = USOL(LSXO2,1)      !testing
-           SO2aq = H(LSXO2,1)*SO2g
-        endif
+        SO2g = USOL(LSO2,1)
+        SO2aq = H(LSO2,1)*SO2g
 
         HSO3_ = R5(1)*SO2aq/HPLUS
         SO3_2 = R7(1)*HSO3_/HPLUS
@@ -232,13 +223,10 @@ c           SO2g = USOL(LSXO2,1)      !testing
         X(LHSO3_) = HSO3_*FAC       !7
         X(LSO3_2) = SO3_2*FAC       !8
 C
-        if (ISOTOPE.EQ.0) then 
-         H2COg = USOL(LH2CO,1)
-         CH2OH2 = H(LH2CO,1)*H2COg
-        else
-         H2COg = UINERT(LH2CO-Loff,1)
-         CH2OH2 = 3.2E3 * EXP(6800.*(1./TAQ(1)-1./298.))* H2COg  !hardcoded Henry's law for H2CO here
-        endif   
+
+        H2COg = USOL(LH2CO,1)
+        CH2OH2 = H(LH2CO,1)*H2COg
+
         FHSO3_ = R8(1)*CH2OH2*X(LHSO3_)
         FAC = H2COg/(H2COg + ALPHARAIN*(CH2OH2 + FHSO3_))
         X(LH2COg) = H2COg*FAC    !2
@@ -247,19 +235,6 @@ C
 
 
    4  CONTINUE     !end skip on first call section
-
-c      print *, (XSAVE(K,1),K=1,NAQ)
-c      print *, X
-c      stop
-
-c-mc tempt
-c      do I=1,NH
-c      DO  J=1,NAQ
-c      XSAVE(J,I) = X(J)
-c      enddo
-c      enddo
-c-mc temporary      
-
 
 
 C
@@ -273,30 +248,19 @@ C ***** LOOP OVER ALTITUDE *****
 
       ALPHARAIN = WL * 1.E-9 * 6.02E23/DEN(I)
 
-      if (ISOTOPE.EQ.0) then
        if(USETD.EQ.1) then
         SO4_2 = (USOL(LH2SO4,I) + PARTICLES(I,LSO4AER-NQ))/ALPHARAIN  
        else
         SO4_2 = (USOL(LH2SO4,I) + USOL(LSO4AER,I))/ALPHARAIN  
        endif   
-      else !if ISOTOPE=1, use the major species concentrations which are stored as inert species
-       SO4_2= (UINERT(LH2SO4-Loff,I) + UINERT(LSO4AER-Loff,I))/ALPHARAIN
-      endif   
+
       SO4SAV(I) = SO4_2
       CO2aq = FCO2*DEN(I)*HCO2(I)*R*TAQ(I)
       
-      if (ISOTOPE.EQ.0) then
-       SO2g0 = USOL(LSO2,I)
-       H2COg0 = USOL(LH2CO,I)
-       HSO2 = H(LSO2,I)
-       HH2CO = H(LH2CO,I)
-      else
-       SO2g0 = UINERT(LSO2-Loff,I)
-c       SO2g0 = USOL(LSXO2,I)
-       H2COg0 = UINERT(LH2CO-Loff,I)
-       HSO2 = H(LSXO2,I)
-       HH2CO = 3.2E3 * EXP(6800.*(1./TAQ(I)-1./298.))  ! hardcoded henry's law for H2CO
-      endif   
+      SO2g0 = USOL(LSO2,I)
+      H2COg0 = USOL(LH2CO,I)
+      HSO2 = H(LSO2,I)
+      HH2CO = H(LH2CO,I)
 
 
 
@@ -350,16 +314,10 @@ C      PHASE REACTIONS)
       DO 18 J=1,NQ
   18  HEFF(J) = H(J,I) + 1.E-30
 C
-      if(ISOTOPE.EQ.0) HEFF(LH2CO) =(X(LH2COaq) + X(LH2COSO3))/X(LH2COg)
+      HEFF(LH2CO) =(X(LH2COaq) + X(LH2COSO3))/X(LH2COg)
 
-      if(ISOTOPE.EQ.0) then
-         L1=LSO2
-         L2=LH2S
-      else
-         L1=LSXO2
-         L2=LH2SX
-      endif   
-  
+      L1=LSO2
+      L2=LH2S
 
       HEFF(L1) = (X(LSO2aq) + X(LHSO3_) + X(LSO3_2)
      1  + X(LH2COSO3)) / X(LSO2g)
@@ -377,7 +335,7 @@ C   SAVE DENSITIES AND CALCULATE ENHANCEMENTS
 
 
 
-      if(ISOTOPE.EQ.0) ENHAN(LH2CO,I) = HEFF(LH2CO)/H(LH2CO,I)
+      ENHAN(LH2CO,I) = HEFF(LH2CO)/H(LH2CO,I)
       ENHAN(L1,I) = HEFF(L1)/H(L1,I)
       ENHAN(L2,I) = HEFF(L2)/H(L2,I)
 c  17  CONTINUE !EWS - not used
@@ -441,7 +399,6 @@ c-mc set rainout rates to zero above the tropopause (nh=jtrop)
       DO 11 J=1,NQ
   11  RAINGC(J,I) = 0.
 
-c      endif  !end isotope skip loop (testing reading in RAINGC from main model
 
 C
 C ***** OLD (FISHMAN AND CRUTZEN) RAINOUT RATE *****

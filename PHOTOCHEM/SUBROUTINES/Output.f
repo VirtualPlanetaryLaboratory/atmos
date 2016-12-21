@@ -23,7 +23,6 @@
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/SULBLK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/AERBLK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/RRATS.inc'
-      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/ISOBLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/MBLOK.inc'
 
       COMMON/LifeTime/TAUO2,TAUCH4,TAUSO2
@@ -82,16 +81,14 @@ C
 c      write(14, 106)
 c106  format(//1X,'S8AER MIXING RATIO'/)
 c      write(14, 180) S8AER
-      IF (N.EQ.0) RETURN
-C     
-      if(ISOTOPE.EQ.0) write(14, 107) TP(LS8AER),TL(LS8AER)
-c      if(ISOTOPE.EQ.1) write(14, 107) TP(LSXS7AER),TL(LSXS7AER)  !ISO-UNHACK 
- 
 
+      IF (N.EQ.0) RETURN
+C     EVERYTHING BELOW PRINTED AFTER FINAL TIMESTEP
      
+      write(14, 107) TP(LS8AER),TL(LS8AER)
  107  format(/5X,'TP =',1PE10.3,2X,'TL =',E10.3)
-C
-      if(ISOTOPE.EQ.0) then
+
+
       write(14, 150) O3COL   
  150  format(//1X,'OZONE COLUMN DEPTH = ',1PE11.4)
       write(19, 150) O3COL   !terse output
@@ -109,7 +106,7 @@ C
       write(14, 152) H2SCOL,SO2COL,S2COL,S4COL,S8COL
  152  format(/1X,'SULFUR COLUMN DEPTHS:  H2S =',1PE10.3,2X,'SO2 =',
      2  E10.3,2X,'S2 =',E10.3,2X,'S4 =',E10.3,2X,'S8 =',E10.3)
-      endif
+
 
 c-mab FOR THE FIRST TWO PARTICLES (ASSUMED SULPHATE AND S8 IN HARDCODING ORDER)      
       IF (NP.GT.0) THEN
@@ -245,10 +242,9 @@ c      ENDDO
       endif  !loop for particles 3 and 4
 
 
-      if (ISOTOPE.EQ.0) then
       write(14, 151) USOL(LH2O,NH)
  151  format(/1X,'FH2O AT COLD TRAP =',1PE10.3)
-      endif
+
 
 c in order to print fluxes I need to do this next bit
 c     IF(N.LT.NSTEPS) RETURN
@@ -323,19 +319,18 @@ c     enddo
 c these should be flagged for IH2=-1
 c         \phi = b*f*({1/over H_A}-{1/over H}) - b*df/dz
 c the following gives fluxes from 1 to 80 km.
-      if(ISOTOPE.EQ.0) then
-        if(PLANET.EQ.'WASP12B') then
-      do i=1,NZ-1
-       do j=1,NQ
-        fluxo(j,i) = fluxo(j,i)
+      if(PLANET.EQ.'WASP12B') then
+       do i=1,NZ-1
+        do j=1,NQ
+         fluxo(j,i) = fluxo(j,i)
      5    - bX1X2(j,i)*(usol(j,i+1) - usol(j,i))/dz(i)
      6    + bX1X2(j,i)*0.5*(usol(j,i) + usol(j,i+1))
      7       *(1./H_atm(i) - 1./scale_H(j,i))
+         enddo
        enddo
-      enddo
         
-        else
-      do i=1,NZ-1
+      else
+       do i=1,NZ-1
         fluxo(LH,i) = fluxo(LH,i)
      5    - bHN2(i)*(usol(LH,i+1) - usol(LH,i))/dz(i)
      6    + bHN2(i)*0.5*(usol(LH,i) + usol(LH,i+1))
@@ -344,9 +339,9 @@ c the following gives fluxes from 1 to 80 km.
      5    - bH2N2(i)*(usol(LH2,i+1) - usol(LH2,i))/dz(i)
      6    + bH2N2(i)*0.5*(usol(LH2,i) + usol(LH2,i+1))
      7      *(1./H_atm(i) - 1./scale_H(LH2,i))
-      enddo
-        endif
+       enddo
       endif
+
 
 C
 c 
@@ -359,7 +354,7 @@ c  but its not entirely clear that the boundary condition knows this
       CON(K) = TP(K) - TL(K) + FLOW(K) - FUP(K)
   15  CONTINUE
 C
-      if(ISOTOPE.EQ.0) then
+
 c water is not conserved.  should this be jtrop or jtrop + 1?
       FLOW(LH2O) = FLUXO(LH2O,jtrop)   ! jim had 11 hard-wired
       CON(LH2O) = TP(LH2O) - TL(LH2O) + FLOW(LH2O) - FUP(LH2O)
@@ -408,7 +403,7 @@ c-mab then only sum for species that contain H for a given layer
   974 format(1x,1PE13.6,23E10.2)
 c  I want the averages of these things
   
-      endif  !end isotope skip loop
+
 
 
       IF(N.LT.NSTEPS) RETURN
@@ -431,33 +426,27 @@ C
 c-mc
 c-mc want to write out number densities of SO2, O2,H20,CO2
 
-      if(ISOTOPE.EQ.0) then
          L1=LSO2
          L2=LS8
          if(L2.eq.0) L2=LS8AER
-      else
-         L1=LSXO2
-         L2=LSXS7
-         if(L2.eq.0) L2=LSXS7AER
-      endif
+
 
 
       DO I=1,NZ
       write(27, 224) SL(L1,I),SL(LO2,I),SL(LH2O,I),SL(LCO2,I),
      2 SL(L2,I)
       enddo
-!these are SL's so should work in the ISOTOPE calculation
+
  224  format(6(1pe10.3,2X))
 
 
 c-mc writing out final number densities to out.finalden
 
-      if(ISOTOPE.EQ.0) then
       write(42,112) (ISPEC(K),K=1,NQ)
        do I=1,nz
         write(42,114), (SL(K,I),K=1,NQ)   
        enddo
-      endif
+
 
  112  format(100(1X,A8,1X))   !ACK update if NQ ever goes > 100
  114  format(100(1pe10.3))    !ditto
@@ -481,41 +470,28 @@ c-mc
   10  CONTINUE
 C
 
-      if(ISOTOPE.EQ.0) then
       write(45,*) ZFL, FLOW(2)
-      do I=1,NZ
-       write(45, *) ZF(I),FLUXO(2,I)
-      enddo 
+       do I=1,NZ
+        write(45, *) ZF(I),FLUXO(2,I)
+       enddo 
       write(45, *) ZFT,FUP(2)
-      endif
+   
 
 
 c-mc write out total production and loss terms
 c-mc this needs to be fixed for the generic case.  should just write out all sulfur gases, I suppose.
 c-mc or nest some ifs somehow.  what a pain. for now, just hacking S8's out.  this will probably break the analysis scripts...
 
-c$$$      if (ISOTOPE.EQ.0) then
 c$$$      write(27,533) (YP(LS8,I), YL(LS8,I),YP(LH2SO4,I),
 c$$$     2    YP(LS,I),YP(LS2,I),YP(LSO4AER,I),YP(LS8AER,I),
 c$$$     3    YP(LSO2,I),YL(LSO2,I), I=1,NZ)
-c$$$      else
-c$$$      write(27,533) (YP(LSXS7,I), YL(LSXS7,I),YP(LH2SXO4,I),
-c$$$     2    YP(LSX,I),YP(LSXS,I),YP(LSXO4AER,I),YP(LSXS7AER,I),
-c$$$     3    YP(LSXO2,I),YL(LSXO2,I), I=1,NZ)
-c$$$      endif
-c$$$
-c$$$ 533  format(9(1PE9.2,2X))
-c above are origs.  below is hacked for my S8 removal
 
-      if (ISOTOPE.EQ.0) then
+c$$$ 533  format(9(1PE9.2,2X))
+c above are origs.  below is hacked for my S8 gas removal
+
       write(27,533) (YP(LH2SO4,I),
      2    YP(LS,I),YP(LS2,I),YP(LSO4AER,I),YP(LS8AER,I),
      3    YP(LSO2,I),YL(LSO2,I), I=1,NZ)
-      else
-      write(27,533) (YP(LH2SXO4,I),
-     2    YP(LSX,I),YP(LSXS,I),YP(LSXO4AER,I),YP(LSXS7AER,I),
-     3    YP(LSXO2,I),YL(LSXO2,I), I=1,NZ)
-      endif
 
  533  format(7(1PE9.2,2X))
 
@@ -523,17 +499,14 @@ c above are origs.  below is hacked for my S8 removal
 
 
 
-
 c-copying tp/tpl loop here to help with print out. checking units..
 c - find the sulfur production plots as a function of height...
-c      if(ISOTOPE.EQ.0) then
       do j=1,NZ
        write(44,534) (YP(I,J), I=1,NQ1)
       enddo
       do j=1,NZ
        write(44,534) (YL(I,J)*SL(I,J), I=1,NQ1)  !'loss' units in .prod file in 1/cm^3/s to comapre with 'production'(yp)
       enddo
-c      endif
  534  format(1P100E10.3)    !ACK - update if NQ>100
 
 c-when I use this format, IDL reads in <10^-72 as 0 which is fine by me)
@@ -607,20 +580,17 @@ C
       write(14, 145) (CON(K),K=K1,K2)
 
 c  terse output
-      if(ISOTOPE.EQ.0) then
       write(19, 110) (ISPEC(K),K=K1,K2)    ! terse
       write(19, 120) Z(1),(USOL(K,1),K=K1,K2)
       write(19, 145) (TLOSS(K),K=K1,K2)    ! terse
       write(19, 145) (FLOW(K),K=K1,K2)
       write(19, 145) (FUP(K),K=K1,K2)
-      endif
   13  CONTINUE
 
 
       write(62,*) FLOW   !write out lower boundary fluxes (not mass weighted)
 
 
-c      if(ISOTOPE.EQ.0) then  !revisit this skip  (unskipping and seeing what happens
       
 C   COMPUTE CONSERVATION OF SULFUR
 
@@ -649,7 +619,6 @@ C   COMPUTE CONSERVATION OF SULFUR
        Sloss=Sdep+Srain
        difference  = Spro - Sloss
 
-      if(ISOTOPE.EQ.0) then 
       SO4LOS = TLOSS(LH2SO4) + TLOSS(LSO4AER)   ! these are redundant when taking accounts
       S8LOS = 8.*TLOSS(LS8AER)   !TLOSS is rainout+deposition
 
@@ -659,10 +628,6 @@ C   COMPUTE CONSERVATION OF SULFUR
        ! but there is a heritage code for S8 gas phase condensation. This is only really needed for high temperatures
        ! anyway - if that is back and this is useful, might need to add 8.*TLOSS(LS8) to the above
 
-
-
-
-      endif
 
       print 177,  Sloss,Spro,SO4LOS,S8LOS,Srain, difference
       write(14, 177) Sloss,Spro,SO4LOS,S8LOS,Srain, difference
@@ -756,7 +721,6 @@ c 889  format (A8,2X,1PE10.3)
      2  ' mol/cm^2/s, a factor of ',1PE10.3, ' NEW METHOD' /)
 
 
-      if(ISOTOPE.EQ.0) then  !revisit this skip  (unskipping and seeing what happens
 
       print 932,  FLOW(LCH4), FLOW(LO2), FLOW(LCH4)/FLOW(LO2)
  932  format('CH4 flux = ',1PE12.6,'  O2 flux = ',1PE12.6,
@@ -809,7 +773,7 @@ c-mc
  273  continue
       O2minT=tempo2min                 !minimum O2 mr in troposphere
 
-      endif  !this is ending a big skip loop for the ISOTOPE code which starts at the redox computation (MOVING TARGET)
+
 
 
 
@@ -832,24 +796,15 @@ c-mc - three lines below should be cut - perhaps usable for JSO2
 
 
 !now compute photochemical production in the MIF producing regime (i.e. J_SO2_MIF)
-!I am going to hack this into the isotope code, even though it might not be necessary
-!mostly, I think I am doing this for ease in resurection old IDL analysis codes...
       do j=1,NZ
-       if(ISOTOPE.EQ.0) then  
         PROSO2MIF(j) = PSO2MIF(j) * SL(LSO2,j)
         JSO=minloc(photoreac,1,ISPEC(INT(photoreac)).eq.'SO      ')
         PROSO(j) = prates(JSO,j)*SL(LSO,j)   !assuming the existence of SO
-       else
-        PROSO2MIF(j) = PSO2MIF(j) * SL(LSXO2,j)
-        JSO=minloc(photoreac,1,ISPEC(INT(photoreac)).eq.'SXO      ')
-        PROSO(j) = prates(JSO,j)*SL(LSXO,j)   !assuming the existence of SXO
-       endif
       enddo 
 
       write(27,522) (PROSO2MIF(I),PROSO(I),I=1,NZ)
  522  format(2(1PE9.2,2X))
 
-      if(ISOTOPE.EQ.0) then
 
 !compute maximum production rate of MIF-inducing SO2 photolysis
          PROSO2MIFmax=0.0
@@ -906,7 +861,7 @@ c-mc - three lines below should be cut - perhaps usable for JSO2
 
  975  format(46(1PE10.3,1X))
 
-      endif  !ending an isotope skip loop
+
 
       write(14, 179)
  179  format(/1X,'INTEGRATED REACTION RATES'/)
@@ -989,7 +944,7 @@ C
  195  FORMAT(/4X,'Z',9X,'T',9X,'EDD',7X,'DEN',8X,'P',8X,'H2OSAT',
      2  5X,'H2O',7X,'RELH',5X,'CONDEN',4x,'H FLUX')
       ISKIP = 2
-      write(14, 200) (Z(I),T(I),EDD(I),DEN(I),P(I),H2OSAT(I),H2O(I),   !H2O(I) could be generified so it works in ISOTOPE loop
+      write(14, 200) (Z(I),T(I),EDD(I),DEN(I),P(I),H2OSAT(I),H2O(I),   
      2  RELH(I),CONDEN(I), flux_H(i), I=1,NZ,ISKIP)
  200  FORMAT(1X,1P10E10.3)
 C
@@ -1005,8 +960,7 @@ c-mab: the hardcoding in the species and expected order still remain...
  235  FORMAT(/4X,'Z',8X,'AERSOL',5X,'RPAR',6X,'WFALL',5X,'FSULF',4X,
      2  'TAUSED',4X,'TAUEDD',4X,'TAUC',6X,'H2SO4S',4X,'H2SO4',5X,
      3  'CONSO4',4X,'CONVER')
-      if(ISOTOPE.EQ.0) LP=LH2SO4
-      if(ISOTOPE.EQ.1) LP=LH2SXO4
+      LP=LH2SO4
        write(14, 240) (Z(I),AERSOL(I,J),RPAR(I,J),WFALL(I,J),FSULF(I),     !ACK - harcoded particle numbers here
      2  TAUSED(I,J),TAUEDD(I),TAUC(I,J),H2SO4S(I),USOL(LP,I),
      3  CONSO4(I),CONVER(I,J),I=1,NZ,ISKIP)
@@ -1127,7 +1081,7 @@ c Err2 is the L2 norm, which is more sensitive to major species
       print *, 'Comparison between input and output files'
       print *, 'Normalized Gross Error       L2 Norm'
       print *,ERR1, ERR2
-      if (ISOTOPE.EQ.0) write (50,*) ERR1, ERR2
+      write (50,*) ERR1, ERR2
 
 
       
