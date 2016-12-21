@@ -1,15 +1,5 @@
             PROGRAM PhotoMain
 c
-ccc test test
-c I am attempting to abtract this so we can have an Earth/Mars switch
-c I should also think about adding extra abstraction for the humidty stuff
-c
-c - this code is undergoing active development for chlorine speciesS
-c - as such it is not really the best code to be used as a base for TOTC,
-c - but such it is.
-c - it is starting from one of the more up-to-date branches of Mark's code,
-c - but doesn't have any time-dependent gear stuff in it
-
 c- at some point go through and clean up all comments
 c
 c
@@ -18,8 +8,6 @@ c - the suite of models for the whiff paper.
 c - this code could/should be modified to use a variable grid size at some point
 c - to make it faster all common blocks abstracted to DATA/INCLUDE
 
-c - re-introducing the tridiagonal...
-c - and attempting to take it away...
 
 c - g77 will no longer work as there are some F90 built-ins being used
 c see makefile for compilation syntax
@@ -433,7 +421,6 @@ C     !can go away when MSCAT does WARNING DO WE NEED THIS COMMENT
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/SULBLK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/SATBLK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
-      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/ISOBLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/comPRESS1.inc'
 
 
@@ -446,11 +433,6 @@ C                       -WARNING do we need can go away comment?
       DATA CI/9.5733223454, 25.6329561486, 21.0996530827,
      2  3.9584969228/
       DATA NUML,NUMP/NSP*0,NSP*0/
-
-C    !Isotope flag Below
-      ISOTOPE=0
-C    !use 32S (i.e. the dominant isotope)
-      ISOS=32
 
 c OPEN FILES
 

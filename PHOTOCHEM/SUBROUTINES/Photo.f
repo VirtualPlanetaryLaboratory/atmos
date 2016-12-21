@@ -313,7 +313,7 @@ c     so this is repeated once for L<1754 and L>2041A and NK(L) times for 1754<L
 
        !set up new Rayleigh scattering vectors
          do j=1,NSP
-           if (SL(j,i)/DEN(i).GE. 0.01) then  !if more than 0.1% of atmosphere, consider Rayleigh contribution
+           if (SL(j,i)/DEN(i).GE. 0.02) then  !if more than 2% of atmosphere, consider Rayleigh contribution
 
 c              if (Z(i)/1e5.eq.107.5) print *, ispec(j)
 

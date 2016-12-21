@@ -103,7 +103,6 @@ c   lets play guess the units.  looks like mol/liter/atm
        if(ISPEC(J).EQ.'S2')        H(J,I) = 0.
        if(ISPEC(J).EQ.'S4')       H(J,I) = 0.
        if(ISPEC(J).EQ.'S8')       H(J,I) = 0.
-!       if(ISPEC(J).EQ.'S8AER'.OR.ISPEC(J).EQ.'SXS7AER') H(J,I) = 0
       !infinite (CHECK THIS against PAVLOV/KEVIN)
        if(ISPEC(J).EQ.'S8AER') H(J,I) = 7.E11
        if(ISPEC(J).EQ.'HNO') H(J,I) = 7.E11

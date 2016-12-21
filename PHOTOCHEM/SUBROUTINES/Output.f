@@ -600,10 +600,10 @@ C   COMPUTE CONSERVATION OF SULFUR
 
        do i=1,nq1
           if (flow(i).le.0.0) then
-          print *, 'Sdep:   ', ISPEC(I),FLOW(I)*atomsS(i)
+c          print *, 'Sdep:   ', ISPEC(I),FLOW(I)*atomsS(i)
            Sdep=Sdep-flow(i)*atomsS(i)  
           else
-          print *, 'Sprod:  ', ISPEC(I),FLOW(I)*atomsS(i)
+c          print *, 'Sprod:  ', ISPEC(I),FLOW(I)*atomsS(i)
            Spro=Spro+flow(i)*atomsS(i)  !this knows about the ground fluxes, but not distributed fluxes
           endif   
 
@@ -647,7 +647,7 @@ C compute net model redox
       oxy_rain_new=0.0
 
       do i=1,NQ1
-         print *, ISPEC(I),redoxstate(I)
+c         print *, ISPEC(I),redoxstate(I)
          if (redoxstate(I) .GT. 0.) then
             
             !print *, ISPEC(I),FLOW(I)
@@ -670,6 +670,8 @@ c 889  format (A8,2X,1PE10.3)
 
       
 !distributed fluxes 
+!ACK - hardcoding - the below needs to be wrapped in an IF loop on the LBOUND...
+
       oxid_in_new=oxid_in_new + 2.0*distflux(LO2)  
 
       red_in_new=red_in_new + distflux(LCO) + distflux(LH2) + 

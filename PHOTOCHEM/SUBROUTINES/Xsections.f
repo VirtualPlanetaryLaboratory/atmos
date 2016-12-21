@@ -6441,8 +6441,6 @@ c      stop
       END
 
 
-       !EWS - airlev, tlev, and wc not used
-c      SUBROUTINE XS_CL2O3(nw,wl,wc,tlev,airlev,jn,sq)
        SUBROUTINE XS_CL2O3(nw,wl,jn,sq)
 *---------------------------------------------------------------------------------*
 *=  PURPOSE:                                                                     =*
@@ -6533,8 +6531,6 @@ c assuming Quantum yield is 1,
       RETURN
       END
 
-       !EWS - airlev, tlev, and wc not used
-c      SUBROUTINE XS_CL2O4(nw,wl,wc,tlev,airlev,jn,sq)
        SUBROUTINE XS_CL2O4(nw,wl,jn,sq)
 *---------------------------------------------------------------------------------*
 *=  PURPOSE:                                                                     =*

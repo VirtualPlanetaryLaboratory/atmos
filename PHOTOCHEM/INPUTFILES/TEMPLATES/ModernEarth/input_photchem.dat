@@ -1,4 +1,4 @@
-*** Set parameters for the high CO2/CH4 photochemical model ***
+*** Set parameters for the modern Earth (HCSNO) photochemical model ***
 * Write the number after the 11th space
 *2345678901Here      
 
@@ -23,7 +23,7 @@ C               ISEASON < 3)
 C     IZYO2 = TELLS WHETHER SOLAR ZENITH ANGLE VARIES WITH TIME (0 SAYS
 C             IT DOESN'T; 1 SAYS IT DOES)
 C     LGRID = 0  USE OLD JPL WAVELENGTH GRID
-C     LGRID = 1  USE MARK'S NEW HIGH RESOLUTION GRID (SEE ALSO GRID.F)
+C     LGRID = 1  USE HIGH RESOLUTION GRID (SEE ALSO GRID.F)
 C                IF LGRID=1, IO2 and INO should be set to 2
 C     IO2 = 0 FOR ALLEN AND FREDERICK O2 SCHUMANN-RUNGE COEFFICIENTS
 C         = 1 FOR EXPONENTIAL SUM FITS (FOR LOW-O2 ATMOSPHERES)
