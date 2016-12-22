@@ -49,7 +49,7 @@ S3         LL  0 0 0 3 0 0    0     0.020   0.      0.        0.      0      0. 
 O3         LL  3 0 0 0 0 0    0     0.020   0.      0.        0.      0      0.      0.
 HNO3       LL  3 1 0 0 1 0    0     0.020   0.      0.        0.      0      0.      0.
 N          LL  0 0 0 0 1 0    0     0.020   0.      0.        0.      0      -2.0e1  0.             !KG I've added N for the influx from above.  why not.  it doesn't really matter much.                
-HNO4       LL  4 1 0 0 1 0    0     0.020   0.      0.        0.      0      0.      0.
+HO2NO2     LL  4 1 0 0 1 0    0     0.020   0.      0.        0.      0      0.      0.
 NO3        LL  3 0 0 0 1 0    0     0.      0.      0.        0.      0      0.      0.
 N2O5       LL  5 0 0 0 2 0    0     0.      0.      0.        0.      0      0.      0.
 N2O        LL  1 0 0 0 2 0    0     0.      0       0.        0.      0      0.      0.

@@ -197,11 +197,11 @@ OCS2      CO        OCS       OCS               2BODY     3.00E-12    0.0       
 CO2       O1D       CO2       O                 2BODY     7.5e-11     115.                   ! JPL-11
 O3        O1D       O2        O2                2BODY     1.2e-10     0.0                    ! JPL-11
 O3        O1D       O2        O         O       2BODY     1.2e-10     0.0                    ! JPL-11
-HO2       NO2       HNO4                        3BODY     2.0D-31     2.9D-12    3.40  1.10  ! JPL-11
-OH        HNO4      H2O       O2        NO2     2BODY     1.3E-12     380.                   ! JPL-11
-O         HNO4      NO2       O2        OH      2BODY     7.8e-11     -3400.                 ! JPL-11
-HNO4      HV        HO2       NO2               PHOTO
-HNO4      H         HNO3      OH                2BODY     2.4e-14     0.0                    ! NIST 2012
+HO2       NO2       HO2NO2                      3BODY     2.0D-31     2.9D-12    3.40  1.10  ! JPL-11
+OH        HO2NO2    H2O       O2        NO2     2BODY     1.3E-12     380.                   ! JPL-11
+O         HO2NO2    NO2       O2        OH      2BODY     7.8e-11     -3400.                 ! JPL-11
+HO2NO2    HV        HO2       NO2               PHOTO
+HO2NO2    H         HNO3      OH                2BODY     2.4e-14     0.0                    ! NIST 2012
 O         NO3       O2        NO2               2BODY     1.00E-11    0.                     ! JPL-11
 HO2       NO3       OH        NO2       O2      2BODY     3.50E-12    0.                     ! JPL-11, 298 K
 NO        NO3       NO2       NO2               2BODY     1.50E-11    170.                   ! JPL-11
@@ -324,7 +324,7 @@ CLO       CH3O2     CH3OCL    O2                2BODY     1.65E-12    -115.     
 CLO       CH3O2     CLOO      CH3O              2BODY     1.65E-12    -115.                  !JPL-11 (products uncertain splitting equally with other branch)
 OH        CH3OCL    HOCL      CH3O              2BODY     2.50E-12    -370.                  !JPL-11 product assumed as in yuk 174
 CH3OCL    HV        CH3O      CL                PHOTO
-CL        HNO4      CLO       HNO3              2BODY     1.0E-13     0.0                    !JPL-11 Upper limit (products assumed)
+CL        HO2NO2    CLO       HNO3              2BODY     1.0E-13     0.0                    !JPL-11 Upper limit (products assumed)
 O         CL2O      CLO       CLO               2BODY     2.7E-11     -530.                  !IUPAC-07  yuk-147
 CL        CL2O      CL2       CLO               2BODY     6.2E-11     130.                   !IUPAC-07  yuk-200
 NO        CL2O2     CL2O      NO2               2BODY     1.0E-15     0.0                    !

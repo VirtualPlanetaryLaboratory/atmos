@@ -453,10 +453,11 @@ c compute photlysis rates for each reaction at each height (summed over waveleng
       do j=1,kj
        do i=1,nz
           prates(j,i) = prates(j,i) + FLX*sq(j,i,L)*S(i)
-C      IF(J.EQ.10) THEN
-C      IF(I.EQ.1)print*,"J,wav,Reaction No.",J,L,wav(L),photonums(j)
-C      print*,'L,I,prates,FLX,sq,S',L,I,prates(j,i),FLX,sq(j,i,L),S(i) !!!PRINT ADD !!!
-C      ENDIF 
+c       IF(J.EQ.60) THEN
+c        IF(I.EQ.1)print*,"J,wav,Reaction No.",J,L,wav(L),photonums(j)
+c         print*,'WAV,Z,prates,FLX,sq,S',wav(L),Z(I)/1e5,prates(j,i),
+c     $           FLX,sq(j,i,L),S(i) !!!PRINT ADD !!!
+c       ENDIF 
        enddo
       enddo
 
@@ -514,8 +515,7 @@ C            frederick and allen method (effective cross sections)
 
 !print out on last timestep
       if (N .NE. 0 .AND. K.EQ.KN) then !N.NE.0 only on last timestep,  KN=1 or 1-4 for L<17
-c        TAUR = SIGR*TTOT(1)
-        TAUR = SIGR(1)*TTOT(1)  !ack temporary way of indicating total rayleigh optical depth. should be sum
+        TAUR = SIGR(1)*TTOT(1)  !ack simple way of indicating total rayleigh optical depth. should be sum
         DELWAV = WAVU(L) - WAVL(L)
         EFLUX = 1.E6*HC*FLX/(WAV(L)*DELWAV*AGL)  !convert to W/m^2
         GFLUX = EFLUX*S(1)  !ground flux = TOA flux*optical path
@@ -524,11 +524,11 @@ c        TAUR = SIGR*TTOT(1)
       endif
 
 
+
+
+
 C ***** ***** ***** END WAVELENGTH LOOP ***** ***** *****
   19  continue
-
-c      print *, 'stopping after wavelength loop in PHOTO'
-c      stop
 
 
 
