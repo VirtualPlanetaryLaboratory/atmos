@@ -23,7 +23,6 @@
 !----------------------------Comments Correspond to line below---------------------------!
       !T dependent - also unexplained factor of 1000. (but not using T-dependent data right now)
       IF(species.eq.'HNO3    ') CALL XS_HNO3(nw,wavl,T,j,sq) 
-      ! the 0 is also an ISOHACK 
       IF(species.eq.'HO2     ') CALL XS_HO2(nw,wavl,wav,j,sq,Ja)
       !T-dependent (not in use)   
       IF(species.eq.'NO2     ') CALL XS_NO2(nw,wavl,T,j,sq)
@@ -129,12 +128,9 @@
       IF(species.eq.'CH3CHO  ') CALL XS_CH3CHO(nw,wavl,j,sq)  !shawn used C2H4 rate here with 0.57/0.02/0.05 quantum yields
       IF(species.eq.'C3H6    ') CALL XS_C3H6(nw,wavl,j,sq)
       IF(species.eq.'C2H5CHO ') CALL XS_simple(species,nw,wavl,j,sq)
-
-!ISOCLEAN - leaving these as a final step, just in case the existing calls are messed up...
-
-      IF(species.eq.'C3H3') CALL XS_simple(species,nw,wavl,j,sq)    !shawn used C2H4 rate here (check this xsection)
-      IF(species.eq.'CH3C2H') CALL XS_CH3C2H(nw,wavl,j,sq)
-      IF(species.eq.'CH2CCH2') CALL XS_CH2CCH2(nw,wavl,j,sq)
+      IF(species.eq.'C3H3    ') CALL XS_simple(species,nw,wavl,j,sq)    !shawn used C2H4 rate here (check this xsection)
+      IF(species.eq.'CH3C2H  ') CALL XS_CH3C2H(nw,wavl,j,sq)
+      IF(species.eq.'CH2CCH2 ') CALL XS_CH2CCH2(nw,wavl,j,sq)
 
 c these are just here to remind us that these XS files exist
 c       CALL XS_CL2O3(nw,wavl,wav,T,DEN,JCL2O3,sq)  !returns CLO + CLOO  (branch to CLO3??)  
