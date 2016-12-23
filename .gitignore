@@ -25,11 +25,7 @@ PHOTOCHEM/INPUTFILES/species.dat
 PHOTOCHEM/INPUTFILES/input_photochem.dat
 PHOTOCHEM/INPUTFILES/PLANET.dat
 PHOTOCHEM/INPUTFILES/input_photchem.dat
-COUPLE/time_frak_photo.out
-COUPLE/mixing_ratios.dat
-COUPLE/fromPhoto2Clima.dat
-COUPLE/coupling_params.out
-COUPLE/hcaer.photoout.out
+COUPLE/*
 photochem_smart/atm/tag.atm
 photochem_smart/photchem/photfile.pt
 
