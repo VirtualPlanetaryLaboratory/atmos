@@ -1020,14 +1020,6 @@ C           OK for one character as this should always be <10
        ENDIF
       enddo
 
-C   EWS - there was an error in this loop fixed 8/12/2015
-      DO K=1,LR
-         DO I=1,NZ
-C   EWS - fixed an error here where USOL=1.e-30 instead of USOL(K,I)=1.e-30
-           IF(USOL(K,I).lt.1.e-30) USOL(K,I)=1.e-30
-         END DO
-      END DO
-
 C   This final one is CO2 number density
       read(17,881) (T(i),EDD(i),DEN(i),O3(i), SL(LCO2,i),i=1,nz)
 C-SL(NSP-1) will be the density of the final short-lived species
