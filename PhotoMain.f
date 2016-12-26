@@ -1228,8 +1228,8 @@ c      enddo
 
 c-mab: Note: Loop below is temporary....
       IF (PLANET.EQ.'WASP12B') THEN
-	CALL RATESWASP12B
-        PRINT*, "CALLING RATESWASP12B..."
+	CALL RATESHJS
+        PRINT*, "CALLING RATESHJS..."
       ELSE
         CALL RATES
         PRINT*, "CALLING RATES..."
