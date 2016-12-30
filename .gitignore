@@ -28,6 +28,16 @@ PHOTOCHEM/INPUTFILES/input_photchem.dat
 COUPLE/*
 photochem_smart/atm/tag.atm
 photochem_smart/photchem/photfile.pt
+CLIMA/IO/TempOut.dat
+CLIMA/IO/TempIn.dat
+CLIMA/IO/clima_allout.tab
+CLIMA/IO/clima_last.tab
+CLIMA/IO/SolarHeating.tab
+CLIMA/IO/IR_wavelength_grid.tab
+CLIMA/IO/FTIR.dat
+CLIMA/IO/FTSO.dat
+CLIMA/IO/input_clima.dat
+
 
 # Fortran detritus #
 ####################
@@ -49,8 +59,8 @@ photochem_smart/photchem/photfile.pt
 */*.par
 */*/*.par
 
-#junk emacs files#
-##################
+#emacs autosave files#
+######################
 **/*~
 **/*#
 
