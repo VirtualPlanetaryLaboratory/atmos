@@ -339,16 +339,15 @@ c         41        DIRDATA/soltotal.DAT
    
 C   OUTPUT FILES
 c-as Next file has the same structure as TempIn.dat, and should be copied 
-c-as to TempIn.dat in order to start from the last solution
+c-as to TempIn.dat in order to start from the last solution, if IUP=0
       OPEN (unit=12,file= DIRINOUT//'/TempOut.dat') 
-c-as  This file is the output for the photochemical model
-c    File formerly called photo_input.dat
-      OPEN(unit=116,file= 'COUPLE/fromClima2Photo.dat')    ! Uncommented this because it is used in coupling
+      OPEN(unit=116,file= 'COUPLE/fromClima2Photo.dat')   
 
       OPEN(UNIT=98,FILE= DIRINOUT//'/clima_allout.tab')
-      OPEN(UNIT=97,FILE= DIRINOUT//'/clima_last.tab')
       OPEN(UNIT=96,FILE= DIRINOUT//'/SolarHeating.tab')
+      OPEN(UNIT=97,FILE= DIRINOUT//'/clima_last.tab')
       OPEN(UNIT=80,FILE= DIRINOUT//'/IR_wavelength_grid.tab')
+
       
 c======================================================
 c             VARIABLE INPUT PARAMETERS

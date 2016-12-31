@@ -101,12 +101,12 @@ C   2452, 1976)
 
       IF (NP.GT.O) THEN !REMOVE THE PARTICLE STUFF, YET AGAIN....
 C   Particle 1 is sulfate, 2 is S8, 3 is HCAER
-       DO K=1,NP
+       do K=1,NP
         W0P(K) = 0.0
         IF (K.LT.3) W0P(K) = 1.
         IF (K.EQ.2.AND.WAV.LE.3500.) W0P(K) = 0.5 !ACK hardcoded grid
  !      print*, 'K,W0P=', K,W0P
-       ENDDO    
+       enddo    
 !here, Kevin uses a formula to compute WOPS and QEXT (fom G0=0.8 and WOP)
 
       		DO  J=1,NP
@@ -142,63 +142,65 @@ C-MC Here, we are including correct value of Qext and W0P for hydrocarbons
 C   Calculate W0 and G by averaging over Rayleigh and Mie scatterers.  
 C   (scattering due to gases vs. particles)
 C   Avoid letting W0 equal exactly 1.
-      DO  N=1,NZ
-      !TAU is total extinction (Gas + Rayleigh + Particle)
-      TAU(N)=TAUG(N) + TAUP(N) 
-      !w0 = total scattering/total extinction
-      W0(N) = (TAUSG(N) + TAUSP(N))/TAU(N)  
-      W0(N) = AMIN1(W0(N), 0.99999) 
+      do  N=1,NZ
+       !TAU is total extinction (Gas + Rayleigh + Particle)
+       TAU(N)=TAUG(N) + TAUP(N) 
+       !w0 = total scattering/total extinction
+       W0(N) = (TAUSG(N) + TAUSP(N))/TAU(N)  
+       W0(N) = AMIN1(W0(N), 0.99999) 
 c-mab: Was "0.999" before - extra 99s needed for WASP12B convergence
 
-      !GFT is still bottom to top, so needs a switch
-      I= NZP1 - N  
+       !GFT is still bottom to top, so needs a switch
+       I= NZP1 - N  
 
-      GPnew=0.0
-      IF (NP.GT.O) THEN !REMOVE THE PARTICLE STUFF, YET AGAIN....
-      do k=1,np
-      !asymmetry factors weighted by particle scattering/total scattering
-      GPnew=GPnew + GFT(LL,I,K)*TAUSCAT_PART(K,I)/(TAUSP(N) + TAUSG(N)) 
-      enddo  
+       GPnew=0.0
+       IF (NP.GT.O) THEN !REMOVE THE PARTICLE STUFF, YET AGAIN....
+        do k=1,np
+       !asymmetry factors weighted by particle scattering/total scattering
+         GPnew=GPnew+GFT(LL,I,K)*TAUSCAT_PART(K,I)/(TAUSP(N) + TAUSG(N)) 
+        enddo  
  
-      !dont let assymetry factor get larger than 1
-      	GT(N) = amin1(Gpnew,0.99999)
-      ELSE
+        !dont let assymetry factor get larger than 1
+        GT(N) = amin1(Gpnew,0.99999)
+       ELSE
       	GT(N) = 0.0   
-      ENDIF 
-
+       ENDIF 
       enddo
 
 
 C   Delta-Eddington scaling
 C-AP I used approximation from Joseph et al. 1976
-      DO 24 N=1,NZ
-      FMT(N) = GT(N)*GT(N) 
-      TAU(N) = TAU(N)*(1. - W0(N)*FMT(N))
-      W0(N) = W0(N)*(1. - FMT(N))/(1. - W0(N)*FMT(N))
-  24  GT(N) = GT(N)/(1. + GT(N))
+      do N=1,NZ
+       FMT(N) = GT(N)*GT(N) 
+       TAU(N) = TAU(N)*(1. - W0(N)*FMT(N))
+       W0(N) = W0(N)*(1. - FMT(N))/(1. - W0(N)*FMT(N))
+       GT(N) = GT(N)/(1. + GT(N))
+      enddo
+
 C-AP**************************************************
 C
 C   Calculate the gamma's, lambda's, and e's
-      DO 2 N=1,NZ
-C     GAM1(N) = (7. - W0(N)*(4.+3.*GT(N)))/4.
-C     GAM2(N) = - (1. - W0(N)*(4.-3.*GT(N)))/4.
-C     GAM3(N) = (2. - 3.*GT(N)*U0)/4.
-C   (Eddington values above; quadrature values below)
+      do N=1,NZ
+C      GAM1(N) = (7. - W0(N)*(4.+3.*GT(N)))/4.
+C      GAM2(N) = - (1. - W0(N)*(4.-3.*GT(N)))/4.
+C      GAM3(N) = (2. - 3.*GT(N)*U0)/4.
+C      (Eddington values above; quadrature values below)
 C
-      GAM1(N) = SQ3*(2. - W0(N)*(1.+GT(N)))/2.
-      GAM2(N) = SQ3*W0(N)*(1.-GT(N))/2.
-      GAM3(N) = (1. - SQ3*GT(N)*U0)/2.
-      IF(NP.EQ.0)GAM3(N) = (1. - SQ3*U0)/2.
-      GAM4(N) = 1. - GAM3(N)
+       GAM1(N) = SQ3*(2. - W0(N)*(1.+GT(N)))/2.
+       GAM2(N) = SQ3*W0(N)*(1.-GT(N))/2.
+       GAM3(N) = (1. - SQ3*GT(N)*U0)/2.
+       IF(NP.EQ.0)GAM3(N) = (1. - SQ3*U0)/2.
+       GAM4(N) = 1. - GAM3(N)
 
-      ALAM(N) = SQRT(GAM1(N)*GAM1(N) - GAM2(N)*GAM2(N))
-      CGAM(N) = (GAM1(N) - ALAM(N))/GAM2(N)
-      EMLT = EXP(-ALAM(N)*TAU(N))
+       ALAM(N) = SQRT(GAM1(N)*GAM1(N) - GAM2(N)*GAM2(N))
+       CGAM(N) = (GAM1(N) - ALAM(N))/GAM2(N)
+       EMLT = EXP(-ALAM(N)*TAU(N))
 
-      E1(N) = 1. + CGAM(N)*EMLT
-      E2(N) = 1. - CGAM(N)*EMLT
-      E3(N) = CGAM(N) + EMLT
-   2  E4(N) = CGAM(N) - EMLT
+       E1(N) = 1. + CGAM(N)*EMLT
+       E2(N) = 1. - CGAM(N)*EMLT
+       E3(N) = CGAM(N) + EMLT
+       E4(N) = CGAM(N) - EMLT
+      enddo
 
 C   Calculate A, B, and D, i.e. the coefficients of the tridiagonal matrix 
 C   Top of atmosphere
@@ -207,19 +209,19 @@ C   Top of atmosphere
       D(1) = -E2(1)
 
 C   Odd coefficients
-      DO 3 N=1,NZM1
-      L = 2*N + 1
-      A(L) = E2(N)*E3(N) - E4(N)*E1(N)
-      B(L) = E1(N)*E1(N+1) - E3(N)*E3(N+1)
-   3  D(L) = E3(N)*E4(N+1) - E1(N)*E2(N+1)
-
+      do N=1,NZM1
+       L = 2*N + 1
+       A(L) = E2(N)*E3(N) - E4(N)*E1(N)
+       B(L) = E1(N)*E1(N+1) - E3(N)*E3(N+1)
+       D(L) = E3(N)*E4(N+1) - E1(N)*E2(N+1)
+      enddo
 C   Even coefficients
-      DO 4 N=1,NZM1
-      L = 2*N
-      A(L) = E2(N+1)*E1(N) - E3(N)*E4(N+1)
-      B(L) = E2(N)*E2(N+1) - E4(N)*E4(N+1)
-   4  D(L) = E1(N+1)*E4(N+1) - E2(N+1)*E3(N+1)
-
+      do  N=1,NZM1
+       L = 2*N
+       A(L) = E2(N+1)*E1(N) - E3(N)*E4(N+1)
+       B(L) = E2(N)*E2(N+1) - E4(N)*E4(N+1)
+       D(L) = E1(N+1)*E4(N+1) - E2(N+1)*E3(N+1)
+      enddo
 C   Bottom of atmosphere
       A(NZ2) = E1(NZ) - ALB*E3(NZ)
       B(NZ2) = E2(NZ) - ALB*E4(NZ)
@@ -228,65 +230,72 @@ C   Bottom of atmosphere
 C   Now, set up the RHS of the equation:
 C   TAUCTSTR(N) is the optical depth above layer N
       TAUCTSTR(1) = 0.
-      DO 5 N=2,NZP1
-   5  TAUCTSTR(N) = TAUCTSTR(N-1) + TAU(N-1)
+      do N=2,NZP1
+       TAUCTSTR(N) = TAUCTSTR(N-1) + TAU(N-1)
+      enddo
+
 C On last call,
 C Print out TAUCTSTR(N), TAU(N), W0(N), GT(N), TAUSG(N), TAUSP(N).
 C Also print TAUC at the ground for all wavelengths.
+c-mc commenting out the loop below as the LUN's 20 and 22 do not 
+c-   have corresponding open statements so are just being left around
+c-   as FORT files.  If you want these to come back, make it so.
 
-      IF(NN.EQ.1 .AND. IKN.EQ.1) THEN
-      !ACK - check LUN
-      WRITE(22,114) WAV,TAUCTSTR(NZP1)   
- 114  FORMAT(1X,F6.1,2X,1PE10.3)
+
+c      IF(NN.EQ.1 .AND. IKN.EQ.1) THEN
+c      WRITE(22,114) WAV,TAUCTSTR(NZP1)
+c 114  FORMAT(1X,F6.1,2X,1PE10.3)
       !ACK - what are these hardcoded wavelengths???
-      IF (WAV.EQ.1860.5 .OR. WAV.EQ.2010. .OR. WAV.EQ.2116.5 .OR.  
-     2    WAV.EQ.2211. .OR. WAV.EQ.2312.5 .OR. WAV.EQ.2516. .OR.
-     3    WAV.EQ.3007.5 .OR. WAV.EQ.3900. .OR. WAV.EQ.4500.) THEN
-      !ACK - check LUN
-      WRITE(20,106)WAV,U0,ALB    
- 106  FORMAT('# WAV = ',F6.1,2X,'U0 = ',F6.4,2X,'Rsfc = ',F5.3,
-     2   /'# TWOSTR: TAUCTSTR(N) is the optical depth above layer N',
-     3   /'#  Z',4X,'TAUCTSTR(N)',4X,'TAU(N)',5X,'W0(N)',6X,'G(N)',6X,
-     4   'TAUSG(N)',3X,'TAUSP(N)',3X,'N')
-      DO 113 N=1,NZ
-      I = NZP1 - N
-      !ACK - check LUN
-      WRITE(20,107) I,TAUCTSTR(N),TAU(N),W0(N),GT(N),TAUSG(N),TAUSP(N),N
- 107  FORMAT(1X,I3,1P6E11.3,1X,I3)
- 113  CONTINUE
-      !ACK - check LUN
-      WRITE(20,105)TAUCTSTR(NZP1)   
- 105  FORMAT('#  0',1PE11.3)
-      ENDIF
-      ENDIF
+c      IF (WAV.EQ.1860.5 .OR. WAV.EQ.2010. .OR. WAV.EQ.2116.5 .OR.  
+c     2    WAV.EQ.2211. .OR. WAV.EQ.2312.5 .OR. WAV.EQ.2516. .OR.
+c     3    WAV.EQ.3007.5 .OR. WAV.EQ.3900. .OR. WAV.EQ.4500.) THEN
+c      WRITE(20,106)WAV,U0,ALB 
+c 106  FORMAT('# WAV = ',F6.1,2X,'U0 = ',F6.4,2X,'Rsfc = ',F5.3,
+c     2   /'# TWOSTR: TAUCTSTR(N) is the optical depth above layer N',
+c     3   /'#  Z',4X,'TAUCTSTR(N)',4X,'TAU(N)',5X,'W0(N)',6X,'G(N)',6X,
+c     4   'TAUSG(N)',3X,'TAUSP(N)',3X,'N')
+c      DO N=1,NZ
+c      I = NZP1 - N
+c      WRITE(20,107) I,TAUCTSTR(N),TAU(N),W0(N),GT(N),TAUSG(N),TAUSP(N),N !note this LUN doesn't have an open
+c 107  FORMAT(1X,I3,1P6E11.3,1X,I3)
+c      ENDDO
+c      WRITE(20,105)TAUCTSTR(NZP1) !note this LUN doesn't have an open   
+c 105  FORMAT('#  0',1PE11.3)
+c      ENDIF
+c      ENDIF
 
 C   DIRECT(N) is the direct solar flux at the top of layer N.  Values
 C   are normalized to unity.  DIRECT(NZP1) is the direct flux at the ground.
       DIRECT(1) = U0
-      DO 6 N=1,NZ
-      ET0 = EXP(-TAUCTSTR(N)/U0)
-      ETB = ET0 * EXP(-TAU(N)/U0)
-      DIRECT(N+1) = ETB*U0
-      DENOM = ALAM(N)*ALAM(N) - U0M2
-      FACP = W0(N) * ((GAM1(N)-U0M)*GAM3(N) + GAM4(N)*GAM2(N))
-      FACM = W0(N) * ((GAM1(N)+U0M)*GAM4(N) + GAM2(N)*GAM3(N))
+      do N=1,NZ
+       ET0 = EXP(-TAUCTSTR(N)/U0)
+       ETB = ET0 * EXP(-TAU(N)/U0)
+       DIRECT(N+1) = ETB*U0
+       DENOM = ALAM(N)*ALAM(N) - U0M2
+       FACP = W0(N) * ((GAM1(N)-U0M)*GAM3(N) + GAM4(N)*GAM2(N))
+       FACM = W0(N) * ((GAM1(N)+U0M)*GAM4(N) + GAM2(N)*GAM3(N))
 
-      CP0(N) = ET0*FACP/DENOM
-      CPB(N) = ETB*FACP/DENOM
-      CM0(N) = ET0*FACM/DENOM
-   6  CMB(N) = ETB*FACM/DENOM
+       CP0(N) = ET0*FACP/DENOM
+       CPB(N) = ETB*FACP/DENOM
+       CM0(N) = ET0*FACM/DENOM
+       CMB(N) = ETB*FACM/DENOM
+      enddo
+
       SSFC = ALB*DIRECT(NZP1)
 
 C   Odd coefficients
       E(1) = - CM0(1)
-      DO 7 N=1,NZM1
-      L = 2*N + 1
-   7  E(L) = (CP0(N+1)-CPB(N))*E3(N) + (CMB(N)-CM0(N+1))*E1(N)
+      do N=1,NZM1
+       L = 2*N + 1
+       E(L) = (CP0(N+1)-CPB(N))*E3(N) + (CMB(N)-CM0(N+1))*E1(N)
+      enddo
 
 C   Even coefficients
-      DO 8 N=1,NZM1
-      L = 2*N
-   8  E(L) = (CP0(N+1)-CPB(N))*E2(N+1) - (CM0(N+1)-CMB(N))*E4(N+1)
+      do N=1,NZM1
+       L = 2*N
+       E(L) = (CP0(N+1)-CPB(N))*E2(N+1) - (CM0(N+1)-CMB(N))*E4(N+1)
+      enddo
+
       E(NZ2) = SSFC - CPB(NZ) + ALB*CMB(NZ)
 
 C   Call the tridiagonal solver (from LINPACK).  E is the RHS of the matrix
@@ -295,47 +304,52 @@ C   equation on input and is the solution vector Y on output
       IF (NFLAG .NE. 0) PRINT 100, NFLAG
  100  FORMAT(/1X,'Tridiagonal solver failed in TWOSTR, NFLAG =',I4)
 
-      DO 9 N=1,NZ
-      L = 2*N
-      L1 = L-1
-      Y1(N) = E(L1)
-   9  Y2(N) = E(L)
-
+      do N=1,NZ
+       L = 2*N
+       L1 = L-1
+       Y1(N) = E(L1)
+       Y2(N) = E(L)
+      enddo
 C   Calculate the mean intensities, AMEAN(N), at the boundaries between
 C   the layers.  AMEAN(N) is the intensity at the top of layer N.
       AMEAN(1) = U1M * (Y1(1)*E3(1) - Y2(1)*E4(1) + CP0(1)) + 1.
-      DO 10 N=1,NZ
-  10  AMEAN(N+1) = U1M * (Y1(N)*(E1(N)+E3(N)) + Y2(N)*(E2(N)+E4(N)) 
-     1  + CPB(N) + CMB(N)) + DIRECT(N+1)/U0
+
+      do N=1,NZ
+       AMEAN(N+1) = U1M * (Y1(N)*(E1(N)+E3(N)) + Y2(N)*(E2(N)+E4(N)) 
+     &              + CPB(N) + CMB(N)) + DIRECT(N+1)/U0
+      enddo
 
 C   Reset any AMEAN values that may go negative.  Check error file
 C   to be sure this only happens near the ground where AMEAN ~ 0.
-      DO 12 N=1,NZP1 
-      IF(AMEAN(N).LT.0.0)THEN
-         !ACK - check LUN
-         WRITE(13,103) WAV,N,AMEAN(N)   
- 103     FORMAT('WAVE =',F6.1,' AMEAN(',I3,')=',1PE11.3)
-         AMEAN(N) = ABS(AMEAN(N))
-      ENDIF
-  12  CONTINUE
+c-mc - commenting this out for now as this lun has vanished
+c-mc but perhaps the below should be monitored within the loop and
+c-mc report to the user if a fail condition is met?
+
+c      do N=1,NZP1 
+c       IF(AMEAN(N).LT.0.0)THEN
+c         WRITE(13,103) WAV,N,AMEAN(N)   
+c 103     FORMAT('WAVE =',F6.1,' AMEAN(',I3,')=',1PE11.3)
+c         AMEAN(N) = ABS(AMEAN(N))
+c       ENDIF
+c      enddo
 
 C  Calculate upward and downward fluxes.
  
       FUP(1) = ((Y1(1)*E3(1) - Y2(1)*E4(1)) + CP0(1))
       FDN(1) = DIRECT(1)
-      DO 110 N=1,NZ
+      do N=1,NZ
          FUP(N+1) = (Y1(N)*E1(N) + Y2(N)*E2(N)
      &     + CPB(N))
          FDN(N+1) = (Y1(N)*E3(N) + Y2(N)*E4(N)
      &     + CMB(N)) + DIRECT(N+1)
- 110  CONTINUE
+      enddo
 
 C   Convert back to main program grid.  S(I) is the mean intensity at the
 C   midpoint of layer I.
-      DO 11 I=1,NZ
-      N = NZP1 - I
-  11  S(I) = SQRT(AMEAN(N)*AMEAN(N+1))
-
+      do I=1,NZ
+       N = NZP1 - I
+       S(I) = SQRT(AMEAN(N)*AMEAN(N+1))
+      enddo
 C  Print out the results at a few wavelengths
 
       IF(NN.EQ.1 .AND. IKN.EQ.1) THEN

@@ -688,34 +688,6 @@ c        endif
 
  1155 CONTINUE                   !**END WAVELENGTH LOOP**
 
-C   CONVERT FREQUENCIES TO UNITS OF 1/SEC AND COMPUTE WEIGHTING FACTORS
-c-jdh commented to include this in Clima.f
-      IF(NST.eq.1) THEN
-c      DO  N=1,NF
-c       AV(N) = C*AV(N)
-c      ENDDO
-c      W(1) = AV(1)
-c      DO N1=2,NF
-c        W(N1) = AV(N1) - AV(N1-1)
-c      ENDDO
-C
-C   CENTER FREQUENCIES IN MIDDLE OF INTERVALS AND COMPUTE WAVELENGTHS
-c  
-c      SAV = 0.
-c       DO N3=1,NF
-c        AVOLD(N3) = AV(N3)/C
-c        SAV2 = AV(N3)
-c        AV(N3) = 0.5*(AV(N3) + SAV)
-c        ALAM(N3) = 3.E14/AV(N3)
-c        SAV = SAV2
-c       ENDDO
-       WRITE(96,150)
- 150   FORMAT(/1X,"WAVELENGTHS (U)"/)
-c       WRITE(96,151) ALAM
-       WRITE(96,151) LAM
- 151   FORMAT(1X,10F6.1)
-       ENDIF
-
         IF (LAST .EQ. 1) THEN       
         do k=1,5
          istart = (k-1)*9 + 1
