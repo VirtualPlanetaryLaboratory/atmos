@@ -298,8 +298,6 @@ c-mc zero out Rayleigh scattering vectors:
        enddo
       enddo
 
-
-
 C   LOOP OVER K'S AT LOW O2 LEVELS (this is a long loop)
 c     note that 19 is also target for loop over L
 c     so this is repeated once for L<1754 and L>2041A and NK(L) times for 1754<L<2041
@@ -313,7 +311,7 @@ c     so this is repeated once for L<1754 and L>2041A and NK(L) times for 1754<L
 
        !set up new Rayleigh scattering vectors
          do j=1,NSP
-           if (SL(j,i)/DEN(i).GE. 0.02) then  !if more than 2% of atmosphere, consider Rayleigh contribution
+           if (SL(j,i)/DEN(i).GE. 0.01) then  !if more than 1% of atmosphere, consider Rayleigh contribution 
 
 c              if (Z(i)/1e5.eq.107.5) print *, ispec(j)
 
@@ -329,14 +327,28 @@ c              if (Z(i)/1e5.eq.107.5) print *, ispec(j)
                  ncomp(i)=ncomp(i)+1
                  volmix(ncomp(i),i)=SL(j,i)/DEN(i)
                  icomp(ncomp(i),i)=4
+c-mab: Added H2O 12/2016 as the 5th item. H2 is now 6 and He 7. Try this?
+c-mab: See "Rayleigh" routine for data reference...
+              else if (ISPEC(j).eq.'H2O') then
+                 ncomp(i)=ncomp(i)+1
+                 volmix(ncomp(i),i)=SL(j,i)/DEN(i)
+                 icomp(ncomp(i),i)=5
               else if (ISPEC(j).eq.'H2') then
                  ncomp(i)=ncomp(i)+1
-                 volmix(ncomp(i),i) = FH2 !should matter for gas giants only
-                 icomp(ncomp(i),i)=5
+                 volmix(ncomp(i),i) = USOL(LH2,1) !should matter for gas giants only
+c-mab: Rayleigh scattering routines typically assume the major species abundance don't change much vertically.
+c-mab: Thus ignoring any H2 loss due to photolysis and other reactions that are prevalent at high alt. for HJs.
+c-mab: Using fixedmr value for H2 allows for fastest convergence without qualitatively changing profiles.
+                 icomp(ncomp(i),i)=6
               else if (ISPEC(j).eq.'HE') then
                  ncomp(i)=ncomp(i)+1
                  volmix(ncomp(i),i) = FHE !should matter for gas giants only
-                 icomp(ncomp(i),i)=6
+                 icomp(ncomp(i),i)=7
+c-mab/mc: No scattering contributions for O, N, H, C or Cl!
+              else if (ISPEC(j).eq.'O'.or.ISPEC(J).eq.'H'.or.
+     $          ISPEC(J).eq.'N'.or.ISPEC(J).eq.'S'.or.
+     $          ISPEC(J).eq.'C'.or.ISPEC(J).eq.'Cl') then
+c-mab: Do nothing! Atoms don't scatter! 
               else
                  if(FH2.LT.0.5) then
 c-mab assuming "rest" to be Earth air is not valid for giant planets!
@@ -345,14 +357,13 @@ c-mab this H2 fraction-based loop is a temporary fix--don't want to hardcode ign
                   volmix(ncomp(i),i)=SL(j,i)/DEN(i)
                   icomp(ncomp(i),i)=1  
 !using Earth 'air' for the rocky planets - better than nothing? hard to know...
-                 endif
                if (wavl(L).eq.2273) then
                   if (tempcount.eq.0) then
                     print *, ISPEC(j),'at ', Z(i)/1e5, 'km is major
      $  species without Rayleigh data - using AIR', SL(j,i)/DEN(i)
                     tempcount=1
                   endif
-
+                 endif
                endif
               endif
 
@@ -379,21 +390,6 @@ c             endif
         call RAYLEIGH(wavl(l)*1e-4,ncomp,icomp,volmix,SIGR)
 
        endif   !end case for Rayleigh loop
-
-!!!!       
-c-mab: The adjustment below is required to enable WASP12B convergence...
-c-mab: We know this as the difference between the RAYLEIGH() in 
-c-mab: Kopparapu et. al 2012 version and the one here was a factor of (1e-16) 
-c-mab: exact.... so I believe a wavelength^4 unit conversion might be the issue here.
-c-mab: (The RAYLEIGH() in the other version also did not have depolarization).
-c-mab: Will remove or change this upon incurring a smoother solution :).
-
-       if(PLANET.EQ.'WASP12B') then
-            do I=1,NZ
-       		 SIGR(I) = SIGR(I)*1e-16
-            enddo
-       endif
-!!!! 
 
        if (IO2 .EQ. 1) then   !re-compute O2 cross section via exponential sums
         if(PLANET.EQ.'WASP12B') then !ignore sum calculation entirely

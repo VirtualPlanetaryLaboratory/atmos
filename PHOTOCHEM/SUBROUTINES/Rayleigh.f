@@ -6,8 +6,8 @@ cc    p u r p o s e :                                                 cc
 cc                                                                    cc
 cc    this subroutine computes the rayleigh scattering cross section  cc
 cc    per molecule (meters**-2)  for atmospheres composed of (1) air, cc
-cc    (2) co2, (3) n2, (4) o2, (5) h2, (6) he, or any combination of  cc
-cc    these gases.                                                    cc
+cc    (2) co2, (3) n2, (4) o2, (5), h2o, (6) h2, (7) he, or any       cc
+cc    combination of these gases.                                     cc
 cc    to find the rayleigh scattering optical depth at any level of   cc
 cc    the atmosphere, these cross sections must be multiplied by      cc
 cc    the pathlength-integrated number density, n(z)*dz.  in a        cc
@@ -28,7 +28,7 @@ cc    i n p u t :                                                     cc
 cc                                                                    cc
 cc    ncomp = number of major atmosphere constituents                 cc
 cc    icomp = atmosphere constituent index                            cc
-cc            (1) air  (2) co2  (3) n2  (4) o2 (5) h2 (6) he          cc
+cc            (1) air  (2) co2  (3) n2  (4) o2  (5) h2o (6) h2 (7) he cc
 cc   volmix = volume mixing ratio of each constituent                 cc
 cc    wleff = effective wavelength (microns)                          cc
 cc                                                                    cc
@@ -40,17 +40,21 @@ cccccccccccccccccccccccccccccc  r a y l e i g h  ccccccccccccccccccccccc
 
       INCLUDE 'PHOTOCHEM/INPUTFILES/parameters.inc'
       implicit real*8(A-H,O-Z)
-      real*8 delta(6),a(6),b(6),wl2i,r,aniso,r2,sum,cnst
+      real*8 delta(7),a(7),b(7),c(7),wl2i,r,aniso,r2,sum,cnst
       dimension volmix(10,NZ),ncomp(NZ),icomp(10,NZ),SIGR2(NZ)
 
 c       depolarization factors for air, co2, n2, o2 (young, 1980)
-      data delta/0.02790e0,0.0780e0,0.0210e0,0.0580e0,0.0000,0.0000/
+c-mab: h2o depolarization from Marshall & Smith (1990).
+      data delta/0.0279E0,0.078E0,0.021E0,0.058E0,0.17E0,0.0000,0.0000/
 
 c***    wavelength dependence coefficients for the refractive index
 c       (allen, 1964) (note: wavelengths must be in microns)
+c-mab: Tabulating h2o A, B as 0.85*(air value) as per suggested in
+c-mab: Kopparapu et al. 2013 (Habitable zones) and P. von Paris 2013.
 
-      data a/2.871e-04,4.39e-04,2.906e-04,2.663e-04,1.358e-4,3.48e-5/
-      data b/5.67e-03,6.4e-03,7.7e-03,5.07e-03,7.52e-3,2.3e-3/
+      data a/2.871e-04,4.39e-04,2.906e-04,2.663e-04,2.44e-04,
+     2  1.358e-4,3.48e-5/
+      data b/5.67e-3,6.4e-3,7.7e-3,5.07e-3,4.82e-3,7.52e-3,2.3e-3/
 
 c****   Define the constant multiplier, cnst.  this 
 c	constant is equal to 24*pi**3/(1.e-24*L**2), 
