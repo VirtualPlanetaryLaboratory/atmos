@@ -306,10 +306,15 @@ c      OPEN(unit=89, file=DIRINOUT//'/TPRIND.dat')   !write tau sums experiment
 c  Starting temperature profile
       OPEN (unit=11,file= DIRINOUT//'/TempIn.dat')
 c  US standard atmosphere O3 profile used when the climate model is not
-c  coupled to the photochemical model
-      OPEN (unit=22,file= DIRINOUT//'/Ozone_standard.dat')
-      OPEN(UNIT=244,file='IHZ.dat')
-      OPEN(UNIT=24,file='waterloss_IHZ.dat')
+c  coupled to the photochemical model - no - it calls SUBROUTINE OZONE for this...
+c      OPEN (unit=22,file= DIRINOUT//'/Ozone_standard.dat')
+
+c-mc commenting these out as they are not currently being written to
+c-mc If you turn them back on, please direct them to the IO directory and
+c-mc add them to the .gitignore files.  We don't want output files clogging up
+c-mc version contril 
+c      OPEN(UNIT=244,file='IHZ.dat')
+c      OPEN(UNIT=24,file='waterloss_IHZ.dat')
 c  Ozone and water profiles from the photochemical model
 c    File formerly called Pass2SurfMP.dat      
       OPEN (unit=113,file= 'COUPLE/fromPhoto2Clima.dat') 

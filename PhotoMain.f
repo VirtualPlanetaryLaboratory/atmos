@@ -580,12 +580,10 @@ C    Wavelength specific SO2 photorates on HR grid
 
 
 
-c The next four files are used only when this model is coupled
+c The next four files are used when this model is coupled
 C           with the climate model (ICOUPLE=1)
-C   To be used as input for the climate model (coupling)
-!     gna - these next few lines should not just be when ICOUPLE = 1
-!     because the model needs to print coupling
-!     regardless of whether it's running in coupled mode
+C   To be used as input for the climate model
+C they are created and updated regardless of whether ICOUPLE=1 in input_photochem
        open(90, file='COUPLE/hcaer.photoout.out',status='UNKNOWN')
        open(84, file='COUPLE/fromPhoto2Clima.dat', status='UNKNOWN')
        open(116, file='COUPLE/fromClima2Photo.dat', status='UNKNOWN')
