@@ -1,0 +1,3 @@
+This is a placeholder file to prevent OSX filesystems
+from thinking this folder (otherwise empty in the 
+repository) is a file and not a folder.
