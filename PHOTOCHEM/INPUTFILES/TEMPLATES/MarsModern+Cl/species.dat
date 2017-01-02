@@ -1,0 +1,105 @@
+***** SPECIES DEFINITIONS *****
+*
+*define LL,SL,TD, etc here
+* Note - if you change the species order in LL or TD, you will need to change in.dist as well.
+*
+*LBOUND = lower boundary conditions
+* 0 = constant deposition velocity (VDEP)
+* 1 = constant mixing ratio
+* 2 = constant upward flux (SGFLUX)
+* 3 = constant vdep + vertically distributed upward flux  (uses both SGFLUX and DISTH)
+*
+*MBOUND - Upper boundary conditions
+* 0 = CONSTANT EFFUSION VELOCITY (VEFF)  - (H and H2 set in code for molecular diffusion/diffusion limited flux)
+* 1 = constant mixing ratio - never been used so would need testing
+* 2 = CONSTANT FLUX (SMFLUX) (option for CO2/CO/0 in code)
+*
+*
+*   LONG-LIVED O H C S N CL LBOUND  VDEP0   FIXEDMR SGFLUX    DISTH MBOUND SMFLUX  VEFF0
+O          LL  1 0 0 0 0 0    0     0.020   0.      0.        0.      0      0.      0.
+O2         LL  2 0 0 0 0 0    2     0.      0.      0.        0.      0      5.0E6   0.
+H2O        LL  1 2 0 0 0 0    0     0.020   0.      0.        0.      0      0.      0.
+H          LL  0 1 0 0 0 0    0     0.020   0.      0.        0.      0      0.      0.
+OH         LL  1 1 0 0 0 0    0     0.020   0.      0.        0.      0      0.      0.
+HO2        LL  2 1 0 0 0 0    0     0.020   0.      0.        0.      0      0.      0.
+H2O2       LL  2 2 0 0 0 0    0     0.020   0.      0.        0.      0      0.      0.
+H2         LL  0 2 0 0 0 0    2     0.      0.      2.0e7     0.      0      0.      0.        !2.4e-4 Kharecha 05 - bugs eating H2
+CO         LL  1 0 1 0 0 0    2     0.      0.      7.0e6     0.      0      -2.0E7  0.        !1.2e-4 Kharecha 05 - bugs eating CO
+HCO        LL  1 1 1 0 0 0    0     0.020   0.      0.        0.      0      0.      0.
+H2CO       LL  1 2 1 0 0 0    0     0.020   0.      0.        0.      0      0.      0.
+CH4        LL  0 4 1 0 0 0    2     0.020   0.      0.1e1     0.      0      0.      0.
+CH3        LL  0 3 1 0 0 0    0     0.020   0.      0.        0.      0      0.      0.
+C2H6       LL  0 6 2 0 0 0    0     0.020   0.      0.        0.      0      0.      0.
+NO         LL  1 0 0 0 1 0    0     0.020   0.      0.        0.      0      -2.0e2  0.
+NO2        LL  2 0 0 0 1 0    0     0.020   0.      0.        0.      0      0.      0.
+HNO        LL  1 1 0 0 1 0    0     0.020   0.      0.        0.      0      0.      0.
+H2S        LL  0 2 0 1 0 0    3     0.020   0.      1.5e6     20.     0      0.      0.            !orig
+HS         LL  0 1 0 1 0 0    0     0.020   0.      0.        0.      0      0.      0.
+S          LL  0 0 0 1 0 0    0     0.020   0.      0.        0.      0      0.      0.
+SO         LL  1 0 0 1 0 0    0     0.020   0.      0.        0.      0      0.      0.
+SO2        LL  2 0 0 1 0 0    3     0.020   0.      1.0e7     20.     0      0.      0.
+H2SO4      LL  4 2 0 1 0 0    0     0.020   0.      0.        0.      0      0.      0.
+HSO        LL  1 1 0 1 0 0    0     0.020   0.      0.        0.      0      0.      0.
+S2         LL  0 0 0 2 0 0    2     0.020   0.      2.0e7     0.      0      0.      0.
+S4         LL  0 0 0 4 0 0    0     0.020   0.      0.        0.      0      0.      0.
+S8         LL  0 0 0 8 0 0    0     0.020   0.      0.        0.      0      0.      0.
+SO3        LL  3 0 0 1 0 0    0     0.020   0.      0.        0.      0      0.      0.
+OCS        LL  1 0 1 1 0 0    0     0.020   0.      0.        0.      0      0.      0.            !1MDF is 1.4E+07
+S3         LL  0 0 0 3 0 0    0     0.020   0.      0.        0.      0      0.      0.
+O3         LL  3 0 0 0 0 0    0     0.020   0.      0.        0.      0      0.      0.
+HNO3       LL  3 1 0 0 1 0    0     0.020   0.      0.        0.      0      0.      0.
+N          LL  0 0 0 0 1 0    0     0.020   0.      0.        0.      0      -2.0e1  0.             !KG I've added N for the influx from above.  why not.  it doesn't really matter much.                
+HO2NO2     LL  4 1 0 0 1 0    0     0.020   0.      0.        0.      0      0.      0.
+NO3        LL  3 0 0 0 1 0    0     0.      0.      0.        0.      0      0.      0.
+N2O5       LL  5 0 0 0 2 0    0     0.      0.      0.        0.      0      0.      0.
+N2O        LL  1 0 0 0 2 0    0     0.      0       0.        0.      0      0.      0.
+CH3O       LL  1 3 1 0 0 0    0     0.      0.      0.        0.      0      0.      0.
+CH3ONO     LL  2 3 1 0 1 0    0     0.      0.      0.        0.      0      0.      0.
+CH3ONO2    LL  3 3 1 0 1 0    0     0.      0.      0.        0.      0      0.      0.
+CH2ONO2    LL  3 2 1 0 1 0    0     0.      0.      0.        0.      0      0.      0.
+CH3O2NO2   LL  4 3 1 0 1 0    0     0.020   0.      0.        0.      0      0.      0.
+CH3O2      LL  2 3 1 0 0 0    0     0.      0.      0.        0.      0      0.      0.
+CH3OH      LL  1 4 1 0 0 0    0     0.      0.      0.        0.      0      0.      0.
+CH3OOH     LL  2 4 1 0 0 0    0     0.020   0.      0.        0.      0      0.      0.
+CH2OOH     LL  2 3 1 0 0 0    0     0.      0.      0.        0.      0      0.      0.
+HCL        LL  0 1 0 0 0 1    3     0.020   0.      6.0e6     20.     0      0.      0.
+CL         LL  0 0 0 0 0 1    0     0.020   0.      0.        0.      0      0.      0.
+CLO        LL  1 0 0 0 0 1    0     0.020   0.      0.        0.      0      0.      0.
+HOCL       LL  1 1 0 0 0 1    0     0.020   0.      0.        0.      0      0.      0.
+CL2        LL  0 0 0 0 0 2    0     0.      0.      0.        0.      0      0.      0.
+CH2O2      LL  2 2 1 0 0 0    0     0.      0.      0.        0.      0      0.      0.
+CH2OH      LL  1 3 1 0 0 0    0     0.      0.      0.        0.      0      0.      0.
+OCLO       LL  2 0 0 0 0 1    0     0.      0.      0.        0.      0      0.      0.
+CLOO       LL  2 0 0 0 0 1    0     0.      0.      0.        0.      0      0.      0.
+CLONO      LL  2 0 0 0 1 1    0     0.      0.      0.        0.      0      0.      0.
+CLONO2     LL  3 0 0 0 1 1    0     0.020   0.      0.        0.      0      0.      0.
+CLNO       LL  1 0 0 0 1 1    0     0.      0.      0.        0.      0      0.      0.
+CLNO2      LL  2 0 0 0 1 1    0     0.      0.      0.        0.      0      0.      0.
+CH3OCL     LL  1 3 1 0 0 1    0     0.      0.      0.        0.      0      0.      0.
+CL2O2      LL  2 0 0 0 0 2    0     0.      0.      0.        0.      0      0.      0.
+CL2O       LL  1 0 0 0 0 2    0     0.      0.      0.        0.      0      0.      0.
+CLO3       LL  3 0 0 0 0 1    0     0.      0.      0.        0.      0      0.      0.
+HCLO4      LL  4 1 0 0 0 1    0     0.020   0.      0.        0.      0      0.      0.
+CL2O4      LL  4 0 0 0 0 2    0     0.      0.      0.        0.      0      0.      0.
+SO4AER     LL  4 2 0 1 0 0    0     0.020   0.      0.        0.      0      0.      0.            !turbulent depostion velocity for particles (particles need to be last here, it appears)
+S8AER      LL  0 0 0 8 0 0    0     0.020   0.      0.        0.      0      0.      0.            !turbulent depostion velocity for particles
+* NQ should be the number above
+* note that species that have isotopes (only S for now) need to be the final entries in species.dat for proper functioning of the isotope code.
+*   TRIDIAGONAL SOLVER
+*NQ1 should be the number directly above
+*   SHORT-LIVED SPECIES
+HNO2       SL  2 1 0 0 1 0
+O1D        SL  1 0 0 0 0 0
+CH21       SL  0 2 1 0 0 0
+CH23       SL  0 2 1 0 0 0
+C2H5       SL  0 5 2 0 0 0
+SO21       SL  2 0 0 1 0 0
+SO23       SL  2 0 0 1 0 0
+HSO3       SL  3 1 0 1 0 0
+OCS2       SL  1 0 1 2 0 0
+*   INERT SPECIES             Fixed MR
+CO2        IN  2 0 1 0 0 0    0.95          !must be second to last IN
+N2         IN  0 0 0 0 2 0    0.0           !must be last IN  (FIXED MR NOT YET USED...)
+* NSP should be the number directly above
+HV         HV  0 0 0 0 0 0                  !must be second to last
+M          M   0 0 0 0 0 0                  !must be last

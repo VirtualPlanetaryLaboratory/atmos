@@ -1,0 +1,4 @@
+CO2 + HV -> CO + O1D is from Eric
+CO2 + Hv -> CO + O should probably be 1 - Eric, but theres a wavelength issue:
+Erics data is more extensive than the existing cross section files, and his QY files have different WL than his XS files
+What WL to use??

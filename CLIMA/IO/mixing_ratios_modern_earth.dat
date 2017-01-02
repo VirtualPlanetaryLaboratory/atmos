@@ -1,0 +1,14 @@
+ 1.000E-02          !Argon
+ 1.700E-06          !Methane
+ 5.000E-10          !Ethane
+ 3.300E-04          !Carbon Dioxide
+ 0.78               !Nitrogen
+ 0.210E-00          !Oxygen
+ 1.000E-60          !Hydrogen
+ 1.000E-60          !Nitrogen Dioxide
+ 13                 !Tropopause layer
+
+
+! The noncondensible mixing ratios (ARGON, METHANE, ETHANE, NITROGEN, OXYGEN, HYDROGEN, AND NITROGEN DIOXIDE)
+! are defined in terms of the noncondensible (dry) fraction.
+! FCO2, in contrast, is defined in terms of total air.

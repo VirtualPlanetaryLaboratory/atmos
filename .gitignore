@@ -1,0 +1,94 @@
+# Compiled source #
+###################
+**/*.com
+**/*.class
+**/*.dll
+**/*.exe
+**/*.o
+**/*.so
+**/*.pyc
+Photo.run
+Clima.run
+PHOTOCHEM/OBJECTFILES/*
+CLIMA/OBJECT_CLIMA/*
+PHOTOCHEM/OBJECT_PHOT/*
+
+# Runtime I/O files for Atmos models #
+#####################################
+PHOTOCHEM/OUTPUT/*
+PHOTOCHEM/profile.pt
+PHOTOCHEM/in.dist
+PHOTOCHEM/PTZ_mixingratios_in.dist
+PHOTOCHEM/INPUTFILES/parameters.inc
+PHOTOCHEM/INPUTFILES/reactions.rx
+PHOTOCHEM/INPUTFILES/species.dat
+PHOTOCHEM/INPUTFILES/input_photochem.dat
+PHOTOCHEM/INPUTFILES/PLANET.dat
+PHOTOCHEM/INPUTFILES/input_photchem.dat
+COUPLE/*
+photochem_smart/atm/tag.atm
+photochem_smart/photchem/photfile.pt
+CLIMA/IO/TempOut.dat
+CLIMA/IO/TempIn.dat
+CLIMA/IO/clima_allout.tab
+CLIMA/IO/clima_last.tab
+CLIMA/IO/SolarHeating.tab
+CLIMA/IO/IR_wavelength_grid.tab
+CLIMA/IO/FTIR.dat
+CLIMA/IO/FTSO.dat
+CLIMA/IO/input_clima.dat
+
+
+# Fortran detritus #
+####################
+**/fort.*  
+# note fort. files indicate user error. something is writing to a file unit that hasn't been opened. so if you see fort.### files, why not be a good citizen and find/remove the resulting write statement rather than ignore them...
+
+
+
+# Model Output Files #
+######################
+**/*.tab
+#not exactly sure why this is here. There are some .tab files, but they are all checked in. revisit me at some point.
+
+
+# Hitran linelists should never be added (they are big!) #
+##########################################################
+**/.par
+*.par
+*/*.par
+*/*/*.par
+
+#emacs autosave files#
+######################
+**/*~
+**/*#
+
+# Packages #
+############
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+**/*.7z
+**/*.dmg
+**/*.gz
+**/*.iso
+**/*.jar
+**/*.rar
+**/*.tar
+**/*.zip
+
+# Logs and databases #
+######################
+**/*.log
+**/*.sql
+**/*.sqlite
+
+# OS generated files #
+######################
+**/.DS_Store
+**/.DS_Store?
+**/._*
+**/.Spotlight-V100
+**/.Trashes
+**/ehthumbs.db
+**/Thumbs.db

@@ -1,0 +1,47 @@
+
+        SUBROUTINE INTERPOZONE (P,WEIGHTOZC,KAPPAOZC)
+
+        REAL WEIGHTOZ(8), KAPPAOZC(8), KAPPAOZ(8,3), WEIGHTOZC(8)
+        DATA WEIGHTOZ /1.6523105144E-01, 2*3.0976894856E-01,
+     2  1.6523105144E-01, 8.6963711284E-03, 2*1.6303628872E-02,
+     3  8.6963711284E-03/
+        DATA KAPPAOZ /2.609056E-22, 1.204282E-21, 6.474190E-21,
+     2  6.195899E-20, 4.614477E-19, 1.083314E-18, 3.914387E-18,
+     3  2.011646E-17,
+     4  2.062152E-21, 8.500829E-21, 3.257602E-20, 2.337766E-19,
+     5  1.039972E-18, 1.638418E-18, 3.570968E-18, 1.147563E-17,
+     6  1.211615E-20, 4.765294E-20, 1.590839E-19, 5.609454E-19,
+     7  1.025170E-18, 1.184516E-18, 1.483017E-18, 2.353584E-18/
+        P1 = 1.E-3
+        P2 = 1.E-2
+        P3 = 1.E-1
+        DO I=1,8
+         WEIGHTOZC(I) = WEIGHTOZ(I)
+        ENDDO
+        IF (P.LE.P1) THEN 
+        DO I=1,8
+        KAPPAOZC(I) = KAPPAOZ(I,1)
+        ENDDO
+        RETURN
+        ENDIF
+        IF ((P.GE.P1).and.(P.LE.P2)) THEN
+        DO I=1,8 
+        KAPPAOZC(I) = KAPPAOZ(I,1) + (log10(P)-log10(P1))*
+     2  (KAPPAOZ(I,2)-KAPPAOZ(I,1))/(log10(P2)-log10(P1))
+        ENDDO
+        RETURN
+        ENDIF
+        IF ((P.GE.P2).and.(P.LE.P3)) THEN
+        DO I=1,8
+        KAPPAOZC(I) = KAPPAOZ(I,2) + (log10(P)-log10(P2))*
+     2  (KAPPAOZ(I,3)-KAPPAOZ(I,2))/(log10(P3)-log10(P2))
+        ENDDO
+        RETURN
+        ENDIF
+        IF (P.GE.P3) THEN
+        DO I=1,8
+        KAPPAOZC(I) = KAPPAOZ(I,3)
+        ENDDO
+        ENDIF
+        RETURN 
+        END

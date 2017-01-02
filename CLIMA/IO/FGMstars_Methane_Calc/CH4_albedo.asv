@@ -1,0 +1,130 @@
+ clear all;clc
+ 
+% FOR COLD
+
+% F7200
+FCH4 = [0 1E-6 5E-6 1E-5 5E-5 1E-4 5E-4 1E-3 5E-3 1E-2]
+T = [198.64 198.79 198.95 198.98 199.44 199.67 200.55 201.40 202.45 201.98]
+PALB = [.4269 .4266 .4258 .4251 .4222 .4202 .4135 .4097 .3983 .3919]
+
+FCH42= [0:1E-6:1E-2]
+
+T2 = spline(FCH4, T, FCH42)
+
+plot(FCH42, T2)
+pause
+
+
+FCH43 = [0:1E-6:1E-2]
+PALB3 = spline(FCH4,PALB, FCH43)
+
+plot(FCH43, PALB3)
+
+
+%%
+clear all;clc
+%M3600
+FCH4 = [0 1E-6 5E-6 1E-5 5E-5 1E-4 5E-4 1E-3 5E-3 1E-2]
+T = [228.69 228.7 228.63 228.59 227.96 227.61 225.87 224.27 217.63 214.02]
+PALB = [.2010 .1997 .1964 .1940 .1855 .1801 .1642 .1564 .1363 .1267]
+
+FCH42= [0:1E-6:1E-2]
+
+T2 = spline(FCH4, T, FCH42)
+
+plot(FCH42, T2)
+pause
+
+FCH43 = [0:1E-6:1E-2]
+PALB3 = spline(FCH4,PALB, FCH43)
+
+plot(FCH43, PALB3)
+
+
+%%
+clear all;clc
+% Sun
+
+% NEED TO FINISH FCH4 runs for Sun
+FCH4 = [0 1E-6 3E-6 1E-5 3E-5 1E-4 5E-4 1E-3]
+T = [212.35 212.8 212.89 212.99 213.55 214.65 215.9 215.35]
+PALB = [.3213 .3244 .3235 .3218 .3189 .3138 .3036 .2982]
+
+FCH42 = [0:1E-6:1E-3]
+
+T2 = spline(FCH4, T, FCH42)
+
+plot(FCH42, T2)
+pause
+
+FCH43 = [0:1E-6:1E-3]
+PALB3 = spline(FCH4,PALB, FCH43)
+
+plot(FCH43, PALB3)
+
+
+%%
+clear all;clc
+ 
+% FOR HOT, STARTING AT 288K
+
+% F7200
+FCH4 = [0 1E-6 5E-6 1E-5 5E-5 1E-4 5E-4 1E-3 5E-3 1E-2]
+T = [287.91 288.53 289.22 289.78 291.29 292.47 295.28 297.47 302.32 305.01]
+PALB = [.3575 .3568 .3559 .3551 .3525 .3508 .3451 .3414 .3298 .3238]
+
+FCH42= [0:1E-6:1E-2]
+
+T2 = spline(FCH4, T, FCH42)
+
+plot(FCH42, T2)
+pause
+
+FCH43 = [0:1E-6:1E-2]
+PALB3 = spline(FCH4,PALB, FCH43)
+
+plot(FCH43, PALB3)
+
+
+%%
+clear all;clc
+%M3600
+FCH4 = [0 1E-6 5E-6 1E-5 5E-5 1E-4 5E-4 1E-3 5E-3 1E-2]
+T = [288.04 289.63 291.43 292.71 295.87 297.68 301.36 303.06 304.85 304.76]
+PALB = [.1822 .1]
+
+FCH42= [0:1E-6:1E-2]
+
+T2 = spline(FCH4, T, FCH42)
+
+plot(FCH42, T2)
+pause
+
+FCH43 = [0:1E-6:1E-2]
+PALB3 = spline(FCH4,PALB, FCH43)
+
+plot(FCH43, PALB3)
+
+%%
+
+clear all;clc
+% Sun
+
+% NEED TO FINISH FCH4 runs for Sun
+FCH4 = [0 1E-6 3E-6 1E-5 3E-5 1E-4 5E-4 1E-3]
+T = [212.35 212.8 212.89 212.99 213.55 214.65 215.9 215.35]
+PALB = [.3213 .3244 .3235 .3218 .3189 .3138 .3036 .2982]
+
+FCH42 = [0:1E-6:1E-3]
+
+T2 = spline(FCH4, T, FCH42)
+
+plot(FCH42, T2)
+pause
+
+FCH43 = [0:1E-6:1E-3]
+PALB3 = spline(FCH4,PALB, FCH43)
+
+plot(FCH43, PALB3)
+
+

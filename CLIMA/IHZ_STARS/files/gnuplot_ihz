@@ -1,0 +1,22 @@
+reset
+set grid
+#########################################################################
+# This is for Temp (vs) Planetary Albedo
+#set xlabel 'T (K)'
+#set ylabel 'Planetary Albedo'
+#set xrange[200:600]
+#set key left bottom
+#plo 'ihz_B4530' u 1:3 w l lw 3 ti 'M star','ihz_B4544' u 1:3 w l lw 3 ti 'K star','ihz_Sun' u 1:3 w l lw 3 ti 'Sun','ihz_B4570' u 1:3 w l lw 3 ti 'F star'
+##########################################################################
+# This is for SEFF (vs) FH2O
+#set xlabel 'SEFF'
+#set ylabel 'FH2O'
+#set xrange[0.5:1.5]
+#set log y
+#plo 'ihz_B4530' u 2:4 w l lw 3 ti 'M star','ihz_B4544' u 2:4 w l lw 3 ti 'K star','ihz_Sun' u 2:4 w l lw 3 ti 'Sun','ihz_B4570' u 2:4 w l lw 3 ti 'F star'
+##########################################################################
+#set xrange[200:600]
+#set yrange[100:400]
+#set xlabel 'T (K)'
+#set ylabel 'Out going Flux (W/m^{2})'
+#plo 'ihz_A4530' u 1:5 w l lw 3,'ihz_B4530' u 1:5 w l lw 3

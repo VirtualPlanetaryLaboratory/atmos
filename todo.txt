@@ -1,0 +1,24 @@
+This is a "to-do list" of code improvements, categorized by urgency and with the people working on it listed.
+
+IMMEDIATE - Critical to proper code maintenance or the limiting factor for some major code upgrade
+- get photochemical code working in standalone mode, by fixing broken links		| Shawn
+- get climate code working in standalone mode, by fixing broken links			| Shawn
+- get coupled code running without errors, by re-doing I/O interfaces			| Shawn
+
+HIGH - Things we really need or are major upgrades, but aren't necessary for proper code functioning
+- allow climate code to use photochemical code's water vapor profile in stratosphere	| Shawn
+- ensure fractal particles work in climate code						| Giada
+- track down hard-coded pressure limnts in BIGDATAFILE.txt				| Eddie
+- benchmark new climate code against SMART, old climate code				| Eddie
+- get particles into SMART-run python scripts						| Eddie and Giada
+- finish coupling with Eddie's SMART script files                                       | Shawn, supported by Eddie and Giada
+
+MEDIUM - We should probably do these, but don't NEED to. For example, we can do our work without these, it just might not be as easy
+- benchmark new climate code against SMART, old climate code                            | Eddie
+- improve convergence criteria for photchem during coupling (flexible species list)	| Giada
+- improve convergence criteria for clima during coupling (flexible time-stepping?)	| Giada
+
+LOW - "Nice to have." The place to put long-term projects that could lead to significant improvement in performance or flexibility
+- change photochem's vertical grid to pressures, for simulating super-Earths		| ??? Natasha Batalhia?
+- add sensitiviy analyses tools                                                         | Eric? Mark? Shawn?
+- more particle bin sizes in smart (maybe, may not be necessary) 			| Giada?  Dave Crisp?

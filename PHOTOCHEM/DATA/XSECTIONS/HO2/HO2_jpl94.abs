@@ -1,0 +1,40 @@
+34 7 
+Reference: JPL Publication 94-26
+           Chemical Kinetics and Photochemical Data for Use in Stratospheric
+           Modeling
+           Evaluation Number 11
+           December 15, 1994
+           page 117
+
+HO2 + hv -> OH + O
+
+"The absorption cross sections of the hydroperoxyl radical, HO2, in the 200-250
+nm region have been measured at troom temperature by Paukert and Johnston
+[1239], Hochanadel et al. [682], Cox and Burrows [366], McAdam et al. [1049],
+Kurylo et al. [892], Moortgat et al. [1126], Dagayt and Kurylo [396], Lightfoot
+and Jemi-Alade [963], who measured the cross sections up to 777K, Crowley et
+al. [392]; and Sander et al. [1366] at 227.5 nm.  There are significant
+discrepancies in the cross section values, particluarly around 200 nm;  no
+definitive explanation of the differences can be offered at present.
+
+Table 9 lists the recommended cross sections, which are taken from the review
+by Wallington et al. [1651].  Photolysis of HO2 in the stratosphere and
+troposphere is slow and can be neglected, but the UV absorption cross sections
+are important in laboratory stydies of reaction kinetics.
+
+Lee [921] has detected O(1D) as a primary photodissociation product at 193 and
+at 248 nm, with a quantum yield which is about 15 times larger at the longer
+wavelength.  The absolute quantum yield for O(1D) production has not been
+reported yet."
+
+Table 9.  Absorption Cross Sections of HO2
+=====================================================
+  lambda (nm)		1E20 sigma(cm^2)
+=====================================================
+190			387
+200			458
+210			454
+220			373
+230			245
+240			135
+250			 60

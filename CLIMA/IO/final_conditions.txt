@@ -1,0 +1,290 @@
+tests to do: modern earth temperature with no ethane in input file but with IMETETH turned on or off
+modern earth with 5e-10 ethane (actual value)
+run modern earth with iup=0 to get ethane convergence
+
+
+for IMETETH =1, IRM=1, solcon=1, srfalb = 0.35, ICOUPLE=0, IUP=1, ICONSERV=0
+ 1.000E-02          !Argon
+ 1.700E-06          !Methane
+ 5.000E-90          !Ethane
+ 3.300E-04          !Carbon Dioxide
+ 0.78               !Nitrogen
+ 0.210E-00          !Oxygen
+ 1.000E-60          !Hydrogen
+ 1.000E-60          !Nitrogen Dioxide
+ 13                 !Tropopause layer
+Tsurf = 2.8994E+02 after 500 iterations
+
+;-----
+
+for IMETETH =1, IRM=1, solcon=1, srfalb = 0.35, ICOUPLE=0, IUP=0, ICONSERV=0
+(using the above initial conditions)
+ 1.000E-02          !Argon
+ 1.700E-06          !Methane
+ 5.000E-90          !Ethane
+ 3.300E-04          !Carbon Dioxide
+ 0.78               !Nitrogen
+ 0.210E-00          !Oxygen
+ 1.000E-60          !Hydrogen
+ 1.000E-60          !Nitrogen Dioxide
+ 13                 !Tropopause layer
+Tsurf = NaN (why??)
+When I run it with IUP=0 and copy the TempIn.dat from LATEST_CLIMA, it works, so I guess there's something messed up in the temperature profile or water profile it's producing in the run above...
+When I copy the water mixing ratios from the TempIn that works to the one that doesn't, it's still broken
+ALSO when I copy the temp profile from the TempIn that works to the broken one, I still get NaNs
+ugh....
+It's a formatting weirdness issue...the TempIn that doens't work has two extra sig figs in T and water profile.  Works when I delete them...
+***fixed by adding a formatting statement to the write call for TempOut***
+;----
+
+for IMETETH =1, IRM=1, solcon=1, srfalb = 0.35, ICOUPLE=0, IUP=1, ICONSERV=1
+only 50 iterations
+ 1.000E-02          !Argon
+ 1.700E-06          !Methane
+ 5.000E-90          !Ethane
+ 3.300E-04          !Carbon Dioxide
+ 0.78               !Nitrogen
+ 0.210E-00          !Oxygen
+ 1.000E-60          !Hydrogen
+ 1.000E-60          !Nitrogen Dioxide
+ 13                 !Tropopause layer
+Tsurf = 281.3
+stays cooler than with ICONSERV=0 (note only 50 iterations though!)
+
+;----
+
+for IMETETH =0, IRM=1, solcon=1, srfalb = 0.35, ICOUPLE=0, IUP=1, ICONSERV=1
+only 50 iterations
+ 1.000E-02          !Argon
+ 1.700E-06          !Methane
+ 5.000E-90          !Ethane
+ 3.300E-04          !Carbon Dioxide
+ 0.78               !Nitrogen
+ 0.210E-00          !Oxygen
+ 1.000E-60          !Hydrogen
+ 1.000E-60          !Nitrogen Dioxide
+ 13                !Tropopause layer
+Tsurf = 281.88
+stays cooler than with ICONSERV=0 (note only 50 iterations though!)
+
+;--------
+for IMETETH =0, IRM=0, solcon=1, srfalb = 0.35, ICOUPLE=0, IUP=1, ICONSERV=0
+after 500 iterations
+ 1.000E-02          !Argon
+ 1.700E-06          !Methane
+ 5.000E-90          !Ethane
+ 3.300E-04          !Carbon Dioxide
+ 0.78               !Nitrogen
+ 0.210E-00          !Oxygen
+ 1.000E-60          !Hydrogen
+ 1.000E-60          !Nitrogen Dioxide
+ 13                !Tropopause layer
+Tsurf = 283.89262133172127 (and still falling)
+
+;--------
+for IMETETH =0, IMET=1, solcon=1, srfalb = 0.35, ICOUPLE=0, IUP=1, ICONSERV=0
+after 500 iterations
+ 1.000E-02          !Argon
+ 1.700E-06          !Methane
+ 5.000E-90          !Ethane
+ 3.300E-04          !Carbon Dioxide
+ 0.78               !Nitrogen
+ 0.210E-00          !Oxygen
+ 1.000E-60          !Hydrogen
+ 1.000E-60          !Nitrogen Dioxide
+ 13                !Tropopause layer
+Tsurf = 285.49966020062470 (and still falling)
+
+;---------
+for IMETETH =0, IMET=0, solcon=1, srfalb = 0.32, ICOUPLE=0, IUP=1, ICONSERV=0
+after 500 iterations
+ 1.000E-02          !Argon
+ 1.700E-06          !Methane
+ 5.000E-90          !Ethane
+ 3.300E-04          !Carbon Dioxide
+ 0.78               !Nitrogen
+ 0.210E-00          !Oxygen
+ 1.000E-60          !Hydrogen
+ 1.000E-60          !Nitrogen Dioxide
+ 13                !Tropopause layer
+Tsurf = 287.91032939301641 (seems converged)
+
+;----------
+
+for IMETETH =0, IMET=1, solcon=1, srfalb = 0.32, ICOUPLE=0, IUP=1, ICONSERV=0
+after 500 iterations
+ 1.000E-02          !Argon
+ 1.700E-06          !Methane
+ 5.000E-90          !Ethane
+ 3.300E-04          !Carbon Dioxide
+ 0.78               !Nitrogen
+ 0.210E-00          !Oxygen
+ 1.000E-60          !Hydrogen
+ 1.000E-60          !Nitrogen Dioxide
+ 13                !Tropopause layer
+Tsurf = 289.48812830502555 (looks converged?)
+
+;----------
+
+for IMETETH =1, IMET=1, solcon=1, srfalb = 0.32, ICOUPLE=0, IUP=1, ICONSERV=0
+after **200** iterations
+ 1.000E-02          !Argon
+ 1.700E-06          !Methane
+ 5.000E-90          !Ethane
+ 3.300E-04          !Carbon Dioxide
+ 0.78               !Nitrogen
+ 0.210E-00          !Oxygen
+ 1.000E-60          !Hydrogen
+ 1.000E-60          !Nitrogen Dioxide
+ 13                !Tropopause layer
+Tsurf = 294.54634162227160
+(run it from these ICs with both iconserv = 1 and 0)
+
+
+;---------
+using above run's ICs:
+for IMETETH =1, IMET=1, solcon=1, srfalb = 0.32, ICOUPLE=0, IUP=0 [1], ICONSERV=0 (1)
+after **200** iterations
+ 1.000E-02          !Argon
+ 1.700E-06          !Methane
+ 5.000E-90          !Ethane
+ 3.300E-04          !Carbon Dioxide
+ 0.78               !Nitrogen
+ 0.210E-00          !Oxygen
+ 1.000E-60          !Hydrogen
+ 1.000E-60          !Nitrogen Dioxide
+ 13                !Tropopause layer
+Tsurf = 294.54634162227160 (294.39493303590609 after 200 more iterations with iup=0)
+[295.69293444591574 with iconserv=1 and iup=0 after 200 more iterations)
+
+;----------
+for IMETETH =0, IMET=1, solcon=1, srfalb = 0.35, ICOUPLE=0, IUP=1, ICONSERV=0
+after **200** iterations
+ 1.000E-02          !Argon
+ 1.700E-06          !Methane
+ 5.000E-60          !Ethane (wanted to test a higher amount to see if e-90 was screwing it up)
+ 3.300E-04          !Carbon Dioxide
+ 0.78               !Nitrogen
+ 0.210E-00          !Oxygen
+ 1.000E-60          !Hydrogen
+ 1.000E-60          !Nitrogen Dioxide
+ 13                !Tropopause layer
+Tsurf = 289 (but this was with albedo = 0.35)
+
+;----------
+test with methane amount very tiny in mixing_ratios.dat but with IMET=1
+for IMETETH =0, IMET=1, solcon=1, srfalb = 0.32, ICOUPLE=0, IUP=1, ICONSERV=0
+ 1.000E-02          !Argon
+ 1.700E-60          !Methane
+ 5.000E-90          !Ethane
+ 3.300E-04          !Carbon Dioxide
+ 0.78               !Nitrogens
+ 0.210E-00          !Oxygen
+ 1.000E-60          !Hydrogen
+ 1.000E-60          !Nitrogen Dioxide
+ 13                 !Tropopause layer
+Tsurf = 288 K (so clearly it's ok with tiny amounts of methane and IMET=1)
+
+(note: It crashed when I ran it with 1.7E-90 amount of methane...maybe it can't handle below a certain threshold amount??  try higher amounts of C2H6 while still keeping tiny?) -> this is running in atmos2 now
+
+;----------------
+running on screen
+divided kappac2h6 by 2.68e19
+after *300* iterations
+for IMETETH =1, IRM=1, solcon=1, srfalb = 0.32, ICOUPLE=0, IUP=1, ICONSERV=0
+ 1.000E-02          !Argon
+ 1.700E-06          !Methane
+ 5.000E-10          !Ethane
+ 3.300E-04          !Carbon Dioxide
+ 0.78               !Nitrogen
+ 0.210E-00          !Oxygen
+ 1.000E-60          !Hydrogen
+ 1.000E-60          !Nitrogen Dioxide
+ 13                 !Tropopause layer
+TSURF = 287.4 K (DIFV  = -6e-5!, DIVFrms = 6e-2 though, DT = -1.96e-3)
+
+;-------------------
+using above run's initial conditions and going for 100 iterations
+(kappa/2.68e19 still)
+for IMETETH =1, IRM=1, solcon=1, srfalb = 0.32, ICOUPLE=0, IUP=0, ICONSERV=0
+ 1.000E-02          !Argon
+ 1.700E-06          !Methane
+ 5.000E-10          !Ethane
+ 3.300E-04          !Carbon Dioxide
+ 0.78               !Nitrogen
+ 0.210E-00          !Oxygen
+ 1.000E-60          !Hydrogen
+ 1.000E-60          !Nitrogen Dioxide
+ 13                 !Tropopause layer
+TSURF = 287.9 (doing 100 more iterations with iup=0)
+(288.1 K after 100 additional iterations with iup=0 and the prev initial conditions - 287.9)
+NST=   100 JCONV= 70 CHG=1.19E-02 dt0=3.13E+02 DIVF(1)=-1.63E-04 DIVFrms= 5.90E-02 DT(ND)=-4.70E-03 T(ND)=2.8810E+02
+;-------------------
+on main version (version 1):
+(kappa/2.68e19 still)
+for IMETETH =1, IRM=1, solcon=1, srfalb = 0.32, ICOUPLE=0, IUP=1, ICONSERV=0
+ 1.000E-02          !Argon
+ 1.700E-06          !Methane
+ 3.000E-06          !Ethane
+ 3.300E-04          !Carbon Dioxide
+ 0.78               !Nitrogen
+ 0.210E-00          !Oxygen
+ 1.000E-60          !Hydrogen
+ 1.000E-60          !Nitrogen Dioxide
+ 13                 !Tropopause layer
+TSURF = 294.10908852049238
+PLANETARY ALBEDO:  ALBP = 0.2491
+(after 300 more iterations and iup=0: 294.1 K again)
+;-------------------
+on testing version 2:
+(testing the same as above on the other clima to make sure it reaches the same solution and that the two versions have the same edits)
+for IMETETH =1, IRM=1, solcon=1, srfalb = 0.32, ICOUPLE=0, IUP=1, ICONSERV=0
+ 1.000E-02          !Argon
+ 1.700E-06          !Methane
+ 3.000E-06          !Ethane
+ 3.300E-04          !Carbon Dioxide
+ 0.78               !Nitrogen
+ 0.210E-00          !Oxygen
+ 1.000E-60          !Hydrogen
+ 1.000E-60          !Nitrogen Dioxide
+ 13                 !Tropopause layer
+TSURF = 289.03942328036305
+ALBP = 0.1754
+ok...why is this different from the above one???
+--> was because NS1 was wrong in this verison 
+But now I'm getting higher temperatures than I think are reasonable again :/
+add clima 1 to here
+;---------------------
+I think it was the for loop order?  maybe?
+clima 1 test:
+for IMETETH =1, IRM=1, solcon=1, srfalb = 0.32, ICOUPLE=0, IUP=1, ICONSERV=0
+ 1.000E-02          !Argon
+ 1.700E-06          !Methane
+ 5.000E-10          !Ethane
+ 3.300E-04          !Carbon Dioxide
+ 0.78               !Nitrogen
+ 0.210E-00          !Oxygen
+ 1.000E-60          !Hydrogen
+ 1.000E-60          !Nitrogen Dioxide
+ 13                 !Tropopause layer
+TSURF = 289.5 (hmmm...a little too much warming?)
+ALBP = 0.2565
+
+;-----------------
+clima 2 test: archean amount of ethane
+for IMETETH =1, IRM=1, solcon=1, srfalb = 0.32, ICOUPLE=0, IUP=1, ICONSERV=0
+ 1.000E-02          !Argon
+ 1.700E-06          !Methane
+ 3.000E-06          !Ethane
+ 3.300E-04          !Carbon Dioxide
+ 0.78               !Nitrogen
+ 0.210E-00          !Oxygen
+ 1.000E-60          !Hydrogen
+ 1.000E-60          !Nitrogen Dioxide
+ 13                 !Tropopause layer
+TSURF = 296.1 (!) (initial results: really hot omg I don't think this is right either!  try iconserv=1??)
+ALBP = 0.2464
+at least it isn't really hot when running on irme with basically NO ethane!
+;-------------------
+
+

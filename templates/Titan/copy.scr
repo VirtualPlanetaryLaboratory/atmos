@@ -1,0 +1,9 @@
+#!/bin/tcsh
+cp PLANET.dat ../../IO/
+cp parameters.inc ../../IO/
+cp photo_parameters.inc ../../PHOTOCHEM/INPUTFILES/
+cp reactions.rx ../../PHOTOCHEM/INPUTFILES/
+cp species.dat ../../PHOTOCHEM/INPUTFILES/
+cp in.dist ../../PHOTOCHEM/INPUTFILES/
+cp input_clima.dat ../../IO/
+cp input_photchem.dat ../../IO/

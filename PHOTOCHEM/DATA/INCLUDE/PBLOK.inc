@@ -1,0 +1,1 @@
+       COMMON/PBLOK/photolabel(kj)

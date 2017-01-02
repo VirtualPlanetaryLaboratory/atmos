@@ -1,0 +1,33 @@
+Here are some things that need doing - in the opinion of MC
+If you are bored, why not checkout a fresh branch, make some of these changes, and fix things?
+If you are planning on doing any of these, add your name by the end of the list, so there is no overlap
+
+-change all species.dat files to NEWSPEC format, then delete option from input_photochem.dat
+
+-consider coding multiple photolysis species, so as not to included hardcoded assumptions as to the order on the reactions.rx table (should wait until Xsections work settles)
+
+-make sure all interpolations on Xsection file are done correctly
+
+-remove unnecessary files from version control and update .gitingore
+
+-standardize the file units on the read statements in PhotoMain.f (and propogate through all read/writes)
+
+-take out changeL in dochem
+
+-F90!
+
+Remove testing files from the code base - go through git ls-files
+PHOTOCHEM/SUBROUTNES
+-Initmie.fsave
+-OLDXsections.f
+-Output.f_backup
+-Output.f_edits
+-Output_old.f
+-Output_orig.f
+-Photo.fsave
+-Sedmnt_Jan25_original.f
+-Sedmnt_backup.f
+-Sedmnt_new.f
+-newXS.f
+-new_Initmie.f
+subroutine HELP/

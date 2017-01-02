@@ -1,0 +1,9 @@
+# Get auto line ending formatting for all files
+* text=auto
+# Set everything to text
+*.* text
+# Make sure shell scripts keep LF endings
+*.sh eol=lf
+# Dont touch objects! (try not to push run files in the first place)
+*.o binary
+*.run binary

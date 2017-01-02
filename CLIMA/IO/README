@@ -1,0 +1,168 @@
+Hi!  You are probably wanting to run Clima and wondering what files to start with and what files are 
+necessary as inputs to the model.  Read on...
+
+Here are the input files you will want to know about as a newbie Clima user:
+(this document is a work in progress because *I* am not familiar with all of these variable 
+names enough to be comfortable describing them here... :p)
+
+
+---------------------------------------------------
+---------------input_clima.dat---------------------   
+This file has all the basic, important info for your Clima run.  It's analagous
+to input_photochem.dat in the photochemical model, but it's got a lot more lines
+in it becase, unlike Photo, clima has fewer input files.  Just about everything
+the model wants to know is consolidated here in this file.
+
+*NSTEPS : number of steps the model will run. If you've run the photochemical model,
+	you know that it runs until convergence happens.  Clima is different: YOU
+	specify how many steps it will take and then YOU check the output files
+	to see if it has converged.
+*IMW : type of water profile in the atmosphere. They are:
+        0 - saturated troposphere (good for hot atmospheres)
+	1 - Manabe/Wetherald fixed relative humidity 
+	2 - M/W with constant stratospheric H2O content and empirical troposphere H2O (start with this if you're unsure)
+	3 - dry adiabat (good for atmospheres without a lot of water in them)
+*RSURF : surface relative humidity (set to 0.8 if you're unsure)
+*ZY : solar zenith angle (0 is straight overhead; set to 60 if unsure, 
+      that approximates average flux at quadrature)
+*DTAU0: OPTICAL DEPTH STEP IN SUBLEVEL INTEGRATION (somebody else explain this?)
+*ZCON: ARBITRARY CONSTANT ADDED TO Z TO KEEP IT POSITIVE
+*P0: lowest pressure at the top of the grid (bars)
+*PGO: pressure at ground level (bars). Note that if ICOUPLE=1 (see below), it will read this in		
+      from the photochemical model regardless of what you set here.
+*G: gravitational acceleration (cm/s^2)
+*FAC:  RATIO OF GRID SPACING AT TOP TO SPACING AT BOTTOM (set to 4 if unsure)
+*IO3: Set to 1 if you want to include ozone, 0 if not
+*IUP: This sets clima's initial conditions.  Unlike Photo, clima does not *require*
+      you to give it initial conditions. If you set IUP to 1, it will generate its own
+      initial conditions and start a new run from scratch.  If IUP = 0, it will read
+      in the contents of TempIn.dat as its initial conditions. (clima generates TempOut.dat
+      after each run.  Copy that file to TempIn.dat if you want to use it as your ICs)
+*TG0: If you set IUP=1 (new run from scratch), set an initial surface temperature here (try something between 270-300 K if unsure)
+*TSTRAT: Stratospheric temperature for IUP=1 (try 200 K if unsure)
+*STARR: The type of star your planet is orbiting.  There is a WHOLE SYSTEM of stellar naming in the model
+        allowing you to create just about any type of star you want! Note that quotes around the star name
+	are necessary. NOTE: Model ignores what you have here if ICOUPLE = 1 (see below) and reads this in from
+	the photochemical model.
+	* "sun" is the sun.  Easy.
+	* You can also select "F2V", "K2V", "G2V", "ADLEO"
+	* But if you want stars besides the sun, I recommend you use this system implemented
+	 by Ravi and Ramses:
+	  Stars after first 4 written in following manner: 
+	  The first letter are the Metallicities A,B,and C. These correspond to -0.5,+0.0, and +0.5, respectively. 
+	  The middle two numbers (30, 35, 40, 45, and 50)are logg. These correspond to 3.0, 3.5, 4.0, 4.5, and 5.0, respectively. 
+	  The final two numbers are the temperatures, 26 to 72, which correspond to 2600 to 7200K.'
+	  For example, "B5034" would be an m dwarf.  "B5050" would be a K2V star.  "B4070" would be an F2V star.
+	 Using this system of stellar naming seems to produce more stable results than the "F2V", etc stars (not including
+	 the "sun".  that one is ok)
+*ICONSERV: ok, this one is important, and you may need to tweak this parameter
+	   depending on your specific model run's behavior.  
+	   0: a looser, faster, non-strict time-stepping method.  This typically
+	      results in bigger initial temperature jumps (so, don't be alarmed
+	      if your temperature suddenly jumps to 320 K from starting at ~280 K.
+	      It will fall back down if it's supposed to be cooler...). 
+	   1: A strict energy conservation method. The energy in each layer is conserved.
+	   * A few notes: If you are  doing some kind of "weird" atmosphere and start getting NaNs,
+	      or the model refuses to ever converge, if you have ICONSERV =0, try setting it to 1.
+	      If you find that your atmospheric temperatures are HARDLY changing at all from the
+	      initial conditions (but you think it should be) and ICONSERV = 1, try setting it to 0.
+	   * A useful trick: Do an initial run with the model using IUP = 1 and ICONSERV = 0.
+	     Then copy TempOut.dat to TempIn.dat, change IUP to 0, and change ICONSERV = 1.
+*ICOUPLE: 0 to turn off coupling / 1 to turn on coupling
+                NOTE: the model will output coupling files for photo regardless
+		 of whether this is on or off!  This was done intentionally because
+		 you may need to run clima uncoupled first to generate an initial atmospheric
+		 state to feed to photo in coupling mode.
+*SRFALB: surface albedo. 0.32 reproduces modern Earth's average temperature. What you are doing here
+	 is "painting the clouds on the surface". Ignore any notes about it being 0.2 in input_clima.dat.
+	 That's for an older version of the model.
+*SOLCON: Your solar constant (1 = 1x modern day solar flux). Note that if the model is coupled, 
+	 it will read this in from what Photo tells it no matter what you set here.
+*dtmax:  Maximum time step in seconds  
+*CO2MAX: hmmm...not sure if this is relevant anymore.  But it is "Maximum CO2 mixing ratio 
+	 that RRTM can manage with accuracy, for greater values of CO2 the former IR subroutine is used."
+	 (if unsure use 3.55e-2)
+*IMET: 1 = Turn methane on (slows things down)/ 0 = turn methane off. Leave at 0 if your atmosphere
+           does not have a lot of methane or the model will be sloowwww....
+*IMETETH: 1 = Turn methane+ethane on (slows things down a LOT)/ 0 = turn methane+ethane off
+	  Goes without saying, do not turn this on unless you have a lot of ethane and methane 
+	  or the model will be REALLY slow
+*nga: number of gases in your model. 
+*IHAZE: Turn haze on or off
+*monsize: still a work in progess, but this will eventually let you 
+	  choose different monomer sizes for fractal hazes. 
+	  Monsize = 0 is the only one guaranteed to work right now.
+	  0: 0.05 um monomers
+	  1: 0.01 um monomers
+	  2: 0.02 um monomers
+	  3: 0.07 um monomers
+	  4: 0.10 um monomers
+	  Change from 0 at your own risk...
+*icealbedo: a nice little ice-albedo parameterization from
+	    Benjamin Charnay that will iteratively update the 
+	    surface albedo based on your temperature to simulate
+	    ice-albedo feedbacks.  This is still fairly new and
+	    so testing/feedback is welcome.
+*INVERSE: oh boy...This turns on the inverse model if you set it to 1.  
+	  The inverse model is this:
+	  You specify a surface temperature, and the model runs for ONE timestep (you 
+	  set this: NSTEPS=1!) and spits out the solar/thermal fluxes necessary to get that
+	  temperature.  Don't attempt to turn coupling on if you do this.
+	  Also doesn't seem to be working with hazes...
+	  This is how Ravi did his habitable zone calculations.  Basically, it forces
+	  the code to skip its climate calculations loop because YOU are the one
+	  setting the temperature.  It's super quick to run since it's one timestep.
+*FRAK: 0 = spherical hazes/1 = fractal hazes
+       Model ignores what you have here and read in from the photochemical
+       model if you have ICOUPLE = 1	  
+
+
+
+---------------------------------------------------
+---------------mixing_ratios.dat-------------------  
+Here you get to tell Clima what's in its atmosphere!  Note that if coupling
+is turned on, the photochemical model automatically generates this for Clima
+in the top-level directory COUPLE folder, and CLIMA will read that version in!
+
+Set the mixing ratios of your gases in this file. 
+The tropopause layer is an initial guess for where to set the tropopause.
+(try 22 if unsure)
+
+***SUPER IMPORTANT NOTE!!!***
+In the climate model’s mixing_ratio.dat file the way the code treats condensibles and noncondensibles is different. 
+If I wanted to make a 95% CO2, 5% H2 atmosphere I would set CO2 to 0.95 and H2 to 1 because H2 is 100% of the noncondensibles.
+Or, e.g. if you had 99% N2 an 1% CO2 you would set CO2 to 0.01 and N2 to 1 
+(text courtesy of Natasha Batalha)
+
+The model's condensibles are CO2 and H2O, but CO2 is the only one set in this file because the water
+mixing ratio is calculated by the model. So, basically, CO2 + H2O = 1 (again, H2O is not set in this file)
+and everything also adds to 1.
+
+***NOTE ON nitrogen dioxide***
+This doesn't work and will make the model crash.  Keep its mixing ratio tiny (<1e-60)
+
+---------------------------------------------------
+
+-----TEXT FROM A USEFUL 2008 README IS PRESERVED BELOW-------
+-----SEE ALSO readme_OLD for a 2005 readme file--------------
+This is a readme file for the new (summer, 2008) version of the climate model. Current working version is in ~mbeach/Desktop/clima. The program is called 'clima.f'.
+
+This version of the climate model was inherited from Jacob Haqq-Misra. Jacob did several things to the climate model. Most importantly, he fixed the CH4 absorption coefficients in the thermal infrared. These were being read into the wrong wavelength bins, a mistake that had been in the code ever since CH4 was added (1999). Jacob also fixed several errors that had been discovered by Philip vonParis, a graduate student working with Heike Rauer at the DLR in Berlin. I can remember that the wavelengths were being calculated at the boundaries of the spectral intervals, rather than in the middle. Philip uncovered some other minor errors, as well, and these fixes were incorporated into Jacob's code. Most of these errors got into the code when it was converted into makefile format, sometime around 2004.
+
+This summer, I worked with undergraduates Michael Beach and William Lee. We fixed several things:
+
+CHANGES TO THE CLIMATE MODEL
+
+1) The pressures that were being passed from the main code to subroutine ir.f were those at the centers of the grid levels, P. In reality, ir.f also needs to know the pressures at the layer boundaries, PF. Both pressure vectors are now passed to ir.f.
+
+2) The smoothing algorithm, which is supposed to operate only in the stratosphere, may have been operating in the upper troposphere as well, especially in regions where CO2 is condensing. That's because the logic had been set up to look for IFLAG=1, i.e., to look for where H2O was condensing and then to smoothe above this level. That's not right, though, because it causes smoothing to occur in the upper troposphere where the temperature profile is supposed to be following a moist (H2O or CO2) adiabat. This may be why Hilary Justh got different answers when she used different (energy conserving and non-conserving) convective algorithms. We changed this so that now the code smoothes only above the cold trap, i.e., the point where the H2O saturation mixing ratio reaches a minimum. Both convective algorithms now give approximately the same answer (although see next comment).
+
+3) We changed the way that the non-energy-conserving convective algorithm works. This algorithm works by adjusting the surface temperature in such a way as to balance the incoming solar flux and outgoing ir flux at the top of the atmosphere. It allows you to quickly get close to the answer in a dense atmosphere. The energy-conserving algorithm, by contrast, takes forever to converge when the atmosphere becomes thick.
+	The logic for the non-conserving convective algorithm had never been properly reworked since the code was converted from a steady-state Newton solver to a time-stepper. That change was made for the Mischna et al. (2000) paper in order to include CO2 clouds and to allow for non-convective layers below these clouds. Consequently, the non-conserving algorithm was not operating very effectively in the time-stepping model.
+	We changed this by i) adjusting the surface temperature itself, rather than the temperature of the first atmospheric layer, and 2) doing things differently when the surface temperature, Ts is increasing and when it is decreasing. When Ts is increasing, all one needs to do is run adiabats up from the surface, layer by layer, and check to see whether each layer is convective. If the radiative lapse rate is steeper than the moist adiabat, then the layer convects; otherwise, it does not. When Ts is decreasing, though, one cannot apply this same logic. If you pull the surface temperature down, then the bottom (half) layer of the atmosphere becomes stable, and the rest of the troposphere does not adjust. To make the logic work, the entire troposphere needs to change temperature along with the surface. So, we fixed this by simply moving the tropospheric temperatures linearly with the surface temperature, all the way up to the cold trap. The resulting temperature profile may depart slightly from a moist adiabat, but the deviations should be small.
+
+4) The best way to run the code, then, is the following: Start from a solution in which the surface temperature is slightly lower than what one is looking for. Run the model 25-50 steps in non-energy-conserving mode (ICONSERVE=0). This should get you close to the solution. Then run the model ~200 steps in energy-conserving mode (ICONSERVE=1) to make sure that the tropospheric temperatures are indeed along a moist adiabat in regions that are convective. In practice, Mike, Will, and I have found that this makes little difference to the calculated surface temperature; however, this is the safe way to proceed because the logic for the energy-conserving mode is, hopefully, correct and self-consistent.
+
+5) We also found that increasing the number of vertical levels in the model makes a significant difference, particularly in atmospheres with a steep tropospheric temperature gradient. The old model typically ran with ND=25. We find that increasing NS to 51 or even 101 increases the calculated surface temperatures in some cases. For example, when we redid the early Mars calculations, we found that surface temperatures increased by about 10 K for dense CO2 atmospheres even when we tuned the present (6 mbar) atmosphere to the same surface temperature. We also found that accuracy can be improved by increasing the ratio of the grid spacing at the top of the model to that at the bottom. This parameter is called FAC. We recommend FAC=4 instead of FAC=2. You just don't need that many levels in the stratosphere if ND is large.
+
+6) Finally, we have created different versions of the model which include different gases. All of our versions now include NO2, which is an important absorber in the near-UV and visible between 300 and 500 nm. In the current version, the mixing ratio of NO2 is constant with altitude. This could be changed, however, with a little work. The current version of the model includes H2O, CO2, and CH4 (and O3 in one interval) in the thermal infrared. The C2H6 loop is commented out to make the model run faster. We also have a version in which the CH4 loop is also commented out (clima_noCH4). This one runs really fast. It would be nice to create a version of the code in which one could pick one's gases and in which they could all vary with altitude, as required.

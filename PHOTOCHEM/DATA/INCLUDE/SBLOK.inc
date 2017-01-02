@@ -1,0 +1,1 @@
+      COMMON/SBLOK/PSO2MC(kw,NZ),prates(kj,nz)

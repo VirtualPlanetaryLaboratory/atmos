@@ -1,0 +1,2 @@
+The old XSections O2 takes into account air density and makes Schuman-Runge corrections.
+The file system for O2 has not been changed since O2 will be called via old XSections anyways

@@ -1,0 +1,138 @@
+Repository location (for TOTC):  https://dev.phys.washington.edu/groups/vpl/svn/vpl/TOTC
+website: http://www.phys.washington.edu/groups/vpl/trac/vpl/  (not sure if this is all that useful)
+
+General philosophy:
+
+main trunk is for code changes that all will want, and should move the code forward as a whole.
+
+branches are for 2 things: major overhauls and actual science:
+-at least until we have all species/reactions/boundary conditions etc. abstracted, we don't want to be overwriting eachothers science cases.
+for instance, I am working on Mars right now.  This is a large project that will take a while, so it definitly needs its own branch.
+some of what I am doing is adding new species and reactions. I would add them in directly to a 'mars' branch and investigate what they do. Some of what I need to do will be useful in general, such as moves to abstract species and reactions.  It would be up to me to realize this as a general improvement and do/copy this work to a working copy of the trunk, commit, and update/merge into the branch.  I need to check how this will work with respect to changing stuff, and add some best practices below about merging branges, etc. 
+
+
+COMMONLY USED COMMAND EXAMPLES:
+svn list https://dev.phys.washington.edu/groups/vpl/svn/vpl/TOTC    (this shows what is in the repository...)
+
+svn log https://dev.phys.washington.edu/groups/vpl/svn/vpl/TOTC  (to see all changes ever)
+svn log https://dev.phys.washington.edu/groups/vpl/svn/vpl/TOTC/trunk  (to see all changes to the trunk)
+
+svn log  (show all changes to files in your working directory - as of last svn update)
+
+svn checkout https://dev.phys.washington.edu/groups/vpl/svn/vpl/TOTC/trunk/  (will make a /trunk "working directory" in your current directory
+
+
+DAILY CYCLE:
+
+The typical work cycle looks like this: 
+
+1.Update your working copy       (svn update)
+2.Make changes to files  (svn add, svn delete, svn copy, svn move)
+3.Examine your changes.  (svn status, svn diff)
+4.Possibly undo some changes.  (svn revert)
+5.Possilbly Resolve conflicts (merge others' changes).    (svn update, svn resolve)
+6.Commit your changes.  (svn commit)
+
+see http://svnbook.red-bean.com/en/1.5/svn.tour.cycle.html for more details
+
+Other thougts on the daily cycle:
+the easiest things to forget are to use svn delete and svn move (rather than rm or mv)when ch:anging a filename that is under version control
+
+svn status -u will contact the repository and allow you to see what files will be changed when you run the next svn update
+
+
+BRANCHING AND MERGING THOUGHTS
+superunfortnately, the astro svn server is version 1.4, which is before they fixed branch merging.  branch merges need to be handled in the old painful way.  Read 
+http://svnbook.red-bean.com/en/1.4/svn.branchmerge.copychanges.html, specifically the feature branch section.
+
+my plan is to map trunk changes to the chlorine branch (keeping track of change numbers in the comments), then eventualy merge the entire branch back to the trunk in the manner described in the feature branch section  (or when Shawn needs something that I have done in the chlorine branch - or when I specifically move to mars...)
+
+-example workflow:
+-make and commit changes to both the chlorine branch and trunk.
+-starting with fuly commited and updated branch and trunk (very important!), run svn log to find what has happened to the trunk since the last branch merge.
+-if just one update to the trunk, can use:
+-svn merge -c42 https://dev.phys.washington.edu/groups/vpl/svn/vpl/TOTC/trunk
+-from the branch working directory (in this case, gets the change made in revision 42 of the trunk.
+-       test and commit the merge, specifically entering that -c42 was brought from the trunk
+-futher down the road (and if there are multiple changes to the trunk between say revision 42 and 100, would then need to:
+-svn merge -r42:100 https://dev.phys.washington.edu/groups/vpl/svn/vpl/TOTC/trunk
+-       test and commit the merge, specifically entering that -r42:100 was brought from the trunk
+-When the time comes to merge the branch back in, I'll need to do some research, then write more here.
+ 
+--svn update in both the branch and the trunk:
+--in branch run svn log -v --stop-on-copy, which tells me the branch was created at r14
+--in trunk, run svn update to get the current revision number (84), then
+-- run svn merge -r 14:84 https://dev.phys.washington.edu/groups/vpl/svn/vpl/TOTC/branches/chlorine
+-- this goes mostly smoothly, but a few conflicts emerged due to bad practices on previous merges.
+-- so a heads up to carefuly follow up and conflicts (by default I used 'tf' (their copy) i.e. the branch version, but I found a few things)
+(i probably should have done r60:84 or something like that to be better. - w/e. hopefully I never use svn < 1.4 ever again)
+
+
+-Also, remember that svn merge and svn diff have identical syntax, so svn diff works as a good testing device.
+
+
+
+
+OCCASIONALLY USED COMMANDS:
+
+TAGGING (or branching):
+svn copy https://dev.phys.washington.edu/groups/vpl/svn/vpl/TOTC/trunk/ https://dev.phys.washington.edu/groups/vpl/svn/vpl/TOTC/tags/version-1.1
+svn copy https://dev.phys.washington.edu/groups/vpl/svn/vpl/TOTC/trunk/ https://dev.phys.washington.edu/groups/vpl/svn/vpl/TOTC/branches/mars
+
+
+general stuff:
+by default, svn ignores .o, #*#, *~ and .DS_Store files so will not version control these.
+These are set in the global-ignores setting in ~/.subversion/config
+To ignore extra stuff run the following on the top level dir and then add patterns  (I have done this for out.* and TOTCdev)
+svn propedit svn:ignore .
+
+
+note: ~./subversion/config also contains the diff properties; 
+http://svnbook.red-bean.com/en/1.5/svn.advanced.confarea.html
+could write up something on how to get emacs ediff as the default...
+
+
+
+ADMIN STUFF THAT IS NOT USED ALL THAT OFTEN:
+
+To add a username to the repository:
+
+from an astro machine, ssh to portal
+cd /www/dev/groups/vpl/
+add username to htgroup file (this is sufficent for anyone in the astro-vpl group)
+if they are external, need to create a (non-user changable) password via htpasswd:
+htpasswd htpasswd username
+make the password complicated - the person only needs to use it once (default svn behavior is to cache the auth pwd)
+
+
+Inital work to set up the repository:
+PACS is in charge of running any svnsdmin commands, so I won't detail how to create the actual repository.
+
+Initial import was:
+svn import /Users/mark1/oxygen/photochem/TOTC https://dev.phys.washington.edu/groups/vpl/svn/vpl/TOTC/trunk/
+(the above command makes the subdirectories TOTC/trunk in the base of the repository)
+svn mkdir https://dev.phys.washington.edu/groups/vpl/svn/vpl/TOTC/branches
+svn mkdir https://dev.phys.washington.edu/groups/vpl/svn/vpl/TOTC/tags
+   (making "best practice" subdirectories as recomended in svn book)
+
+Branch creation:
+svn copy https://dev.phys.washington.edu/groups/vpl/svn/vpl/TOTC/trunk/ https://dev.phys.washington.edu/groups/vpl/svn/vpl/TOTC/tags/version-1.0
+ (copies the code in the repository trunk into the /tags directory.  The theory is that an easily accesible copy of a snapshot of the code now exists without having to search through the trunk to find the correct revision number.  Note also that the /tags subdirectory is just like any other directory here and can be modified, but the "best practice" is that the code in the /tags/ directory is never updated.
+
+
+OK - if wemove this local - here are some thoughts on how to administer:
+use svnserve.. have this run as a daemon on cerridwyn.
+
+svnserve -d - r /Volumes/LaCie/VPL/svn/src   
+
+(the -r restricts possible exports and provides the 'root' path,so that a user would just run: svn checkout svn://cerridwyn.astro.washington.edu/PROJ without knowing the path on cerridwyn
+
+in the conf/ directory of the repository, mess with:
+svnserve.conf
+password-db files
+
+turn off anonymous access 
+anon-access = none in .conf file
+
+(need to check if these will cache)
+

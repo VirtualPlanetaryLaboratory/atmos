@@ -1,0 +1,23 @@
+Updated: December 9, 2016
+This document contains the branch management policy for ATMOS.
+
+The master branch is intendend to be boring. It contains only fully stable code - our "production" line. At any point someone should be able to checkout master and use it. It may not have the newest code, but it always works.  To enforce this, only admins have write access to master and the aim is to never commit directly on master - rather the aim is to be able to, from time-to-time, do a fast forward merge from the main code branch - development
+
+development is the primary working branch of the atmos model.  The aim is to keep this branch completly stable as well. It is the last stop before code goes to production, so code that is merged into development should be bug-free, well teseted, not break other peoples code or templates. If you are proposing changes to any major input/outpuft files or model physics, the decision should have been discussed with an admin.  This should all happen naturally as part of the process, but it does need to be written down.
+
+As is the best practice in all cases with git - please avoid making direct commits to development, especially if they are complicated.  All work should be done in local (or shared remote) branches that are branched from development.  Even if you are doing something as simple as removing some comments (or writting a README file), follow a git life cycle (branch from development code, test, add, commit, merge to development, delete branch).
+
+For now, everyone has read/write access to development, so please do follow best practices and only merge working, tested, vetted code.  Open write permissions to development may change in the future.  We may move to a 'pull request' style of code review/incoporation into development.  The admins are still researching this, but it may make it easier and better for all to use one of the GUI pull request/issue tracking systems for this. 
+ 
+Also, as of Dec 9, 2016, there are two 'legacy' branches in the main repositiory - cython and InputStandard. These are not (yet) branched off of the current development, so will require some care when integrating. 
+
+
+
+Anything else new that is pushed to the main repository should have a common ancestor with the current development branch.  If you have code in local, non-shared branches, now would be a good time to assess them.  Ask youself 1) is all code in this branch part of 'development' - if so, delete the branch.  2) If there are unpushed commits that you think should be part of the main codebase, do one of two things 2a) create a new temporary branch off your local branch, git merge development, fix up, and re-merge (note the important use of the temporary branch here- if the merge goes wonky - just abort and delete the temporary branch and try again) or 2b) identify the key bits in this branch by looking at the logs, indetifying when it branched from the then master, doing a git diff, creating a patch, then applying this patch over a freshly checked out version of development.  If you are really good with git, you might be able to accomplish 2b as a fancy 'git rebase' operation, but the above is conceptually simpler.  Either way - follow best practices and do all merges (and coding) in a short-lived branch. Your life will be easier!
+
+
+
+
+
+
+

@@ -1,0 +1,86 @@
+54 33
+Reference: JPL Publication 94-26
+           Chemical Kinetics and Photochemical Data for Use in Stratospheric
+           Modeling
+           Evaluation Number 11
+           December 15, 1994
+           page 118
+
+H2O2 + hv -> OH + OH
+
+"The recommended 298 K absorption cross section values, listed in Table 11, are 
+the mean of the data of Lin et al. [978], Molina and Molina [1102], Nicovich
+and Wine [1171], and Vaghjiani and Ravishankara [1600].  Molina and Molina
+[1102] supersedes the earlier results of Molina et al. [1108].  Nicovich and
+Wine measured the cross sections at lambda +- 230 relative to the values at
+202.6, sigma = 4.32 x 1E-19 cm^2, and at 228.8 nm, sigma = 1.86 x 1E-19 cm^2.
+The values are within 2% of the recommended value.
+
+Nicovich and Wine have measured the temperature dependence of these cross
+sections.  They expressed the measured cross sections as the sum of two
+components;  sigma1, due to absorption from H2O2 which has the O-O stretch
+excited and the other sigma0, due to absorption by ground state molecules.  For
+atmospheric calculations the expression given in Table 12 may be used.  The
+photodissociation quantum yield is believed to be unity.  At and above 248 nm,
+the major photodissociation process is that leading to OH, i.e., the quantum
+yield for OH production is 2 (Vaghjiani and Racishankara [1601] and Vaghjiani
+et al. [1604]).  At 193 nm this quantum yeild decreases to about 1.5 (Vaghjiani
+et al. [1604]; Schiffman et al. [1384]), and the quantum yield for O-atom
+production increases to about 0.16 (Vaghjiani et al. [1604]).
+
+Table 12:  Mathematical Expression for Absorption Cross Sections of H2O2
+           as a Function of Temperature
+---------------------------------------------------------------------------
+
+ 10^21 * s(l,T) = chi * sum(n=0,7){A(n) l^n} + (1-chi) * sum(n=0,4){B(n)l^n}
+
+   Where T: temperature K;  l: nm;  chi = [1 + exp(-1265/T)]^(-1)
+         s: cross section in cm^2
+
+A(0) = 6.4761E-04            B(0) = 6.8123E+03
+A(1) = -9.2170972E+02        B(1) = -5.1351E+01
+A(2) = 4.535649              B(2) = 1.1522E-01
+A(3) = -4.4589016E-03        B(3) = -3.0493E-05
+A(4) = -4.035101E-05         B(4) = -1.0924E-07
+A(5) = 1.6878206E-07
+A(6) = -2.652014E-10
+A(7) = 1.5534675E-13
+
+Range 260-350 nm; 200-400 K
+
+---------------------------------------------------------------------------"
+
+Wavelength (nm)     Cross Section (cm^2 at 298K)
+190			67.2
+195			56.4
+200			47.5
+205			40.8
+210			35.7
+215			30.7
+220			25.8
+225			21.7
+230			18.2
+235			15.0
+240			12.4
+245			10.2
+250			8.3
+255			6.7
+260			5.3
+265			4.2
+270			3.3
+275			2.6
+280			2.0
+285			1.5
+290			1.2
+295			0.90
+300			0.68
+305			0.51
+310			0.39
+315			0.29
+320			0.22
+325			0.16
+330			0.13
+335			0.10
+340			0.07
+345			0.05
+350			0.04

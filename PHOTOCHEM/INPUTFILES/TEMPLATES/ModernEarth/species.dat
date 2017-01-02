@@ -1,0 +1,75 @@
+***** SPECIES DEFINITIONS *****
+*
+*define LL,SL,TD, etc here
+*
+*LBOUND = lower boundary conditions
+* 0 = constant deposition velocity (VDEP)
+* 1 = constant mixing ratio
+* 2 = constant upward flux (SGFLUX)
+* 3 = constant vdep + vertically distributed upward flux  (uses SGFLUX and DISTH)
+*
+*MBOUND - Upper boundary conditions
+* 0 = CONSTANT EFFUSION VELOCITY (VEFF)  - (H and H2 set in code for molecular diffusion/diffusion limited flux)
+* 1 = constant mixing ratio - never been used so needs testing
+* 2 = CONSTANT FLUX (SMFLUX) (option for CO2/CO/0 in code)
+*
+*
+*   LONG-LIVED O H C S N CL LBOUND  VDEP0   FIXEDMR SGFLUX    DISTH MBOUND SMFLUX  VEFF0  
+O          LL  1 0 0 0 0 0    0     1.0E+00 0.      0.        0.      0      0.      0.   
+O2         LL  2 0 0 0 0 0    1     0.      2.1E-01 0.        0.      0      0.      0.        
+H2O        LL  1 2 0 0 0 0    0     0.      0.      0.        0.      0      0.      0.        
+H          LL  0 1 0 0 0 0    0     1.0E+00 0.      0.        0.      0      0.      0.        
+OH         LL  1 1 0 0 0 0    0     1.0E+00 0.      0.        0.      0      0.      0.        
+HO2        LL  2 1 0 0 0 0    0     1.0E+00 0.      0.        0.      0      0.      0.        
+H2O2       LL  2 2 0 0 0 0    0     2.0E-01 0.      0.        0.      0      0.      0.        
+H2         LL  0 2 0 0 0 0    1     2.4E-04 5.3E-07 0.        0.      0      0.      0.        
+CO         LL  1 0 1 0 0 0    1     1.2E-04 1.1E-07 0.        0.      0      0.      0.        
+HCO        LL  1 1 1 0 0 0    0     1.0E+00 0.      0.        0.      0      0.      0.        
+H2CO       LL  1 2 1 0 0 0    0     2.0E-01 0.      0.        0.      0      0.      0.        
+CH4        LL  0 4 1 0 0 0    1     0.      1.8E-06 0.        0.      0      0.      0.        
+CH3        LL  0 3 1 0 0 0    0     1.0E+00 0.      0.        0.      0      0.      0.        
+C2H6       LL  0 6 2 0 0 0    0     0.      0.      0.        0.      0      0.      0.        
+NO         LL  1 0 0 0 1 0    0     3.0E-04 0.      0.        0.      0      0.      0.        
+NO2        LL  2 0 0 0 1 0    0     3.0E-03 0.      0.        0.      0      0.      0.        
+HNO        LL  1 1 0 0 1 0    0     1.0E+00 0.      0.        0.      0      0.      0.        
+H2S        LL  0 2 0 1 0 0    2     2.0E-02 0.      1.000E+08 0.      0      0.      0.            !orig
+HS         LL  0 1 0 1 0 0    0     0.      0.      0.        0.      0      0.      0.        
+S          LL  0 0 0 1 0 0    0     0.      0.      0.        0.      0      0.      0.        
+SO         LL  1 0 0 1 0 0    0     0.      0.      0.        0.      0      0.      0.        
+SO2        LL  2 0 0 1 0 0    3     1.0E+00 0.      1.000E+09 20.     0      0.      0.        
+H2SO4      LL  4 2 0 1 0 0    0     1.0E+00 0.      0.        0.      0      0.      0.        
+HSO        LL  1 1 0 1 0 0    0     1.0E+00 0.      0.        0.      0      0.      0.        
+S2         LL  0 0 0 2 0 0    0     0.      0.      0.        0.      0      0.      0.        
+S4         LL  0 0 0 4 0 0    0     0.      0.      0.        0.      0      0.      0.        
+S8         LL  0 0 0 8 0 0    0     0.      0.      0.        0.      0      0.      0.        
+SO3        LL  3 0 0 1 0 0    0     0.      0.      0.        0.      0      0.      0.        
+OCS        LL  1 0 1 1 0 0    0     0.      0.      0.        0.      0      0.      0.        
+S3         LL  0 0 0 3 0 0    0     0.      0.      0.        0.      0      0.      0.        
+O3         LL  3 0 0 0 0 0    0     7.0E-02 0.      0.        0.      0      0.      0.        
+HNO3       LL  3 1 0 0 1 0    0     2.0E-01 0.      0.        0.      0      0.      0.        
+N          LL  0 0 0 0 1 0    0     0.      0.      0.        0.      2      -1.E+08 0.             !KG I've added N for the influx from above.  why not.  it doesn't really matter much.     
+NO3        LL  3 0 0 0 1 0    0     0.      0.      0.        0.      0      0.      0.        
+N2O        LL  1 0 0 0 2 0    1     0.      3.1E-07 0.        0.      0      0.      0.        
+HO2NO2     LL  4 1 0 0 1 0    0     2.0E-01 0.      0.        0.      0      0.      0.        
+N2O5       LL  5 0 0 0 2 0    0     0.      0.      0.        0.      0      0.      0.   
+SO4AER     LL  4 2 0 1 0 0    0     1.0E-02 0.      0.        0.      0      0.      0.            !turbulent depostion velocity for particles (hardcoded for td)
+S8AER      LL  0 0 0 8 0 0    0     1.0E-02 0.      0.        0.      0      0.      0.            !turbulent depostion velocity for particles     
+* NQ should be the number above
+*   TRIDIAGONAL SOLVER
+*NQ1 should be the number directly above
+*   SHORT-LIVED SPECIES
+HNO2       SL  2 1 0 0 1 0
+O1D        SL  1 0 0 0 0 0
+CH21       SL  0 2 1 0 0 0
+CH23       SL  0 2 1 0 0 0
+C2H5       SL  0 5 2 0 0 0
+SO21       SL  2 0 0 1 0 0
+SO23       SL  2 0 0 1 0 0
+HSO3       SL  3 1 0 1 0 0
+OCS2       SL  1 0 1 2 0 0
+*   INERT SPECIES
+CO2        IN  2 0 1 0 0 0    3.6E-4       !must be second to last IN 
+N2         IN  0 0 0 0 2 0    0.78          !must be last IN  (FIXED MR NOT YET USED...)
+* NSP should be the number directly above
+HV         HV  0 0 0 0 0 0
+M          M   0 0 0 0 0 0
