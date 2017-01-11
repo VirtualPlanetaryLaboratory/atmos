@@ -537,6 +537,7 @@ C - Seperating the out.dist file into seperate files
        open(66, file='PHOTOCHEM/OUTPUT/out.strctr', status='UNKNOWN')
        open(71, file='PHOTOCHEM/OUTPUT/out.aersol', status='UNKNOWN')
        open(72, file='PHOTOCHEM/OUTPUT/out.tridag', status='UNKNOWN')
+       open(15, file='PHOTOCHEM/OUTPUT/out.HR.rates', status='UNKNOWN')
 
 
 C - other model parameters read in from input_photochem.dat
