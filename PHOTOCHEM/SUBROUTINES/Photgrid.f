@@ -1074,15 +1074,15 @@ c-mab: Recall msun = 22 is using Kevin's grid. We don't need the conversions bel
 
 
       IF (msun .EQ. 21) THEN
-         n = 26035
-         print *, "MSUN IS 21 (M5V)!"
+         n = 26024
+         print *, "MSUN IS 21 (Proxima Centauri)!"
          call sleep(1)
          nhead = 0
          ierr = 0
          OPEN(UNIT=kin,
-     &    file='PHOTOCHEM/DATA/FLUX/M5V_units.txt',
+     &    file='PHOTOCHEM/DATA/FLUX/Proxima_units_rev1.txt',
      &                STATUS='old')
-          print *, 'M5V star!'
+          print *, 'Proxima Centauri! Yay for nearby red stars!'
       ENDIF
 
 
