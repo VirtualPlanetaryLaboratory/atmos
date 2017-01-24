@@ -999,9 +999,11 @@ c-mab: Recall msun = 22 is using Kevin's grid. We don't need the conversions bel
          call sleep(1)
          nhead = 0
          ierr = 0
+         ! EWS Note: Fixed to spectrum added in Jan 2016 to include correct Lyman-Alpha Flux
+         ! See Table 2 of Domagal-Goldman et al. 2014, ApJ, 792:90, and references therein 
          OPEN(UNIT=kin,
-     &    file='PHOTOCHEM/DATA/FLUX/adleo_dat_units.txt',
-     &                STATUS='old')
+     &    file='PHOTOCHEM/DATA/FLUX/adleo_dat_units_fixed.txt',
+     &                STATUS='old') !
           print *, 'Suzanne Hawley would be proud of you!'
       ENDIF
 
@@ -1011,8 +1013,10 @@ c-mab: Recall msun = 22 is using Kevin's grid. We don't need the conversions bel
          call sleep(1)
          nhead = 0
          ierr = 0
+         ! EWS Note: Fixed to spectrum added in Jan 2016 to include correct Lyman-Alpha Flux
+         ! See Table 2 of Domagal-Goldman et al. 2014, ApJ, 792:90, and references therein 
          OPEN(UNIT=kin,
-     &    file='PHOTOCHEM/DATA/FLUX/adleo_20_units.txt',
+     &    file='PHOTOCHEM/DATA/FLUX/adleo_20_units_fixed.txt',
      &                STATUS='old')
           print *, 'Suzanne Hawley would be proud of you!'
       ENDIF
@@ -1036,8 +1040,10 @@ c-mab: Recall msun = 22 is using Kevin's grid. We don't need the conversions bel
          call sleep(1)
          nhead = 0
          ierr = 0
+         ! EWS Note: Fixed to spectrum added in Jan 2016 to include correct Lyman-Alpha Flux
+         ! See Table 2 of Domagal-Goldman et al. 2014, ApJ, 792:90, and references therein 
          OPEN(UNIT=kin,
-     &    file='PHOTOCHEM/DATA/FLUX/K2V_units.txt',
+     &    file='PHOTOCHEM/DATA/FLUX/K2V_units_fixed.txt',
      &                STATUS='old')
           print *, 'K, you have a K star.'
       ENDIF
@@ -1068,15 +1074,15 @@ c-mab: Recall msun = 22 is using Kevin's grid. We don't need the conversions bel
 
 
       IF (msun .EQ. 21) THEN
-         n = 26035
-         print *, "MSUN IS 21 (M5V)!"
+         n = 26024
+         print *, "MSUN IS 21 (Proxima Centauri)!"
          call sleep(1)
          nhead = 0
          ierr = 0
          OPEN(UNIT=kin,
-     &    file='PHOTOCHEM/DATA/FLUX/M5V_units.txt',
+     &    file='PHOTOCHEM/DATA/FLUX/Proxima_units_rev1.txt',
      &                STATUS='old')
-          print *, 'M5V star!'
+          print *, 'Proxima Centauri! Yay for nearby red stars!'
       ENDIF
 
 
@@ -1111,7 +1117,8 @@ c-mab: Recall msun = 22 is using Kevin's grid. We don't need the conversions bel
             STOP
          ENDIF     
 
-! We are not bothering with an extra Lyman Alpha component because the spectrum is already finely sampled enough in the UV
+! NOTE: This explicitly assumes the correct Lyman-Alpha flux *at the planet* has been included 
+!      in the input spectrum. It would benefit you to ensure that this is really the case! 
         DO iw = 1, nw
                f(iw) = yg3(iw)*(wl(iw+1)-wl(iw))*5.039e8*wl(iw)/10. !convert to photons/cm2/s
                print *, wl(iw), yg3(iw)
