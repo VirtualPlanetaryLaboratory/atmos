@@ -445,7 +445,7 @@ c*******Changed for now*********
       IF (ICOUPLE.eq.1) THEN 
       OPEN(unit=999,FILE= 'COUPLE/coupling_params.out')
  107  FORMAT(1X, F4.2, 5X, F8.3, 5X, F3.1, 5X, I2, 5X, I2,
-     &     9X, I4, 6X, F4.2, 6X, F7.3)
+     &     9X, I4, 6X, F4.2, 6X, F8.2)
       READ(999,*)
       READ(999,107) timega, P0ground, frak, msun, ihztype, nzp, fscale,
      & G
