@@ -40,6 +40,12 @@
       REAL*8, allocatable :: x1(:), x2(:), x3(:), y1(:), y2(:), y3(:)
       REAL*8 yg1(nw), yg2(nw), yg3(nw)
 
+      ! *** CAUTION *** TEMPATURE DEPENDENCE IS STILL BEING WORKED ON
+      ! RUNNING WITH TDXS=0 (OFF) IS SAFER
+      ! Turn ON temperature dependence with 1
+      ! Turn OFF with 0
+      integer TDXS
+
 !     File name stuff
       character*8 species
       character*11 photolabel
@@ -152,6 +158,21 @@
 
 ! XS GRID WORK
 
+		! TURN ON OR OFF TEMPERATURE DEPENDENCE
+		TDXS = 0 ! off
+		if(TDXS == 0 .and. temps > 1) then
+			! Temp Depend is off but there are more than one temp values
+			! Note, 300K will never be the third column of data so only need
+			! to check if its second column. (Else its already first)
+			if(tempB == '300K ') then
+				y1 = y2
+		    endif
+			temps = 1
+			! y1 is assigned the values at Medium Temp (300K)
+			! temps is now 1
+		endif
+
+
         CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
         CALL addpnt(x1,y1,kdata,n1,               zero,zero)
         CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
@@ -166,7 +187,6 @@
 
         ! need to interpolate at each temperature
         if(temps > 1) then
-
           CALL addpnt(x2,y2,kdata,n2,x2(1)*(1.-deltax),zero)
           CALL addpnt(x2,y2,kdata,n2,               zero,zero)
           CALL addpnt(x2,y2,kdata,n2,x2(n2)*(1.+deltax),zero)
@@ -179,6 +199,7 @@
             STOP
           ENDIF
         endif
+          
 
         if(temps > 2) then
           CALL addpnt(x3,y3,kdata,n3,x3(1)*(1.-deltax),zero)
@@ -193,6 +214,8 @@
             STOP
           ENDIF
         endif
+
+
 
 ! QY LOOP
         ! This loop will call subroutines on each reaction path
