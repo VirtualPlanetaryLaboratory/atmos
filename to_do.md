@@ -3,6 +3,7 @@
 ## To-do
 1. Add UV scaling
 1. Change the `msun_n` reference system for star input
+1. Add muscle stars
 
 ## Done
 + Item 1
@@ -14,4 +15,5 @@
 + `clima`
     + Routine 1
 + `photochem`
-    + Routine 1
+    + `photogrid.f`
+    + 
