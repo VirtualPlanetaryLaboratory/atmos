@@ -1,6 +1,6 @@
 # README #
 
-This README would normally document whatever steps are necessary to get your application up and running.
+Atmos is a package containing two atmospheric models, along with scripts to couple them together. One of the atmospheric models calculates the profiles of chemical species, including both gaseous and aerosol phases. The second model calculated the temperature profile. Because these profiles depend on each other - kinetic reaction rates are temperature-dependent and radiative transfer is subject to radiatively active gases - we have set up atmos to run alternate the running of these two models until both models have solutions consistent with the other one. While either of these models can be run with time-dependence, most applications of these models are to find steady-state solutions for the atmosphere that would be stable over long (geological/astronomical) time periods, given constant inputs to the atmosphere.
 
 #### What is this repository for? ####
 
@@ -16,4 +16,3 @@ The model development was supported by NASA Astrobiology Institute's  Virtual Pl
 ### [How to run Atmos ?](https://bitbucket.org/ravikopparapu/how-to-run-atmos/wiki/How%20to%20Run%20Atmos) ###
 
 ### [What does the converged output looks like?](https://bitbucket.org/ravikopparapu/output-examples/wiki/Converged%20Output%20Examples) ###
-
