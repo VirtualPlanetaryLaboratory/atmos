@@ -8,7 +8,7 @@
 EARTH    = PLANET  string naming the planet for extra changes (MARS is the only other option for the moment)
 2.7      = TIMEGA - time in Ga, for modifying the solar flux
 0        = IRESET
-13       = msun
+25       = msun
 0        = IHZSCALE
 1.0      = uvscale
 

@@ -1,0 +1,49 @@
+*** Set parameters for the Neoarchean photochemical model ***
+* Write the number after the 11th space
+*2345678901Here      
+
+AGL=       0.5
+ISEASON=   1
+IZYO2=     0
+LGRID=     0
+IO2=       1
+INO=       1
+EPSJ=      1.E-9
+PRONO=     1.E9
+frak=      1
+HCDENS=    0.63
+ICOUPLE=   0
+ihztype=   0
+ZY=	   50.
+
+C ***** SET MODEL PARAMETERS *****
+C     AGL = DIURNAL AVERAGING FACTOR FOR PHOTORATES
+C     ISEASON = TELLS WHETHER P AND T VARY WITH TIME (THEY DON'T FOR
+C               ISEASON < 3)
+C     IZYO2 = TELLS WHETHER SOLAR ZENITH ANGLE VARIES WITH TIME (0 SAYS
+C             IT DOESN'T; 1 SAYS IT DOES)
+C     LGRID = 0  USE OLD JPL WAVELENGTH GRID
+C     LGRID = 1  USE HIGH RESOLUTION GRID (SEE ALSO GRID.F)
+C                IF LGRID=1, IO2 and INO should be set to 2
+C     IO2 = 0 FOR ALLEN AND FREDERICK O2 SCHUMANN-RUNGE COEFFICIENTS
+C         = 1 FOR EXPONENTIAL SUM FITS (FOR LOW-O2 ATMOSPHERES)
+C         = 2 FOR USING HIGH RESOLUTION CROSS SECTION
+C     INO = 0 FOR ALLEN AND FREDERICK NO PREDISSOCIATION COEFFICIENTS
+C         = 1 FOR MODIFIED CIESLIK AND NICOLET FORMULATION
+C         = 2 USE OUT.NOPRATES FILE
+C     EPSJ = AMOUNT BY WHICH TO PERTURB THINGS FOR JACOBIAN CALCULATION
+C     PRONO  = COLUMN-INTEGRATED NO PRODUCTION RATE FROM LIGHTNING IN
+C              EARTH'S PRESENT ATMOSPHERE
+C     FRAK = 0  use Mie scattering for hydrocarbon particles
+C          = 1  use Fractal scattering for hydrocarbon particles
+C     HCDENS = 0.63 g/cm^3 (Archean hydrocarbon density - Trainer et al 2006)
+C            = 0.8 g/cm^3 (titan tholins - Trainer et al 2006)
+C 	     = 1.0 g/cm^3 (old suspicious default value)
+C     ICOUPLE = 0 to turn off coupling / 1 to turn on coupling
+C             = 0 to use old formatting (E7.2 for VDEP and FIXEDMR)
+C     IHZTYPE = 0 for 0.05 um monomers for fractal particles
+C      	      = 1 for 0.01 um monomers for fractal particles
+C	      = 2 for 0.02 um monomers for fractal particles
+C	      = 3 for 0.07 um monomers for fractal particles
+C	      = 4 for 0.10 um monomers for fractal particles
+C     ZY      = solar zenith angle

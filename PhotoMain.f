@@ -364,6 +364,7 @@ C
       INCLUDE 'PHOTOCHEM/INPUTFILES/parameters.inc'
       implicit real*8(A-H,O-Z)
       character*10 buffer
+      character*8 pstar
       CHARACTER*8 ISPEC, CHEMJ,SPECIES,SPECTYPE,REACTYPE,PLANET
       CHARACTER*20 string,fmtstr,fmtstr2
       real*8 mass
@@ -950,28 +951,27 @@ c       print *, NR
 
 C ***** READ THE PLANET PARAMETER DATAFILE *****
       READ(7,502) G,FSCALE,ALB,ZTROP,FAR,R0,P0,PLANET,TIMEGA,IRESET,
-     &   msun, ihzscale
+     &   pstar, ihzscale, uvscale
 c-mab: Uncomment below for debugging with this part
 C      	print*,'G,FSCALE,ALB,ZTROP,FAR,R0 = ',G,FSCALE,ALB,ZTROP,FAR,R0
 C      	print*,'P0,PLANET,TIMEGA,IRESET = ',P0,PLANET,TIMEGA,IRESET
  502  FORMAT(F7.1/,F7.2/,F7.3/,E7.1/,F7.3/,E8.3/,F8.3/,A8/,F4.2/,I1/
-     &  ,I2/,I1/,I3/,E10.4)
+     &  ,A8/,I1/,F8.3)
 C     adding IRESET to create the atmospheric profile for modern earth
-C     gna - added msun keyword to change the star from planet.dat
-C     print *, 'msun is ', msun
+C     gna - added pstar keyword to change the star from planet.dat
+C     print *, 'pstar is ', pstar
 C     print *, 'ihzscale is ', ihzscale
 C gna-scale stellar flux based on spectral type:
 C uses Kopparapu et al 2012 scalings for earth-equivalent distance
       IF (ihzscale.eq.1) then
-         IF (msun.eq.16) FSCALE = FSCALE * 0.870
-         IF (msun.eq.17) FSCALE = FSCALE * 0.859
-         IF (msun.eq.18) FSCALE = FSCALE * 0.950
-         IF (msun.eq.19) FSCALE = FSCALE * 1.110
-         IF (msun.eq.76) FSCALE = FSCALE * 0.866
-         IF (msun.eq.21) FSCALE = FSCALE * 0.920
-         IF (msun.eq.20) FSCALE = FSCALE * 0.911
-         IF (msun.eq.22) FSCALE = FSCALE * 1890.40
-
+         IF (pstar.eq.'adleo') FSCALE = FSCALE * 0.870
+         IF (pstar.eq.'t3200') FSCALE = FSCALE * 0.859
+         IF (pstar.eq.'k2v') FSCALE = FSCALE * 0.950
+         IF (pstar.eq.'f2v') FSCALE = FSCALE * 1.110
+         IF (pstar.eq.'gj876') FSCALE = FSCALE * 0.866
+         IF (pstar.eq.'proxima') FSCALE = FSCALE * 0.920
+         IF (pstar.eq.'m8v') FSCALE = FSCALE * 0.911
+         IF (pstar.eq.'wasp12') FSCALE = FSCALE * 1890.40
          print *, 'fscale is ', fscale
       ENDIF
 
@@ -1076,13 +1076,13 @@ C sgflux, vdep, smflux, and distributed fluxes are already set
 
 C added by giada
       OPEN(unit=999, file='COUPLE/coupling_params.out')
- 909  FORMAT(1X, F4.2, 5X, F8.3, 5X, F3.1, 5X, I2, 5X, I2,
-     &     9X, I4, 6X, F4.2, 6X, F8.2)
- 908  FORMAT(1X, 'timega', 6X, 'P0', 8X, 'frak', 3X, 'msun', 3X,
+ 909  FORMAT(1X, F4.2, 5X, F8.3, 5X, F3.1, 5X, A8, 5X, I2,
+     &     9X, I4, 6X, F4.2, 6X, F7.3)
+ 908  FORMAT(1X, 'timega', 6X, 'P0', 8X, 'frak', 3X, 'pstar', 3X,
      &   'ihztype', 6X, 'NZ', 6X, 'FSCALE', 6X, 'G')
       print *, 'FRAK = ', frak
       print *, 'P0 = ', P0
-      print *, 'msun = ', msun
+      print *, 'pstar = ', pstar
       if(NP.eq.4) print *, 'ihztype = ', ihztype
       print *, 'NZ =', NZ
       print *, 'FSCALE = ', FSCALE
@@ -1092,7 +1092,7 @@ C added by giada
       print *, 'ihz = ', ihz
       print *, 'NP =', NP
       WRITE(999,908)
-      WRITE(999,909) timega, P0, frak, msun, ihz, NZ, FSCALE,G
+      WRITE(999,909) timega, P0, frak, pstar, ihz, NZ, FSCALE,G
 
 C
 C
@@ -1582,7 +1582,7 @@ C orig       CO2(I) = FCO2
       IDO = 0
       IF (NN.EQ.NSTEPS) IDO = 1
       CALL PHOTO(ZY,AGL,LTIMES,ISEASON,IZYO2,IO2,INO,IDO,timega,frak,
-     &      msun,ihztype)
+     &      pstar,ihztype,uvscale)
 
       IF (NAQ.GT.0) CALL RAINOUT(JTROP,NRAIN,USETD)  !ok
 

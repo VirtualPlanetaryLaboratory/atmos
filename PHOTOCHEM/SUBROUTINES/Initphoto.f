@@ -1,9 +1,11 @@
-      SUBROUTINE INITPHOTO(sq,columndepth,zy,nw,timega,IO2,msun)
+      SUBROUTINE INITPHOTO(sq,columndepth,zy,nw,timega,IO2,pstar,uvscale
+     $       )
       INCLUDE 'PHOTOCHEM/INPUTFILES/parameters.inc'
       implicit real*8(A-H,O-Z)
       Integer nw,j,IO2
       real*8 mass
       REAL*8 dum
+      character*8 pstar
       real*8 SQ(kj,nz,kw),columndepth(KJ,NZ) 
       character*8 PLANET,ISPEC
       character*11 photolabel
@@ -12,6 +14,8 @@
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/DBLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/JBLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
+
+
 
 c this function defines the wavelength grid and returns
       CALL gridw(nw,wavl,wav,wavu,LGRID)
@@ -22,7 +26,7 @@ c wav, a vector of centered values (i.e. (wavl + wavu)/2 )
 
 c this subroutine returns the flux data interpolated to the wavelength grid along with 
 c Claire et al. 2012 corrections for the specified time (timeGa set in PLANET.dat)
-      CALL readflux(nw,wavl,flux,timega,msun)
+      CALL readflux(nw,wavl,flux,timega,pstar,uvscale)
 
       print *, 'for a solar flux from ',timega,' Ga'
 

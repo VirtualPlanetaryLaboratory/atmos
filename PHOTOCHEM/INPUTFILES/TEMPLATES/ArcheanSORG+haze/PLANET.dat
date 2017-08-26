@@ -8,27 +8,34 @@
 EARTH    = PLANET  string naming the planet for extra changes (MARS is the only other option for the moment)
 2.7      = TIMEGA - time in Ga, for modifying the solar flux
 0        = IRESET
-13       = msun
+13       = pstar
 0        = IHZSCALE
+1.0      = uvscale
 
 -below here are not read in.  They are from Shawn's Planet.earth file but are handled differently here.
 
-IHZSCALE = set to 1 to automatically scale FSCALE to the earth-equivalent flux based on the spectral type (msun)
-(to use keep FSCALE as 1, set IHZSCALE to 1, then change your msun type; will use Kopparapu et al 2012 scalings)
+IHZSCALE = set to 1 to automatically scale FSCALE to the earth-equivalent flux based on the spectral type (pstar)
+(to use keep FSCALE as 1, set IHZSCALE to 1, then change your pstar type; will use Kopparapu et al 2012 scalings)
 
-choices for msun (these numbers are from photgrid.f)
-      msun = 12    !Gj 581 from Lucianne
-      msun = 13    !high resolution solar data from ATLAS1/3 (Thullier et al 2004)
-      msun = 14    !kevin's data from photo.dat
-      msun = 15    !AD Leo from VPL climate DB
-      msun = 16    !AD LEO from VPL website
-      msun = 17    !T3200.dat
-      msun = 18    !K2V
-      msun = 19    !F2V
-      msun = 76    !GJ876
-      msun = 20    !M8V
-      msun = 21    !M5V
-      msun = 22    !G0V star for wasp12b (first Hot Jupiter model)
+choices for pstar (these numbers are from photgrid.f)
+      pstar = 12    !Gj 581 from Lucianne
+      pstar = 13    !high resolution solar data from ATLAS1/3 (Thullier et al 2004)
+      pstar = 14    !kevin's data from photo.dat
+      pstar = 15    !AD Leo from VPL climate DB
+      pstar = 16    !AD LEO from VPL website
+      pstar = 17    !T3200.dat
+      pstar = 18    !K2V
+      pstar = 19    !F2V
+      pstar = 76    !GJ876
+      pstar = 20    !M8V
+      pstar = 21    !M5V/Proxima Centauri
+      pstar = 22    !G0V star for wasp12b (first Hot Jupiter model)
+      pstar = 23    !Phoenix 3300K star (for GCM Earth Project)
+      pstar = 80    !GJ876 MUSCLES data adaptive constant res panchromatic
+      pstar = 81    !GJ551 """""" (Proxima Centauri)
+      pstar = 82    !GJ581 """"""
+      pstar = 83    !GJ667c """""" (note: GJ667 is a triple star system)
+      pstar = 84    !GJ1214 """"""
 
 11    = JTROP, Grid layer marking the tropopause height, depends on ZTROP and DELZ
 1.0E5 = DELZ, Height of each atm layer - Earth=1.0E5, Mars=2.0E5 (cm)

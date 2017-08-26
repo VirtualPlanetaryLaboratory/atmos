@@ -2,6 +2,7 @@
       INCLUDE 'PHOTOCHEM/INPUTFILES/parameters.inc'
       implicit real*8(A-H,O-Z)
       character*8 PLANET
+      character*8 pstar
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PHOTABLOK.inc'
       real *8 skip
 C ***** SET UP THE VERTICAL GRID ZS *****
@@ -579,7 +580,7 @@ c-mc should probably print these out to output file rather than screen
       END
 
 
-      SUBROUTINE readflux(nw,wl,f,timega,msun)
+      SUBROUTINE readflux(nw,wl,f,timega,pstar,uvscale)
 
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
@@ -612,7 +613,8 @@ c       M. Claire       091306 integrating into Kevin's code
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/QBLOK.inc'
       integer kdata
-      parameter(kdata=26500) 
+      parameter(kdata=77000)
+      character*8 pstar
 
 * input: (wavelength grid)
       INTEGER nw
@@ -637,28 +639,31 @@ c       M. Claire       091306 integrating into Kevin's code
       REAL*8 hc
       PARAMETER(hc = 6.62E-34 * 2.998E8)
 
-!      INTEGER msun
       REAL*8 refrac
       EXTERNAL refrac
+ 
 
+!      print *, 'nw,wl,f,timega,pstar,uvscale'
+!      print *, nw,wl,f,timega, pstar,uvscale
 
 *_______________________________________________________________________
-* select desired extra-terrestrial solar irradiance, using msun:
+* select desired extra-terrestrial solar irradiance, using pstar:
 
-c      msun = 12    !Gj 581 from Lucianne 
-c      msun = 13    !high resolution solar data from ATLAS1/3 (Thullier et al 2004)
-c      msun = 14    !kevin's data from photo.dat
-c      msun = 15    !AD Leo from VPL climate DB
-c      msun = 16    !AD LEO from VPL website
-c      msun = 17    !Gj 581 from Lucianne 
+c      pstar = 12    !Gj 581 from Lucianne 
+c      pstar = 13    !high resolution solar data from ATLAS1/3 (Thullier et al 2004)
+c      pstar = 14    !kevin's data from photo.dat
+c      pstar = 16    !AD LEO from VPL website
+c      pstar = 17    !Gj 581 from Lucianne 
 
-!ACK - implementing YOUNGSUN.f into msun=13 for now, but it could apply to 14 if I ever wanted to use it again...
+!ACK - implementing YOUNGSUN.f into pstar=13 for now, but it could apply to 14 if I ever wanted to use it again...
 !but not for Mdwarfs...
 
 
+!      pstar = lower(pstar)
+!      pstar = trim(pstar)
 
-      IF (msun .EQ. 13) THEN
-         print *, "MSUN IS 13 (our sun)"
+      IF (pstar == 'sun' .or. pstar .eq. '13') THEN
+         print *, "PSTAR is our sun"
          call sleep(1)
          nhead = 0
          ierr = 0
@@ -668,7 +673,7 @@ c      msun = 17    !Gj 581 from Lucianne
          n = 26150
          OPEN(UNIT=kin,file='PHOTOCHEM/DATA/FLUX/composite.atl1_1',
      &                 STATUS='old')
-         print *, 'using Atlas 1 spectrum'
+         print *, 'using Atlas 1 spectrum for the sun'
 
 !ATLAS 3 was closer to the mean of solar activity  (late 1994ish)
 c         n = 26182
@@ -776,9 +781,9 @@ c         print *, wl(i),f(i),relflux(i)
 c         enddo
 c         stop
 
-      ENDIF  !end msun=13
+      ENDIF  !end pstar=sun
 
-      IF (msun .EQ. 14) THEN
+      IF (pstar .EQ. "zahnle" .or. pstar .eq. '14') THEN
 
          nhead = 2
          ierr = 0
@@ -828,56 +833,10 @@ c         stop
 
       ENDIF
 
-      IF (msun .EQ. 15) THEN
-
-         nhead = 1
-         ierr = 0
-
-         n = 4821
-         OPEN(UNIT=kin,file='PHOTOCHEM/DATA/FLUX/dMV.flx',
-     &                 STATUS='old')
-         print *, 'using ADLeo spectrum - NEEDS CHECKING'
-
-         DO i = 1, nhead
-            READ(kin,*)
-         ENDDO
-         DO i = 1, n
-            READ(kin,*) x1(i), y1(i)   !wl in nm, flux in W/m2/nm
-            x1(i)=x1(i)*10  !convert to angstroms 
-            y1(i)=y1(i)*1e-4/1.98468e-16*x1(i)/10.     !convert to photons/cm2/s 
-         ENDDO
 
 
 
-
-         CLOSE (kin)
-         
-      CALL addpnt(x1,y1,kdata,n,x1(1)*(1.-deltax),zero)  
-      CALL addpnt(x1,y1,kdata,n,               zero,zero)
-      CALL addpnt(x1,y1,kdata,n,x1(n)*(1.+deltax),zero)
-      CALL addpnt(x1,y1,kdata,n,            biggest,zero)
-      CALL inter3(nw+1,wl,yg1,n,x1,y1,0)   !inter3 doesn't have any error checking at the moment
-!ACK- I think this should be inter2
-
-         IF (ierr .NE. 0) THEN
-            WRITE(*,*) ierr,'  Something wrong in readflux.f'
-            STOP
-         ENDIF         
-
-         DO iw = 1, nw
-               f(iw) = yg1(iw)
-         ENDDO
-c         do i=1,nw
-c         print *, wl(i),f(i)
-c         enddo
-c         stop
-
-
-      ENDIF
-
-
-
-      IF (msun .EQ. 12) THEN
+      IF (pstar .EQ. 'gj581' .or. pstar .eq. '12') THEN
 
          nhead = 0
          ierr = 0
@@ -953,12 +912,21 @@ c 1.33432e+14 in photons/cm2/s
 !-------wavelength = nm; flux = mW/m2/nm; they have the equivalent flux at 1 AU-------!
 !-------such that you can keep the planets at 1 AU and have the correct flux----------!
 
-      IF (msun .GT. 15.AND.msun.NE.22) THEN
-c-mab: Recall msun = 22 is using Kevin's grid. We don't need the conversions below.. 
+      IF (pstar .NE. 'wasp12' .and. pstar .ne. 'sun' .and. pstar .ne.
+     &     'zahnle' .and. pstar .ne. 'gj581' .and. pstar .ne. '13' .and.
+     &     pstar .ne. '14' .and. pstar .ne. '22' .and.
+     &     pstar .ne. '23' .and. pstar .ne. '12' .and. 
+     &     pstar  .ne. 'MUGJ876' .and. pstar .ne. '80' .and. pstar .NE.
+     &    'MUGJ551' .and. pstar .ne. '81' .and. pstar .NE. 'MUGJ581'
+     &     .and. pstar .ne. '82' .and. pstar .NE. 'MUGJ667c' .and. 
+     &     pstar .ne. '83' .and. pstar .NE. 'MUGJ1214' .and. pstar .ne.
+     &      '84' )                    ! this if statement... :( -gna 
+     &      THEN
+c-mab: Recall pstar = 22 is using Kevin's grid. We don't need the conversions below.. 
                        
-      IF (msun .EQ. 76) THEN
+      IF (pstar .EQ. 'gj876' .or. pstar .eq. '76') THEN
          n = 26035
-         print *, "MSUN IS 76!"
+         print *, "STAR IS 76!"
          call sleep(1)
          nhead = 0
          ierr = 0
@@ -968,34 +936,10 @@ c-mab: Recall msun = 22 is using Kevin's grid. We don't need the conversions bel
           print *, 'using GJ 876 Spectrum - Giddyup and Ride on Cowboy!'
       ENDIF
 
-      IF (msun .EQ. 77) THEN
-         n = 26035
-         print *, "MSUN IS 76 - scaled to F star!"
-         call sleep(1)
-         nhead = 0
-         ierr = 0
-         OPEN(UNIT=kin,
-     &    file='PHOTOCHEM/DATA/FLUX/gj876_77_units.txt',
-     &                STATUS='old')
-          print *, 'using GJ 876 Spectrum - Giddyup and Ride on Cowboy!'
-      ENDIF
 
-      IF (msun .EQ. 78) THEN
+      IF (pstar .EQ. 'adleo' .or. pstar .eq. '16') THEN
          n = 26035
-         print *, "MSUN IS 76 - scaled to AD Leo!"
-         call sleep(1)
-         nhead = 0
-         ierr = 0
-         OPEN(UNIT=kin,
-     &    file='PHOTOCHEM/DATA/FLUX/gj876_78_units.txt',
-     &                STATUS='old')
-          print *, 'using GJ 876 Spectrum - Giddyup and Ride on Cowboy!'
-      ENDIF
-
-
-      IF (msun .EQ. 16) THEN
-         n = 26035
-         print *, "MSUN IS 16 (AD Leo)!"
+         print *, "STAR IS 16 (AD Leo)!"
          call sleep(1)
          nhead = 0
          ierr = 0
@@ -1007,23 +951,10 @@ c-mab: Recall msun = 22 is using Kevin's grid. We don't need the conversions bel
           print *, 'Suzanne Hawley would be proud of you!'
       ENDIF
 
-      IF (msun .EQ. 20) THEN
-         n = 26035
-         print *, "MSUN IS 20 (AD Leo w/ UV flux scaled to GJ 876)!"
-         call sleep(1)
-         nhead = 0
-         ierr = 0
-         ! EWS Note: Fixed to spectrum added in Jan 2016 to include correct Lyman-Alpha Flux
-         ! See Table 2 of Domagal-Goldman et al. 2014, ApJ, 792:90, and references therein 
-         OPEN(UNIT=kin,
-     &    file='PHOTOCHEM/DATA/FLUX/adleo_20_units_fixed.txt',
-     &                STATUS='old')
-          print *, 'Suzanne Hawley would be proud of you!'
-      ENDIF
 
-      IF (msun .EQ. 17) THEN
+      IF (pstar .EQ. 't3200' .or. pstar .eq. '17') THEN
          n = 26141
-         print *, "MSUN IS 17 (T3200)!"
+         print *, "STAR IS 17 (T3200)!"
          call sleep(1)
          nhead = 0
          ierr = 0
@@ -1034,9 +965,9 @@ c-mab: Recall msun = 22 is using Kevin's grid. We don't need the conversions bel
       ENDIF
 
 
-      IF (msun .EQ. 18) THEN
+      IF (pstar .EQ. 'k2v' .or. pstar .eq. '18') THEN
          n = 26034
-         print *, "MSUN IS 18 (K2V)!"
+         print *, "STAR IS 18 (K2V)!"
          call sleep(1)
          nhead = 0
          ierr = 0
@@ -1048,9 +979,9 @@ c-mab: Recall msun = 22 is using Kevin's grid. We don't need the conversions bel
           print *, 'K, you have a K star.'
       ENDIF
 
-      IF (msun .EQ. 19) THEN
+      IF (pstar .EQ. 'f2v' .or. pstar .eq. '19') THEN
          n = 26035
-         print *, "MSUN IS 19 (F2V)!"
+         print *, "STAR IS 19 (F2V)!"
          call sleep(1)
          nhead = 0
          ierr = 0
@@ -1060,22 +991,23 @@ c-mab: Recall msun = 22 is using Kevin's grid. We don't need the conversions bel
           print *, 'An F star a day keeps the doctor away'
       ENDIF
 
-      IF (msun .EQ. 20) THEN
+      IF (pstar .EQ. 'm8v' .or. pstar .eq. '20') THEN
          n = 26150
-         print *, "MSUN IS 20 (M8V)!"
+         print *, "STAR IS 20 (M8V)!"
          call sleep(1)
          nhead = 0
          ierr = 0
          OPEN(UNIT=kin,
      &    file='PHOTOCHEM/DATA/FLUX/M8_active_photogrid.txt',
      &                STATUS='old')
-          print *, 'Here is an M8 dwarf!'
+          print *, 'Here is an M8 dwarf (a la TRAPPIST-1)!'
       ENDIF
 
 
-      IF (msun .EQ. 21) THEN
+      IF (pstar .EQ. 'proxima' .or. pstar .eq. '21' .or.
+     &   pstar .eq. 'm5v') THEN
          n = 26024
-         print *, "MSUN IS 21 (Proxima Centauri)!"
+         print *, "STAR IS 21 (Proxima Centauri)!"
          call sleep(1)
          nhead = 0
          ierr = 0
@@ -1085,9 +1017,48 @@ c-mab: Recall msun = 22 is using Kevin's grid. We don't need the conversions bel
           print *, 'Proxima Centauri! Yay for nearby red stars!'
       ENDIF
 
+      IF (pstar .EQ. 'HD40307' .or. pstar .eq. '24' .or.
+     &   pstar .eq. 'K2.5V') THEN
+         n = 26150
+         print *, "STAR IS 24 (HD40307!)"
+         call sleep(1)
+         nhead = 0
+         ierr = 0
+         OPEN(UNIT=kin,
+     &    file='PHOTOCHEM/DATA/FLUX/HD40307_K2.5V_units.txt',
+     &                STATUS='old')
+          print *, 'This is a K2.5V star!'
+      ENDIF
+      
+       
+      IF (pstar .EQ. 'HD85512' .or. pstar .eq. '25' .or.
+     &   pstar .eq. 'K6V') THEN
+         n = 26150
+         print *, "STAR IS 25 (HD85512!)"
+         call sleep(1)
+         nhead = 0
+         ierr = 0
+         OPEN(UNIT=kin,
+     &    file='PHOTOCHEM/DATA/FLUX/HD85512_K6V_units.txt',
+     &                STATUS='old')
+          print *, 'This is a K6V star!'
+      ENDIF
 
 
-        ! Do same unit conversions as found in msun=13 option - Eddie
+      IF (pstar .EQ. 'HD97658' .or. pstar .eq. '26' .or.
+     &   pstar .eq. 'K1V') THEN
+         n = 26150
+         print *, "STAR IS 26 (HD97658!)"
+         call sleep(1)
+         nhead = 0
+         ierr = 0
+         OPEN(UNIT=kin,
+     &    file='PHOTOCHEM/DATA/FLUX/HD97658_K1V_units.txt',
+     &                STATUS='old')
+          print *, 'This is a K1V star!'
+       ENDIF      
+      
+        ! Do same unit conversions as found in star=13 option - Eddie
          DO i = 1, nhead
             READ(kin,*)
          ENDDO
@@ -1125,9 +1096,10 @@ c-mab: Recall msun = 22 is using Kevin's grid. We don't need the conversions bel
         ENDDO
 
 
-      ENDIF  !msun != 13
-!c-mab msun = 22 added below for the GOV spectra used in wasp12b Hot Jupiter run...
-      IF (msun .EQ. 22) THEN
+      ENDIF  !star != 13
+!c-mab star = 22 added below for the GOV spectra used in wasp12b Hot Jupiter run...
+      IF (pstar .EQ. 'wasp12' .or. pstar .eq. '22' .or. pstar
+     & .eq. 'g0v') THEN
 
          nhead = 2
          ierr = 0
@@ -1179,6 +1151,198 @@ c         stop
 
       ENDIF
       
+c-mab: The new 3300K star from ttps://phoenix.ens-lyon.fr/Grids/BT-Settl/AGSS2009/SPECTRA/lte033-4.5-0.0a+0.0.BT-Settl.7.bz2 very high res     
+      IF (pstar .EQ. 'PH3300K' .or. pstar .eq. '23') THEN
+         nhead = 0
+         ierr = 0
+
+         n = 76800  
+
+         OPEN(UNIT=kin,
+     &      file='PHOTOCHEM/DATA/FLUX/m3300phoenix_76800nl.txt',
+     &         STATUS='old')
+         print *, 'using inactive Mdwarf @ 3300K high res spectrum'
+         !NOTE: this flux file needs be converted to earth-equivalent flux first:
+
+         DO i = 1, nhead
+            READ(kin,*)
+         ENDDO
+         DO i = 1, n
+            READ(kin,*) x1(i), y1(i)   !wl already in Angstroms, flux in logs, convert flux...
+            x3(i) = x1(i);
+            y3(i)=10.**(y1(i)-8.d0) !convert to ergs/cm^2/s/A  
+         ENDDO
+
+      	sum_flux = 0.0
+      	do i=1,n-1
+         sum_flux = sum_flux + (y3(i)*(x3(i+1)-x3(i)))
+      	end do
+
+C scaling to solar constant
+        facm = (1.36e6)/sum_flux
+
+        do i=1,n-1
+          y3(i) = y3(i)*facm !converted to earth-equivalent flux
+        end do
+        
+         CLOSE (kin)
+         
+! We are not bothering with Youngsun stuff because it is a different star
+         n3=n
+         ierr=0
+
+      CALL addpnt(x3,y3,kdata,n3,x3(1)*(1.-deltax),zero)
+      CALL addpnt(x3,y3,kdata,n3,          zero,zero)
+      CALL addpnt(x3,y3,kdata,n3,x3(n3)*(1.+deltax),zero)
+      CALL addpnt(x3,y3,kdata,n3,        biggest,zero)
+      CALL inter2(nw+1,wl,yg3,n3,x3,y3,ierr)  !inter2 is points to bins
+!so yg3 is flux on the model wavelength grid
+
+         !error check for call to inter2
+         IF (ierr .NE. 0) THEN
+            WRITE(*,*) ierr,'  Something wrong in Grid.f/readflux'
+            STOP
+         ENDIF     
+
+! NOTE: This explicitly assumes the correct Lyman-Alpha flux *at the planet* has been included 
+!      in the input spectrum. It would benefit you to ensure that this is really the case! 
+        DO iw = 1, nw
+               f(iw) = yg3(iw)*(wl(iw+1)-wl(iw))*5.039e8*wl(iw)/10. !convert to photons/cm2/s
+               print *, wl(iw), yg3(iw)
+        ENDDO
+
+      ENDIF
+
+c     -mab: MUSCLES stars from the "adaptive constant panchromatic data products.
+
+      IF (pstar  .EQ. 'MUGJ876' .or. pstar .eq. '80' .or. pstar .EQ.
+     &  'MUGJ551' .or. pstar .eq. '81' .or. pstar .EQ. 'MUGJ581' .or.
+     &   pstar .eq. '82' .or. pstar .EQ. 'MUGJ667c' .or. pstar .eq. '83'
+     &   .or. pstar .EQ. 'MUGJ1214' .or. pstar .eq. '84' ) THEN                    !used to be if pstar gt 80, but 80 is a string and we're allowing non-numerical inputs for star names so this will need to be done differently since it's also entering this if statement for things like 'sun'. I think the simplest solution is to convert the muscles stars to the standard input units so that this special case goes away...  -gna 
+      !all of them have same starting units ergs/cm^2/s/A flux and A wavelength.
+      
+        IF (pstar .EQ. 'MUGJ876' .or. pstar .eq. '80') THEN 
+c-mab: Presently this star doesn't allow Modern Earth template to converge (even though we don't have negatives).
+
+
+         nhead = 0
+         ierr = 0
+
+         n = 24995  
+
+         OPEN(UNIT=kin,
+     &      file='PHOTOCHEM/DATA/FLUX/muscles_gj876.txt',
+     &         STATUS='old')
+         print *, 'using GJ876 MUSCLES adaptive constant res data'
+         !NOTE: this flux file needs be converted to earth-equivalent flux first:
+
+      	ENDIF !pstar = 80
+       	
+        IF (pstar .EQ. 'MUGJ551' .or. pstar .eq. '81') THEN
+
+         nhead = 0
+         ierr = 0
+
+         n = 24998  
+
+         OPEN(UNIT=kin,
+     &      file='PHOTOCHEM/DATA/FLUX/muscles_gj551.txt',
+     &         STATUS='old')
+c-mab: Prox Cen was not observed in the MUSCLES survey. Refer to notes:
+c-mab: https://archive.stsci.edu/missions/hlsp/muscles/gj551/hlsp_muscles_multi_multi_gj551_broadband_v21_reduction-notes.pdf
+         print *,'using GJ551 (Prox Cen) MUSCLES adaptive constant data'
+
+      	ENDIF ! pstar = 81
+      	
+        IF (pstar .EQ. 'MUGJ581' .or. pstar .eq. '82') THEN
+
+
+         nhead = 0
+         ierr = 0
+
+         n = 24995  
+
+         OPEN(UNIT=kin,
+     &      file='PHOTOCHEM/DATA/FLUX/muscles_gj581.txt',
+     &         STATUS='old')
+         print *,'using GJ581 MUSCLES adaptive constant res data'
+
+      	ENDIF !pstar = 82
+      	
+        IF (pstar .EQ. 'MUGJ667c' .or. pstar .eq. '83') THEN
+
+
+         nhead = 0
+         ierr = 0
+
+         n = 24995  
+
+         OPEN(UNIT=kin,
+     &      file='PHOTOCHEM/DATA/FLUX/muscles_gj667c.txt',
+     &         STATUS='old')
+         print *,'using GJ667c MUSCLES adaptive constant res data'
+
+      	ENDIF !pstar = 83 
+      	
+        IF (pstar .EQ. 'MUGJ1214' .or. pstar .eq. '84') THEN
+c-mab: Presently this star doesn't allow Modern Earth template to converge (even though we don't have negatives).
+
+
+         nhead = 0
+         ierr = 0
+
+         n = 24995  
+
+         OPEN(UNIT=kin,
+     &      file='PHOTOCHEM/DATA/FLUX/muscles_gj1214.txt',
+     &         STATUS='old')
+         print *,'using GJ1214 MUSCLES adaptive constant res data'
+
+      	ENDIF ! pstar = 84
+      	     	
+         DO i = 1, nhead
+            READ(kin,*)
+         ENDDO
+         DO i = 1, n
+            READ(kin,*) x3(i), y3(i)   !wl already in Angstroms, flux in ergs/cm^2/s/A
+         ENDDO
+
+        
+         CLOSE (kin)
+         
+! We are not bothering with Youngsun stuff because it is a different star
+         n3=n
+         ierr=0
+
+      CALL addpnt(x3,y3,kdata,n3,x3(1)*(1.-deltax),zero)
+      CALL addpnt(x3,y3,kdata,n3,          zero,zero)
+      CALL addpnt(x3,y3,kdata,n3,x3(n3)*(1.+deltax),zero)
+      CALL addpnt(x3,y3,kdata,n3,        biggest,zero)
+      CALL inter2(nw+1,wl,yg3,n3,x3,y3,ierr)  !inter2 is points to bins
+!so yg3 is flux on the model wavelength grid
+
+         !error check for call to inter2
+         IF (ierr .NE. 0) THEN
+            WRITE(*,*) ierr,'  Something wrong in Grid.f/readflux'
+            STOP
+         ENDIF     
+
+! NOTE: This explicitly assumes the correct Lyman-Alpha flux *at the planet* has been included 
+!      in the input spectrum. It would benefit you to ensure that this is really the case! 
+        DO iw = 1, nw
+           f(iw) = yg3(iw)*(wl(iw+1)-wl(iw))*5.039e8*wl(iw)/10. !convert to photons/cm2/s
+           
+               print *, wl(iw), yg3(iw)
+        ENDDO
+
+      ENDIF !muscles stars
+
+!     Scale UV grid
+      print *, 'uvscale', uvscale
+       DO ii = 1, nw
+         IF(wl(ii) .lt. 4000) f(ii) = f(ii)*uvscale
+       ENDDO
+     
 *_______________________________________________________________________
 
       RETURN
@@ -1928,3 +2092,4 @@ C $Id$
 
       RETURN
       END
+      

@@ -1,5 +1,5 @@
       SUBROUTINE PHOTO(ZY,AGL,LTIMES,ISEASON,IZYO2,IO2,INO,N,timega,
-     $                 frak,msun,ihztype)
+     $                 frak,pstar,ihztype,uvscale)
       INCLUDE 'PHOTOCHEM/INPUTFILES/parameters.inc'
       implicit real*8(A-H,O-Z)
       real*8 mass
@@ -8,6 +8,7 @@
 c      real*8 temp(kj) !EWS - not used
       character*8 REACTYPE,PLANET,CHEMJ,ISPEC
       CHARACTER*20 fmtstr
+      character*8 pstar
       CHARACTER*11 photolabel, AA
       DIMENSION D0(2)
       dimension LLNO(35)
@@ -50,7 +51,9 @@ c- this used only if INO=0
 !compute mean molar mass (this could easily be abstracted so that N2 isn't hardcoded...
 
       pO2=USOL(LO2,1)  !assumes atmosphere has O2 in it
-      pCO2=FCO2  !and CO2
+      pCO2=FCO2                 !and CO2
+
+
 
 
 c-mab: Like DENSTY & DIFCO, WT expression based on H2 mixing ratio...
@@ -137,7 +140,7 @@ c - note that columndepth is indexed by photoreac so contains duplicate informat
 c (i.e. columndepth(1,*) and (2,*)  are both the O2 column depth (assuming O2 is the first photoreaction)
 
       IF(LTIMES .EQ. 0) then
-        CALL INITPHOTO(sq,columndepth,ZY,nw,timega,IO2,msun)
+        CALL INITPHOTO(sq,columndepth,ZY,nw,timega,IO2,pstar,uvscale)
  !this subroutine returns sq(nj,nz,nw) = cross section * quantum yield for each
  ! photolysis reaction at each height for each wavelength
 ! it also specifies the wavelength grid and the flux
