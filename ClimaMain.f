@@ -102,7 +102,7 @@ c     PARAMETER(NF=55, NA=1, NLAYERS=51, NZ=64)
       PARAMETER(NSOL=38, NGS=8, IK=8)  ! Added IK=8 parameter and NGS is 7 now, 3/26/2012
       !gna - changed ngs to 8 (ethane)
       parameter(nrow=11)                        
-
+      character*8 pstar
 C      CHARACTER*5 :: ICH4A   !Changed to make STARR hold up to 5 characters
 C      CHARACTER*5 :: ICO2A   !Changed to make STARR hold up to 5 characters
       CHARACTER*5 :: STARR   !Changed to make STARR hold up to 5 characters
@@ -444,16 +444,19 @@ c*******Changed for now*********
 !gna - read more inputs from photo for coupling
       IF (ICOUPLE.eq.1) THEN 
       OPEN(unit=999,FILE= 'COUPLE/coupling_params.out')
- 107  FORMAT(1X, F4.2, 5X, F8.3, 5X, F3.1, 5X, I2, 5X, I2,
-     &     9X, I4, 6X, F4.2, 6X, F8.2)
+! 107  FORMAT(1X, F4.2, 5X, F8.3, 5X, F3.1, 5X, I2, 5X, I2,
+!     &     9X, I4, 6X, F4.2, 6X, F8.2)
+
+ 107  FORMAT(1X, F4.2, 5X, F8.3, 5X, F3.1, 5X, A8, 5X, I2,
+     &     9X, I4, 6X, F4.2, 6X, F7.3)
       READ(999,*)
-      READ(999,107) timega, P0ground, frak, msun, ihztype, nzp, fscale,
+      READ(999,107) timega, P0ground, frak, pstar, ihztype, nzp, fscale,
      & G
       print *, 'COUPLING PARAMETERS ARE:'
       print *, 'TIMEGA = ', timega
       print *, 'P0ground = ', P0ground
       print *, 'frak = ', frak
-      print *, 'msun = ', msun
+      print *, 'pstar = ', pstar
       print *, 'ihztype = ', ihztype
       print *, 'nzp = ', nzp
       print *, 'fscale = ', fscale
@@ -462,19 +465,22 @@ c*******Changed for now*********
       !remove haze in input file if ihztype = 99 (this means no hcaer was run in PHOTO so nonsensical to include it)
       if(ihztype.eq.99) IHAZE = 0
       
-      IF (msun.eq.13) STARR = "Sun"
-      IF (msun.eq.14) STARR = "Sun"
-      IF (msun.eq.15) STARR = "ADLEO"
+      IF (pstar == '13') STARR = "Sun"
+      IF (pstar == '14') STARR = "Sun"
+      IF (pstar == '15') STARR = "ADLEO"
       !using the stellar parameterization implemented by Ramses for these next few 
       !see pickstar.f for details
-      IF (msun.eq.16) STARR = "B5034" !adleo ("adleo" isn't working well) B5035
-      IF (msun.eq.17) STARR = "B5032" !T3200
-      IF (msun.eq.18) STARR = "B5050" !K2V
-      IF (msun.eq.19) STARR = "B4070" !F2V
-      IF (msun.eq.76) STARR = "B5034" !GJ876
-      IF (msun.eq.20) STARR = "B5026" !M8V
-!      IF (msun.eq.21) STARR = "B5030" !M5V
-      IF (msun.eq.21) STARR = "M5V" !EWS - testing this implementation 
+      IF (pstar == '16') STARR = "B5034" !adleo ("adleo" isn't working well) B5035
+      IF (pstar == '17') STARR = "B5032" !T3200
+      IF (pstar == '18') STARR = "B5050" !K2V
+      IF (pstar == '19') STARR = "B4070" !F2V
+      IF (pstar == '76') STARR = "B5034" !GJ876
+      IF (pstar == '20') STARR = "B5026" !M8V
+!      IF (pstar == 21) STARR = "B5030" !M5V
+      IF (pstar == '21') STARR = "M5V" !EWS - testing this implementation 
+      IF (pstar == '24') STARR = "B5050" !K2.5V
+      IF (pstar == '25') STARR = "B5042" !K6V
+      IF (pstar == '26') STARR = "B5052" !K1V
       
          age = 4.7
          time = age-timega
