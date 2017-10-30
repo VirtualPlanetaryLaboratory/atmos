@@ -71,6 +71,11 @@ C  radius of particles is given in cm
          print *, 'doing fractal particles Khare+Hasenkopf'
          endif
 
+         if (ihztype.eq.7) then 
+         OPEN(UNIT=40,FILE= DIRDATA//'/irtotalfract_gk.DAT')
+         OPEN(UNIT=41,FILE= DIRDATA//'/soltotalfract_gk.DAT')
+         print *, 'doing fractal particles Gavalin+Khare'
+         endif
 
         ELSE
          OPEN(UNIT=40,FILE= DIRDATA//'/irtotal.DAT')

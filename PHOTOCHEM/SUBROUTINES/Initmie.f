@@ -204,8 +204,12 @@ C-   spherical particles
         else if (ihztype.eq.6.) then 
             root = 'PHOTOCHEM/DATA/MIE/f6/fractopts'
             print *,'ihztype 6: 0.05 um (Khare shifted to Hasenkopf)'
-        end if
+
+        else if (ihztype.eq.7.) then 
+            root = 'PHOTOCHEM/DATA/MIE/f6/fractopts'
+            print *,'ihztype 7: 0.05 um (Khare + Gavalin)'
          
+        end if         
         
       filenames=['0.001um.txt','0.002um.txt','0.003um.txt','0.004um.txt'
      $          ,'0.005um.txt','0.006um.txt','0.007um.txt','0.008um.txt'
