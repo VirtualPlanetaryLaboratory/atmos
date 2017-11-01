@@ -13,7 +13,7 @@ PRONO=     1.E9
 frak=      1
 HCDENS=    0.63
 ICOUPLE=   0
-ihztype=   0
+ihztype=   7
 ZY=	   50.
 
 C ***** SET MODEL PARAMETERS *****
