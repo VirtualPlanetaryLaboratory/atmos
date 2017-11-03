@@ -481,6 +481,7 @@ c*******Changed for now*********
       IF (pstar == '24') STARR = "B5050" !K2.5V
       IF (pstar == '25') STARR = "B5042" !K6V
       IF (pstar == '26') STARR = "B5052" !K1V
+      IF (pstar == '27') STARR = "B5040" !M0V
       
          age = 4.7
          time = age-timega

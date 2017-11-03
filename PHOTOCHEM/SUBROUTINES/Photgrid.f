@@ -1056,7 +1056,20 @@ c-mab: Recall pstar = 22 is using Kevin's grid. We don't need the conversions be
      &    file='PHOTOCHEM/DATA/FLUX/HD97658_K1V_units.txt',
      &                STATUS='old')
           print *, 'This is a K1V star!'
-       ENDIF      
+       ENDIF
+
+       IF (pstar .EQ. 'K2-3' .or. pstar .eq. '27' .or.
+     &   pstar .eq. 'M0V') THEN
+         n = 26148
+         print *, "STAR IS 27 (K2-3 / M0V)"
+         call sleep(1)
+         nhead = 0
+         ierr = 0
+         OPEN(UNIT=kin,
+     &    file='PHOTOCHEM/DATA/FLUX/M0V.txt',
+     &                STATUS='old')
+          print *, 'This is a M0V star!'
+       ENDIF    
       
         ! Do same unit conversions as found in star=13 option - Eddie
          DO i = 1, nhead
