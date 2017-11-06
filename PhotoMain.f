@@ -2802,7 +2802,13 @@ C-PK Write to file used for spectrum (VPL-SMART)
  940  FORMAT(1X,1P16E10.3)
 
 
-
+!SH - added lower limit to mixing ratios, allows restart file to be
+!     read by other programs w/out issue (1.-100 fix) - Nov. 6, 2017
+      DO I=1,NZ
+        DO K=1,NQ
+          USOL((K,I) = MAX(USOL(K,I),1.E-99)
+        ENDDO
+      ENDDO
 
 C write out formatted out.dist file
 c this new format works automatically even if NQ changes
