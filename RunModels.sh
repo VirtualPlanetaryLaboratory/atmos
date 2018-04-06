@@ -18,7 +18,15 @@ folder_path=$temp_path$folder
 folder_path2=$temp_path2$folder
 
 cd $folder_path
-cp 'in.dist' '../../..' && echo "Copied in.dist from $(pwd ../../..)"
+
+# Copies over the newer dist file if it's present, 
+# otherwise copies over the normal in.dist
+if [ ! -f PTZ_mixing_ratios_out.dist]; then
+    cp 'PTZ_mixingratios_out.dist' && echo "Copied PTZ_mixingratios_out.dist from $(pwd ../.../..)"
+else
+    cp 'in.dist' '../../..' && echo "Copied in.dist from $(pwd ../../..)"
+fi
+
 cp 'input_photchem.dat' '../..' && echo "Copied input_photchem.dat from $(pwd ../..)"
 cp 'reactions.rx' '../..' && echo "Copied reactions.rx from $(pwd ../..)"
 cp 'parameters.inc' '../..' && echo "Copied parameters.inc from $(pwd ../..)"
