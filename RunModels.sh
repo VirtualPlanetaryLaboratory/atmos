@@ -21,8 +21,8 @@ cd $folder_path
 
 # Copies over the newer dist file if it's present, 
 # otherwise copies over the normal in.dist
-if [ ! -f PTZ_mixing_ratios_out.dist]; then
-    cp 'PTZ_mixingratios_out.dist' && echo "Copied PTZ_mixingratios_out.dist from $(pwd ../.../..)"
+if [ -f PTZ_mixing_ratios_out.dist ]; then
+    cp 'PTZ_mixingratios_out.dist' '../../..' && echo "Copied PTZ_mixingratios_out.dist from $(pwd ../.../..)"
 else
     cp 'in.dist' '../../..' && echo "Copied in.dist from $(pwd ../../..)"
 fi
