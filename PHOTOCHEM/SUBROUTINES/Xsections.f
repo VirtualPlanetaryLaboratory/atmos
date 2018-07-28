@@ -2827,7 +2827,7 @@ c ok, the first thing kevin does is combine the two cross sections in the interm
       if (wl(L) .GE. 2632. .AND. wl(L) .LE. 3550.) then     !temperature dependent x-section from Kevin's code 
         do I=1,NZ
          TI = max(tlev(I),T203)
-         TI = min(tlev(I),T273)
+         TI = min(TI,T273)
          FR = (TI - 203.)/70.
          O3xs(I,L) = FR*yg2(L) + (1.-FR)*yg1(L)
         enddo
