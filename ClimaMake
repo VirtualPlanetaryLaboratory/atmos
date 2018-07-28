@@ -16,7 +16,7 @@ PLATFORM = osx
 
 #optimized
 FC = gfortran
-FCFLAG = -O3 -I. -fno-automatic -ftree-vectorize -fdefault-integer-8 -fdefault-real-8 -ffpe-trap=invalid
+FCFLAG = -O3 -I. -fno-automatic -ftree-vectorize -fdefault-integer-8 -fdefault-real-8 -ffpe-trap=invalid -std=legacy
 #debugging versions
 #FCFLAG = -g -fbounds-check -Wall -fbacktrace -finit-real=nan
 #FCFLAG = -g -fno-automatic -ftrapv -fbounds-check -O
