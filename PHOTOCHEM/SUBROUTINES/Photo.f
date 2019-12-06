@@ -248,8 +248,8 @@ c       enddo
          L3 = 3 !EWS - removes compilation warning
       do L=L3,NP  !loop over hydrocarbon particles ONLY RIGHT now
       DO I=1,nw
-      DO J=1,NZ                                       
-      DO k=1,33  !ACK - hardcoded num particles (probably OK - this is how the HC grid was computed)
+      DO J=1,NZ
+      DO k=1,50  !ACK - hardcoded num particles (probably OK - this is how the HC grid was computed)
 
          IF ((RPAR(J,L).GE.RSTAND(k)).and.(RPAR(J,L).LT.RSTAND(k+1)))
      2 THEN
@@ -314,7 +314,7 @@ c     so this is repeated once for L<1754 and L>2041A and NK(L) times for 1754<L
 
        !set up new Rayleigh scattering vectors
          do j=1,NSP
-           if (SL(j,i)/DEN(i).GE. 0.01) then  !if more than 1% of atmosphere, consider Rayleigh contribution 
+           if (SL(j,i)/DEN(i).GE. 0.01) then  !if more than 1% of atmosphere, consider Rayleigh contribution
 
 c              if (Z(i)/1e5.eq.107.5) print *, ispec(j)
 
@@ -351,14 +351,14 @@ c-mab/mc: No scattering contributions for O, N, H, C or Cl!
               else if (ISPEC(j).eq.'O'.or.ISPEC(J).eq.'H'.or.
      $          ISPEC(J).eq.'N'.or.ISPEC(J).eq.'S'.or.
      $          ISPEC(J).eq.'C'.or.ISPEC(J).eq.'Cl') then
-c-mab: Do nothing! Atoms don't scatter! 
+c-mab: Do nothing! Atoms don't scatter!
               else
                  if(FH2.LT.0.5) then
 c-mab assuming "rest" to be Earth air is not valid for giant planets!
 c-mab this H2 fraction-based loop is a temporary fix--don't want to hardcode ignoring H
                   ncomp(i)=ncomp(i)+1
                   volmix(ncomp(i),i)=SL(j,i)/DEN(i)
-                  icomp(ncomp(i),i)=1  
+                  icomp(ncomp(i),i)=1
 !using Earth 'air' for the rocky planets - better than nothing? hard to know...
                if (wavl(L).eq.2273) then
                   if (tempcount.eq.0) then
@@ -438,7 +438,7 @@ c       IF(J.EQ.60) THEN
 c        IF(I.EQ.1)print*,"J,wav,Reaction No.",J,L,wav(L),photonums(j)
 c         print*,'WAV,Z,prates,FLX,sq,S',wav(L),Z(I)/1e5,prates(j,i),
 c     $           FLX,sq(j,i,L),S(i) !!!PRINT ADD !!!
-c       ENDIF 
+c       ENDIF
        enddo
       enddo
 
