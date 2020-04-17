@@ -1398,7 +1398,7 @@ c     enddo
 c  for H and H2
 c  lower boundary condition
 
-      if(PLANET.EQ.'WASP12B' .or. PLANET.EQ.'EARTH') then
+      if(PLANET.EQ.'WASP12B'.or.PLANET.EQ.'EARTH') then
        do k=1,(NQ-NP)
        if(mbound(k).eq.0) then
         DU(k,1) = DU(k,1) + bX1X2(k,1)/Den(1)/DZ(1)**2
@@ -1423,7 +1423,7 @@ c interior grid points   ?fixed 8-13-05
             DD(k,j) = DU(k,j) + DL(k,j)
             ADD(k,j) = -ADU(k,j) - ADL(k,j)
         enddo
-       endif
+        endif
        enddo
 
       else
@@ -2240,7 +2240,7 @@ C                     USOL(I,J) = USOL(I,J) + RHS(K)
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
         !!!!ELSEIF (USOL(I,J).LT. 1.E-15) THEN !TEMPORARILY DISABLING THIS ALTOGETHER TO USE RAVI'S CONDITIONS DIRECTLY
-        ELSEIF(PLANET.NE.'WASP12B'.AND.USOL(I,J).LT. 1.E-15) THEN !DEFAULT ATMOS CONDITION -- USING FOR NON HOT JUP PLANETS
+        ELSEIF(PLANET.NE.'WASP12B'.AND.USOL(I,J).LT. 1.E-19) THEN !DEFAULT ATMOS CONDITION -- USING FOR NON HOT JUP PLANETS
 
 c-orig        IF (USOL(I,J).LT. 1.E-20) THEN
 c        IF (USOL(I,J).LT. 1.E-22) THEN
