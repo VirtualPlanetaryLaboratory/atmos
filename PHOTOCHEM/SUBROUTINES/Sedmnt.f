@@ -90,6 +90,7 @@ C
 
 
       DO 10 K=1,NP
+       LL=NQ-NP+K
 C   (1 = SULFATE, 2 = S8, 3 = HYDROCARBON, 4=HCAER2)
 
        L = LSO4AER  !so using the sulfate aersol for all particles?
@@ -125,7 +126,13 @@ C-EW  S8,SO4,HC if frak=0: USE SPHERICAL MICROPHYSICS
        CUNING(J,K) = 1 + ALPH*ALAM(J)/RPAR(J,K)
 C-AP Here we assume that the density of aerosol is 1 g/cm3
 C-AP Notation is similar Fusch 1964
-       adensity = HCDENS
+       if (LL.EQ.LS8AER) then
+           adensity = 2.07
+       elseif (LL.EQ.LSO4AER) then
+           adensity = 1. + 0.8*FSULF(J)
+       else
+           adensity = HCDENS
+       endif
        amass(J,K) = (4./3.)*PI*RPAR(J,K)**3*adensity
        THERMSP(J,K) = SQRT((8*BK*T(J))/(pi*amass(J,K))) 
        TAURELAXC(J,K)=2*RPAR(J,K)*RPAR(J,K)/(9*ETA(J))
