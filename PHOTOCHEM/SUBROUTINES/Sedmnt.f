@@ -66,7 +66,11 @@ C-EW  THIS IS THE MONOMER RADIUS [cm]
 
          RMON = 50.E-7
       do K=3,4
+      rmmax=1.90e-4
       DO J=1,NZ
+      IF (RPAR(J,K).GE.rmmax) THEN
+          RPAR(J,K)=rmmax
+      ENDIF
       NMON = (RPAR(J,K)/RMON)**3.
       IF (NMON .LE. 1.) THEN
         DF = 3.
@@ -199,6 +203,12 @@ C   DON'T ALLOW PARTICLES TO DECREASE IN SIZE AT LOW ALTITUDES
       DO 3 I=1,NZ1
       J = NZ - I
    3  RPAR(J,K) = max(RPAR(J,K),RPAR(J+1,K))
+
+      if(K.eq.3) then
+       do J=I, NZ
+        RPAR(J,4)=RPAR(J,3)
+       enddo
+      endif
 
 
 C
