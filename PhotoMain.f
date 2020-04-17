@@ -1398,9 +1398,9 @@ c     enddo
 c  for H and H2
 c  lower boundary condition
 
-      if(PLANET.EQ.'WASP12B') then
-       do k=1,NQ
-       if(mbound(i).eq.0) then
+      if(PLANET.EQ.'WASP12B' .or. PLANET.EQ.'EARTH') then
+       do k=1,(NQ-NP)
+       if(mbound(k).eq.0) then
         DU(k,1) = DU(k,1) + bX1X2(k,1)/Den(1)/DZ(1)**2
         ADU(k,1) = bX1X2(k,1)/Den(1)/DZ(1)/2.*
      6      (1./scale_H(k,1)-1./H_atm(1))
@@ -2279,8 +2279,12 @@ c-mc test this at some point down the road WARNING
 C-mab: Foregoing this for giant planets since we don't fudge the values above...
       IF(FH2.LT.0.50) THEN
       DO 4 J=1,JTROP
+        IF(ICOUPLE.eq.0)THEN
         USOL(LH2O,J) = H2O(J)
 c       USOL(LS8,J) = S8S(J)
+        ELSE
+         USOL(LH2O,J) = water(J)
+        ENDIF
    4  CONTINUE
       ENDIF
 

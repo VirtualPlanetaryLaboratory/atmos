@@ -58,8 +58,8 @@ CH4       O1D       H2CO      H2                2BODY     7.5E-12     0.        
 CH21      CH4       CH3       CH3               2BODY     3.6E-11     0.                     ! way too fast? NIST 298K is 2.78e-19.!pavlov 01 has it even higher citing Bohland 1985 !see shawn's code
 CH21      O2        HCO       OH                2BODY     3.E-11      0.                     ! Ashfold et al. [1981]  (duplicated below for CH21 + S2 -> HCS + HS)
 CH21      M         CH23      M                 2BODY     8.8E-12     0.                     ! Ashfold et al. [1981]                                                           
-CH23      H2        CH3       H                 2BODY     0.          0.                     ! zeroed out - could be deleted eventually
-CH23      CH4       CH3       CH3               2BODY     0.          0.                     ! zeroed out - could be deleted eventually
+CH23      H2        CH3       H                 2BODY     5.E-14      0.                     ! zeroed out - could be deleted eventually
+CH23      CH4       CH3       CH3               2BODY     7.1e-12     -5051.                     ! zeroed out - could be deleted eventually
 CH23      O2        HCO       OH                2BODY     4.1E-11     -750.                  ! NIST - products uncertain (duplicated below for CH23 + S2 -> HCS + HS)
 CH3       O2        H2CO      OH                3BODY     4.5D-31     1.8D-12    3.0   1.70  ! JPL-02  (am I doubling this with reac 311?)
 CH3       O         H2CO      H                 2BODY     1.1E-10     0.                     ! JPL-06
@@ -113,21 +113,21 @@ SO2       HV        SO        O                 PHOTO     0.00 !SO2 quantum yiel
 SO2       HV        SO21                        PHOTO     0.00 !this line must follow SO2+hv->SO+O
 SO2       HV        SO23                        PHOTO     0.00 !this line must follow SO2+hv->SO21                   
 SO        O2        O         SO2               2BODY     2.6E-13     -2400.                 ! JPL-02
-SO        HO2       SO2       OH                2BODY     0.0E-11     0.                     ! Kasting [1990] use 2.8e-11. KZ:old rate 2.3E-11 was high.  no information. - ZEROED! !shawn still has. reserach
+SO        HO2       SO2       OH                2BODY     2.8E-11     0.                     ! Kasting [1990] use 2.8e-11. KZ:old rate 2.3E-11 was high.  no information. - ZEROED! !shawn still has. reserach
 SO        O         SO2                         WEIRD     5.1E-31     DEN(I)                 ! NIST 2005 
 SO        OH        SO2       H                 2BODY     8.6E-11     0.                     ! JPL-02 
 SO2       OH        HSO3                        3BODY     3.D-31      1.5D-12    3.30  0.0   ! JPL-02
 SO2       O         SO3                         3BODY     1.3D-33     1.5D-11    -3.60 0.0   ! JPL-02  Not sure how well the read-in is going to work here...
 SO3       H2O       H2SO4                       2BODY     1.2E-15     0.                     ! JPL-02
 HSO3      O2        HO2       SO3               2BODY     1.3E-12     -330.                  ! JPL-02
-HSO3      OH        H2O       SO3               2BODY     0.0E-11     0.                     ! Kasting [1990] use 1e-11  KZ: no information so zereod  !shawn sill has research
-HSO3      H         H2        SO3               2BODY     0.0E-11     0.                     ! Kasting [1990] use 1e-11  KZ: no information so zereod  !shawn sill has research
-HSO3      O         OH        SO3               2BODY     0.0E-11     0.                     ! Kasting [1990] use 1e-11  KZ: no information so zereod !shawn sill has research
+HSO3      OH        H2O       SO3               2BODY     1.0E-11     0.                     ! Kasting [1990] use 1e-11  KZ: no information so zereod  !shawn sill has research
+HSO3      H         H2        SO3               2BODY     1.0E-11     0.                     ! Kasting [1990] use 1e-11  KZ: no information so zereod  !shawn sill has research
+HSO3      O         OH        SO3               2BODY     1.0E-11     0.                     ! Kasting [1990] use 1e-11  KZ: no information so zereod !shawn sill has research
 H2S       OH        H2O       HS                2BODY     6.0E-12     -70.                   ! JPL-02
 H2S       H         H2        HS                2BODY     1.5E-11     -850.                  ! NIST, 1973SCH paper  Shawn uses: Baulch et al. [1976] or pen et al 1999 - needs research
 H2S       O         OH        HS                2BODY     9.2E-12     -1800.                 ! JPL-02
 HS        O         H         SO                2BODY     7.0E-11     0.                     ! JPL-O2 gives 1.6e-10 but with 5X error    !shawn diff
-HS        O2        OH        SO                2BODY     0.0E-19     0.                     ! JPL-02 - zereod out - could be removed...!shawn still has needs research
+HS        O2        OH        SO                2BODY     4.0E-19     0.                     ! JPL-02 - zereod out - could be removed...!shawn still has needs research
 HS        HO2       H2S       O2                2BODY     1.0E-11     0.                     ! estimated by Molina's group NIST 05
 HS        HS        H2S       S                 2BODY     2.0E-11     0.                     ! 4.5e-11 measured at 1 bar, but NIST 2005 1.7e-11 exptl upper limit at 0.01 bar  !shawn diff
 HS        HCO       H2S       CO                2BODY     2.0E-11     0.                     ! Kasting [1990] use 5e-11:  KZ no measurements, no information (duplicated below as HS + HCS -> H2S + CS !shawn diff
@@ -135,12 +135,12 @@ HS        H         H2        S                 2BODY     2.0E-11     0.        
 HS        S         H         S2                2BODY     1.0E-11     0.                     ! KZ: 4e-11 NIST (1970's era lit review), but S2+S2 authority prefers <5e-12 upper limit !shawn diff
 S         O2        SO        O                 2BODY     2.3E-12     0.                     ! JPL-02
 S         OH        SO        H                 2BODY     6.6E-11     0.                     ! JPL-02
-S         HCO       HS        CO                2BODY     1.0E-11     0.                     ! Kasting [1990] uses 5e-11 KZ: no information  on abstractions by S.!shawn diff
+S         HCO       HS        CO                2BODY     5.0E-11     0.                     ! Kasting [1990] uses 5e-11 KZ: no information  on abstractions by S.!shawn diff
 S         HO2       HS        O2                2BODY     5.0E-12     0.                     ! Kasting [1990] uses 1.5e-11 KZ: no information  !shawn diff
 S         HO2       SO        OH                2BODY     5.0E-12     0.                     ! Kasting [1990] uses 1.5e-11 KZ: no information  !shawn diff
 S         S         S2                          WEIRD     !at some point put a better comment here  !shawn has du et al 2008 - research
 S2        O         S         SO                2BODY     1.1E-11     0.                     ! Hills et al. [1987]                                                           
-HS        H2CO      H2S       HCO               2BODY     0.          0.                     ! KZ:no information, an unlikely abstraction CH3 + H2CO -> CH4 + HCO is very slow  (Shawn has fast) reserach
+HS        H2CO      H2S       HCO               2BODY     1.7E-11     -800.                     ! KZ:no information, an unlikely abstraction CH3 + H2CO -> CH4 + HCO is very slow  (Shawn has fast) reserach
 S2        HV        S         S                 PHOTO     1.00                                                                                          
 S         S2        S3                          WEIRD     !yes it is. fix me at some point
 S2        S2        S4                          WEIRD     !yes it is. fix me at some point
@@ -160,35 +160,35 @@ SO23      HV        SO2       HV                2BODY     1.13E+3     0.        
 SO23      SO2       SO3       SO                2BODY     7.0E-14     0.                     ! Turco et al. [1982]                                              
 SO        NO2       SO2       NO                2BODY     1.4E-11     0.                     ! NIST 2005                                               
 SO        O3        SO2       O2                2BODY     4.5E-12     -1170.                 ! NIST 2005                                              
-SO2       HO2       SO3       OH                2BODY     0.          0.                     ! NIST              !shawn has diff. needs research
+SO2       HO2       SO3       OH                2BODY     1.0E-18     0.                     ! NIST              !shawn has diff. needs research
 HS        O3        HSO       O2                2BODY     9.0E-12     -280.                  ! JPL-06
 HS        NO2       HSO       NO                2BODY     2.9E-11     240.                   ! JPL-02
 S         O3        SO        O2                2BODY     1.2E-11     0.                     ! NIST 2005 DeMore et al. [1992]
 SO        SO        SO2       S                 2BODY     2.0E-15     0.                     ! avg of two measurements NIST
 SO3       SO        SO2       SO2               2BODY     2.0E-15     0.                     ! NIST 2005 Yung and DeMore [1982]                                              
-S         CO2       SO        CO                2BODY     0.0E-20     0.                     ! Yung and DeMore [1982] had 1e-20, no info in NIST 2005 - zeroed !shawn still has
-SO        HO2       HSO       O2                2BODY     0.          0.                     ! no information - zeroed and remove someday?
+S         CO2       SO        CO                2BODY     1.0E-20     0.                     ! Yung and DeMore [1982] had 1e-20, no info in NIST 2005 - zeroed !shawn still has
+SO        HO2       HSO       O2                2BODY     2.8E-11     0.                     ! no information - zeroed and remove someday?
 SO        HCO       HSO       CO                2BODY     5.2E-12     0.                     ! no info: assumed same as HCO + O2 -> HO2 + CO  !shawn has something diff
 H         SO        HSO                         3BODY     5.7D-32     7.5D-11    1.60  0.0   ! JPL-02 !Assumed same as H+O2+M->HO2+M                          
 HSO       HV        HS        O                 PHOTO     1.00                               ! note - we use the HO2 cross section for HSO                                       
-HSO       NO        HNO       SO                2BODY     0.          0.                     ! JPL-02  - zeroed and remove someday?  Shawn has this at same as NO + HO2 -> NO2 + OH
+HSO       NO        HNO       SO                2BODY     1.0E-15     0.                     ! JPL-02  - zeroed and remove someday?  Shawn has this at same as NO + HO2 -> NO2 + OH
 HSO       OH        H2O       SO                2BODY     3.0E-11     0.                     ! Kasting [1990] assumes same as OH + HO2 -> H2O + O2, KZ says no information !shawn diff
 HSO       H         HS        OH                2BODY     2.0E-11     0.                     ! Kasting [1990] Assumed same as H+HO2->OH+OH: QY of 0.90 against rate of 8.1E-11 KZ estimate shawn diff
 HSO       H         H2        SO                2BODY     1.E-11      0.                     ! Kasting [1990] Assumed same as H+HO2->H2+O2: QY of 0.08 against rate of 8.1E-11, KZ estimate  shawn diff
 HSO       HS        H2S       SO                2BODY     3.E-11      0.                     ! Kasting [1990] uses 1e-12, KZ estimate here  shawn diff                                                 
 HSO       O         OH        SO                2BODY     3.0E-11     0.                     ! Kasting [1990] use same as HO2+O->OH+O2 but Kevin says: I don't like the O2 path here shawn sdiff
 HSO       S         HS        SO                2BODY     3.0E-11     0.                     ! Kasting [1990] uses 1e-11: Kevin says no information   !shawn diff
-SO3       CO        SO2       CO2               2BODY     0.0         0.0                    ! zeroed - eventually remove 
+SO3       CO        SO2       CO2               2BODY     0.0         0.0                    ! Did not find anything in KIDA, NIST and JPL-18
 H         OCS       CO        HS                2BODY     9.10E-12    -1940.                 ! NIST
 HS        CO        OCS       H                 2BODY     4.15E-14    -7650.                 ! NIST, 1995 reference
 O         OCS       CO        SO                2BODY     2.1E-11     -2200.                 ! JPL-02 new low T 
 O         OCS       S         CO2               2BODY     8.33E-11    -5530.                 ! this is reported - lots of measurements
 OCS       S         CO        S2                2BODY     1.50E-10    -1830.                 ! NIST best at low T    
 OCS       OH        CO2       HS                2BODY     1.10E-13    -1200.                 ! JPL-02
-S         HCO       OCS       H                 2BODY     0.0         0.0                    ! zeroed - eventually remove 
+S         HCO       OCS       H                 2BODY     8.e-11      0.0                    ! Loison et al. [2012] 
 S         CO        OCS                         WEIRD     !essentially the same rate as O+CO+M -> CO2 + M  (but confused about a factor of 3)                         
 OCS       HV        CO        S                 PHOTO     0.72 
-H2S       HO2       H2O       HSO               2BODY     0.0         0.0                    ! reportedly measured (5e-12)- dicey I think! - see NIST 2005  
+H2S       HO2       H2O       HSO               2BODY     3.00E-15    0.0                    ! Upper limit from JPL-18
 OCS       S         OCS2                        WEIRD
 OCS2      S         OCS       S2                2BODY     2.00E-11    0.                     ! NIST reports 4.1e4 in who knows what units! so I'm guessing this means fast
 S3        O         S2        SO                2BODY     0.0         0.0                    ! 0.*1.1E-11 was kevin's
