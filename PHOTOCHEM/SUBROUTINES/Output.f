@@ -319,7 +319,7 @@ c     enddo
 c these should be flagged for IH2=-1
 c         \phi = b*f*({1/over H_A}-{1/over H}) - b*df/dz
 c the following gives fluxes from 1 to 80 km.
-      if(PLANET.EQ.'WASP12B') then
+      if(PLANET.EQ.'WASP12B'.or.PLANET.eq.'EARTH') then
        do i=1,NZ-1
         do j=1,NQ
          fluxo(j,i) = fluxo(j,i)
@@ -980,7 +980,7 @@ C
       
        	ELSE IF (J.EQ.3) THEN
       write(14,301)
- 301  FORMAT(/1X,"S8 AEROSOL PARAMETERS")
+ 301  FORMAT(/1X,"HC TYPE 1 AEROSOL PARAMETERS")
       write(14,256)
       write(14,261) (Z(I),AERSOL(I,J),RPAR(I,J),WFALL(I,J),
      2  TAUSED(I,J),TAUEDD(I),TAUC(I,J),CONVER(I,J),I=1,NZ,ISKIP)
