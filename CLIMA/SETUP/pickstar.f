@@ -1098,6 +1098,23 @@ c             print *, SOLINT(I)
              SOLINT(I)=s(297)
              print *, SOLINT(I)
 
+C    Here on out is Teal's muscles spectra additions... -- Teal
+      ELSE
+            READ(82,*) ll,x80,x81,x82,x83,x84,x85,x86,x87,x88,
+     +      x89,x90,x91,x,x
+            IF(STARR=="G80") SOLINT(I) = x80
+            IF(STARR=="G81") SOLINT(I) = x81
+            IF(STARR=="G82") SOLINT(I) = x82
+            IF(STARR=="G83") SOLINT(I) = x83
+            IF(STARR=="G84") SOLINT(I) = x84
+            IF(STARR=="G85") SOLINT(I) = x85
+            IF(STARR=="G86") SOLINT(I) = x86
+            IF(STARR=="G87") SOLINT(I) = x87
+            IF(STARR=="G88") SOLINT(I) = x88
+            IF(STARR=="G89") SOLINT(I) = x89
+            IF(STARR=="G90") SOLINT(I) = x90
+            IF(STARR=="G91") SOLINT(I) = x91
+
       ENDIF
 
         enddo
