@@ -1322,6 +1322,107 @@ c-mab: Presently this star doesn't allow Modern Earth template to converge (even
 
         
          CLOSE (kin)
+
+! ---- Below here lie Teal's stars
+
+        IF (pstar .eq. '85') THEN  ! GJ176
+
+         nhead = 0
+         ierr = 0
+
+         n = 24995  
+
+         WRITE(*,*) 'ATTEMPTING TO OPEN THE SPECTRUM FILE'
+         OPEN(UNIT=kin,
+     &      file='PHOTOCHEM/DATA/FLUX/muscles_gj176.txt',
+     &         STATUS='old')
+         print *,'using GJ176 MUSCLES adaptive constant res data'
+
+         ENDIF ! pstar = 85
+
+        IF (pstar .eq. '86') THEN  ! GJ436
+
+         nhead = 0
+         ierr = 0
+
+         n = 24995  
+
+         OPEN(UNIT=kin,
+     &      file='PHOTOCHEM/DATA/FLUX/muscles_gj436.txt',
+     &         STATUS='old')
+         print *,'using GJ436 MUSCLES adaptive constant res data'
+
+         ENDIF ! pstar = 86
+
+        IF (pstar .eq. '87') THEN  ! GJ832
+
+         nhead = 0
+         ierr = 0
+
+         n = 24995  
+
+         OPEN(UNIT=kin,
+     &      file='PHOTOCHEM/DATA/FLUX/muscles_gj832.txt',
+     &         STATUS='old')
+         print *,'using GJ832 MUSCLES adaptive constant res data'
+
+         ENDIF ! pstar = 87
+
+        IF (pstar .eq. '88') THEN  ! HD40307
+
+         nhead = 0
+         ierr = 0
+
+         n = 24995  
+
+         OPEN(UNIT=kin,
+     &      file='PHOTOCHEM/DATA/FLUX/muscles_hd40307.txt',
+     &         STATUS='old')
+         print *,'using HD40307 MUSCLES adaptive constant res data'
+
+         ENDIF ! pstar = 88
+
+        IF (pstar .eq. '89') THEN  ! HD85512
+
+         nhead = 0
+         ierr = 0
+
+         n = 24995  
+
+         OPEN(UNIT=kin,
+     &      file='PHOTOCHEM/DATA/FLUX/muscles_hd85512.txt',
+     &         STATUS='old')
+         print *,'using HD85512 MUSCLES adaptive constant res data'
+
+         ENDIF ! pstar = 89
+
+        IF (pstar .eq. '90') THEN  ! HD97658
+
+         nhead = 0
+         ierr = 0
+
+         n = 24995  
+
+         OPEN(UNIT=kin,
+     &      file='PHOTOCHEM/DATA/FLUX/muscles_hd97658.txt',
+     &         STATUS='old')
+         print *,'using HD97658 MUSCLES adaptive constant res data'
+
+         ENDIF ! pstar = 90
+
+        IF (pstar .eq. '91') THEN  ! v epislion eridani
+
+         nhead = 0
+         ierr = 0
+
+         n = 24995  
+
+         OPEN(UNIT=kin,
+     &      file='PHOTOCHEM/DATA/FLUX/muscles_v-eps-eri.txt',
+     &         STATUS='old')
+         print *,'using v eps eri MUSCLES adaptive constant res data'
+
+         ENDIF ! pstar = 91
          
 ! We are not bothering with Youngsun stuff because it is a different star
          n3=n
