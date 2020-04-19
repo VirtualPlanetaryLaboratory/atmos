@@ -10,8 +10,15 @@
       PARAMETER(NSOL=38)
       DIMENSION SOLINT(NSOL), s(297) ! For 292 stars
       CHARACTER(5) :: STARR*5
+      CHARACTER :: DIRDATA*10, DIRINOUT*8
+      LOGICAL :: OPENINT
       real :: s, TOTAL 
 
+      COMMON/DIR/DIRINOUT, DIRDATA
+
+      ! Opening up Teal's muscles_stars.dat file
+
+       OPEN(UNIT=82,FILE= DIRDATA//'/muscles_stars.dat')
 
 
 !      read(10,*)  Removed labels so no need to skip line 
@@ -1101,7 +1108,7 @@ c             print *, SOLINT(I)
 C    Here on out is Teal's muscles spectra additions... -- Teal
       ELSE
             READ(82,*) ll,x80,x81,x82,x83,x84,x85,x86,x87,x88,
-     +      x89,x90,x91,x,x
+     +      x89,x90,x,x
             IF(STARR=="G80") SOLINT(I) = x80
             IF(STARR=="G81") SOLINT(I) = x81
             IF(STARR=="G82") SOLINT(I) = x82

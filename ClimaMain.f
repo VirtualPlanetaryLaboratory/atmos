@@ -482,6 +482,17 @@ c*******Changed for now*********
       IF (pstar == '25') STARR = "B5042" !K6V
       IF (pstar == '26') STARR = "B5052" !K1V
       IF (pstar == '27') STARR = "B5040" !M0V
+      ! Below are Teal's MUSCLES stars, see the end of the pickstar.f
+      ! file
+      IF (pstar == '80') STARR = "G80" ! GJ876
+      IF (pstar == '81') STARR = "G81" ! GJ551 (Proxima)
+      IF (pstar == '82') STARR = "G82" ! GJ581
+      IF (pstar == '83') STARR = "G83" ! GJ667c
+      IF (pstar == '84') STARR = "G84" ! GJ1214b
+      IF (pstar == '85') STARR = "G85" ! GJ176
+      IF (pstar == '86') STARR = "G86" ! GJ436
+      IF (pstar == '87') STARR = "G87" ! GJ832
+      IF (pstar == '88') STARR = "G88" ! HD40307
       
          age = 4.7
          time = age-timega
