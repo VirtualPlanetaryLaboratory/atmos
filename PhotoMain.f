@@ -1271,11 +1271,11 @@ c           bXN2(i) = 0.0
         enddo
       else
 C      !use effusion velocity formulation of diffusion limited flux
-        Veff(LH) = 1.0*bhN2(nz)/DEN(NZ)
+        Veff(LH) = 1.0*bX1X2(LH,NZ)/DEN(NZ)
 C      !diff lim flux
      $     *(1./Hscale(nz) - 1./scale_H(LH,nz))
         if(PLANET.EQ.'WASP12B')Veff(LH) = 0.0
-        Veff(LH2) = 1.0*bH2N2(nz)/DEN(NZ)
+        Veff(LH2) = 1.0*bX1X2(LH2,NZ)/DEN(NZ)
      $     *(1./Hscale(nz) - 1./scale_H(LH2,nz))
         if(PLANET.EQ.'WASP12B')Veff(LH2) = 0.0
       endif
@@ -1398,7 +1398,7 @@ c     enddo
 c  for H and H2
 c  lower boundary condition
 
-      if(PLANET.EQ.'WASP12B'.or.PLANET.EQ.'EARTH') then
+c      if(PLANET.EQ.'WASP12B'.or.PLANET.EQ.'EARTH') then
        do k=1,(NQ-NP)
        if(mbound(k).eq.0) then
         DU(k,1) = DU(k,1) + bX1X2(k,1)/Den(1)/DZ(1)**2
@@ -1426,49 +1426,49 @@ c interior grid points   ?fixed 8-13-05
         endif
        enddo
 
-      else
-       if (mbound(LH2).eq.0) then
-c diff limited flux implemented as effusion velocity
-        DU(LH,1) = DU(LH,1) + bHN2(1)/Den(1)/DZ(1)**2
-        ADU(LH,1) = bHN2(1)/Den(1)/DZ(1)/2.*
-     6      (1./scale_H(LH,1)-1./H_atm(1))
-        DU(LH2,1) = DU(LH2,1) + bH2N2(1)/Den(1)/DZ(1)**2
-        ADU(LH2,1) = bH2N2(1)/Den(1)/DZ(1)/2.*
-     6      (1./scale_H(LH2,1)-1./H_atm(1))
-c upper boundary condition
-        DL(LH,NZ) = DL(LH,NZ) + bHN2(nz1)/Den(nz)/DZ(NZ)**2
-        ADL(LH,NZ) = -bHN2(nz1)/Den(nz)/DZ(nz)/2.*
-     6      (1./scale_H(LH,nz1)-1./H_atm(nz1))
-        DL(LH2,NZ) = DL(LH2,NZ) + bH2N2(nz1)/Den(nz)/DZ(NZ)**2
-        ADL(LH2,NZ) = -bH2N2(nz1)/Den(nz)/DZ(NZ)/2.*
-     6      (1./scale_H(LH2,nz1)-1./H_atm(nz1))
-c  unused....
-        DD(LH,1) = DU(LH,1)
-        ADD(LH,1) = -ADU(LH,1)
-        DD(LH2,1) = DU(LH2,1)
-        ADD(LH2,1) = -ADU(LH2,1)
+c      else
+c       if (mbound(LH2).eq.0) then
+cc diff limited flux implemented as effusion velocity
+c        DU(LH,1) = DU(LH,1) + bHN2(1)/Den(1)/DZ(1)**2
+c        ADU(LH,1) = bHN2(1)/Den(1)/DZ(1)/2.*
+c     6      (1./scale_H(LH,1)-1./H_atm(1))
+c        DU(LH2,1) = DU(LH2,1) + bH2N2(1)/Den(1)/DZ(1)**2
+c        ADU(LH2,1) = bH2N2(1)/Den(1)/DZ(1)/2.*
+c     6      (1./scale_H(LH2,1)-1./H_atm(1))
+cc upper boundary condition
+c        DL(LH,NZ) = DL(LH,NZ) + bHN2(nz1)/Den(nz)/DZ(NZ)**2
+c        ADL(LH,NZ) = -bHN2(nz1)/Den(nz)/DZ(nz)/2.*
+c     6      (1./scale_H(LH,nz1)-1./H_atm(nz1))
+c        DL(LH2,NZ) = DL(LH2,NZ) + bH2N2(nz1)/Den(nz)/DZ(NZ)**2
+c        ADL(LH2,NZ) = -bH2N2(nz1)/Den(nz)/DZ(NZ)/2.*
+c     6      (1./scale_H(LH2,nz1)-1./H_atm(nz1))
+cc  unused....
+c        DD(LH,1) = DU(LH,1)
+c        ADD(LH,1) = -ADU(LH,1)
+c        DD(LH2,1) = DU(LH2,1)
+c        ADD(LH2,1) = -ADU(LH2,1)
 
-c interior grid points   fixed 8-13-05
-        do j=2,nz1
-            DU(LH,j) = DU(LH,j) + bHN2(j)/Den(j)/DZ(j)**2
-            ADU(LH,j) = bHN2(j)/Den(j)/DZ(j)/2.*
-     6            (1./scale_H(LH,j)-1./H_atm(j))
-            DL(LH,j) = DL(LH,j) + bHN2(j-1)/Den(j)/DZ(j)**2
-            ADL(LH,j) = -bHN2(j-1)/Den(j)/DZ(j)/2.*
-     6            (1./scale_H(LH,j-1)-1./H_atm(j-1))
-            DU(LH2,j) = DU(LH2,j) + bH2N2(j)/Den(j)/DZ(j)**2
-            ADU(LH2,j) = bH2N2(j)/Den(j)/DZ(j)/2.*
-     6             (1./scale_H(LH2,j)-1./H_atm(j))
-            DL(LH2,j) = DL(LH2,j) + bH2N2(j-1)/Den(j)/DZ(j)**2
-            ADL(LH2,j) = -bH2N2(j-1)/Den(j)/DZ(j)/2.*
-     6             (1./scale_H(LH2,j-1)-1./H_atm(j-1))
-            DD(LH,j) = DU(LH,j) + DL(LH,j)
-            ADD(LH,j) = -ADU(LH,j) - ADL(LH,j)
-            DD(LH2,j) = DU(LH2,j) + DL(LH2,j)
-            ADD(LH2,j) = -ADU(LH2,j) - ADL(LH2,j)
-        enddo
-       endif  !end molecular diffusion for H and H2 loop
-      endif !End loop with planet-based distinction
+cc interior grid points   fixed 8-13-05
+c        do j=2,nz1
+c            DU(LH,j) = DU(LH,j) + bHN2(j)/Den(j)/DZ(j)**2
+c            ADU(LH,j) = bHN2(j)/Den(j)/DZ(j)/2.*
+c     6            (1./scale_H(LH,j)-1./H_atm(j))
+c            DL(LH,j) = DL(LH,j) + bHN2(j-1)/Den(j)/DZ(j)**2
+c            ADL(LH,j) = -bHN2(j-1)/Den(j)/DZ(j)/2.*
+c     6            (1./scale_H(LH,j-1)-1./H_atm(j-1))
+c            DU(LH2,j) = DU(LH2,j) + bH2N2(j)/Den(j)/DZ(j)**2
+c            ADU(LH2,j) = bH2N2(j)/Den(j)/DZ(j)/2.*
+c     6             (1./scale_H(LH2,j)-1./H_atm(j))
+c            DL(LH2,j) = DL(LH2,j) + bH2N2(j-1)/Den(j)/DZ(j)**2
+c            ADL(LH2,j) = -bH2N2(j-1)/Den(j)/DZ(j)/2.*
+c     6             (1./scale_H(LH2,j-1)-1./H_atm(j-1))
+c            DD(LH,j) = DU(LH,j) + DL(LH,j)
+c            ADD(LH,j) = -ADU(LH,j) - ADL(LH,j)
+c            DD(LH2,j) = DU(LH2,j) + DL(LH2,j)
+c            ADD(LH2,j) = -ADU(LH2,j) - ADL(LH2,j)
+c        enddo
+c       endif  !end molecular diffusion for H and H2 loop
+c      endif !End loop with planet-based distinction
 
 
 
@@ -2167,7 +2167,7 @@ c-orig        ELSEIF(I.EQ.LSO4AER .AND. J.GT.J25) THEN
 c        IF (I.EQ.LSO4AER .AND. J.GT.J25) THEN
 
 !ACK - should return to this now that
-C      particles condensation is fixed up 
+C      particles condensation is fixed up
 
 c      A less drastic measure
         IF (I.EQ.LSO4AER.AND. J.GT.J25) THEN
@@ -2208,11 +2208,11 @@ C        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LO2) THEN
 C        	IF(J.GT.21.AND.J.LT.71) THEN !!! Using this to ignore only PARTS of O2, i.e. more carefully, than entiety of O2 (above this)
 C                     USOL(I,J) = USOL(I,J) + RHS(K)
 C            ENDIF
-!!!!!!!!!!!! The conditions below are necessary to make WASP12B converge !!!!  
+!!!!!!!!!!!! The conditions below are necessary to make WASP12B converge !!!!
 c-mab: These from trial/error + Kopparapu et al. 2012 code.
 c-mab: For the solar system templates, all species have the same USOL = 1e-20 limit.
 c-mab: Similar species-specific conditions may be necessary to get future templates to converge.
-c-mab: This is temporary till we can find a "cleaner" solution.                   
+c-mab: This is temporary till we can find a "cleaner" solution.
         ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LH2CO .AND. J.GT. 61) THEN
                      USOL(I,J) = USOL(I,J) + RHS(K)
         ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LH2COH .AND. J.GT. 35) THEN
@@ -2574,7 +2574,7 @@ C the triadiagonal species to make the budgets work out.
         do i=NQ+1,NQ1
           SR(I)=0.
             do j=1,JTROP
-C      ACK - all particles raining out like H2SO4 
+C      ACK - all particles raining out like H2SO4
               SR(I) = SR(I)+ RAINGC(LH2SO4,J)*PARTICLES(J,i-nq)
      $                *DEN(J)*DZ(J)
             enddo
