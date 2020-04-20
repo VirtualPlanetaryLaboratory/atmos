@@ -328,7 +328,7 @@ C    !what follows is not in Jim's code
 
 C   S8 CONDENSATION (this is needed if we every want to deal with 'hot air' - s8 stays in the vapor phase       
 
-      if (LS8.neq.0) then
+      if (LS8.ne.0) then
        LL=LS8
        LLA=LS8AER
 
