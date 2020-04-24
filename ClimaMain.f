@@ -711,10 +711,10 @@ c Building the water profile
 
 c jfk 6/25/08 Added four lines below
        IF(IMW.EQ.2) THEN
-       DO J=1,JCOLD
-       FI(1,J) = 4.E-6
-c       print *,'j =',j,'  fi(1,j)=',fi(1,j)
-       END DO
+        DO J=1,JCOLD
+        FI(1,J) = 4.E-6
+c        print *,'j =',j,'  fi(1,j)=',fi(1,j)
+        END DO
        END IF
 
       else
