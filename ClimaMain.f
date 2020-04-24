@@ -696,8 +696,6 @@ C   CENTER FREQUENCIES IN MIDDLE OF INTERVALS AND COMPUTE WAVELENGTHS
 c -rr        Tstratospheric iteration loop 4/22/2011
 c        DO KK = 1,4
 
-
-c      print *, 'Hello3'
 c Constructing temperature and water profiles in case they are not provided 
        IF(IUP.EQ.1) THEN
           JCOLD = 1
