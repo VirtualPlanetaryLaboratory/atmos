@@ -493,6 +493,9 @@ c*******Changed for now*********
       IF (pstar == '86') STARR = "G86" ! GJ436
       IF (pstar == '87') STARR = "G87" ! GJ832
       IF (pstar == '88') STARR = "G88" ! HD40307
+      IF (pstar == '89') STARR = "G89" ! HD40307
+      IF (pstar == '90') STARR = "G90" ! HD40307
+      IF (pstar == '91') STARR = "G91" ! HD40307
       
          age = 4.7
          time = age-timega
@@ -780,21 +783,10 @@ c jfk 6/27/08
       end do
 
 
-!     Initializing FNC c-rr 6/7/2012
-      do J = 1,ND
-      FNC(J) = 0.0  
-      enddo
-      do J = 1, ND
-      FNC(J) = 1. - FI(1,J) - FI(2,J)   ! Added initial FNC array c-rr 6/7/2012
- !     print *, 'IN CLIMA_FI(1,J)=', FI(1,J), J
- !     print *, 'IN CLIMA_FI(2,J)=', FI(2,J), J
- !     print *, 'IN CLIMA_FNC=', FNC(J), J
-      enddo
 
 
 c Initial non-condensible mixing ratio at surface (used for write statement in output file) 6/7/2011    
       FNCI = FNC(ND) ! c-rr 5/29/2012 added H2 mixing ratio
-
 
       
 C *** Initial time step
@@ -845,6 +837,17 @@ c        DO J=1,ND
 c         print 353, alt(J), (FI(I,J),I=1,5) 
 c        ENDDO
        ENDIF
+
+!     Initializing FNC c-rr 6/7/2012
+      do J = 1,ND
+      FNC(J) = 0.0  
+      enddo
+      do J = 1, ND
+      FNC(J) = 1. - FI(1,J) - FI(2,J)   ! Added initial FNC array c-rr 6/7/2012
+c     print *, 'IN CLIMA_FI(1,J)=', FI(1,J), J
+c     print *, 'IN CLIMA_FI(2,J)=', FI(2,J), J
+c     print *, 'IN CLIMA_FNC=', FNC(J), J
+      enddo
 
        close(113)
   
