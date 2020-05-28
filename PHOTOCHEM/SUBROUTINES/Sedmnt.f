@@ -16,7 +16,15 @@
      2  TAURELAXC(NZ,NP),TAURELAX(NZ,NP),AFPL(NZ,NP),delta(NZ,NP),
      3  BETAF(NZ,NP)
 
-      REAL NMON,RMON,DF  !frachack
+      REAL NMON,RMON,DF,rmmax,rconmax !frachack
+C- aerosol properties
+      rmmax=1.90E-4 !Maximum HC radius, as to be smaller than greatest rstand for optical properties (current rstand max value 2mum)
+      rconmax=6.0E-5
+      If(NP.eq.2) THEN
+      NPX=NP
+      ELSE
+      NPX=NP-1
+      ENDIF
 
 
 c
@@ -55,21 +63,21 @@ C
 C-EW RPAR = equal mass spherical radii
 C-EW RFRAC = fractal aggregate radii
 C
+          RMON = 50.E-7
 C-EW  THIS IS THE MONOMER RADIUS [cm]
-!       if (ihztype.eq.0.) then RMON = 50.E-7
-!       if (ihztype.eq.1.) then RMON = 10.E-7
-!       if (ihztype.eq.2.) then RMON = 20.E-7
-!       if (ihztype.eq.3.) then RMON = 70.E-7
-!       if (ihztype.eq.4.) then RMON = 10.E-6
-!       if (ihztype.eq.5.) then RMON = 50.E-7
-!       if (ihztype.eq.6.) then RMON = 50.E-7
+       if (ihztype.eq.0.) RMON = 50.E-7
+       if (ihztype.eq.1.) RMON = 10.E-7
+       if (ihztype.eq.2.) RMON = 20.E-7
+       if (ihztype.eq.3.) RMON = 70.E-7
+       if (ihztype.eq.4.) RMON = 10.E-6
+       if (ihztype.eq.5.) RMON = 50.E-7
+       if (ihztype.eq.6.) RMON = 50.E-7
 
          RMON = 50.E-7
-      do K=3,4
-      rmmax=1.90e-4
+      do K=3,3
       DO J=1,NZ
-      IF (RPAR(J,K).GE.rmmax) THEN   !STB-HC optical properties only tabulated up to 2 mum radius- rmmax must be smaller than that.
-          RPAR(J,K)=rmmax
+      IF(RPAR(J,K).GE.rmmax)then   !limiting RPAR size to rmmax, which has to be smaller than greatest rstand
+      RPAR(J,K)=rmmax
       ENDIF
       NMON = (RPAR(J,K)/RMON)**3.
       IF (NMON .LE. 1.) THEN
@@ -93,9 +101,9 @@ C
       ENDDO
 
 
-      DO 10 K=1,NP
-       LL=NQ-NP+K
+      DO 10 K=1,NPX
 C   (1 = SULFATE, 2 = S8, 3 = HYDROCARBON, 4=HCAER2)
+        LL=NQ-NP+K
 
        L = LSO4AER  !so using the sulfate aersol for all particles?
 
@@ -113,7 +121,7 @@ C-EW  HYDROCARBONS: USE FRACTAL MICROPHYSICS
 C-AP Here we assume that the density of aerosol is 1 g/cm3
 C-Giada: actually, density of hc aerosols should be 0.63 g/cm3
 C        see Trainer et al (2006)
-C-AP Notation is similar Fuchs 1964
+C-AP Notation is similar Fusch 1964
 C THERMSP = thermal velocity of molecule
 c       adensity = 0.64
        amass(J,K) = (4./3.)*PI*RPAR(J,K)**3*HCDENS
@@ -129,14 +137,17 @@ C-EW  S8,SO4,HC if frak=0: USE SPHERICAL MICROPHYSICS
        ALPH = A + B*EXP(-C*RPAR(J,K)/ALAM(J))
        CUNING(J,K) = 1 + ALPH*ALAM(J)/RPAR(J,K)
 C-AP Here we assume that the density of aerosol is 1 g/cm3
-C-AP Notation is similar Fuchs 1964
+C-AP Notation is similar Fusch 1964
+
+C assign density
        if (LL.EQ.LS8AER) then
-           adensity = 2.07
+         adensity = 2.07
        elseif (LL.EQ.LSO4AER) then
-           adensity = 1. + 0.8*FSULF(J)
+         adensity = 1. + 0.8*FSULF(J)
        else
-           adensity = HCDENS
+       adensity = HCDENS
        endif
+
        amass(J,K) = (4./3.)*PI*RPAR(J,K)**3*adensity
        THERMSP(J,K) = SQRT((8*BK*T(J))/(pi*amass(J,K)))
        TAURELAXC(J,K)=2*RPAR(J,K)*RPAR(J,K)/(9*ETA(J))
@@ -194,9 +205,9 @@ C   FIND MINIMUM OF DIFFUSION AND SEDIMENTATION LIFETIMES, THEN SCALE PRTICLE SI
       RPAR(I,K) = RPAR(I,K) * (TAUTRN(I)/TAUC(I,K))**0.25     !particle growth depends on
       if (K.GE.3) then
        RPAR(I,K) = max(RPAR(I,K),e_hc)  !largest HC particles are smaller?
-      IF (RPAR(I,K).GE.rmmax) THEN   ! Cut-off for tabulated HC optical properties
-          RPAR(I,K)=rmmax
-      ENDIF
+        IF(RPAR(I,K).GE.rmmax)then   !limiting RPAR size to rmmax, which has to be smaller than greatest rstand
+        RPAR(I,K)=rmmax
+        ENDIF
       else
        RPAR(I,K) = max(RPAR(I,K),e_minus_5)                    !largest particles are 1 micron
       endif
@@ -207,8 +218,11 @@ C   DON'T ALLOW PARTICLES TO DECREASE IN SIZE AT LOW ALTITUDES
       J = NZ - I
    3  RPAR(J,K) = max(RPAR(J,K),RPAR(J+1,K))
 
-
-
+      if(K.eq.3) then
+      Do J= I, NZ
+       RPAR(J,4)=RPAR(J,3)
+      enddo
+      endif
 
 C
 C   COMPUTE PARTICLE-TO-GAS CONVERSION FACTORS AND DENSITIES
@@ -238,13 +252,15 @@ c         factor=7.06E7 !giada - this was computed using 1.4 g/cm3
              gpermolec = 2*1.66e-24+12*4*1.66e-24 !grams per molecule for HCAER
           endif
 
-          IF (LL.eq.LHCAER2) then
-             gpermolec = 4*1.66e-24+12*5*1.66e-24 !grams per molecule for HCAER2
-            endif
-           factor=(4./3.)*PI*(1.E-5)**3*HCDENS/gpermolec
+             gpermolechcaer2 = 4*1.66e-24+12*5*1.66e-24 !grams per molecule for HCAER2
+
+           factorhcaer2=(4./3.)*PI*(1.E-5)**3*HCDENS/gpermolechcaer2
 
        endif
           CONVER(I,K) = factor * (R/1.E-5)**3
+          IF (K.eq.3) then
+          CONVER(I,4) = factorhcaer2 * (R/1.E-5)**3
+          endif
 
 
 c - giada - factor is the NUMBER OF MOLECULES PER 0.1UM SPHERE (don't know why .1um was chosen, but that is how it is...)
@@ -261,8 +277,8 @@ c - giada - factor is the NUMBER OF MOLECULES PER 0.1UM SPHERE (don't know why .
 
 C   NOW COMPUTE FALL VELOCITIES
       DO  J=1,NZ
+cccccccccc
       IF(K.GE.3 .AND. frak.eq.1) THEN
-C-STB RECALCULATE RFRAC WITH NEW RPAR
       NMON = (RPAR(J,K)/RMON)**3.
       IF (NMON .LE. 1.) THEN
         DF = 3.
@@ -270,7 +286,7 @@ C-STB RECALCULATE RFRAC WITH NEW RPAR
         DF = 2.4 - 0.9*EXP(-NMON/500.)
       ENDIF
       RFRAC(J,K) = RPAR(J,K)**(3./DF)*RMON**(1.-3./DF)
-
+cccccccccc
 C-EW  HYDROCARBONS: USE FRACTAL MICROPHYSICS
        R = RPAR(J,K)
        RF = RFRAC(J,K)
@@ -279,6 +295,9 @@ C-EW  HYDROCARBONS: USE FRACTAL MICROPHYSICS
        !are equal to gravitational force
        ALPH = A + B*EXP(-C*RF/ALAM(J)) ! I think this is related to particle resistance to motion
        WFALL(J,K) = F1*(1. + ALAM(J)*ALPH/RF) !wfall = fall velocity
+       IF (K.eq.3) THEN
+       WFALL(J,4) =WFALL(J,3)
+       ENDIF
                              !this term (alam*alph/rf) is particle diffusion?  maybe?
       ELSE
 C-EW  S8, SO4,HC if frak=0: USE SPHERICAL MICROPHYSICS
@@ -288,6 +307,9 @@ C-AP  From Prupacher & Klett
        F1 = 2./9. * RHOP(J)*R*R*G/ETA(J)
        ALPH = A + B*EXP(-C*R/ALAM(J))
        WFALL(J,K) = F1*(1. + ALAM(J)*ALPH/R)
+       IF (K.eq.3) THEN
+       WFALL(J,4) =WFALL(J,3)
+       ENDIF
       ENDIF
       enddo
 
@@ -297,7 +319,7 @@ C-AP  From Prupacher & Klett
 C
 
 
-c      print *, 'stopping in Sedmnt'
+c      print *, 'stopping in Sedmnt', GZ(1)
 c      stop
       RETURN
       END

@@ -1719,15 +1719,15 @@ C    particles in main loop
        if (USETD.EQ.0) then
 
       do J=1,NZ
-      do JJ=1, NP
 
-            if (JJ.eq.1)  nparti = LSO4AER
-            if (JJ.eq.2)  nparti = LS8AER
-            if (JJ.eq.3)  nparti = LHCAER
-            if (JJ.eq.4)  nparti = LHCAER2
-
-
-            AERSOL(J,JJ) = USOL(nparti,J)*DEN(J)/(CONVER(J,JJ))
+            AERSOL(J,1) = USOL(nparti,J)*DEN(J)/(CONVER(J,1))
+            AERSOL(J,2) = USOL(nparti,J)*DEN(J)/(CONVER(J,2))
+            if (NP.GT.2) then
+                AERSOL(J,3) = USOL(LHCAER,J)*DEN(J)/(CONVER(J,3)) +
+     &          USOL(LHCAER,J)*DEN(J)/(CONVER(J,4))
+                AERSOL(J,4) = 0.0
+            endif
+            
 
 
 c O2 CODE CHANGES
@@ -1745,7 +1745,6 @@ c     &         USOL(LS8AER,J),CONVER(J,2)
 C   conver is the number of molecules/particle, so that main calcuations
 C     are done in molecule space
 C      molecules/cm3 *#particles/molecule - > AERSOL [# particles/cm3]
-      enddo
       enddo
 
 C
@@ -2240,7 +2239,7 @@ C                     USOL(I,J) = USOL(I,J) + RHS(K)
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
         !!!!ELSEIF (USOL(I,J).LT. 1.E-15) THEN !TEMPORARILY DISABLING THIS ALTOGETHER TO USE RAVI'S CONDITIONS DIRECTLY
-        ELSEIF(PLANET.NE.'WASP12B'.AND.USOL(I,J).LT. 1.E-19) THEN !DEFAULT ATMOS CONDITION -- USING FOR NON HOT JUP PLANETS
+        ELSEIF(PLANET.NE.'WASP12B'.AND.USOL(I,J).LT. 1E-15) THEN !DEFAULT ATMOS CONDITION -- USING FOR NON HOT JUP PLANETS
 
 c-orig        IF (USOL(I,J).LT. 1.E-20) THEN
 c        IF (USOL(I,J).LT. 1.E-22) THEN
