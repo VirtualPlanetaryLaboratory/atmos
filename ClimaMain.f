@@ -1158,7 +1158,7 @@ c   calculation, adjusting those layers that are unstable.
         CALL CONVEC(T1,T2,P1,P2,FH1,FH2,FC1,FC2,DZP,ITROP,cflag,
      & Idry, imco2)
         
-         IF(IO3.EQ.1 .AND. ALT(J1) .GT. 40.) GOTO 1401   ! Skip convection if ozone beyond 40km
+c         IF(IO3.EQ.1 .AND. ALT(J1) .GT. 40.) GOTO 1401   ! Skip convection if ozone beyond 40km
 c
 c  jkf 7/15/08 I am replacing the following logic with simpler logic.
            IF (TN(J1-1) .LE. T2) THEN
@@ -1239,7 +1239,7 @@ c-as  layer, as Hilary Justh did it (oct-2003)
        CALL CONVEC(T1,T2,P1,P2,FH,FH2,FC1,FC2,DZP,ITROP,cflag,
      & Idry, imco2)
 
-        IF(IO3 .EQ. 1 .AND. ALT(J1) .GT. 40.) GOTO 1403
+c        IF(IO3 .EQ. 1 .AND. ALT(J1) .GT. 40.) GOTO 1403
         
         IF (TN(J1-1).LE.T2) THEN
           FLAGCONVEC(J1) =  cflag
