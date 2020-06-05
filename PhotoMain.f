@@ -569,6 +569,8 @@ C - other model parameters read in from input_photochem.dat
       IF(IDEBUG.eq.1) print *, "IHZTYPE =",ihztype
       READ(231,*)AA, ZY
       IF(IDEBUG.eq.1) print *, "ZY =",ZY
+      READ(231,*)AA, USOLMIN
+      IF(IDEBUG.eq.1) print *, "USOLMIN =",USOLMIN
  555  format(3/)
       close(231)
 
@@ -2238,8 +2240,8 @@ C                     USOL(I,J) = USOL(I,J) + RHS(K)
                      USOL(I,J) = USOL(I,J) + RHS(K)
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-        !!!!ELSEIF (USOL(I,J).LT. 1.E-15) THEN !TEMPORARILY DISABLING THIS ALTOGETHER TO USE RAVI'S CONDITIONS DIRECTLY
-        ELSEIF(PLANET.NE.'WASP12B'.AND.USOL(I,J).LT. 1E-15) THEN !DEFAULT ATMOS CONDITION -- USING FOR NON HOT JUP PLANETS
+        
+        ELSEIF(USOL(I,J).LT. USOLMIN) THEN !DEFAULT ATMOS CONDITION -- USING FOR NON HOT JUP PLANETS
 
 c-orig        IF (USOL(I,J).LT. 1.E-20) THEN
 c        IF (USOL(I,J).LT. 1.E-22) THEN
