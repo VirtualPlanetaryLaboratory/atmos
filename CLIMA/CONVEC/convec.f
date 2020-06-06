@@ -184,7 +184,7 @@ c--JFK 7/14/08 Dont allow these dry adiabats. They seem to be
 c      occurring within the mesosphere, which is unphysical.
 c      IF (ITROP .EQ. 0) THEN 
        IF (IMW.eq.5) THEN   ! This does the dry adiabat only
-        DLPDLT = CPN/R
+        DLPDLT = CPNW/R
 c        print *, 'CPN=',CPN, 'R=', R
         cflag = 2.
         GO TO 2
