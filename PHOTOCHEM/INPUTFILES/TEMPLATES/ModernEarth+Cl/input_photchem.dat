@@ -15,6 +15,7 @@ HCDENS=    0.63
 ICOUPLE=   0
 monsize=   0
 ZY=        50.
+USOLMIN=   1.E-20
 
 C ***** SET MODEL PARAMETERS *****
 C     AGL = DIURNAL AVERAGING FACTOR FOR PHOTORATES
@@ -47,3 +48,5 @@ C	      = 2 for 0.02 um monomers for fractal particles
 C	      = 3 for 0.07 um monomers for fractal particles
 C	      = 4 for 0.10 um monomers for fractal particles
 C     ZY      = solar zenith angle
+C     USOLMIN = Mixing ratios smaller than this value are ignored 
+c 		in time stepper 
