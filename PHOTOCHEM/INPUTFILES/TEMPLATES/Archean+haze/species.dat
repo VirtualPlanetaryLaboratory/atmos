@@ -73,6 +73,7 @@ HSO        LL  1 1 0 1 0 0    0     1.00E+00 0.       0.        0.      0      0
 H2SO4      LL  4 2 0 1 0 0    0     1.00E+00 0.       0.        0.      0      0.      0.
 SO2        LL  2 0 0 1 0 0    3     1.00E+00 0.       3.500e+09 10.     0      0.      0.
 SO         LL  1 0 0 1 0 0    0     0.       0.       0.        0.      0      0.      0.
+CO2	   LL  2 0 1 0 0 0    1     0.       2.00E-2  0.        0.      0      0.      0.
 SO4AER     LL  4 2 0 1 0 0    0     1.00E-02 0.       0.        0.      0      0.      0.            !turbulent depostion velocity for particles (hardcoded for td)
 S8AER      LL  0 0 0 8 0 0    0     1.00E-02 0.       0.        0.      0      0.      0.            !turbulent depostion velocity for particles
 HCAER      LL  0 2 4 0 0 0    0     1.00E-02 0.       0.        0.      0      0.      0.            !turbulent depostion velocity for particles
@@ -94,7 +95,6 @@ CS2X       SL  0 0 1 2 0 0
 S3         SL  0 0 0 3 0 0    0     0.       0.       0.        0.      0      0.      0.
 S4         SL  0 0 0 4 0 0    0     0.       0.       0.        0.      0      0.      0.
 *   INERT SPECIES             Fixed MR
-CO2        IN  2 0 1 0 0 0    2.0E-2       !must be second to last IN
 N2         IN  0 0 0 0 2 0    0.80          !must be last IN  (FIXED MR NOT YET USED...)
 * NSP should be the number directly above
 HV         HV  0 0 0 0 0 0		    !must be second to last

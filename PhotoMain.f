@@ -1729,7 +1729,7 @@ C    particles in main loop
      &          USOL(LHCAER,J)*DEN(J)/(CONVER(J,4))
                 AERSOL(J,4) = 0.0
             endif
-            
+
 
 
 c O2 CODE CHANGES
@@ -2240,7 +2240,7 @@ C                     USOL(I,J) = USOL(I,J) + RHS(K)
                      USOL(I,J) = USOL(I,J) + RHS(K)
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-        
+
         ELSEIF(USOL(I,J).LT. USOLMIN) THEN !DEFAULT ATMOS CONDITION -- USING FOR NON HOT JUP PLANETS
 
 c-orig        IF (USOL(I,J).LT. 1.E-20) THEN
