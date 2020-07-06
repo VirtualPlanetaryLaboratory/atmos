@@ -77,14 +77,15 @@ corig   TAUG(N) = TAUA + TAUSG(N)
 !a loop over kj (to get all species that absorb (at each height)) - 
 !of sq*absorbers
   
-      taua=0.0
-       do j=1,kj
-          IF(PLANET.EQ.'WASP12B') THEN
-           if(j.lt.9)taua = taua + sq(j,i,LL)*absorbers(j,i)
-          ELSE
-           taua = taua + sq(j,i,LL)*absorbers(j,i)
-          ENDIF   
-       enddo   
+      if(PLANET .eq. 'WASP12B') then
+         if(kj .lt. 9) then
+            taua = sum(sq(1:kj,i,LL)*absorbers(1:kj,i))
+         else
+            taua = sum(sq(1:9,i,LL)*absorbers(1:9,i))
+         end if
+      else
+         taua = sum(sq(1:kj,i,LL)*absorbers(1:kj,i))
+      end if
 
       TAUG(N) = TAUA*DEN(I)*DZ(I) + TAUSG(N)
 

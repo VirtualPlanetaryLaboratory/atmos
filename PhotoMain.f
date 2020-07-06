@@ -539,6 +539,7 @@ C - Seperating the out.dist file into seperate files
        open(66, file='PHOTOCHEM/OUTPUT/out.strctr', status='UNKNOWN')
        open(71, file='PHOTOCHEM/OUTPUT/out.aersol', status='UNKNOWN')
        open(72, file='PHOTOCHEM/OUTPUT/out.tridag', status='UNKNOWN')
+       open(80, file='PHOTOCHEM/OUTPUT/nsteps.out', status='UNKNOWN')
 
 
 C - other model parameters read in from input_photochem.dat
@@ -977,17 +978,31 @@ c       print *, NR
 
 
 C ***** READ THE PLANET PARAMETER DATAFILE *****
-      READ(7,502) G,FSCALE,ALB,ZTROP,FAR,R0,P0,PLANET,TIMEGA,IRESET,
-     &   pstar, ihzscale, uvscale
 c-mab: Uncomment below for debugging with this part
 C      	print*,'G,FSCALE,ALB,ZTROP,FAR,R0 = ',G,FSCALE,ALB,ZTROP,FAR,R0
 C      	print*,'P0,PLANET,TIMEGA,IRESET = ',P0,PLANET,TIMEGA,IRESET
- 502  FORMAT(F7.1/,F7.2/,F7.3/,E7.1/,F7.3/,E8.3/,F8.3/,A8/,F4.2/,I1/
-     &  ,A8/,I1/,F8.3)
+      Read(7,*) G
+      Read(7,*) FSCALE
+      Read(7,*) ALB
+      Read(7,*) ZTROP
+      Read(7,*) FAR
+      Read(7,*) R0
+      Read(7,*) P0
+      Read(7,*) PLANET
+      Read(7,*) TIMEGA
+      Read(7,*) IRESET
+      Read(7,*) pstar
+      Read(7,*) ihzscale
+      Read(7,*) uvscale
+c-mab: Uncomment below for debugging with this part
+c    	print*,'G,FSCALE,ALB,ZTROP,FAR,R0 = ',G,FSCALE,ALB,ZTROP,FAR,R0
+c     	print*,'P0,PLANET,TIMEGA,IRESET = ',P0,PLANET,TIMEGA,IRESET
+
 C     adding IRESET to create the atmospheric profile for modern earth
 C     gna - added pstar keyword to change the star from planet.dat
-C     print *, 'pstar is ', pstar
-C     print *, 'ihzscale is ', ihzscale
+      print *, 'pstar is ', pstar
+      print *, 'ihzscale is ', ihzscale
+c      print *, 'uvscale is ', uvscale
 C gna-scale stellar flux based on spectral type:
 C uses Kopparapu et al 2012 scalings for earth-equivalent distance
       IF (ihzscale.eq.1) then
@@ -2562,6 +2577,9 @@ C Oxidation state stuff commented out for now.
      3  2X,'DT =',E9.2,2X,'TIME =',E9.2)
 C     print this to terminal
        print 100, N, EMAX, ISPEC(IS), ZMAX, UMAX, RMAX, DT, TIME
+
+      write(80, 101) N
+ 101  FORMAT(I4)
 
 C
 C   COMPUTE ATMOSPHERIC OXIDATION STATE

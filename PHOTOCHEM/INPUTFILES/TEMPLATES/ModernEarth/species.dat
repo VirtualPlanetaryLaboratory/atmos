@@ -53,6 +53,7 @@ NO3        LL  3 0 0 0 1 0    0     0.      0.      0.        0.      0      0. 
 N2O        LL  1 0 0 0 2 0    1     0.      3.1E-07 0.        0.      0      0.      0.        
 HO2NO2     LL  4 1 0 0 1 0    0     2.0E-01 0.      0.        0.      0      0.      0.        
 N2O5       LL  5 0 0 0 2 0    0     0.      0.      0.        0.      0      0.      0.   
+CO2        LL  2 0 1 0 0 0    1	    0.      3.6E-4  0.        0.      0      0.      0.
 SO4AER     LL  4 2 0 1 0 0    0     1.0E-02 0.      0.        0.      0      0.      0.            !turbulent depostion velocity for particles (hardcoded for td)
 S8AER      LL  0 0 0 8 0 0    0     1.0E-02 0.      0.        0.      0      0.      0.            !turbulent depostion velocity for particles     
 * NQ should be the number above
@@ -69,7 +70,6 @@ SO23       SL  2 0 0 1 0 0
 HSO3       SL  3 1 0 1 0 0
 OCS2       SL  1 0 1 2 0 0
 *   INERT SPECIES
-CO2        IN  2 0 1 0 0 0    3.6E-4       !must be second to last IN 
 N2         IN  0 0 0 0 2 0    0.78          !must be last IN  (FIXED MR NOT YET USED...)
 * NSP should be the number directly above
 HV         HV  0 0 0 0 0 0
