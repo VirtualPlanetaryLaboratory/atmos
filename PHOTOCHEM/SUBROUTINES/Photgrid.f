@@ -23,8 +23,8 @@ c-mc for now, since we are invoking constant dz, we can choose dzgrid based on N
 
       DZ(1)=Z(1)+0.5*dzgrid    !for now, hacking in the DZ(1) to be the same as the others. should it be 1/2 this?
       do I=2,NZ             !just to see if its working, though I will leave it like this.
-        DZ(I)=Z(I)-Z(I-1) 
-      enddo  
+        DZ(I)=Z(I)-Z(I-1)
+      enddo
       RETURN
       END
 
@@ -66,7 +66,7 @@ C M. Claire  060802  Integrating into Kevin's code
       INCLUDE 'PHOTOCHEM/INPUTFILES/parameters.inc'
       implicit real*8(A-H,O-Z)
       character*60 string
- 
+
 * input:
       INTEGER LGRID
 * output:
@@ -107,7 +107,7 @@ C-mab The present stellar flux files for Hot Jupiters also use this grid.
 *     mopt = 7    Jim's old grid, but high resolution from 175-220
 
 !note - before using, make sure that nw is the number of wavelengths to loop over and
-!that wl(nw+1)=wu(nw) 
+!that wl(nw+1)=wu(nw)
 ! this is needed for the interpolations to work correctly
       if (LGRID.eq.0) mopt = 5
       if (LGRID.eq.1) mopt = 7
@@ -135,7 +135,7 @@ c         print *, wl, wl(nw),wu(nw-1)
 
       wl(nw) = wu(nw-1) !why is this here? some sort of check digit, i guess
       !081006 - the final value is needed for the interpolater
-      
+
 
 
       GO TO 9
@@ -147,7 +147,7 @@ c orig    &  file=PHRT(1:INDEX(PHRT,' ')-1)//'DATAE1/GRIDS/isaksen.grid',
 c orig    &  status='old')
 
       OPEN(kin, file='PHOTOCHEM/DATA/GRIDS/isaksen.grid',status='old')
-      DO iw = 1, 2 
+      DO iw = 1, 2
          READ(kin,*)
       ENDDO
       DO iw = 1, 130
@@ -313,14 +313,14 @@ C define wavelength intervals of width 10 nm from 420 - 700 nm:
 c define wavelength intervals from 178 - 730 nm (17 bins):
 
 c     nw=1
-c     wl(nw) = 178.6 
+c     wl(nw) = 178.6
 c     wu(nw) = 180.0
-c     wc(nw) = (wl(nw) + wu(nw))/2      
+c     wc(nw) = (wl(nw) + wu(nw))/2
 
 c     nw=nw+1
 c     wl(nw) = 180.0
 c     wu(nw) = 183.0
-c     wc(nw) = (wl(nw) + wu(nw))/2     
+c     wc(nw) = (wl(nw) + wu(nw))/2
 
 c     nw=nw+1
 c     wl(nw) = 183.0
@@ -330,7 +330,7 @@ c     wc(nw) = (wl(nw) + wu(nw))/2
 c     nw=nw+1
 c     wl(nw) = 187.0
 c     wu(nw) = 192.0
-c     wc(nw) = (wl(nw) + wu(nw))/2     
+c     wc(nw) = (wl(nw) + wu(nw))/2
 
 c     nw=nw+1
 c     wl(nw) = 192.0
@@ -345,7 +345,7 @@ c     wc(nw) = (wl(nw) + wu(nw))/2
 c     nw=nw+1
 c     wl(nw) = 205.0
 c     wu(nw) = 213.0
-c     wc(nw) = (wl(nw) + wu(nw))/2     
+c     wc(nw) = (wl(nw) + wu(nw))/2
 
 c     nw=nw+1
 c     wl(nw) = 213.0
@@ -355,53 +355,53 @@ c     wc(nw) = (wl(nw) + wu(nw))/2
 c     nw=nw+1
 c     wl(nw) = 222.0
 c     wu(nw) = 231.0
-c     wc(nw) = (wl(nw) + wu(nw))/2         
+c     wc(nw) = (wl(nw) + wu(nw))/2
 
 c     nw=nw+1
 c     wl(nw) = 241.0
 c     wu(nw) = 289.9
-c     wc(nw) = (wl(nw) + wu(nw))/2     
+c     wc(nw) = (wl(nw) + wu(nw))/2
 
 c     nw=nw+1
 c     wl(nw) = 289.9
 c     wu(nw) = 305.5
-c     wc(nw) = (wl(nw) + wu(nw))/2     
+c     wc(nw) = (wl(nw) + wu(nw))/2
 
 c     nw=nw+1
 c     wl(nw) = 305.5
 c     wu(nw) = 313.5
-c     wc(nw) = (wl(nw) + wu(nw))/2     
+c     wc(nw) = (wl(nw) + wu(nw))/2
 
 c     nw=nw+1
 c     wl(nw) = 313.5
 c     wu(nw) = 337.5
-c     wc(nw) = (wl(nw) + wu(nw))/2     
+c     wc(nw) = (wl(nw) + wu(nw))/2
 
 c     nw=nw+1
 c     wl(nw) = 337.5
 c     wu(nw) = 420.0
-c     wc(nw) = (wl(nw) + wu(nw))/2    
+c     wc(nw) = (wl(nw) + wu(nw))/2
 
-c     nw=nw+1 
+c     nw=nw+1
 c     wl(nw) = 420.0
 c     wu(nw) = 475.0
-c     wc(nw) = (wl(nw) + wu(nw))/2    
+c     wc(nw) = (wl(nw) + wu(nw))/2
 
 c     nw=nw+1
 c     wl(nw) = 475.
 c     wu(nw) = 729.0
-c     wc(nw) = (wl(nw) + wu(nw))/2    
+c     wc(nw) = (wl(nw) + wu(nw))/2
 
 c     nw=nw+1
 c     wl(nw) = 729.0
 c     wu(nw) = 743.6
-c     wc(nw) = (wl(nw) + wu(nw))/2    
+c     wc(nw) = (wl(nw) + wu(nw))/2
 c     nw=nw+1
 
 c     wl(nw) = 743.6
       GO TO 9
 
- 5    CONTINUE 
+ 5    CONTINUE
 c-mc read in Kevin's grid here
 c-mab Presently, only grid option for hot Jup stellar fluxes.
       nw = 118
@@ -426,7 +426,7 @@ c      OPEN(kin, file='PHOTOCHEM/DATA/GRIDS/zahnle.grid.orig',status='old')
       GO TO 9
 
 
- 6    CONTINUE 
+ 6    CONTINUE
 c-mc read in Jim's grid here ( this won't work to drive the code)
 c-mc this is just used as a convienient interpolator
 
@@ -458,16 +458,16 @@ c      ENDDO
       enddo
 
       do L=1,nw
-         I = nw - L+1     
+         I = nw - L+1
          wl(L)=wc(I)
-      enddo   
+      enddo
 
       nw=54
 
       CLOSE (kin)
       GO TO 9
 
- 7    CONTINUE 
+ 7    CONTINUE
 
 
 
@@ -641,7 +641,7 @@ c       M. Claire       091306 integrating into Kevin's code
 
       REAL*8 refrac
       EXTERNAL refrac
- 
+
 
 !      print *, 'nw,wl,f,timega,pstar,uvscale'
 !      print *, nw,wl,f,timega, pstar,uvscale
@@ -649,11 +649,11 @@ c       M. Claire       091306 integrating into Kevin's code
 *_______________________________________________________________________
 * select desired extra-terrestrial solar irradiance, using pstar:
 
-c      pstar = 12    !Gj 581 from Lucianne 
+c      pstar = 12    !Gj 581 from Lucianne
 c      pstar = 13    !high resolution solar data from ATLAS1/3 (Thullier et al 2004)
 c      pstar = 14    !kevin's data from photo.dat
 c      pstar = 16    !AD LEO from VPL website
-c      pstar = 17    !Gj 581 from Lucianne 
+c      pstar = 17    !Gj 581 from Lucianne
 
 !ACK - implementing YOUNGSUN.f into pstar=13 for now, but it could apply to 14 if I ever wanted to use it again...
 !but not for Mdwarfs...
@@ -691,7 +691,7 @@ c         OPEN(UNIT=kin,file='PHOTOCHEM/DATA/FLUX/composite.atl3',STATUS='old')
          ENDDO
          CLOSE (kin)
 
-!iImplementing youngsun on Thuillier grid and apply to flux in energy space 
+!iImplementing youngsun on Thuillier grid and apply to flux in energy space
 !BEFORE converting to photochemical units...
 
 ! I'm keeping x1,y1 as high res orig just to test integrated energy against the interpolations done with x3/y3
@@ -731,20 +731,20 @@ c         stop
          IF (ierr .NE. 0) THEN
             WRITE(*,*) ierr,'  Something wrong in Grid.f/readflux'
             STOP
-         ENDIF         
+         ENDIF
 
 c so yg3 is the average values for flux in mw/m2/A at any point on the working wavelength grid
-c to convert to actual flux in the bin (mw/m2), need to multiply by bin width 
+c to convert to actual flux in the bin (mw/m2), need to multiply by bin width
 
 c-before we convert, some tests of energy conservation across the interpolation
 c-note - this are conserved across various wavelength grids.
-c         call cspint(n,x1,y1/10d0,2000d0,3550d0,y,e,work,poop)  
-c         call cspint(n,x1,y1/10d0,3500d0,5000d0,y,e,work,poop)  
+c         call cspint(n,x1,y1/10d0,2000d0,3550d0,y,e,work,poop)
+c         call cspint(n,x1,y1/10d0,3500d0,5000d0,y,e,work,poop)
 c         print *, poop  !ok this is the right answer for 200-350 (55.8 W/m2)  this is the thuillier flux
 
-c         call cspint(nw,wl,yg3,2000d0,3550d0,y,e,work,poop)  
-c         call cspint(nw,wl,yg3,3500d0,5000d0,y,e,work,poop)  
-c         print *, poop !flux interpolated to new grid 
+c         call cspint(nw,wl,yg3,2000d0,3550d0,y,e,work,poop)
+c         call cspint(nw,wl,yg3,3500d0,5000d0,y,e,work,poop)
+c         print *, poop !flux interpolated to new grid
 
 c         stop
 
@@ -764,7 +764,7 @@ c - the youngsun correction will be overwritten and should be done in energy spa
             if (wl(iw).eq.1216) then
                f(iw)=5.6e11*y2(indexLa)
                relflux(iw)=y2(indexLa)
-            else 
+            else
                f(iw) = yg3(iw)*(wl(iw+1)-wl(iw))*5.039e8*wl(iw)/10. !convert to photons/cm2/s
                relflux(iw)=yg2(iw)
             endif
@@ -810,18 +810,18 @@ c         OPEN(UNIT=kin,file='PHOTOCHEM/DATA/FLUX/zahnle.flx.orig',STATUS='old')
 
 
          CLOSE (kin)
-         
-      CALL addpnt(x1,y1,kdata,n,x1(1)*(1.-deltax),zero)  
+
+      CALL addpnt(x1,y1,kdata,n,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n,               zero,zero)
       CALL addpnt(x1,y1,kdata,n,x1(n)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n,            biggest,zero)
       CALL inter3(nw+1,wl,yg1,n,x1,y1,0)   !inter3 doesn't have any error checking at the moment
-      !inter3 is bins to bins. 
+      !inter3 is bins to bins.
 
          IF (ierr .NE. 0) THEN
             WRITE(*,*) ierr,'  Something wrong in readflux.f'
             STOP
-         ENDIF         
+         ENDIF
 
          DO iw = 1, nw
                f(iw) = yg1(iw)
@@ -864,7 +864,7 @@ c         stop
          ENDDO
          DO i = 1, n
             READ(kin,*) x1(i), y1(i)   !wl in Angstroms, flux in ergs/cm^2/s/A, at 1 AU
-c ergs/cm2/s is equivalent to mw/m^2           
+c ergs/cm2/s is equivalent to mw/m^2
             if (y1(i).lt.0.0) y1(i)=0.0  !ignore negative fluxes...
             y1(i)=y1(i)*(1./0.146)**2 !convert to distance of Gj581g which is 0.146 AU
          ENDDO
@@ -872,8 +872,8 @@ c ergs/cm2/s is equivalent to mw/m^2
 
 
          CLOSE (kin)
-         
-      CALL addpnt(x1,y1,kdata,n,x1(1)*(1.-deltax),zero)  
+
+      CALL addpnt(x1,y1,kdata,n,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n,               zero,zero)
       CALL addpnt(x1,y1,kdata,n,x1(n)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n,            biggest,zero)
@@ -882,20 +882,20 @@ c ergs/cm2/s is equivalent to mw/m^2
          IF (ierr .NE. 0) THEN
             WRITE(*,*) ierr,'  Something wrong in readflux.f'
             STOP
-         ENDIF         
+         ENDIF
 
 c so yg1 is the average values for flux in mW/m2/A at any point on the working wavelength grid
-c to convert to actual flux in the bin (mW/m2), need to multiply by bin width 
+c to convert to actual flux in the bin (mW/m2), need to multiply by bin width
 
 c - NOTE:  One remaining problem here.  The ly A bin is now integrated over large interval and is not just ly a.  need to figure this out
-c- integrating Lucianne's spectrum (at 0.146 AU) from 1205-1225A yields 108.881 mW/m2/A or 2177.62 mW/m2 which converts to 
-c 1.33432e+14 in photons/cm2/s 
+c- integrating Lucianne's spectrum (at 0.146 AU) from 1205-1225A yields 108.881 mW/m2/A or 2177.62 mW/m2 which converts to
+c 1.33432e+14 in photons/cm2/s
 
 
          DO iw = 1, nw
             if (wl(iw).eq.1216) then
-               f(iw)=1.33432e14    
-            else 
+               f(iw)=1.33432e14
+            else
                f(iw) = yg1(iw)*(wl(iw+1)-wl(iw))*5.039e8*wl(iw)/10.
             endif
          ENDDO
@@ -915,15 +915,15 @@ c 1.33432e+14 in photons/cm2/s
       IF (pstar .NE. 'wasp12' .and. pstar .ne. 'sun' .and. pstar .ne.
      &     'zahnle' .and. pstar .ne. 'gj581' .and. pstar .ne. '13' .and.
      &     pstar .ne. '14' .and. pstar .ne. '22' .and.
-     &     pstar .ne. '23' .and. pstar .ne. '12' .and. 
+     &     pstar .ne. '23' .and. pstar .ne. '12' .and.
      &     pstar  .ne. 'MUGJ876' .and. pstar .ne. '80' .and. pstar .NE.
      &    'MUGJ551' .and. pstar .ne. '81' .and. pstar .NE. 'MUGJ581'
-     &     .and. pstar .ne. '82' .and. pstar .NE. 'MUGJ667c' .and. 
+     &     .and. pstar .ne. '82' .and. pstar .NE. 'MUGJ667c' .and.
      &     pstar .ne. '83' .and. pstar .NE. 'MUGJ1214' .and. pstar .ne.
-     &      '84' )                    ! this if statement... :( -gna 
+     &      '84' )                    ! this if statement... :( -gna
      &      THEN
-c-mab: Recall pstar = 22 is using Kevin's grid. We don't need the conversions below.. 
-                       
+c-mab: Recall pstar = 22 is using Kevin's grid. We don't need the conversions below..
+
       IF (pstar .EQ. 'gj876' .or. pstar .eq. '76') THEN
          n = 26035
          print *, "STAR IS 76!"
@@ -944,7 +944,7 @@ c-mab: Recall pstar = 22 is using Kevin's grid. We don't need the conversions be
          nhead = 0
          ierr = 0
          ! EWS Note: Fixed to spectrum added in Jan 2016 to include correct Lyman-Alpha Flux
-         ! See Table 2 of Domagal-Goldman et al. 2014, ApJ, 792:90, and references therein 
+         ! See Table 2 of Domagal-Goldman et al. 2014, ApJ, 792:90, and references therein
          OPEN(UNIT=kin,
      &    file='PHOTOCHEM/DATA/FLUX/adleo_dat_units_fixed.txt',
      &                STATUS='old') !
@@ -972,7 +972,7 @@ c-mab: Recall pstar = 22 is using Kevin's grid. We don't need the conversions be
          nhead = 0
          ierr = 0
          ! EWS Note: Fixed to spectrum added in Jan 2016 to include correct Lyman-Alpha Flux
-         ! See Table 2 of Domagal-Goldman et al. 2014, ApJ, 792:90, and references therein 
+         ! See Table 2 of Domagal-Goldman et al. 2014, ApJ, 792:90, and references therein
          OPEN(UNIT=kin,
      &    file='PHOTOCHEM/DATA/FLUX/K2V_units_fixed.txt',
      &                STATUS='old')
@@ -1029,8 +1029,8 @@ c-mab: Recall pstar = 22 is using Kevin's grid. We don't need the conversions be
      &                STATUS='old')
           print *, 'This is a K2.5V star!'
       ENDIF
-      
-       
+
+
       IF (pstar .EQ. 'HD85512' .or. pstar .eq. '25' .or.
      &   pstar .eq. 'K6V') THEN
          n = 26150
@@ -1069,8 +1069,8 @@ c-mab: Recall pstar = 22 is using Kevin's grid. We don't need the conversions be
      &    file='PHOTOCHEM/DATA/FLUX/M0V.txt',
      &                STATUS='old')
           print *, 'This is a M0V star!'
-       ENDIF    
-      
+       ENDIF
+
         ! Do same unit conversions as found in star=13 option - Eddie
          DO i = 1, nhead
             READ(kin,*)
@@ -1099,13 +1099,13 @@ c-mab: Recall pstar = 22 is using Kevin's grid. We don't need the conversions be
          IF (ierr .NE. 0) THEN
             WRITE(*,*) ierr,'  Something wrong in Grid.f/readflux'
             STOP
-         ENDIF     
+         ENDIF
 
-! NOTE: This explicitly assumes the correct Lyman-Alpha flux *at the planet* has been included 
-!      in the input spectrum. It would benefit you to ensure that this is really the case! 
+! NOTE: This explicitly assumes the correct Lyman-Alpha flux *at the planet* has been included
+!      in the input spectrum. It would benefit you to ensure that this is really the case!
         DO iw = 1, nw
                f(iw) = yg3(iw)*(wl(iw+1)-wl(iw))*5.039e8*wl(iw)/10. !convert to photons/cm2/s
-               print *, wl(iw), yg3(iw)
+               !print *, wl(iw), yg3(iw)
         ENDDO
 
 
@@ -1122,37 +1122,37 @@ c-mab: Recall pstar = 22 is using Kevin's grid. We don't need the conversions be
          OPEN(UNIT=kin,
      &    file='PHOTOCHEM/DATA/FLUX/totalwasp12_G0V_forAtmos.dat',
      &                STATUS='old')
-       
+
          print *, 'Using Ravis GOV spectrum for WASP12b'
 c-mab: Ravis wasp12b star fluxes are already converted to photons/cm^2/s, distance unsure
 c-mab: to convert from ergs to photons to create above file wc was used not wl
 c-mab: is over grid identical to zanhle.grid, so gridding done with LGRID = 0 earlier
-                  
+
          DO i = 1, nhead
             READ(kin,*)
          ENDDO
 
          DO i = 1, nw
-            READ(kin,*) x1(i), skip, y1(i)  
-c-mab: wavl,wavu,flux given  
-c-mab: flux is already earth-equivalent in photons/s/cm^2/bin       
+            READ(kin,*) x1(i), skip, y1(i)
+c-mab: wavl,wavu,flux given
+c-mab: flux is already earth-equivalent in photons/s/cm^2/bin
             if (y1(i).lt.0.0) y1(i)=0.0  !ignore negative fluxes...
          ENDDO
-         
+
              CLOSE (kin)
-                     
-      CALL addpnt(x1,y1,kdata,n,x1(1)*(1.-deltax),zero)  
+
+      CALL addpnt(x1,y1,kdata,n,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n,               zero,zero)
       CALL addpnt(x1,y1,kdata,n,x1(n)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n,            biggest,zero)
-      CALL inter3(nw+1,wl,yg1,n,x1,y1,0)   
+      CALL inter3(nw+1,wl,yg1,n,x1,y1,0)
 !inter3 doesn't have any error checking at the moment
-      !inter3 is bins to bins. 
+      !inter3 is bins to bins.
 
          IF (ierr .NE. 0) THEN
             WRITE(*,*) ierr,'  Something wrong in readflux.f'
             STOP
-         ENDIF         
+         ENDIF
 
          DO iw = 1, nw
                f(iw) = yg1(iw)
@@ -1163,13 +1163,13 @@ c         enddo
 c         stop
 
       ENDIF
-      
-c-mab: The new 3300K star from ttps://phoenix.ens-lyon.fr/Grids/BT-Settl/AGSS2009/SPECTRA/lte033-4.5-0.0a+0.0.BT-Settl.7.bz2 very high res     
+
+c-mab: The new 3300K star from ttps://phoenix.ens-lyon.fr/Grids/BT-Settl/AGSS2009/SPECTRA/lte033-4.5-0.0a+0.0.BT-Settl.7.bz2 very high res
       IF (pstar .EQ. 'PH3300K' .or. pstar .eq. '23') THEN
          nhead = 0
          ierr = 0
 
-         n = 76800  
+         n = 76800
 
          OPEN(UNIT=kin,
      &      file='PHOTOCHEM/DATA/FLUX/m3300phoenix_76800nl.txt',
@@ -1183,7 +1183,7 @@ c-mab: The new 3300K star from ttps://phoenix.ens-lyon.fr/Grids/BT-Settl/AGSS200
          DO i = 1, n
             READ(kin,*) x1(i), y1(i)   !wl already in Angstroms, flux in logs, convert flux...
             x3(i) = x1(i);
-            y3(i)=10.**(y1(i)-8.d0) !convert to ergs/cm^2/s/A  
+            y3(i)=10.**(y1(i)-8.d0) !convert to ergs/cm^2/s/A
          ENDDO
 
       	sum_flux = 0.0
@@ -1197,9 +1197,9 @@ C scaling to solar constant
         do i=1,n-1
           y3(i) = y3(i)*facm !converted to earth-equivalent flux
         end do
-        
+
          CLOSE (kin)
-         
+
 ! We are not bothering with Youngsun stuff because it is a different star
          n3=n
          ierr=0
@@ -1215,10 +1215,10 @@ C scaling to solar constant
          IF (ierr .NE. 0) THEN
             WRITE(*,*) ierr,'  Something wrong in Grid.f/readflux'
             STOP
-         ENDIF     
+         ENDIF
 
-! NOTE: This explicitly assumes the correct Lyman-Alpha flux *at the planet* has been included 
-!      in the input spectrum. It would benefit you to ensure that this is really the case! 
+! NOTE: This explicitly assumes the correct Lyman-Alpha flux *at the planet* has been included
+!      in the input spectrum. It would benefit you to ensure that this is really the case!
         DO iw = 1, nw
                f(iw) = yg3(iw)*(wl(iw+1)-wl(iw))*5.039e8*wl(iw)/10. !convert to photons/cm2/s
                print *, wl(iw), yg3(iw)
@@ -1231,17 +1231,17 @@ c     -mab: MUSCLES stars from the "adaptive constant panchromatic data products
       IF (pstar  .EQ. 'MUGJ876' .or. pstar .eq. '80' .or. pstar .EQ.
      &  'MUGJ551' .or. pstar .eq. '81' .or. pstar .EQ. 'MUGJ581' .or.
      &   pstar .eq. '82' .or. pstar .EQ. 'MUGJ667c' .or. pstar .eq. '83'
-     &   .or. pstar .EQ. 'MUGJ1214' .or. pstar .eq. '84' ) THEN                    !used to be if pstar gt 80, but 80 is a string and we're allowing non-numerical inputs for star names so this will need to be done differently since it's also entering this if statement for things like 'sun'. I think the simplest solution is to convert the muscles stars to the standard input units so that this special case goes away...  -gna 
+     &   .or. pstar .EQ. 'MUGJ1214' .or. pstar .eq. '84' ) THEN                    !used to be if pstar gt 80, but 80 is a string and we're allowing non-numerical inputs for star names so this will need to be done differently since it's also entering this if statement for things like 'sun'. I think the simplest solution is to convert the muscles stars to the standard input units so that this special case goes away...  -gna
       !all of them have same starting units ergs/cm^2/s/A flux and A wavelength.
-      
-        IF (pstar .EQ. 'MUGJ876' .or. pstar .eq. '80') THEN 
+
+        IF (pstar .EQ. 'MUGJ876' .or. pstar .eq. '80') THEN
 c-mab: Presently this star doesn't allow Modern Earth template to converge (even though we don't have negatives).
 
 
          nhead = 0
          ierr = 0
 
-         n = 24995  
+         n = 24995
 
          OPEN(UNIT=kin,
      &      file='PHOTOCHEM/DATA/FLUX/muscles_gj876.txt',
@@ -1250,13 +1250,13 @@ c-mab: Presently this star doesn't allow Modern Earth template to converge (even
          !NOTE: this flux file needs be converted to earth-equivalent flux first:
 
       	ENDIF !pstar = 80
-       	
+
         IF (pstar .EQ. 'MUGJ551' .or. pstar .eq. '81') THEN
 
          nhead = 0
          ierr = 0
 
-         n = 24998  
+         n = 24998
 
          OPEN(UNIT=kin,
      &      file='PHOTOCHEM/DATA/FLUX/muscles_gj551.txt',
@@ -1266,14 +1266,14 @@ c-mab: https://archive.stsci.edu/missions/hlsp/muscles/gj551/hlsp_muscles_multi_
          print *,'using GJ551 (Prox Cen) MUSCLES adaptive constant data'
 
       	ENDIF ! pstar = 81
-      	
+
         IF (pstar .EQ. 'MUGJ581' .or. pstar .eq. '82') THEN
 
 
          nhead = 0
          ierr = 0
 
-         n = 24995  
+         n = 24995
 
          OPEN(UNIT=kin,
      &      file='PHOTOCHEM/DATA/FLUX/muscles_gj581.txt',
@@ -1281,22 +1281,22 @@ c-mab: https://archive.stsci.edu/missions/hlsp/muscles/gj551/hlsp_muscles_multi_
          print *,'using GJ581 MUSCLES adaptive constant res data'
 
       	ENDIF !pstar = 82
-      	
+
         IF (pstar .EQ. 'MUGJ667c' .or. pstar .eq. '83') THEN
 
 
          nhead = 0
          ierr = 0
 
-         n = 24995  
+         n = 24995
 
          OPEN(UNIT=kin,
      &      file='PHOTOCHEM/DATA/FLUX/muscles_gj667c.txt',
      &         STATUS='old')
          print *,'using GJ667c MUSCLES adaptive constant res data'
 
-      	ENDIF !pstar = 83 
-      	
+      	ENDIF !pstar = 83
+
         IF (pstar .EQ. 'MUGJ1214' .or. pstar .eq. '84') THEN
 c-mab: Presently this star doesn't allow Modern Earth template to converge (even though we don't have negatives).
 
@@ -1304,7 +1304,7 @@ c-mab: Presently this star doesn't allow Modern Earth template to converge (even
          nhead = 0
          ierr = 0
 
-         n = 24995  
+         n = 24995
 
          OPEN(UNIT=kin,
      &      file='PHOTOCHEM/DATA/FLUX/muscles_gj1214.txt',
@@ -1312,7 +1312,7 @@ c-mab: Presently this star doesn't allow Modern Earth template to converge (even
          print *,'using GJ1214 MUSCLES adaptive constant res data'
 
       	ENDIF ! pstar = 84
-      	     	
+
          DO i = 1, nhead
             READ(kin,*)
          ENDDO
@@ -1320,7 +1320,7 @@ c-mab: Presently this star doesn't allow Modern Earth template to converge (even
             READ(kin,*) x3(i), y3(i)   !wl already in Angstroms, flux in ergs/cm^2/s/A
          ENDDO
 
-        
+
          CLOSE (kin)
 
 ! ---- Below here lie Teal's stars
@@ -1330,7 +1330,7 @@ c-mab: Presently this star doesn't allow Modern Earth template to converge (even
          nhead = 0
          ierr = 0
 
-         n = 24995  
+         n = 24995
 
          WRITE(*,*) 'ATTEMPTING TO OPEN THE SPECTRUM FILE'
          OPEN(UNIT=kin,
@@ -1345,7 +1345,7 @@ c-mab: Presently this star doesn't allow Modern Earth template to converge (even
          nhead = 0
          ierr = 0
 
-         n = 24995  
+         n = 24995
 
          OPEN(UNIT=kin,
      &      file='PHOTOCHEM/DATA/FLUX/muscles_gj436.txt',
@@ -1359,7 +1359,7 @@ c-mab: Presently this star doesn't allow Modern Earth template to converge (even
          nhead = 0
          ierr = 0
 
-         n = 24995  
+         n = 24995
 
          OPEN(UNIT=kin,
      &      file='PHOTOCHEM/DATA/FLUX/muscles_gj832.txt',
@@ -1373,7 +1373,7 @@ c-mab: Presently this star doesn't allow Modern Earth template to converge (even
          nhead = 0
          ierr = 0
 
-         n = 24995  
+         n = 24995
 
          OPEN(UNIT=kin,
      &      file='PHOTOCHEM/DATA/FLUX/muscles_hd40307.txt',
@@ -1387,7 +1387,7 @@ c-mab: Presently this star doesn't allow Modern Earth template to converge (even
          nhead = 0
          ierr = 0
 
-         n = 24995  
+         n = 24995
 
          OPEN(UNIT=kin,
      &      file='PHOTOCHEM/DATA/FLUX/muscles_hd85512.txt',
@@ -1401,7 +1401,7 @@ c-mab: Presently this star doesn't allow Modern Earth template to converge (even
          nhead = 0
          ierr = 0
 
-         n = 24995  
+         n = 24995
 
          OPEN(UNIT=kin,
      &      file='PHOTOCHEM/DATA/FLUX/muscles_hd97658.txt',
@@ -1415,7 +1415,7 @@ c-mab: Presently this star doesn't allow Modern Earth template to converge (even
          nhead = 0
          ierr = 0
 
-         n = 24995  
+         n = 24995
 
          OPEN(UNIT=kin,
      &      file='PHOTOCHEM/DATA/FLUX/muscles_v-eps-eri.txt',
@@ -1423,7 +1423,7 @@ c-mab: Presently this star doesn't allow Modern Earth template to converge (even
          print *,'using v eps eri MUSCLES adaptive constant res data'
 
          ENDIF ! pstar = 91
-         
+
 ! We are not bothering with Youngsun stuff because it is a different star
          n3=n
          ierr=0
@@ -1439,13 +1439,13 @@ c-mab: Presently this star doesn't allow Modern Earth template to converge (even
          IF (ierr .NE. 0) THEN
             WRITE(*,*) ierr,'  Something wrong in Grid.f/readflux'
             STOP
-         ENDIF     
+         ENDIF
 
-! NOTE: This explicitly assumes the correct Lyman-Alpha flux *at the planet* has been included 
-!      in the input spectrum. It would benefit you to ensure that this is really the case! 
+! NOTE: This explicitly assumes the correct Lyman-Alpha flux *at the planet* has been included
+!      in the input spectrum. It would benefit you to ensure that this is really the case!
         DO iw = 1, nw
            f(iw) = yg3(iw)*(wl(iw+1)-wl(iw))*5.039e8*wl(iw)/10. !convert to photons/cm2/s
-           
+
                print *, wl(iw), yg3(iw)
         ENDDO
 
@@ -1456,7 +1456,7 @@ c-mab: Presently this star doesn't allow Modern Earth template to converge (even
        DO ii = 1, nw
          IF(wl(ii) .lt. 4000) f(ii) = f(ii)*uvscale
        ENDDO
-     
+
 *_______________________________________________________________________
 
       RETURN
@@ -1527,7 +1527,7 @@ C       M.C.            060802  Integrated into Kevin's code
          print *,'Number of data exceeds dimension'
          print *, k,n
          RETURN
-       ENDIF         
+       ENDIF
 
       IF (n .LT. 2) THEN
          ok = .FALSE.
@@ -1628,10 +1628,10 @@ C-----------------------------------------------------------------------
 * otherwise, insert <xnew,ynew> at position INSERT
 
       IF ( xnew .GT. x(n) ) THEN
- 
+
          x(n+1) = xnew
          y(n+1) = ynew
-  
+
       ELSE
 
 * shift all existing points one index up
@@ -1645,7 +1645,7 @@ C-----------------------------------------------------------------------
 
          x(insert) = xnew
          y(insert) = ynew
-  
+
       ENDIF
 
 * increase total number of elements in x, y
@@ -1800,7 +1800,7 @@ C $Id$
             WRITE(*,*)'data not sorted', i,x(i),x(i-1)
             RETURN
          ENDIF
-   10 CONTINUE     
+   10 CONTINUE
 
 
       DO i = 2, ng
@@ -1824,8 +1824,8 @@ C $Id$
           STOP
       ENDIF
 
-*  find the integral of each grid interval and use this to 
-*  calculate the average y value for the interval      
+*  find the integral of each grid interval and use this to
+*  calculate the average y value for the interval
 *  xgl and xgu are the lower and upper limits of the grid interval
 
       jstart = 1
@@ -1838,7 +1838,7 @@ C $Id$
             xgl = xg(i)
             xgu = xg(i+1)
 
-*  discard data before the first grid interval and after the 
+*  discard data before the first grid interval and after the
 *  last grid interval
 *  for internal grid intervals, start calculating area by interpolating
 *  between the last point which lies in the previous interval and the
@@ -1859,7 +1859,7 @@ C $Id$
 *  if the last point is beyond the end of the grid, complete and go to the next
 *  grid
    40         CONTINUE
-                 IF ((k .LE. n-1) .AND. (x(k) .LT. xgu)) THEN          
+                 IF ((k .LE. n-1) .AND. (x(k) .LT. xgu)) THEN
 
                     jstart = k-1
 
@@ -1886,7 +1886,7 @@ c                       print *,a2,a1,k,y(k),slope,b2,b1,darea
                     area = area + darea
 
 * go to next point
-              
+
                     k = k+1
                     GO TO 40
 
@@ -1896,7 +1896,7 @@ c                       print *,a2,a1,k,y(k),slope,b2,b1,darea
 
 *  calculate the average y after summing the areas in the interval
             yg(i) = area/(xgu - xgl)
-            
+
 
    50 CONTINUE
 *_______________________________________________________________________
@@ -1968,7 +1968,7 @@ C       M. Claire       060806  integrated into Kevin's code
 *-----------------------------------------------------------------------------*
 
       IMPLICIT NONE
-      
+
 * input:
       INTEGER n, ng
       REAL*8 xg(ng)
@@ -2010,7 +2010,7 @@ C       M. Claire       060806  integrated into Kevin's code
                 jstart = jl
                 jl = jl+1
                 IF (jl .LE. n-1) GO TO 20
-             ENDIF               
+             ENDIF
 
    25      CONTINUE
 
@@ -2025,7 +2025,7 @@ C       M. Claire       060806  integrated into Kevin's code
 
              ENDIF
 
-           yg(i) = sum 
+           yg(i) = sum
 
          ENDIF
 
@@ -2040,7 +2040,7 @@ C       M. Claire       060806  integrated into Kevin's code
          a1 = xg(ng)     ! upper limit of last interpolated bin
          a2 = x(jl+1)     ! upper limit of last input bin considered
 
-*        do folding only if grids don't match up and there is more input 
+*        do folding only if grids don't match up and there is more input
          IF ((a2 .GT. a1) .OR. (jl+1 .LT. n)) THEN
            tail = y(jl) * (a2-a1)/(x(jl+1)-x(jl))
            DO k = jl+1, n-1
@@ -2119,7 +2119,7 @@ C $Id$
 *-----------------------------------------------------------------------------*
 
       IMPLICIT NONE
-      
+
 * input:
       INTEGER n, ng
       REAL*8 xg(ng)
@@ -2161,7 +2161,7 @@ C $Id$
                 jstart = jl
                 jl = jl+1
                 IF (jl .LE. n-1) GO TO 20
-             ENDIF               
+             ENDIF
 
    25      CONTINUE
 
@@ -2192,7 +2192,7 @@ C $Id$
          a1 = xg(ng)     ! upper limit of last interpolated bin
          a2 = x(jl+1)     ! upper limit of last input bin considered
 
-*        do folding only if grids don't match up and there is more input 
+*        do folding only if grids don't match up and there is more input
          IF ((a2 .GT. a1) .OR. (jl+1 .LT. n)) THEN
            tail = y(jl) * (a2-a1)/(x(jl+1)-x(jl))
            DO k = jl+1, n-1
@@ -2206,4 +2206,3 @@ C $Id$
 
       RETURN
       END
-      

@@ -36,13 +36,13 @@ echo "You will need to be in your top folder for atmos, not a subfolder."
 echo "Your current folder is $(pwd)."
 echo ""
 echo "Your PHOTOCHEM has these templates:"
-ls $temp_path
+ls $temp_path --hide=*.*
 echo ""
 # *** Initiate loop for testing ***
 # Find all the templates and copy/compile/run/test each one
 cd $temp_path
 # This command finds and loops on all the top-level template folders
-for folder in `find . -type d -maxdepth 1 -mindepth 1 | sed 's|./||'`; do
+for folder in `find -s . -type d -maxdepth 1 -mindepth 1 | sed 's|./||'`; do
   cd $true_path
   cd $temp_path
   # copy files
@@ -58,34 +58,40 @@ for folder in `find . -type d -maxdepth 1 -mindepth 1 | sed 's|./||'`; do
               printf "${GREEN}${folder}Finished copying photochem templates over for ${folder} run!${NC}"
               echo ""
             else
-              printf "${RED}${temp_path}${folder}/PLANET.dat appears to be missing! Quitting.${NC}"
+              printf "${RED}${temp_path}${folder}/PLANET.dat appears to be missing! Skipping.${NC}"
               echo ""
-              exit 1
+              echo ""
+              continue
             fi
           else
-            printf "${RED}${temp_path}${folder}/species.dat appears to be missing! Quitting.${NC}"
+            printf "${RED}${temp_path}${folder}/species.dat appears to be missing! Skipping.${NC}"
             echo ""
-            exit 1
+            echo ""
+            continue
           fi
         else
-          printf "${RED}${temp_path}${folder}/parameters.inc appears to be missing! Quitting.${NC}"
+          printf "${RED}${temp_path}${folder}/parameters.inc appears to be missing! Skipping.${NC}"
           echo ""
-          exit 1
+          echo ""
+          continue
         fi
       else
-        printf "${RED}${temp_path}${folder}/reactions.rx appears to be missing! Quitting.${NC}"
+        printf "${RED}${temp_path}${folder}/reactions.rx appears to be missing! Skipping.${NC}"
         echo ""
-        exit 1
+        echo ""
+        continue
       fi
     else
-      printf "${RED}${temp_path}${folder}/input_photochem.dat appears to be missing! Quitting.${NC}"
+      printf "${RED}${temp_path}${folder}/input_photochem.dat appears to be missing! Skipping.${NC}"
       echo ""
-      exit 1
+      echo ""
+      continue
     fi
   else
-    printf "${RED}${temp_path}${folder}/in.dist appears to be missing! Quitting.${NC}"
+    printf "${RED}${temp_path}${folder}/in.dist appears to be missing! Skipping.${NC}"
     echo ""
-    exit 1
+    echo ""
+    continue
   fi
   cd $true_path
 
@@ -99,9 +105,11 @@ for folder in `find . -type d -maxdepth 1 -mindepth 1 | sed 's|./||'`; do
   else
     # exit if compliation fails
     printf "${RED}${folder} did not compile! Something is wrong. Quitting.${NC}"
+    echo ""
     echo "See ${folder}.log for compliation output and error messages."
     echo ""
-    exit 1
+    echo ""
+    continue
   fi
 
   # run photochemistry code
@@ -124,22 +132,30 @@ for folder in `find . -type d -maxdepth 1 -mindepth 1 | sed 's|./||'`; do
       echo ""
       echo "See ${folder}.out.out for model output to diagnose this."
       echo "Please DO NOT submit your code changes until resolving this issue."
+      echo ""
+      echo ""
     elif grep "N =" ${folder}.out.out | grep 500 >/dev/null 2>&1; then
       printf "${YELLOW}${folder} run complete in > 500 steps... This means your model did not converge very quicly.${NC}"
       echo ""
       echo "See ${folder}.out.out for model output to diagnose this."
       echo "Please DO NOT submit your code changes until resolving this issue."
+      echo ""
+      echo ""
     else
       printf "${GREEN}${folder} run complete in < 500 steps! Output stored in ${folder}.out.out${NC}"
+      echo ""
+      echo ""
       echo ""
     fi
   else
     # In this case, the model crashed before completion.
     printf "${RED}${folder} run did NOT complete! Something is worng. Quitting.${NC}"
+    echo ""
     echo "See ${folder}.out.out for model output and error messages."
     echo "Please DO NOT submit your code changes until resolving this issue."
     echo ""
-    exit 1
+    echo ""
+    continue
   fi
   echo ""
 

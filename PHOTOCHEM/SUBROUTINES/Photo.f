@@ -422,6 +422,7 @@ c             endif
 ! this returns the Source function S to this code
 
        FLX = FLUX(L)*AGL*ALP*FSCALE
+!       print *, "FLUX(", L,") =",FLUX(L)
 C       print*,'wavelength, flx',wavl(L),FLX
       !AGL is diurnal averaging factor, ALP is 1 if out of the SR band or IO2.NE.1
       ! or is the exponential sum coeffiecent if in the SR band and IO2.EQ.1
@@ -430,18 +431,20 @@ C       print*,'wavelength, flx',wavl(L),FLX
           !FSCALE=1 is Earth, FSCALE=0.43 is Mars
 
 c compute photlysis rates for each reaction at each height (summed over wavelength)
-
       do j=1,kj
+!        print *, "sq(",j,",",wavl(1),", surf) =",sq(j,1,1)
+!        print *, "sq(",j,",",wavl(1),", TOA) =",sq(j,nz,1)
+!        print *, "sq(",j,",",wavl(nw),", surf) =",sq(j,1,nw)
+!        print *, "sq(",j,",",wavl(nw),", TOA) =",sq(j,nz,nw)
        do i=1,nz
           prates(j,i) = prates(j,i) + FLX*sq(j,i,L)*S(i)
-c       IF(J.EQ.60) THEN
-c        IF(I.EQ.1)print*,"J,wav,Reaction No.",J,L,wav(L),photonums(j)
-c         print*,'WAV,Z,prates,FLX,sq,S',wav(L),Z(I)/1e5,prates(j,i),
-c     $           FLX,sq(j,i,L),S(i) !!!PRINT ADD !!!
-c       ENDIF
+!       IF(L.EQ.1) THEN
+!        IF(I.EQ.1)print*,"J,wav,Reaction No.",J,L,wav(L),photonums(j)
+!         print*,'WAV,Z,prates,FLX,sq,S',wav(L),Z(I)/1e5,prates(j,i),
+!     $           FLX,sq(j,i,L),S(i) !!!PRINT ADD !!!
+!       ENDIF
        enddo
       enddo
-
 c save wavelength dependence of SO2 photolysis and optical depth
       do I=1,NZ
         PSO2MC(L,I) = FLX*sq(JSO2,I,L)*S(I)
@@ -556,7 +559,7 @@ c   go through "crises" that seem to be unrelated to column depths
 !L-13 is 1786.25 and L-934 is 2246.75
        L1=minloc(wavl,1,wavl.ge.1786.25)  !ACK hardcoded to high resolution grid
        L2=minloc(wavl,1,wavl.ge.2246.75)  !ACK hardcoded to high resolution grid
-       write(61,*),L1,L2
+       write(61,*) L1,L2
         fmtstr='(    (1PE9.2,2x))'
         write(fmtstr(2:5),'(I4)')NZ
        do j=L1,L2
@@ -608,7 +611,7 @@ c so analysis programs can pick up on nz and nw
 
        do L=1,nw
          write(31,*) wavl(L),wavu(L),wav(L)
-         write(41,*), flux(L),relflux(L)
+         write(41,*) flux(L),relflux(L)
        enddo
        write(41,*) AM    !write out mu
 

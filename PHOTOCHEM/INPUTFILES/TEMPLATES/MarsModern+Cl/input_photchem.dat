@@ -14,8 +14,9 @@ frak=      0
 HCDENS=    0.63
 ICOUPLE=   0
 monsize=   0
-ZY=	   50.
+ZY=	       50.
 USOLMIN=   1.E-20
+KIDA=      1
 
 C ***** SET MODEL PARAMETERS *****
 C     AGL = DIURNAL AVERAGING FACTOR FOR PHOTORATES
@@ -24,7 +25,7 @@ C               ISEASON < 3)
 C     IZYO2 = TELLS WHETHER SOLAR ZENITH ANGLE VARIES WITH TIME (0 SAYS
 C             IT DOESN'T; 1 SAYS IT DOES)
 C     LGRID = 0  USE OLD JPL WAVELENGTH GRID
-C     LGRID = 1  USE HIGH RESOLUTION GRID (SEE ALSO GRID.F)
+C     LGRID = 1  USE MARK'S NEW HIGH RESOLUTION GRID (SEE ALSO GRID.F)
 C                IF LGRID=1, IO2 and INO should be set to 2
 C     IO2 = 0 FOR ALLEN AND FREDERICK O2 SCHUMANN-RUNGE COEFFICIENTS
 C         = 1 FOR EXPONENTIAL SUM FITS (FOR LOW-O2 ATMOSPHERES)
@@ -48,5 +49,12 @@ C	      = 2 for 0.02 um monomers for fractal particles
 C	      = 3 for 0.07 um monomers for fractal particles
 C	      = 4 for 0.10 um monomers for fractal particles
 C     ZY      = solar zenith angle
-C     USOLMIN = Mixing ratios smaller than this value are ignored 
-c 		in time stepper 
+C     USOLMIN = Value under which the time stepper no longer considers
+C               a species when calculating "max relative change."
+C               This should be set to 1.e-20 or lower, unless you are
+C               moving the model to a new regime or creating a new
+C               template and require looser convergence criteria.
+C               Even in that case, you should lower/tighten this again
+C               before production runs.
+C     KIDA = 1 if using "kida-style" reactions.rx format
+C          = 0 if using the code's "old-style" reactions.rx format

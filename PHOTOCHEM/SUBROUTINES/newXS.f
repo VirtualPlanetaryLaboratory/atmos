@@ -40,12 +40,18 @@
       REAL*8, allocatable :: x1(:), x2(:), x3(:), y1(:), y2(:), y3(:)
       REAL*8 yg1(nw), yg2(nw), yg3(nw)
 
+      ! *** CAUTION *** TEMPATURE DEPENDENCE IS STILL BEING WORKED ON
+      ! RUNNING WITH TDXS=0 (OFF) IS SAFER
+      ! Turn ON temperature dependence with 1
+      ! Turn OFF with 0
+      integer TDXS
+
 !     File name stuff
       character*8 species
       character*11 photolabel
       character*10 reac1, reac2, prod1, prod2, prod3
       character*5 label
-      character*60 xsname, qyname
+      character*70 xsname, qyname
       character*25 reacs, prods
 
       character*60 line
@@ -53,19 +59,18 @@
       character*5 dumtemp, tempA, tempB, tempC
 
 ! Open reactions.rx and find current species
-! This read style relies on a single species' reaction paths being together in reactions.rx
-      open(12, file='PHOTOCHEM/INPUTFILES/reactions.rx', status='OLD')
 
-! use this format for now:
-667   FORMAT(A10, A10, A10, A10, A8, A5)
-! new formatting (commented out for now, will update):
-!667   FORMAT(A10,A10,A10,A10,A10,10X,A5)
+      open(12, file='PHOTOCHEM/INPUTFILES/reactions.rx', status='OLD')
+      ! skip header
+      read(12, *)
+
+! Updated Format
+667   FORMAT(A10, A10, A10, A10, A10, A5)
 
 !  Read until first photo species match (error if species not in .rx)
 !  Matching first 4 characters to PHOT for photolysis
       stat = 0
       READ(12,667,IOSTAT=stat) reac1,reac2,prod1,prod2,prod3,label
-      ! print *,label
       do while((trim(reac1).ne.trim(species).OR.label(1:4).ne.'PHOT')
      &  .AND.stat == 0)
         READ(12,667,IOSTAT=stat) reac1,reac2,prod1,prod2,prod3,label
@@ -75,14 +80,15 @@
         print*, reac1,reac2,prod1,prod2,prod3,label
         STOP
       endif
-
+!      print 667, reac1,reac2,prod1,prod2,prod3,label
       ! If this reaction has been marked as non-standard call old xsections
       if(label(5:5).ne.'O') then
+!        print *, "calling XS(", trim(species), ",", nw, ",", ")"
         CALL XS(species,nw,wavl,wav,T,DEN,j,sq,columndepth,zy,IO2)
       else
-! Now at line of reactions.rx where first occurence of spcies is
+! Now at line of reactions.rx where first occurence of sepcies is
         labnum = 0
-* Determine species cross section
+! Determine species cross section
         xsname = 'PHOTOCHEM/DATA/XSECTIONS/'//trim(species)//'/'//
      &    trim(species)//'.XS.dat'
         open(11, file=trim(xsname), status='OLD')
@@ -112,6 +118,7 @@
         end do
 
         close(11)
+
         kdata = kdata - 1 ! stat will /= 0 when it reaches EOF, so kdata was incremented once too many
         n1 = kdata - 4 ! subtract the four headers
         n2 = kdata - 4
@@ -147,17 +154,37 @@
         enddo
         close(11)
 
+!        print *, "Cross section data for: ",trim(species)
+!        print 66, x1(1), y1(1)
+!        print 66, x1(maxloc(y1)), maxval(y1)
+!        print 66, x1(n1), y1(n1)
+
         x2 = x1
         x3 = x1
 
 ! XS GRID WORK
 
+		! TURN ON OR OFF TEMPERATURE DEPENDENCE
+		TDXS = 0 ! off
+		if(TDXS == 0 .and. temps > 1) then
+			! Temp Depend is off but there are more than one temp values
+			! Note, 300K will never be the third column of data so only need
+			! to check if its second column. (Else its already first)
+			if(tempB == '300K ') then
+				y1 = y2
+		    endif
+			temps = 1
+			! y1 is assigned the values at Medium Temp (300K)
+			! temps is now 1
+		endif
+
+
         CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
         CALL addpnt(x1,y1,kdata,n1,               zero,zero)
         CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
         CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-
-        CALL inter2(nw+1,wavl,yg1,n1,x1,y1,ierr)   !inter2 is used for discrete points -> bins
+        !inter2 is used for discrete points -> bins
+        CALL inter2(nw+1,wavl,yg1,n1,x1,y1,ierr)
 
         IF (ierr .NE. 0) THEN
           WRITE(*,*) ierr,' ***Something wrong in XS_Standard*** '
@@ -166,31 +193,35 @@
 
         ! need to interpolate at each temperature
         if(temps > 1) then
-
           CALL addpnt(x2,y2,kdata,n2,x2(1)*(1.-deltax),zero)
           CALL addpnt(x2,y2,kdata,n2,               zero,zero)
           CALL addpnt(x2,y2,kdata,n2,x2(n2)*(1.+deltax),zero)
           CALL addpnt(x2,y2,kdata,n2,            biggest,zero)
+          !inter2 is used for discrete points -> bins
+          CALL inter2(nw+1,wavl,yg2,n2,x2,y2,ierr)
 
-          CALL inter2(nw+1,wavl,yg2,n2,x2,y2,ierr)   !inter2 is used for discrete points -> bins
           IF (ierr .NE. 0) THEN
             WRITE(*,*) ierr,' ***Something wrong in XS_Standard*** '
             STOP
           ENDIF
         endif
+
 
         if(temps > 2) then
           CALL addpnt(x3,y3,kdata,n3,x3(1)*(1.-deltax),zero)
           CALL addpnt(x3,y3,kdata,n3,               zero,zero)
           CALL addpnt(x3,y3,kdata,n3,x3(n3)*(1.+deltax),zero)
           CALL addpnt(x3,y3,kdata,n3,            biggest,zero)
+          !inter2 is used for discrete points -> bins
+          CALL inter2(nw+1,wavl,yg3,n3,x3,y3,ierr)
 
-          CALL inter2(nw+1,wavl,yg3,n3,x3,y3,ierr)   !inter2 is used for discrete points -> bins
           IF (ierr .NE. 0) THEN
             WRITE(*,*) ierr,' ***Something wrong in XS_Standard*** '
             STOP
           ENDIF
         endif
+
+
 
 ! QY LOOP
         ! This loop will call subroutines on each reaction path
@@ -199,7 +230,9 @@
      &    label(1:4).eq.'PHOT')
 
           if(label(5:5).ne.'O') then
-           CALL XS(species,nw,wavl,wav,T,DEN,j,sq,columndepth,zy,IO2)
+!            print *, "called XS(", trim(species), ",", nw, ",", ")"
+            CALL XS(species,nw,wavl,wav,T,DEN,j,sq,columndepth,zy,IO2)
+
           else
 
             labnum = labnum + 1
@@ -223,6 +256,8 @@
             qyname = 'PHOTOCHEM/DATA/XSECTIONS/'//trim(species)//'/'//
      &        trim(reacs)//"_"//trim(prods)//".QY.dat"
 ! Call new xs subroutine
+!            print *, "calling XS_Standard(", qyname,
+!     &                ",", nw, ",", temps, ",", trim(species), ")"
             CALL XS_Standard(qyname,yg1,yg2,yg3,nw,wavl,T,tempA,
      &       tempB,tempC,temps,species,j,sq,labnum)
            endif
@@ -271,14 +306,15 @@
       REAL*8 sq(kj,nz,kw)
       REAL*8 tlev(NZ)
       PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
-      REAL*8, allocatable :: qy (:), x2 (:) ! qy is uninterpolated qy, x2 is wavelength from qy file
+      ! qy is uninterpolated qy, x2 is wavelength from qy file
+      REAL*8, allocatable :: qy (:), x2 (:)
       INTEGER i, iw, kdata, temps, jn, labnum
-      INTEGER ierr
+      INTEGER ierr, ios
       INTEGER stat
       INTEGER n1 ! number of lines of data
       character*8 species
       CHARACTER*11 plab, photolabel
-      CHARACTER*60 qyname
+      CHARACTER*70 qyname
       CHARACTER*5 tempA, tempB, tempC
       integer ta, tb, tc
       REAL*8 m, x, b
@@ -298,100 +334,121 @@
       end do
       kdata = kdata - 1 ! quick fix to stat check EOF
       n1 = kdata - 4 ! subtract the four headers
-      kdata = kdata !need +4 -4
+      ! kdata needs +4 -4 so leave alone
       close(13)
 
-      open(13, file=trim(qyname), status='OLD')
+      open(13, file=trim(qyname), status='OLD', IOSTAT=ios)
+      if(ios /= 0) then
+        print*, "FILE NOT FOUND ERROR"
+        print*, trim(qyname)
+      else
+
 ! Ignore headers
-      do i = 1, 4
-        READ(13, *)
-      enddo
+        do i = 1, 4
+          READ(13, *)
+        enddo
 ! Get QY
-      allocate(qy(kdata))
-      allocate(x2(kdata))
+        allocate(qy(kdata))
+        allocate(x2(kdata))
 
-      i = 1
-      stat = 0
-      do while(i <= n1)
-        READ(13, 66, IOSTAT=stat) x2(i), qy(i)
-        i = i + 1
-      enddo
-      close(13)
+        i = 1
+        stat = 0
+        do while(i <= n1)
+          READ(13, 66, IOSTAT=stat) x2(i), qy(i)
+          i = i + 1
+        enddo
+        close(13)
+
+!        print 66, x2(1),qy(1)
+!        print 66, x2(maxloc(qy)),maxval(qy)
+!        print 66, x2(n1),qy(n1)
 
 ! QY GRID WORK
 ! adding quantum yield points and interpolating them to yq1
 
-      CALL addpnt(x2,qy,kdata,n1,x2(1)*(1.-deltax),zero)
-      CALL addpnt(x2,qy,kdata,n1,               zero,zero)
-      CALL addpnt(x2,qy,kdata,n1,x2(n1)*(1.+deltax),zero)
-      CALL addpnt(x2,qy,kdata,n1,            biggest,zero)
-
-      CALL inter2(nw+1,wl,yq1,n1,x2,qy,ierr)   !inter2 is used for discrete points -> bins
-      IF (ierr .NE. 0) THEN
-        print*, "FAILED IN QY"
-        WRITE(*,*) ierr, ' ***Something wrong in XS_Standard*** '
-        STOP
-      ENDIF
+        CALL addpnt(x2,qy,kdata,n1,x2(1)*(1.-deltax),zero)
+        CALL addpnt(x2,qy,kdata,n1,               zero,zero)
+        CALL addpnt(x2,qy,kdata,n1,x2(n1)*(1.+deltax),zero)
+        CALL addpnt(x2,qy,kdata,n1,            biggest,zero)
+        !inter2 is used for discrete points -> bins
+        CALL inter2(nw+1,wl,yq1,n1,x2,qy,ierr)
+        IF (ierr .NE. 0) THEN
+          print*, "FAILED IN QY"
+          WRITE(*,*) ierr, ' ***Something wrong in XS_Standard*** '
+          STOP
+        ENDIF
 
 ! sq work
-      if(temps <= 1) then
-        DO iw = 1, nw
-          DO i = 1, nz
-            sq(jn,i,iw) = yg1(iw)*yq1(iw)
-          ENDDO
-        ENDDO
-      else if(temps == 2) then
-        read(tempA(1:len_trim(tempA)-1), *) ta ! Remove the K and put tempA into integer ta
-        read(tempB(1:len_trim(tempB)-1), *) tb
-
-        DO iw = 1, nw ! interpolated vector range
-          DO i = 1, nz ! tlev range
-            if(tlev(i) <= ta) then
+        if(temps <= 1) then
+          DO iw = 1, nw
+            DO i = 1, nz
               sq(jn,i,iw) = yg1(iw)*yq1(iw)
-            else if(tlev(i) <= tb) then
-              b = yg1(iw)
-              m = (yg2(iw) - yg1(iw)) / (tb - ta)
-              x = tlev(i) - ta
-              sq(jn,i,iw) = (m*x + b)*(yq1(iw))
-            else
-              sq(jn,i,iw) = yg2(iw)*yq1(iw)
-            endif
+            ENDDO
           ENDDO
-        ENDDO
-      else
-        read(tempA(1:len_trim(tempA)-1), *) ta ! Remove the K and put tempA into integer ta
-        read(tempB(1:len_trim(tempB)-1), *) tb
-        read(tempC(1:len_trim(tempC)-1), *) tc
+        else if(temps == 2) then
+          ! Remove the K and put tempA into integer ta
+          read(tempA(1:len_trim(tempA)-1), *) ta
+          read(tempB(1:len_trim(tempB)-1), *) tb
 
-        DO iw = 1, nw
-          DO i = 1, nz
-            if(tlev(i) <= ta) then
-              sq(jn,i,iw) = yg1(iw)*yq1(iw)
-            else if(tlev(i) <= tb) then
-              b = yg1(iw)
-              m = (yg2(iw) - yg1(iw)) / (tb - ta)
-              x = tlev(i) - ta
-              sq(jn,i,iw) = (m*x + b)*(yq1(iw))
-            else if(tlev(i) <= tc) then
-              b = yg2(iw)
-              m = (yg3(iw) - yg2(iw)) / (tc - tb)
-              x = tlev(i) - tb
-              sq(jn,i,iw) = (m*x + b)*(yq1(iw))
-            else
-              sq(jn,i,iw) = yg3(iw)*yq1(iw)
-            endif
+          DO iw = 1, nw ! interpolated vector range
+            DO i = 1, nz ! tlev range
+              if(tlev(i) <= ta) then
+                sq(jn,i,iw) = yg1(iw)*yq1(iw)
+              else if(tlev(i) <= tb) then
+                b = yg1(iw)
+                m = (yg2(iw) - yg1(iw)) / (tb - ta)
+                x = tlev(i) - ta
+                sq(jn,i,iw) = (m*x + b)*(yq1(iw))
+              else
+                sq(jn,i,iw) = yg2(iw)*yq1(iw)
+              endif
+            ENDDO
+          ENDDO
+        else
+          ! Remove the K and put tempA into integer ta
+          read(tempA(1:len_trim(tempA)-1), *) ta
+          read(tempB(1:len_trim(tempB)-1), *) tb
+          read(tempC(1:len_trim(tempC)-1), *) tc
+
+          DO iw = 1, nw
+            DO i = 1, nz
+              if(tlev(i) <= ta) then
+                sq(jn,i,iw) = yg1(iw)*yq1(iw)
+              else if(tlev(i) <= tb) then
+                b = yg1(iw)
+                m = (yg2(iw) - yg1(iw)) / (tb - ta)
+                x = tlev(i) - ta
+                sq(jn,i,iw) = (m*x + b)*(yq1(iw))
+              else if(tlev(i) <= tc) then
+                b = yg2(iw)
+                m = (yg3(iw) - yg2(iw)) / (tc - tb)
+                x = tlev(i) - tb
+                sq(jn,i,iw) = (m*x + b)*(yq1(iw))
+              else
+                sq(jn,i,iw) = yg3(iw)*yq1(iw)
+              endif
+            enddo
           enddo
-        enddo
-      endif
+        endif
+
+!        print *, "sq(",trim(species),",",wl(1),", surf) =",sq(jn,1,1)
+!        print *, "sq(",trim(species),",",wl(1),", TOA) =",sq(jn,nz,1)
+!        print *, "sq(",trim(species),",",wl(maxloc(yg1)),", surf) =",
+!     &            sq(jn,1,maxloc(yg1))
+!        print *, "sq(",trim(species),",",wl(maxloc(yg1)),", TOA) =",
+!     &            sq(jn,nz,maxloc(yg1))
+!        print *, "sq(",trim(species),",",wl(nw),", surf) =",sq(jn,1,nw)
+!        print *, "sq(",trim(species),",",wl(nw),", TOA) =",sq(jn,nz,nw)
 
 ! photolabel
-      write(plab, '(a, a, i1)') 'P',trim(species)//'_',labnum
-      photolabel(jn) = plab
-      jn = jn + 1
+        write(plab, '(a, a, i1)') 'P',trim(species)//'_',labnum
+        photolabel(jn) = plab
+        jn = jn + 1
 
-      DEALLOCATE(x2)
-      DEALLOCATE(qy)
+        DEALLOCATE(x2)
+        DEALLOCATE(qy)
 
+      endif
       RETURN
       END SUBROUTINE
 

@@ -1,0 +1,180 @@
+Reactants           Products                      Type     Alpha_0    Beta_0  Gamma_0    F_0    G_0     Alpha_inf Beta_inf Gamma_inf   F_inf  g_inf      ! Comments/Citations
+H         H         H2                            3BODY    8.800e-33  -0.60   0.000e+00   0.     0.     1.000e-12   0.00   0.000e+00   0.     0.         ! Baulch et al.(1992)
+H2        M         H         H         M         3BACK
+O         H         OH                            3BODY    4.300e-32  -1.00   0.000e+00   0.     0.     1.000e-12   0.00   0.000e+00   0.     0.         ! Tsang & Hampson(1986)
+OH        M         O         H         M         3BACK
+H2        O         OH        H                   2BODY    3.500e-13   2.67   3.160e+03                 0.000e+00   0.00   0.000e+00                     ! Baulch et al.(1992)
+H         OH        H2        O                   2BACK
+H         OH        H2O                           3BODY    6.600e-32  -2.10   0.000e+00   0.     0.     0.270E-09   0.00   0.750E+02   0.     0.         ! Javoy et al.(2003)
+H2O       M         OH        H         M         3BACK
+H2        OH        H2O       H                   2BODY    1.600e-12   1.60   1.660e+03                 0.000e+00   0.00   0.000e+00                     ! Baulch et al.(1992)
+H2O       H         H2        OH                  2BACK
+OH        OH        H2O       O                   2BODY    1.700e-12   1.14   5.000e+01                 0.000e+00   0.00   0.000e+00                     ! Baulch et al.(1992),ifshitz & Michael(1991)
+H2O       O         OH        OH                  2BACK
+OH        OH        O2        H2                  2BODY    3.300e-12   0.51   2.540e+04                 0.000e+00   0.00   0.000e+00                     ! Karach & Osherov(2005)
+H2        O2        OH        OH                  2BACK
+O         O         O2                            3BODY    5.200e-35   0.00  -9.000e+02   0.     0.     1.000e-12   0.00   0.000e+00   0.     0.         ! Tsang & Hampson(1986)
+O2        M         O         O         M         3BACK
+O         OH        O2        H                   2BODY    2.400e-11   0.00   3.530e+02                 0.000e+00   0.00   0.000e+00                     ! Baulch et al.(1992)
+H         O2        OH        O                   2BACK
+C         O         CO                            3BODY    5.800e-29  -3.34   0.000e+00   0.     0.     1.000E-12   0.00   0.000e+00   0.     0.         ! reverse-Baulch et al.(1992)
+CO        M         C         O         M         3BACK
+C         O2        CO        O                   2BODY    1.600e-11   0.00   0.000e+00                 0.000e+00   0.00   0.000e+00                     ! Baulch et al.(1992)
+CO        O         C         O2                  2BACK
+CO        O         CO2                           3BODY    1.700e-33   0.00   0.151E+04   0.     0.     1.000e-14   0.00   0.163E+04   0.     0.         ! Tsang & Hampson(1986)
+CO2       M         CO        O         M         3BACK
+CO        OH        CO2       H                   2BODY    0.176E-13   1.89  -5.830e+02                 0.000e+00   0.00   0.000e+00                     ! Li et al.(2007)
+CO2       H         CO        OH                  2BACK
+CO        O2        O         CO2                 2BODY    4.200e-12   0.00   2.400e+04                 0.000e+00   0.00   0.000e+00                     ! Tsang & Hampson(1986)
+O         CO2       CO        O2                  2BACK
+C         OH        CO        H                   2BODY    1.100e-10   0.50   0.000e+00                 0.000e+00   0.00   0.000e+00                     ! Millar et al.(1997)
+H         CO        C         OH                  2BACK
+H         CO        HCO                           3BODY    5.150e-33  -0.66   8.250e+02   0.     0.     2.000e-13   0.00   1.370e+03   0.     0.         ! reverse-Fr02 & Ar81
+HCO       M         H         CO        M         3BACK
+HCO       O         H         CO2                 2BODY    5.000e-11   0.00   0.000e+00                 0.000e+00   0.00   0.000e+00                     ! Tsang & Hampson(1986)
+H         CO2       HCO       O                   2BACK
+HCO       O         OH        CO                  2BODY    5.000e-11   0.00   0.000e+00                 0.000e+00   0.00   0.000e+00                     ! Tsang & Hampson(1986)
+OH        CO        HCO       O                   2BACK
+OH        HCO       CO        H2O                 2BODY    1.700e-10   0.00   0.000e+00                 0.000e+00   0.00   0.000e+00                     ! Baulch et al.(1992)
+CO        H2O       OH        HCO                 2BACK
+HCO       H         CO        H2                  2BODY    0.150E-09   0.00   0.000e+00                 0.000e+00   0.00   0.000e+00                     ! Baulch et al.(1992)
+H2        CO        HCO       H                   2BACK
+H         HCO       H2CO                          3BODY    3.210e-30  -2.57   0.215E+03   0.     0.     3.000e-10   0.00   0.000e+00   0.     0.         ! Eiteneer et al.(1998) & reverse-Troe(2005)
+H2CO      M         HCO       H         M         3BACK
+H2        CO        H2CO                          3BODY    1.400e-33   0.00   3.290e+04   0.     0.     5.500e-12   0.00   3.590e+04   0.     0.         ! reverse-Troe(2005)
+H2CO      M         H2        CO        M         3BACK
+HCO       HCO       H2CO      CO                  2BODY    4.500e-11   0.00   0.000e+00                 0.000e+00   0.00   0.000e+00                     ! Baulch et al.(1992)
+H2CO      CO        HCO       HCO                 2BACK
+HCO       H2        H2CO      H                   2BODY    0.940E-13   2.00   0.760E+04                 0.000e+00   0.00   0.000e+00                     ! Tsang & Hampson(1986)
+H2CO      H         HCO       H2                  2BACK
+H2CO      OH        HCO       H2O                 2BODY    4.800e-12   1.18  -2.250e+02                 0.000e+00   0.00   0.000e+00                     ! Baulch et al.(1992)
+HCO       H2O       H2CO      OH                  2BACK
+O         H2CO      OH        HCO                 2BODY    1.770e-11   0.57   1.390e+03                 0.000e+00   0.00   0.000e+00                     ! Baulch et al.(1992)
+OH        HCO       H2CO      O                   2BACK
+C         H         CH                            3BODY    5.000e-34   0.00  -0.710E+04   0.     0.     0.590E-14   0.00  -0.710E+04   0.     0.         ! reverse-Dean & Hanson(1992)
+CH        M         C         H         M         3BACK
+C         OH        O         CH                  2BODY    0.230E-10   0.50   0.148E+05                 0.000e+00   0.00   0.000e+00                     ! Millar et al.(1997)
+O         CH        OH        C                   2BACK
+O         CH        CO        H                   2BODY    6.600e-11   0.00   0.000e+00                 0.000e+00   0.00   0.000e+00                     ! Baulch et al.(1992)
+CO        H         O         CH                  2BACK
+CH        O2        CO        OH                  2BODY    8.300e-11   0.00   0.000e+00                 0.000e+00   0.00   0.000e+00                     ! Lichtin et al.(1984)
+CO        OH        CH        O2                  2BACK
+CH        CO2       CO        HCO                 2BODY    5.900e-12   0.00   3.500e+02                 0.000e+00   0.00   0.000e+00                     ! Baulch et al.(1992)
+HCO       CO        CH        CO2                 2BACK
+CH        H         H2        C                   2BODY    1.300e-10   0.00   8.060e+02                 0.000e+00   0.00   0.000e+00                     ! Harding et al.(1993)
+C         H2        CH        H                   2BACK
+H2        C         CH23                          3BODY    7.000e-32   0.00   0.000e+00   0.     0.     0.210E-10   0.00   0.000e+00   0.     0.         ! Husain & Young(1975)
+CH23      M         C         H2        M         3BACK
+CH        H         CH23                          3BODY    1.440e-33   0.22  -6.000e+03   0.     0.     1.000e-10   0.00   0.000e+00   0.     0.         ! reverse-Bauerle et al.(1995)
+CH23      M         CH        H         M         3BACK
+CH        H2        CH23      H                   2BODY    2.400e-10   0.00   1.760e+03                 0.000e+00   0.00   0.000e+00                     ! Baulch et al.(1992)
+CH23      H         CH        H2                  2BACK
+OH        CH23      H2CO      H                   2BODY    9.540e-11   0.12  -8.140e+01                 0.000e+00   0.00   0.000e+00                     ! Jasper et al.(2007)
+H         H2CO      OH        CH23                2BACK
+OH        CH23      H2O       CH                  2BODY    1.420e-13   2.02   3.420e+03                 0.000e+00   0.00   0.000e+00                     ! Jasper et al.(2007)
+CH        H2O       OH        CH23                2BACK
+CH23      O         HCO       H                   2BODY    1.200e-10   0.00   0.000e+00                 0.000e+00   0.00   0.000e+00                     ! Baulch et al.(1992)
+HCO       H         CH23      O                   2BACK
+O         CH23      CO        H2                  2BODY    8.000e-11   0.00   0.000e+00                 0.000e+00   0.00   0.000e+00                     ! Baulch et al.(1992)
+CO        H2        O         CH23                2BACK
+O2        CH23      H2CO      O                   2BODY    4.100e-11   0.00   7.500e+02                 0.000e+00   0.00   0.000e+00                     ! Baulch et al.(1992)
+H2CO      O         O2        CH23                2BACK
+CH        H2        CH3                           3BODY    6.800e-31  -2.30   0.000e+00   0.     0.     2.000e-10   0.15   0.000e+00   0.     0.         ! Berman & Lin(1984) & Fu97a
+CH3       M         CH        H2        M         3BACK
+CH23      H         CH3                           3BODY    2.000e-29  -2.00   0.000e+00   0.     0.     0.200E-09  -2.00   0.000e+00   0.     0.
+CH3       M         CH23      H         M         3BACK
+H2        CH23      CH3       H                   2BODY    1.000e-11   0.00   5.300e+03                 0.000e+00   0.00   0.000e+00                     ! reverse of Baulch et al.(1992)
+CH3       H         CH23      H2                  2BACK
+CH3       O         H2CO      H                   2BODY    1.400e-10   0.00   0.000e+00                 0.000e+00   0.00   0.000e+00                     ! Baulch et al.(1992)
+H2CO      H         CH3       O                   2BACK
+CH3       OH        H2CO      H2                  2BODY    3.200e-12   1.00   1.610e+03                 0.000e+00   0.00   0.000e+00                     ! Jasper et al.(2007)
+H2CO      H2        CH3       OH                  2BACK
+CH23      HCO       CH3       CO                  2BODY    5.000e-11   0.00   0.000e+00                 0.000e+00   0.00   0.000e+00
+CH3       CO        CH23      HCO                 2BACK
+CH23      CH23      CH        CH3                 2BODY    4.000e-10   0.00   5.000e+03                 0.000e+00   0.00   0.000e+00                     ! Frank & Just(1984)
+CH        CH3       CH23      CH23                2BACK
+CH3       H         CH4                           3BODY    6.540e-29  -2.17   0.000e+00   0.     0.     3.500e-10   0.00   0.000e+00   0.     0.         ! Golden(2008)
+CH4       M         CH3       H         M         3BACK
+CH3       H2        CH4       H                   2BODY    0.287E-14   3.80   0.320E+04                 0.000e+00   0.00   0.000e+00
+CH4       H         CH3       H2                  2BACK
+CH4       O         CH3       OH                  2BODY    8.400e-12   1.56   4.270e+03                 0.000e+00   0.00   0.000e+00                     ! Baulch et al.(1992)
+CH3       OH        CH4       O                   2BACK
+CH4       OH        CH3       H2O                 2BODY    8.800e-13   1.83   1.400e+03                 0.000e+00   0.00   0.000e+00                     ! Baulch et al.(1992)
+CH3       H2O       CH4       OH                  2BACK
+CH3       HCO       CH4       CO                  2BODY    4.400e-11   0.00   0.000e+00                 0.000e+00   0.00   0.000e+00                     ! Mulenko(1987)
+CO        CH4       CH3       HCO                 2BACK
+CH3       H2CO      CH4       HCO                 2BODY    4.900e-15   4.40   2.450e+03                 0.000e+00   0.00   0.000e+00                     ! Liu et al.(2003)
+CH4       HCO       CH3       H2CO                2BACK
+CH23      CH4       CH3       CH3                 2BODY    7.100e-12   0.00   5.050e+03                 0.000e+00   0.00   0.000e+00                     ! Bohland et al.(1985)
+CH3       CH3       CH23      CH4                 2BACK
+CH3O      M         H2CO      H         M         3BODY    2.590e-09  -0.39   1.330e+04   0.     0.     5.490e+13   0.00   1.011e+05   0.     0.         ! Cu06
+H         H2CO      CH3O                          3BACK
+H         CH3O      CH3       OH                  2BODY    7.700e-11   0.00   3.750e+02                 0.000e+00   0.00   0.000e+00                     ! Dobe et al.(1991)
+CH3       OH        CH3O      H                   2BACK
+H         CH3O      H2CO      H2                  2BODY    3.300e-11   0.00   3.750e+02                 0.000e+00   0.00   0.000e+00                     ! Dobe et al.(1991)
+H2        H2CO      CH3O      H                   2BACK
+CO        CH3O      CH3       CO2                 2BODY    1.330e-11   0.00   5.940e+03                 0.000e+00   0.00   0.000e+00                     ! Hidaka et al.(2000)
+CH3       CO2       CO        CH3O                2BACK
+H2COH     M         H2CO      H         M         3BODY    1.660e-10   0.00   1.050e+05   0.     0.     1.047e+11   0.00   1.210e+05   0.     0.
+H         H2CO      H2COH                         3BACK
+H         H2COH     H2CO      H2                  2BODY    1.660e-11   0.00   0.000e+00                 0.000e+00   0.00   0.000e+00                     ! Tsang(1987)
+H2CO      H2        H2COH     H                   2BACK
+CH3       OH        H2COH     H                   2BODY    3.660e-13   1.35   2.240e+03                 0.000e+00   0.00   0.000e+00                     ! Jasper et al.(2007)
+H         H2COH     CH3       OH                  2BACK
+HCO       H2COH     H2CO      H2CO                2BODY    1.000e-10   0.00   0.000e+00                 0.000e+00   0.00   0.000e+00                     ! Tsang(1987)
+H2CO      H2CO      HCO       H2COH               2BACK
+H         CH3O      CH3OH                         3BODY    1.600e-29   0.24  -2.650e+01   0.     0.     1.600e-10   0.24  -2.650e+01   0.     0.         ! Jasper et al.(2007)
+CH3OH     M         CH3O      H         M         3BACK
+H         H2COH     CH3OH                         3BODY    2.900e-29   0.04   0.000e+00   0.     0.     2.900e-10   0.04   0.000e+00   0.     0.         ! Jasper et al.(2007)
+CH3OH     M         H2COH     H         M         3BACK
+H2CO      H2        CH3OH                         3BODY    2.300e-30   0.00   3.510e+04   0.     0.     2.300e-11   0.00   3.510e+04   0.     0.         ! Jasper et al.(2007)
+CH3OH     M         H2CO      H2        M         3BACK
+CH3       OH        CH3OH                         3BODY    2.250e-24  -8.20   0.000e+00   0.     0.     1.000e-10   0.00   0.000e+00   0.     0.         ! Baulch et al.(1994)
+CH3OH     M         CH3       OH        M         3BACK
+CH3       H2O       CH3OH     H                   2BODY    3.210e-05  -7.73   2.750e+04                 0.000e+00   0.00   0.000e+00                     ! Jodkowski et al.(1999)
+CH3OH     H         CH3       H2O                 2BACK
+H2        CH3O      CH3OH     H                   2BODY    9.400e-14   0.00   2.940e+03                 0.000e+00   0.00   0.000e+00                     ! Jodkowski et al.(1999)
+H         CH3OH     CH3O      H2                  2BACK
+H2        H2COH     CH3OH     H                   2BODY    1.630e-11   2.00   5.000e+03                 0.000e+00   0.00   0.000e+00                     ! Jodkowski et al.(1999)
+H         CH3OH     H2COH     H2                  2BACK
+H2O       CH3O      CH3OH     OH                  2BODY    2.800e-11  -1.50   9.770e+03                 0.000e+00   0.00   0.000e+00                     ! Jodkowski et al.(1999)
+CH3OH     OH        H2O       CH3O                2BACK
+H2O       H2COH     CH3OH     OH                  2BODY    9.410e-13   0.60   1.050e+04                 0.000e+00   0.00   0.000e+00                     ! Jodkowski et al.(1999)
+CH3OH     OH        H2O       H2COH               2BACK
+CH3O      CH4       CH3       CH3OH               2BODY    2.220e-13   0.90   5.100e+03                 0.000e+00   0.00   0.000e+00                     ! Jodkowski et al.(1999)
+CH3OH     CH3       CH4       CH3O                2BACK
+CH4       H2COH     CH3OH     CH3                 2BODY    9.000e-14   3.17   7.540e+03                 0.000e+00   0.00   0.000e+00                     ! Jodkowski et al.(1999)
+CH3       CH3OH     H2COH     CH4                 2BACK
+CH3O      HCO       CH3OH     CO                  2BODY    1.500e-10   0.00   0.000e+00                 0.000e+00   0.00   0.000e+00
+CH3OH     CO        CH3O      HCO                 2BACK
+HCO       H2COH     CH3OH     CO                  2BODY    6.670e-11   0.00   0.000e+00                 0.000e+00   0.00   0.000e+00                     ! Tsang(1987)
+CH3OH     CO        HCO       H2COH               2BACK
+CH3O      CH3O      CH3OH     H2CO                2BODY    1.100e-12   0.00   0.000e+00                 0.000e+00   0.00   0.000e+00                     ! Tsang(1987)
+CH3OH     H2CO      CH3O      CH3O                2BACK
+H         CH3       H2        CH21                2BODY    3.070e-10   0.00   6.200e+03                 0.000e+00   0.00   0.000e+00                     ! Baulch et al.(1992)
+CH21      H2        CH3       H                   2BACK
+OH        CH3       H2O       CH21                2BODY    1.200e-10   0.00   1.400e+03                 0.000e+00   0.00   0.000e+00
+CH21      H2O       CH3       OH                  2BACK
+CH23      H2        CH21      H2                  2BODY    1.600e-11   0.00   3.850e+03                 0.000e+00   0.00   0.000e+00
+CH21      H2        CH23      H2                  2BACK
+CH21      CH4       CH3       CH3                 2BODY    3.600e-11   0.00   0.000e+00                 0.000e+00   0.00   0.000e+00
+CH3       CH3       CH21      CH4                 2BACK
+CH21      H         CH        H2                  2BODY    5.000e-11   0.00   0.000e+00                 0.000e+00   0.00   0.000e+00
+CH        H2        CH21      H                   2BACK
+CH23      H         CH21      H                   2BODY    4.400e-12   0.00   3.850e+03                 0.000e+00   0.00   0.000e+00
+CH21      H         CH23      H                   2BACK
+O1D       H2        OH        H                   2BODY    1.500e-10   0.00   0.000e+00                 0.000e+00   0.00   0.000e+00
+O1D       CH4       CH3       OH                  2BODY    1.200e-10   0.00   0.000e+00                 0.000e+00   0.00   0.000e+00
+O1D       CH4       H2COH     H                   2BODY    3.000e-11   0.00   0.000e+00                 0.000e+00   0.00   0.000e+00
+O1D       CO        O         CO                  2BODY    7.000e-11   0.00   0.000e+00                 0.000e+00   0.00   0.000e+00
+O1D       H2O       OH        OH                  2BODY    2.200e-10   0.00   0.000e+00                 0.000e+00   0.00   0.000e+00
+H2O       HV        H         OH                  PHOTO    0.000e+00   0.00   0.000e+00                 0.000e+00   0.00   0.000e+00
+CO2       HV        CO        O                   PHOTP    0.000e+00   0.00   0.000e+00                 0.000e+00   0.00   0.000e+00
+CO2       HV        CO        O1D                 PHOTP    0.000e+00   0.00   0.000e+00                 0.000e+00   0.00   0.000e+00
+O2        HV        O         O1D                 PHOTP    0.000e+00   0.00   0.000e+00                 0.000e+00   0.00   0.000e+00
+O2        HV        O         O                   PHOTP    0.000e+00   0.00   0.000e+00                 0.000e+00   0.00   0.000e+00
+CH4       HV        CH21      H2                  PHOTO    0.000e+00   0.00   0.000e+00                 0.000e+00   0.00   0.000e+00
+CH4       HV        CH3       H                   PHOTO    0.000e+00   0.00   0.000e+00                 0.000e+00   0.00   0.000e+00
+CH4       HV        CH23      H         H         PHOTO    0.000e+00   0.00   0.000e+00                 0.000e+00   0.00   0.000e+00
+H2CO      HV        H2        CO                  PHOTO    0.000e+00   0.00   0.000e+00                 0.000e+00   0.00   0.000e+00
+H2CO      HV        HCO       H                   PHOTO    0.000e+00   0.00   0.000e+00                 0.000e+00   0.00   0.000e+00

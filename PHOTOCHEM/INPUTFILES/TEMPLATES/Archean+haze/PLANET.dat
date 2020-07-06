@@ -34,12 +34,11 @@ choices for msun (these numbers are from photgrid.f)
       pstar = 24    !HD40307/K2.5V
       pstar = 25    !HD85512/K6V
       pstar = 26    !HD97658/K1V
-      pstar = 27    !K2-3/M0V
       pstar = 80    !GJ876 MUSCLES data adaptive constant res panchromatic
       pstar = 81    !GJ551 """""" (Proxima Centauri)
       pstar = 82    !GJ581 """"""
       pstar = 83    !GJ667c """""" (note: GJ667 is a triple star system)
       pstar = 84    !GJ1214 """"""
-      
+
 11    = JTROP, Grid layer marking the tropopause height, depends on ZTROP and DELZ
 1.0E5 = DELZ, Height of each atm layer - Earth=1.0E5, Mars=2.0E5 (cm)

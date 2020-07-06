@@ -18,7 +18,7 @@ PLATFORM = mac
 FC = gfortran
 
 #debugging version
-#FCFLAG = -g -fno-automatic -Wuninitialized -fbounds-check -O -ftrapv -Wall -I. -fdefault-integer-8 -fdefault-real-8
+#FCFLAG = -g -fno-automatic -Wuninitialized -ffpe-trap=invalid -O -ftrapv -Wall -I. -fdefault-integer-8 -fdefault-real-8
 
 #optimized (EWS - USE THIS FOR FAST CODE)
 FCFLAG = -O3 -fno-automatic -ftree-vectorize -fdefault-integer-8 -fdefault-real-8 -I.

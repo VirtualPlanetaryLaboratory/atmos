@@ -385,8 +385,8 @@ Cc-mc USOLPREV(NQ,NZ) added for second order reverse Euler calculations
       DIMENSION DPU(NZ,NP),DPL(NZ,NP)
       DIMENSION TA(NZ),TB(NZ),TC(NZ),TY(NZ)
       dimension PRES_bar(NZ)
-
       integer rhOcount,rhHcount,rhCcount,rhScount,rhNcount,rhCLcount
+
 c      dimension atomsO(NSP2),atomsH(NSP2),atomsC(NSP2)
 c      dimension atomsN(NSP2),atomsCL(NSP2),atomsS(NSP2)
 
@@ -396,6 +396,7 @@ c      dimension atomsN(NSP2),atomsCL(NSP2),atomsS(NSP2)
 
       CHARACTER*11 photolabel, AA
       CHARACTER*8  AX
+      LOGICAL newphot
 
 
 
@@ -571,6 +572,8 @@ C - other model parameters read in from input_photochem.dat
       IF(IDEBUG.eq.1) print *, "ZY =",ZY
       READ(231,*)AA, USOLMIN
       IF(IDEBUG.eq.1) print *, "USOLMIN =",USOLMIN
+      READ(231,*)AA, KIDA
+      IF(IDEBUG.eq.1) print *, "KIDA =",KIDA
  555  format(3/)
       close(231)
 
@@ -591,7 +594,6 @@ C they are created and updated regardless of whether ICOUPLE=1 in input_photoche
        open(84, file='COUPLE/fromPhoto2Clima.dat', status='UNKNOWN')
        open(116, file='COUPLE/fromClima2Photo.dat', status='UNKNOWN')
        open(117, file='COUPLE/mixing_ratios.dat', status='UNKNOWN')
-
 
 C - READ IN SPECIES NAMES, ATOMIC NUMBERS, AND BOUNDARY CONDITIONS
 
@@ -619,6 +621,7 @@ C         This loads the "Lnumbers" for ease of use later in the code
             call LNUM(ISPEC(isP),iSP)
 C             Return to previous line in species.dat file
               backspace 4
+
 C  read in atmoic number data, NEVER use LC,LH,LN,LO,LS as placeholders
 C  as they mean something else...
               read(4,*) AX,AX,LA,LB,LD,LE,LF,LM
@@ -682,6 +685,23 @@ C            Hardcoding woohoo! need to do N2 as well WARNING
          I=I+1
       enddo
 
+C     format for species name and type
+ 203  FORMAT(A8,3X,A2)
+C     format for elemental counts
+ 207  format(15X,6(I1,1X))
+ 206  format(15X,6(I2,1X))
+C-mab     format for two-column elemental count
+C   FOLLOWING FORMATS BELOW ARE FOR BOUNDARY CONDITIONS
+      !Original boundary conditions
+C 208  format(30X,I1,5X,4(E7.1,1X),I1,6X,2(E7.1,1X))
+ 208  format(30X,I1,5X,2(E8.2,1X),E9.3,1X,E7.1,1X,I1,6X,2(E7.1,1X))
+ 210  format(30X,I1,5X,2(E7.1,1X),E9.3,1X,E7.1,1X,I1,6X,2(E7.1,1X))
+ 211  format(30X,I1,5X,E8.2,1X,E11.2,1X,E9.3,1X,E7.1,1X,I1,6X,2E8.1)
+C  Above - 211 - added as boundary conditions for Hot Jupiters
+c 208  format(30X,I1,5X,2(E8.1),E9.3,1X,E7.1,1X,I1,6X,2(E7.1,1X))
+C     Format for INERT species boundary conditions
+ 209  format(30X,E7.1)
+ 212  format(30X,F7.5) !for INERT species boundary conditions
  96   CONTINUE
 
 c      stop
@@ -735,8 +755,11 @@ C Reading the altitude, temperature, and water profiles from the climate code
 C ***** READ THE CHEMISTRY DATA CARDS *****
 corig      read (9,200) CHEMJ
  !     print *, 'this is nr', NR
+ ! Skip header
+      read(9, *)
       read (9,200) CHEMJ
-corig 200  FORMAT(10X,A8,2X,A8,2X,A8,2X,A8,2X,A8)
+! 200  FORMAT(A8,2X,A8,2X,A8,2X,A8,2X,A8)
+! Format changed from skipping 10 first W.S.
  200  FORMAT(A8,2X,A8,2X,A8,2X,A8,2X,A8)
       write(14, 201) (J,(CHEMJ(M,J),M=1,5),J=1,NR)
  201  FORMAT(1X,I3,' ',5X,A8,' +  ',A8,'  =    ',A8,' +  ',A8,4X,A8)
@@ -753,8 +776,11 @@ c-mc closing and opening the file again     WARNING
       close(9)
       ! chemical reaction file
       open(9, file='PHOTOCHEM/INPUTFILES/reactions.rx',status='OLD')
+      read(9, *)
       read(9,204) REACTYPE
- 204  FORMAT(48X,A5)
+!      print 204, REACTYPE
+      ! Changed from 48 to 50 W.S.
+ 204  FORMAT(50X,A5)
 
 C    close this because Rates.f and Initphoto.f will re-open it later.
       close(9)
@@ -869,44 +895,43 @@ c                 used in Initphoto.f to fill up sq, the cross section vector
 c photonums(kj) - the reaction number of each photolysis reaction
 c                 used in Photo.f to fill up the A vector of rates
 
-
-C A vector of length nr with 1's in the location where photolysis reactions are
-       testvec=INDEX(REACTYPE,'PHOTO')
-
-
-
         jcount=1
         jrcount=1
         juniq=1
        do i=1,nr
-        if (testvec(i).eq.1.) then
-C    Captures the species number of each photo reaction
-           photoreac(jrcount)=JCHEM(1,i)
-C    Captures the reaction number of each photoreaction
-           photonums(jrcount)=i
+         if (REACTYPE(i)(1:4).eq.'PHOT') then
+           photoreac(jrcount)=JCHEM(1,i)   !capture the species number of each photo reaction
+           photonums(jrcount)=i             !capture the reaction number of each photoreaction
 
 c           print *, jrcount,i,JCHEM(1,i),(CHEMJ(m,i),m=1,5)
 
            jrcount=jrcount+1
+           newphot = .TRUE.
+           m = 1
 
-C    Captures the unique photolysis species in photospec
-           if (juniq.eq.1) then
-              photospec(juniq)=JCHEM(1,i)
-              juniq=juniq+1
-           else
-              bad=0
-              do m=1,ks
-               if (JCHEM(1,i).eq.photospec(m)) bad=1
-              enddo
-              if (bad.eq.0) then
-                photospec(juniq)=JCHEM(1,i)
-                juniq=juniq+1
+!            if(juniq.eq.1) then
+!              photospec(juniq) = JCHEM(1,i)
+!              juniq = juniq + 1
+!            endif
+
+! Loop photospec, if species at JCHEM(1, i) has already been seen
+! then set newphot to false
+           do while(m <= ks)
+              if(JCHEM(1, i).eq.photospec(m)) then
+                  newphot = .FALSE.
+                  m = ks + 1 ! break loop
+              else
+                  m = m + 1
               endif
-           endif
-c          print *, jrcount,juniq,photospec(juniq-1)
-      endif
-           jcount=jcount+1
+           enddo
 
+! If this reaction is new, add it to photospec and increment juniq
+           if (newphot .eqv. .TRUE.) then
+             photospec(juniq) = JCHEM(1,i)
+             juniq = juniq + 1
+           end if
+         endif
+         jcount = jcount + 1
        enddo
 
 c       print *, jnums
@@ -926,9 +951,9 @@ C - SOME CHECKS TO MAKE SURE THE INPUT FILES JIVE WITH PARAMATERS.INC
           stop
        endif
 
-       if (SUM(INDEX(REACTYPE,'PHOTO')) .NE. kj) then
+       if (SUM(INDEX(REACTYPE,'PHOT')) .NE. kj) then
           print *,'discrepency between number of photo reactions and kj'
-          print *, SUM(INDEX(REACTYPE,'PHOTO')), kj
+          print *, SUM(INDEX(REACTYPE(1:4),'PHOT')), kj
        stop
        endif
 
@@ -1035,6 +1060,7 @@ C gna - we need to make it so that T = T_new
          print *, 'T0 is'
          print *, T(1)
       ENDIF
+
       if (NP.gt.0) then
         fmtstr='(  E17.8)'
         write(fmtstr(2:3),'(I2)')NP*3
@@ -1166,10 +1192,9 @@ C  CALL below sets up vertical grid
 
 C   height index for the tropopause (-1 given the staggered grid)
 C      the 1 in the second postion tells minloc to return a scalar
+
 c-mab: JTROP is set to a constant value in planet.dat for the giant templates...
       IF (PLANET.NE.'WASP12B')JTROP=minloc(Z,1, Z .ge. ztrop)-1
-
-
 
 c       print *, 'enter surface T'
 c       read(*,'(F3.0)') TINC
@@ -1218,7 +1243,7 @@ c       print *, Z(I),T(I)
       enddo
 c      stop
 
-ctemp
+c temp
 c      do i=jtrop,NZ
 c      do i=136,NZ
 c       edd(i)=1.3*edd(i)
@@ -1337,7 +1362,6 @@ c-mab: nsteps = 1 recommended for initial model debugging
 c      NSTEPS = 1
 C     for standalone mode this should probably be the default
 C      ICOUPLE = 1
-
 
 C ***** write OUT INITIAL DATA *****
       CALL OUTPUT(0,NSTEPS,0.D0,jtrop, vdep,USOLORIG,USETD, frak)
@@ -1471,8 +1495,6 @@ c            ADD(LH2,j) = -ADU(LH2,j) - ADL(LH2,j)
 c        enddo
 c       endif  !end molecular diffusion for H and H2 loop
 c      endif !End loop with planet-based distinction
-
-
 
       do I=1,nz
 c         write(10, 1210) Z(I),DU(1,i),DU(LH,i),DU(LH2,i),DL(1,i),
@@ -1719,7 +1741,6 @@ C
 
 C    particles in main loop
        if (USETD.EQ.0) then
-
       do J=1,NZ
 
             AERSOL(J,1) = USOL(nparti,J)*DEN(J)/(CONVER(J,1))
@@ -1772,12 +1793,9 @@ C   particles in tri-diag
        endif
 
        else
-       print*,'Note: Since NP = 0, did not call SDMNT...'
+!       print*,'Note: Since NP = 0, did not call SDMNT...'
 
        endif
-
-
-
 
 
 C ***** SET UP THE JACOBIAN MATRIX AND RIGHT-HAND SIDE *****
@@ -1908,7 +1926,6 @@ c-mc filled with -CHEM, so adding DD is appropriate.
 c-mc DTINV is the extra term in the main diagonal
 c-mc J_upper=DU and J_lower=DL, so DJAC (which is -J)
 c-mc uses -DU and -DL respectivly
-
 
       if(USETD.EQ.0.and.NP.gt.0) then  !particles in main loop
 C ack - these need to be abstracted... WARNING
@@ -2297,7 +2314,6 @@ c       enddo
 c      enddo
 C      temp
 
-
       if (USETD.EQ.0.AND.NP.GT.0) then
 C switch around main loop particles
 c 1.e-38 is the smallest number for single precision. We should upgrade
@@ -2377,10 +2393,7 @@ c           USOL(i,j)=max(USOL(i,j),smallest)
          enddo
       enddo
 
-
       if(USETD.EQ.1.AND.NP.GT.0) then
-
-
 
 *********TRIDIAG STARTS HERE
 

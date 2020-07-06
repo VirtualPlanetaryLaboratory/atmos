@@ -10,6 +10,7 @@ DRY      = PLANET  string naming the planet for extra changes (MARS is the only 
 0        = IRESET
 76       = msun
 0        = IHZSCALE
+1.0      = uvscale
 
 -below here are not read in.  They are from Shawn's Planet.earth file but are handled differently here.
 
@@ -30,6 +31,9 @@ choices for msun (these numbers are from photgrid.f)
       pstar = 21    !M5V/Proxima Centauri
       pstar = 22    !G0V star for wasp12b (first Hot Jupiter model)
       pstar = 23    !Phoenix 3300K star (for GCM Earth Project)
+      pstar = 24    !HD40307/K2.5V
+      pstar = 25    !HD85512/K6V
+      pstar = 26    !HD97658/K1V
       pstar = 80    !GJ876 MUSCLES data adaptive constant res panchromatic
       pstar = 81    !GJ551 """""" (Proxima Centauri)
       pstar = 82    !GJ581 """"""

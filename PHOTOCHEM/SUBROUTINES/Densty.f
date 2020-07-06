@@ -14,7 +14,7 @@ C   ING HYDROSTATIC EQUILIBRIUM
       BK = 1.38054E-16
 
 c-mab: Using radius to distinguish terrestrial from giants here
-      IF (R0.LT.(5E9)) THEN 
+      IF (R0.LT.(5E9)) THEN
 c-mab: giving a sub-saturn radius value as the marker here...
         FT = FO2 + FCO2 + FAR
 c-mab: For error checking
@@ -58,14 +58,14 @@ c-mab: For error checking
 C-mab: Uncomment below for debugging
 C        print*,"FH2,FHE,FCO2,FCO,FH2O,FH,FOH,FCH4",
 C     .             FH2,FHE,FCO2,FCO,FH2O,FH,FOH,FCH4
- 
-        WT = FH2*2.0 + FHE*4 +  FCO*28.0 + FH2O*18.0 + FH + FCH4*16.0 
-     .             + FCO2*44.0 
+
+        WT = FH2*2.0 + FHE*4 +  FCO*28.0 + FH2O*18.0 + FH + FCH4*16.0
+     .             + FCO2*44.0
 c=mab: Review above expression prior to release
 
         print*, "Calculated WT for He/H2 dominated atmosphere..."
       ENDIF
-      
+
       	print*,"Molecular weight of atmosphere = ",WT
 
       ROVERM = RGAS/WT
@@ -85,10 +85,10 @@ C ***** FIND DENSITY FROM HYDROSTATIC EQUILIBRIUM *****
       DO 1 I=2,NZ
 c-mc      DZ = Z(I) - Z(I-1)
       R = R0 + Z(I)
-      GZ = G0 * (R0/R)*(R0/R)                              
+      GZ = G0 * (R0/R)*(R0/R)
       TAV = 0.5*(T(I) + T(I-1))
       HA = ROVERM*TAV/GZ
-   1  DEN(I) = DEN(I-1)*EXP(-DZ(I)/HA)*T(I-1)/T(I) 
+   1  DEN(I) = DEN(I-1)*EXP(-DZ(I)/HA)*T(I-1)/T(I)
 C
 
 

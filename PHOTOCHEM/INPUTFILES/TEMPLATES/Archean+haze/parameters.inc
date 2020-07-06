@@ -1,4 +1,4 @@
-      PARAMETER(NZ=200, NQ=62, NP=4,NQ1=NQ)   !particles in main loop (for tri-diag NQ1=NQ+NP)
+      PARAMETER(NZ=200, NQ=61, NP=4,NQ1=NQ)   !particles in main loop (for tri-diag NQ1=NQ+NP)
       PARAMETER(NEQ=NQ*NZ,LDA=3*NQ+1)
       PARAMETER(NR=392, NSP=74, NSP1=NSP+1, NSP2=NSP+2, NMAX=66)
       PARAMETER(kw=2900,kj=60)    !kw = maximum number of wl intervals, kj=number of photolysis reactions

@@ -1,6 +1,6 @@
 *** Set parameters for the high O2 photochemical model ***
 * Write the number after the 11th space
-*2345678901Here      
+*2345678901Here
 
 AGL=       0.5
 ISEASON=   1
@@ -14,8 +14,9 @@ frak=      0
 HCDENS=    0.63
 ICOUPLE=   0
 monsize=   0
-ZY=	   50.
+ZY=	       50.
 USOLMIN=   1.E-20
+KIDA=      0
 
 C ***** SET MODEL PARAMETERS *****
 C     AGL = DIURNAL AVERAGING FACTOR FOR PHOTORATES
@@ -48,5 +49,5 @@ C	      = 2 for 0.02 um monomers for fractal particles
 C	      = 3 for 0.07 um monomers for fractal particles
 C	      = 4 for 0.10 um monomers for fractal particles
 C     ZY      = solar zenith angle
-C     USOLMIN = Mixing ratios smaller than this value are ignored 
-c 		in time stepper 
+C     USOLMIN = Mixing ratios smaller than this value are ignored
+c 		in time stepper
