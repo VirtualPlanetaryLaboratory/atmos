@@ -13,10 +13,10 @@ PRONO=     1.E9
 frak=      1
 HCDENS=    0.63
 ICOUPLE=   0
-ihztype=   0
-ZY=	       50.
+ihztype=   7
+ZY=	   50.
 USOLMIN=   1.E-20
-KIDA=      1
+KIDA=      0
 
 C ***** SET MODEL PARAMETERS *****
 C     AGL = DIURNAL AVERAGING FACTOR FOR PHOTORATES
