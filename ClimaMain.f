@@ -1567,7 +1567,7 @@ c-as  the parameter translation to the photochemical model
       ALT(ND) = 0.
 
       DO J=ND-1,1,-1
-       GNEW(J) = G*(6378.**2)/(6378. + ALT(J))**2  ! Turned Gravity into arrays 10/12/2012
+       GNEW(J) = G*(6378.**2)/(6378. + ALT(J+1))**2  ! Turned Gravity into arrays 10/12/2012
        BKM = BK/(SM*GNEW(J))
        TA = 0.5*(T(J) + T(J+1))
        FH2O = 0.5 * (FI(1,J) + FI(1,J+1))
@@ -1577,7 +1577,7 @@ c-as  the parameter translation to the photochemical model
        AM = 18.*FH2O + 44.*FCO2J + DM2*FNCA  ! AM is the weight of entire parcel (noncondensible + condensible)
             
 
-       IF(NST.lt.1) AM = DM2     
+c       IF(NST.lt.1) AM = DM2     
        BMG = BKM/AM
        ALT(J) = ALT(J+1) + BMG*TA*DZ(J+1)*1.E-5
        
