@@ -77,6 +77,7 @@ C2H6S2     LL  0 6 2 2 0 0    2     1.20E-01 0.       0.        0.      0      0
 C2H6S      LL  0 6 2 1 0 0    2     6.00E-02 0.       4.200E+09 0.      0      0.      0.
 CH3S       LL  0 3 1 1 0 0    0     1.00E-02 0.       0.        0.      0      0.      0.
 CH3SH      LL  0 4 1 1 0 0    0     2.20E-02 0.       8.300E+08 0.      0      0.      0.
+CO2	   LL  2 0 1 0 0 0    1     0.       2.00E-2  0.        0.      0      0.      0.
 SO4AER     LL  4 2 0 1 0 0    0     1.00E-02 0.       0.        0.      0      0.      0.            !turbulent depostion velocity for particles (hardcoded for td)
 S8AER      LL  0 0 0 8 0 0    0     1.00E-02 0.       0.        0.      0      0.      0.            !turbulent depostion velocity for particles
 HCAER      LL  0 2 4 0 0 0    0     1.00E-02 0.       0.        0.      0      0.      0.            !turbulent depostion velocity for particles
@@ -99,7 +100,6 @@ CS2X       SL  0 0 1 2 0 0
 S3         SL  0 0 0 3 0 0    0     0.       0.       0.        0.      0      0.      0.
 S4         SL  0 0 0 4 0 0    0     0.       0.       0.        0.      0      0.      0.
 *   INERT SPECIES             Fixed MR
-CO2        IN  2 0 1 0 0 0    2.0E-2       !must be second to last IN
 N2         IN  0 0 0 0 2 0    0.80          !must be last IN  (FIXED MR NOT YET USED...)
 * NSP should be the number directly above
 HV         HV  0 0 0 0 0 0		    !must be second to last
