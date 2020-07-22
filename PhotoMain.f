@@ -1758,8 +1758,8 @@ C    particles in main loop
        if (USETD.EQ.0) then
       do J=1,NZ
 
-            AERSOL(J,1) = USOL(nparti,J)*DEN(J)/(CONVER(J,1))
-            AERSOL(J,2) = USOL(nparti,J)*DEN(J)/(CONVER(J,2))
+            AERSOL(J,1) = USOL(LSO4AER,J)*DEN(J)/(CONVER(J,1))
+            AERSOL(J,2) = USOL(LS8AER,J)*DEN(J)/(CONVER(J,2))
             if (NP.GT.2) then
                 AERSOL(J,3) = USOL(LHCAER,J)*DEN(J)/(CONVER(J,3)) +
      &          USOL(LHCAER,J)*DEN(J)/(CONVER(J,4))
