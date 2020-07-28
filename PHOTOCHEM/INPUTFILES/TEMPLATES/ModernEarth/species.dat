@@ -52,7 +52,7 @@ NO3        LL  3 0 0 0 1 0    0     0.      0.      0.        0.      0      0. 
 N2O        LL  1 0 0 0 2 0    1     0.      3.1E-07 0.        0.      0      0.      0.        
 HO2NO2     LL  4 1 0 0 1 0    0     2.0E-01 0.      0.        0.      0      0.      0.        
 N2O5       LL  5 0 0 0 2 0    0     0.      0.      0.        0.      0      0.      0.   
-CO2        LL  2 0 1 0 0 0    1	    0.      3.6E-4  0.        0.      0      0.      0.
+CO2        LL  2 0 1 0 0 0    1	    5.0E-05 4.0E-4  6.875E+08 14.     0      0.      0.
 SO4AER     LL  4 2 0 1 0 0    0     1.0E-02 0.      0.        0.      0      0.      0.            !turbulent depostion velocity for particles (hardcoded for td)
 S8AER      LL  0 0 0 8 0 0    0     1.0E-02 0.      0.        0.      0      0.      0.            !turbulent depostion velocity for particles     
 * NQ should be the number above

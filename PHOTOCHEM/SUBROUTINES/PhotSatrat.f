@@ -41,23 +41,23 @@ C   FIND SATURATION VAPOR PRESSURE
 C
 C   CALCULATE TROPOSPHERIC H2O CONCENTRATIONS
       DO 3 J=1,JTROP
-      if (PLANET .EQ. 'EARTH') then 
-       REL = 0.77 * (P(J)/PS - 0.02)/0.98   !manabe formula
+      if (PLANET .EQ. 'EARTH') then
+       REL = 0.70 * (P(J)/PS - 0.02)/0.98   !manabe formula, altered to fit Modern Earth (replace 0.77 by 0.70)
 
-       
+
 c       REL = 1.0 ! Saturated troposphere - eventual should abstract this and ATACAMA
 
 c       REL = 0.17   !test ATACAMA
       else if (PLANET .EQ. 'MARS') then
 c      REL = 0.12                         ! 7 microns
-       REL = 0.17                         ! this is good for 9.5 micrometers  
-! this makes the model very dry  - warning nonstandard!!!      
+       REL = 0.17                         ! this is good for 9.5 micrometers
+! this makes the model very dry  - warning nonstandard!!!
 
       else if (PLANET .EQ. 'DRY') then !Dry planets. Implemented originally for post-runaway, O2-rich atmospheres
        REL= 1.e-8 ! For H2O-free atmospheres. Set above zero to prevent floating point errors. - EWS - 9/14/2015
-      endif   
+      endif
 
-      RELH(J) = REL 
+      RELH(J) = REL
    3  H2O(J) = REL * H2OSAT(J)
 C
 
