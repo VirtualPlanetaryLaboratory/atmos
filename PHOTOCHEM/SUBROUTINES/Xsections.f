@@ -5,7 +5,7 @@
 
 * input
 !------- EWS - these are the variables that need to be declared here-------!
-      dimension columndepth(KJ,NZ)  !testing this as an optional parameter 
+      dimension columndepth(KJ,NZ)  !testing this as an optional parameter
       INTEGER nw,j,IO2
       REAL*8 wavl(nw+1), wav(nw)
       REAL*8 T(NZ), DEN(NZ)
@@ -22,22 +22,22 @@
 !---------EWS NOTE: nw=nw, wl=wavl, wc=wav, tlev=T, airlev=DEN,jn=j, sq=sq---------------!
 !----------------------------Comments Correspond to line below---------------------------!
       !T dependent - also unexplained factor of 1000. (but not using T-dependent data right now)
-      IF(species.eq.'HNO3    ') CALL XS_HNO3(nw,wavl,T,j,sq) 
+      IF(species.eq.'HNO3    ') CALL XS_HNO3(nw,wavl,T,j,sq)
       IF(species.eq.'HO2     ') CALL XS_HO2(nw,wavl,wav,j,sq,Ja)
-      !T-dependent (not in use)   
+      !T-dependent (not in use)
       IF(species.eq.'NO2     ') CALL XS_NO2(nw,wavl,T,j,sq)
-      !T-dependent (not in use) 
+      !T-dependent (not in use)
       IF(species.eq.'H2O2    ') CALL XS_H2O2(nw,wavl,wav,T,j,sq)
       !HAVEN"T INTEGRATED GRACES CODE
       IF(species.eq.'H2O     ') CALL XS_H2O(nw,wavl,wav,j,sq)
-      !returns CO+O to j and CO+O1D j+3 !ACK hardcoded needs fixing.. 
+      !returns CO+O to j and CO+O1D j+3 !ACK hardcoded needs fixing..
       IF(species.eq.'CO2     ') CALL XS_CO2(nw,wavl,j,sq)
-      !returns H2, then HCO  
+      !returns H2, then HCO
       IF(species.eq.'H2CO    ') CALL XS_H2CO(nw,wavl,j,sq)
       !returns O2 + O(1D), then O2 + O(3P)
       IF(species.eq.'O3      ') CALL XS_O3(nw,wavl,T,j,sq)
       IF(species.eq.'CH4     ') CALL XS_CH4(nw,wavl,j,sq)
-      !returns  2 (3)CH2 +H2 then CH4 + (1)CH2  
+      !returns  2 (3)CH2 +H2 then CH4 + (1)CH2
       IF(species.eq.'C2H6    ') CALL XS_C2H6(nw,wavl,j,sq)
       !2 channels: NO + O2, NO2 + O
       !note NO3 is temperature dependent so would need to change if it does...
@@ -65,11 +65,11 @@
       IF(species.eq.'CH3CL   ') CALL XS_CH3CL(nw,wavl,wav,T,j,sq)
       !returns CL + CCL3  (temperature dependent!)
       IF(species.eq.'CCL4    ') CALL XS_CCL4(nw,wavl,wav,T,j,sq)
-      !returns CL + CL + CO 
+      !returns CL + CL + CO
       IF(species.eq.'COCL2   ') CALL XS_COCL2(nw,wavl,j,sq)
-      !returns CH3O2 + NO2 
+      !returns CH3O2 + NO2
       IF(species.eq.'CH3O2NO2') CALL XS_CH3O2NO2(nw,wavl,j,sq)
-      !returns CH3O + CL 
+      !returns CH3O + CL
       IF(species.eq.'CH3OCL  ') CALL XS_CH3OCL(nw,wavl,j,sq)
       IF(species.eq.'CH3OOH  ') CALL XS_CH3OOH(nw,wavl,j,sq)
       !returns CL + O1D and CL + O
@@ -80,21 +80,21 @@
       IF(species.eq.'HO2NO2  ') CALL XS_HO2NO2(nw,wavl,j,sq)
       !returns NO3 + NO2, then NO3 + NO + O  (temperature dependent!)
       IF(species.eq.'N2O5    ') CALL XS_N2O5(nw,wavl,wav,T,j,sq)
-      !returns CL + CLOO, then CLO + CLO 
+      !returns CL + CLOO, then CLO + CLO
       IF(species.eq.'CL2O2   ') CALL XS_CL2O2(nw,wavl,j,sq)
       !returns CL + CLO
       IF(species.eq.'CL2O    ') CALL XS_CL2O(nw,wavl,j,sq)
-      !returns CLO + O2  
+      !returns CLO + O2
       IF(species.eq.'CLO3    ') CALL XS_CLO3(nw,wavl,j,sq)
-      !returns CLOO + OCLO  
+      !returns CLOO + OCLO
       IF(species.eq.'CL2O4   ') CALL XS_CL2O4(nw,wavl,j,sq)
-      !returns H + CL. 
+      !returns H + CL.
       IF(species.eq.'HCL     ') CALL XS_HCL(nw,wavl,j,sq)
       !returns O + O(1D) then O + O
       IF(species.eq.'O2      ') CALL XS_O2(nw,wavl,T,DEN,j,sq,
      $                                     columndepth,zy,IO2)
-      !returns  signo(I,L) for now 
-      IF(species.eq.'NO      ') CALL XS_NO(T,DEN,j,columndepth)  
+      !returns  signo(I,L) for now
+      IF(species.eq.'NO      ') CALL XS_NO(T,DEN,j,columndepth)
       IF(species.eq.'SO      ') CALL XS_SO(nw,wavl,j,sq)
       IF(species.eq.'OCS     ') CALL XS_OCS(nw,wavl,j,sq)
       !returns SO + O, SO21, SO23
@@ -116,13 +116,13 @@
       IF(species.eq.'CH3SH  ') CALL XS_CH3SH(nw,wavl,j,sq)
 
 !below here there are calls to XS_simple.
-      IF(species.eq.'C2H6S  ')CALL XS_simple(species,nw,wavl,j,sq)   
+      IF(species.eq.'C2H6S  ')CALL XS_simple(species,nw,wavl,j,sq)
       IF(species.eq.'C2H6S2 ')CALL XS_simple(species,nw,wavl,j,sq)
 
 !corg species
-      IF(species.eq.'C2H2    ') CALL XS_C2H2(nw,wavl,j,sq) 
+      IF(species.eq.'C2H2    ') CALL XS_C2H2(nw,wavl,j,sq)
       IF(species.eq.'C2H4    ') CALL XS_C2H4(nw,wavl,j,sq,Ja)
-      IF(species.eq.'CH      ') CALL XS_C2H4(nw,wavl,j,sq,Jd) ! shawn used C2H4 rate here  
+      IF(species.eq.'CH      ') CALL XS_C2H4(nw,wavl,j,sq,Jd) ! shawn used C2H4 rate here
       IF(species.eq.'C3H8    ') CALL XS_C3H8(nw,wavl,j,sq)
       IF(species.eq.'CH2CO   ') CALL XS_simple(species,nw,wavl,j,sq)
       IF(species.eq.'CH3CHO  ') CALL XS_CH3CHO(nw,wavl,j,sq)  !shawn used C2H4 rate here with 0.57/0.02/0.05 quantum yields
@@ -133,9 +133,9 @@
       IF(species.eq.'CH2CCH2 ') CALL XS_CH2CCH2(nw,wavl,j,sq)
 
 c these are just here to remind us that these XS files exist
-c       CALL XS_CL2O3(nw,wavl,wav,T,DEN,JCL2O3,sq)  !returns CLO + CLOO  (branch to CLO3??)  
+c       CALL XS_CL2O3(nw,wavl,wav,T,DEN,JCL2O3,sq)  !returns CLO + CLOO  (branch to CLO3??)
 
-c       CALL XS_CHOCHO(nw,wavl,wav,T,DEN,100,sq,101,102)  !ACK - hardcoded "J-numbers" 
+c       CALL XS_CHOCHO(nw,wavl,wav,T,DEN,100,sq,101,102)  !ACK - hardcoded "J-numbers"
        !returns HCO + HCO, then H2 + CO + CO, then H2CO + CO  (never finished)
 
       RETURN
@@ -181,9 +181,9 @@ c       CALL XS_CHOCHO(nw,wavl,wav,T,DEN,100,sq,101,102)  !ACK - hardcoded "J-nu
 * input
       INTEGER nw,jn
 c      REAL*8 wl(kw), wc(kw)
-      REAL*8 wl(nw+1) !EWS wc not needed 
+      REAL*8 wl(nw+1) !EWS wc not needed
       !Eddie - Currently testing commenting out the below. Compilation warning says it isn't used
-      !  but it is. curious. 
+      !  but it is. curious.
       REAL*8 tlev(nz)  ! EWS - used here
       !I am no longer so sure about the above comment - NZ is set by the time we invoke XS's
       !it's not like we are going to change on the fly in the middle of a time-dependent run....
@@ -244,7 +244,7 @@ c option 2 -  Kevin's photo.dat
          STOP
       ENDIF
 
-c note different behavior in addpnt below than above 
+c note different behavior in addpnt below than above
       CALL addpnt(x2,y2,kdata,n2,x2(1)*(1.-deltax),y2(1))  !adds 185.914,1.7
       CALL addpnt(x2,y2,kdata,n2,               zero,y2(1))!adds 0, 1.7
       CALL addpnt(x2,y2,kdata,n2,x2(n2)*(1.+deltax),y2(n2))!adds 3500.35,9.3
@@ -272,12 +272,12 @@ c note different behavior in addpnt below than above
       OPEN(UNIT=kin,
      &  file='PHOTOCHEM/DATA/XSECTIONS/HNO3/HNO3_zahnle.abs',
      &  STATUS='old')
-     
+
       HJtest=0 !HOT JUPITER TEST
       do i=1,nsp
 C         print*,i,ISPEC(i)
          if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
-      enddo 
+      enddo
 
 C         print*,"HJtest",HJtest
 
@@ -290,15 +290,15 @@ C         print*,"HJtest",HJtest
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
       IF (HJtest.eq.1) THEN
-      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)
       ELSE
-      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
-      ENDIF  
+      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)
+      ENDIF
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_HNO3***'
@@ -315,12 +315,12 @@ c      print *, yg1
             sq(jn,i,iw) = yg1(iw)
          ENDDO
       ENDDO
-      endif   !end option 2 
+      endif   !end option 2
 
       plab='PHNO3'
       photolabel(jn)=plab
       jn=jn+1
- 
+
 
       RETURN
       END
@@ -351,7 +351,7 @@ c      print *, yg1
 *-----------------------------------------------------------------------------*
 
 c      IMPLICIT NONE
-c      INTEGER kin,kj,kw 
+c      INTEGER kin,kj,kw
 c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reactions defined - will need to abstract or figure out
       INCLUDE 'PHOTOCHEM/INPUTFILES/parameters.inc'
       implicit real*8(A-H,O-Z)
@@ -365,7 +365,7 @@ c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reacti
 * input
       INTEGER nw,jn,jdum
       REAL*8 wl(nw+1), wc(nw) !EWS - wc used here
-      !orig was kw, but don't see why this is needed once nw is defined by gridw.f 
+      !orig was kw, but don't see why this is needed once nw is defined by gridw.f
       !could go back to kz if I ever want to have a variable altitude grid?
 c      REAL*8 tlev(nz)  ! EWS - not used
 c      REAL*8 airlev(nz) ! - EWS - not used
@@ -376,7 +376,7 @@ c      REAL*8 airlev(nz) ! - EWS - not used
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=100)
-      INTEGER n1 
+      INTEGER n1
       REAL*8 x1(kdata)
       REAL*8 y1(kdata)
 
@@ -416,7 +416,7 @@ c option 2) from Kevin no qy
       CALL addpnt(x1,y1,kdata,n,x1(n)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n,        biggest,zero)
       CALL inter2(nw+1,wl,yg,n,x1,y1,ierr)
-       
+
       IF (ierr .NE. 0) THEN
         WRITE(*,*) ierr,' Something wrong in XS_HSO2'   !???
         STOP
@@ -446,12 +446,12 @@ c option 2) from Kevin no qy
       OPEN(UNIT=kin,
      &  file='PHOTOCHEM/DATA/XSECTIONS/HO2/HO2_zahnle.abs',
      &  STATUS='old')
-     
+
       HJtest=0 !HOT JUPITER TEST
       do i=1,nsp
 C         print*,i,ISPEC(i)
          if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
-      enddo 
+      enddo
 
 C         print*,"HJtest",HJtest
 
@@ -464,15 +464,15 @@ C         print*,"HJtest",HJtest
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
       IF (HJtest.eq.1) THEN
-      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)
       ELSE
-      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
-      ENDIF 
+      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)
+      ENDIF
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_HO2***'
@@ -489,19 +489,19 @@ c      print *, yg1
             sq(jn,i,iw) = yg1(iw)
          ENDDO
       ENDDO
-      endif   !end option 2 
+      endif   !end option 2
 
       if(jdum.eq.0) photolabel(jn)='PHO2'
 
       if(jdum.eq.1) then
         photolabel(jn)='PHSO'
-      endif   
+      endif
 
       jn=jn+1
 
       RETURN
       END
- 
+
        SUBROUTINE XS_NO2(nw,wl,tlev,jn,sq)
 
 *-----------------------------------------------------------------------------*
@@ -665,12 +665,12 @@ C     ENDIF
       OPEN(UNIT=kin,
      &  file='PHOTOCHEM/DATA/XSECTIONS/NO2/NO2_zahnle.abs',
      &  STATUS='old')
-     
+
       HJtest=0 !HOT JUPITER TEST
       do i=1,nsp
 C         print*,i,ISPEC(i)
          if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
-      enddo 
+      enddo
 
 C         print*,"HJtest",HJtest
 
@@ -683,16 +683,16 @@ C         print*,"HJtest",HJtest
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
       IF (HJtest.eq.1) THEN
-      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)
       ELSE
-      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
-      ENDIF 
-     
+      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)
+      ENDIF
+
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_NO2***'
@@ -712,7 +712,7 @@ c      stop
       ENDDO
 
       ENDIF
-         
+
 
       if (option.eq.1 .or. option.eq.2) then
 * quantum yield
@@ -772,21 +772,21 @@ C
          endif
       enddo
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
       IF (HJtest.eq.1) THEN
-      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)
       ELSE
-      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
-      ENDIF 
+      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)
+      ENDIF
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' Something wrong in XS_NO2'
          STOP
       ENDIF
- 
+
       endif    !end quantum yield loop
 
 * combine and return xs*qy
@@ -829,7 +829,7 @@ c      SUBROUTINE XS_H2O2(nw,wl,wc,tlev,airlev,jn,sq)
       CHARACTER*11 photolabel,plab
       CHARACTER*8 ISPEC
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
-      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/DBLOK.inc' 
+      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/DBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
@@ -858,7 +858,7 @@ c      REAL*8 airlev(nz) ! - EWS - not used
       INTEGER ierr,option
       REAL*8 lambda
       REAL*8 sumA, sumB, chi
-      ierr = 0      
+      ierr = 0
 
 **************** H2O2 photodissociation
 
@@ -944,24 +944,24 @@ c     2)Kevin's photo.dat data
 
       ENDDO
       endif  !end option 1
-      
+
       HJtest=0 !HOT JUPITER TEST
       do i=1,nsp
 C         print*,i,ISPEC(i)
          if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
-      enddo 
+      enddo
 C         print*,"HJtest",HJtest
 
       if (option.eq.2) then  !Kevin's data
       OPEN(UNIT=kin,
      &  file='PHOTOCHEM/DATA/XSECTIONS/H2O2/H2O2_zahnle.abs',
      &  STATUS='old')
-     
+
       HJtest=0 !HOT JUPITER TEST
       do i=1,nsp
 C         print*,i,ISPEC(i)
          if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
-      enddo 
+      enddo
 
 C         print*,"HJtest",HJtest
 
@@ -974,14 +974,14 @@ C         print*,"HJtest",HJtest
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
       IF (HJtest.eq.1) THEN
-      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)
       ELSE
-      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)  
+      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)
       ENDIF
 
       IF (ierr .NE. 0) THEN
@@ -1052,7 +1052,7 @@ c      REAL*8 airlev(nz) ! - EWS - not used
       REAL*8 qy
       INTEGER i, iw
       INTEGER ierr,option
-      ierr = 0      
+      ierr = 0
 
 **************** OCS photodissociation
 
@@ -1067,12 +1067,12 @@ c     1)Kevin's photo.dat data
       OPEN(UNIT=kin,
      &  file='PHOTOCHEM/DATA/XSECTIONS/OCS/OCS_zahnle.abs',
      &  STATUS='old')
-     
+
       HJtest=0 !HOT JUPITER TEST
       do i=1,nsp
 C         print*,i,ISPEC(i)
          if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
-      enddo 
+      enddo
 
 C         print*,"HJtest",HJtest
 
@@ -1085,15 +1085,15 @@ C         print*,"HJtest",HJtest
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
       IF (HJtest.eq.1) THEN
-      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)
       ELSE
-      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
-      ENDIF 
+      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)
+      ENDIF
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_OCS***'
@@ -1130,7 +1130,7 @@ c Quantum yield (from Kevin's code - no reference)
 *-----------------------------------------------------------------------------*
 
 c      IMPLICIT NONE
-c      INTEGER kin,kj,kw 
+c      INTEGER kin,kj,kw
 c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reactions defined - will need to abstract or figure out
       INCLUDE 'PHOTOCHEM/INPUTFILES/parameters.inc'
       implicit real*8(A-H,O-Z)
@@ -1162,7 +1162,7 @@ c      REAL*8 airlev(nz) ! - EWS - not used
       REAL*8 qy
       INTEGER i, iw
       INTEGER ierr,option
-      ierr = 0      
+      ierr = 0
 
 **************** SO3 photodissociation
 
@@ -1175,12 +1175,12 @@ c     1)Kevin's photo.dat data
       OPEN(UNIT=kin,
      &  file='PHOTOCHEM/DATA/XSECTIONS/SO3/SO3_zahnle.abs',
      &  STATUS='old')
-     
+
       HJtest=0 !HOT JUPITER TEST
       do i=1,nsp
 C         print*,i,ISPEC(i)
          if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
-      enddo 
+      enddo
 
 C         print*,"HJtest",HJtest
 
@@ -1193,15 +1193,15 @@ C         print*,"HJtest",HJtest
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
       IF (HJtest.eq.1) THEN
-      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)
       ELSE
-      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
-      ENDIF 
+      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)
+      ENDIF
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_SO3***'
@@ -1231,7 +1231,7 @@ c Quantum yield (no reference nor research)
 
       RETURN
       END
-       
+
        SUBROUTINE XS_S2(nw,wl,jn,sq,jdum)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
@@ -1275,7 +1275,7 @@ c      REAL*8 airlev(nz) ! - EWS - not used
       REAL*8 qy, scale
       INTEGER i, iw
       INTEGER ierr,option
-      ierr = 0      
+      ierr = 0
 
 **************** S2 photodissociation
 
@@ -1288,12 +1288,12 @@ c     1)Kevin's photo.dat data
       OPEN(UNIT=kin,
      &  file='PHOTOCHEM/DATA/XSECTIONS/S2/S2_zahnle.abs',
      &  STATUS='old')
-     
+
       HJtest=0 !HOT JUPITER TEST
       do i=1,nsp
 C         print*,i,ISPEC(i)
          if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
-      enddo 
+      enddo
 
 C         print*,"HJtest",HJtest
 
@@ -1306,15 +1306,15 @@ C         print*,"HJtest",HJtest
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
       IF (HJtest.eq.1) THEN
-      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)
       ELSE
-      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
-      ENDIF 
+      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)
+      ENDIF
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_S2***'
@@ -1343,20 +1343,20 @@ C   SCALE UP S2 CROSS SECTIONS TO OBTAIN CORRECT S2 LIFETIME UP HIGH
 
 
       endif  !end option 1
-      
+
 c      print *, jn,photolabel
 
       if(jdum.eq.0) photolabel(jn)='PS2'
       if(jdum.eq.1) photolabel(jn)='PS4'
       if(jdum.eq.2) photolabel(jn)='PS3'
 
-      
+
       jn=jn+1
 
-      
+
       RETURN
       END
-      
+
        SUBROUTINE XS_S8(nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
@@ -1369,7 +1369,7 @@ c      print *, jn,photolabel
 *=  PARAMETERS:  see above subroutines                                       =*
 *-----------------------------------------------------------------------------*
 
-c      IMPLICIT NONE 
+c      IMPLICIT NONE
 c      INTEGER kin,kj,kw
 c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reactions defined - will need to abstract or figure out
       INCLUDE 'PHOTOCHEM/INPUTFILES/parameters.inc'
@@ -1405,7 +1405,7 @@ c      REAL*8 airlev(nz) ! - EWS - not used
       REAL*8 qy
       INTEGER i, iw
       INTEGER ierr,option
-      ierr = 0           
+      ierr = 0
 
 **************** S8 photodissociation
 c options
@@ -1418,12 +1418,12 @@ c     1)Kevin's photo.dat data
       OPEN(UNIT=kin,
      &  file='PHOTOCHEM/DATA/XSECTIONS/S8/S8L_zahnle.abs',
      &  STATUS='old')
-     
+
       HJtest=0 !HOT JUPITER TEST
       do i=1,nsp
 C         print*,i,ISPEC(i)
          if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
-      enddo 
+      enddo
 
 C         print*,"HJtest",HJtest
 
@@ -1437,15 +1437,15 @@ C         print*,"HJtest",HJtest
       CLOSE (kin)
 
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
       IF (HJtest.eq.1) THEN
-      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)
       ELSE
-      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
-      ENDIF 
+      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)
+      ENDIF
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_S8***'
@@ -1456,12 +1456,12 @@ C         print*,"HJtest",HJtest
       OPEN(UNIT=kin,
      &  file='PHOTOCHEM/DATA/XSECTIONS/S8/S8R_zahnle.abs',
      &  STATUS='old')
-     
+
       HJtest=0 !HOT JUPITER TEST
       do i=1,nsp
 C         print*,i,ISPEC(i)
          if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
-      enddo 
+      enddo
 
 C         print*,"HJtest",HJtest
 
@@ -1474,18 +1474,18 @@ C         print*,"HJtest",HJtest
          y2(i)=y2(i)*1.E-17      !data given in units of sigma*1E17
       ENDDO
       CLOSE (kin)
-      
 
 
-      CALL addpnt(x2,y2,kdata,n1,x2(1)*(1.-deltax),zero)  
+
+      CALL addpnt(x2,y2,kdata,n1,x2(1)*(1.-deltax),zero)
       CALL addpnt(x2,y2,kdata,n1,               zero,zero)
       CALL addpnt(x2,y2,kdata,n1,x2(n1)*(1.+deltax),zero)
       CALL addpnt(x2,y2,kdata,n1,            biggest,zero)
       IF (HJtest.eq.1) THEN
-      	CALL inter3(nw+1,wl,yg2,n1,x2,y2,ierr)   
+      	CALL inter3(nw+1,wl,yg2,n1,x2,y2,ierr)
       ELSE
-      	CALL inter2(nw+1,wl,yg2,n1,x2,y2,ierr)   
-      ENDIF 
+      	CALL inter2(nw+1,wl,yg2,n1,x2,y2,ierr)
+      ENDIF
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_S8***'
@@ -1498,13 +1498,13 @@ c Quantum yield (no reference nor research)
       qy=1.0
 
 ccc  Kevin's original code
-c        do L=1,68    
-c          SS8L(L) = MAX(SS8R(L),SS8L(L))  
+c        do L=1,68
+c          SS8L(L) = MAX(SS8R(L),SS8L(L))
 c        enddo
 
       do iw=1,68                          !ACK
          yg1(iw)=MAX(yg1(iw),yg2(iw))
-      enddo   
+      enddo
 
       DO iw = 1, nw
          DO i = 1, nz
@@ -1512,7 +1512,7 @@ c        enddo
               sq(jn+1,i,iw) = yg2(iw)*qy     !then SS8R
          ENDDO
       ENDDO
-      endif      
+      endif
 
       photolabel(jn)='PS8L'
       jn=jn+1
@@ -1534,15 +1534,15 @@ c        enddo
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for H2S photolysis  =*
 *=         H2S + HV -> HS + H                                                =*
-*=  Cross section:  From Kevin's photo.dat                                   =* 
-*=  Cross section:  data from MPI db.  Temperature dependence ignored        =*  
+*=  Cross section:  From Kevin's photo.dat                                   =*
+*=  Cross section:  data from MPI db.  Temperature dependence ignored        =*
 *=  Quantum yield:  Assuming 1 with no research                              =*
 *-----------------------------------------------------------------------------*
 *=  PARAMETERS:  see above subroutines                                       =*
 *-----------------------------------------------------------------------------*
 
 c      IMPLICIT NONE
-c      INTEGER kin,kj,kw 
+c      INTEGER kin,kj,kw
 c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reactions defined - will need to abstract or figure out
       INCLUDE 'PHOTOCHEM/INPUTFILES/parameters.inc'
       implicit real*8(A-H,O-Z)
@@ -1574,7 +1574,7 @@ c      REAL*8 airlev(nz) ! - EWS - not used
       REAL*8 qy
       INTEGER i, iw
       INTEGER ierr,option
-      ierr = 0      
+      ierr = 0
 
 **************** H2S photodissociation
 c options
@@ -1588,12 +1588,12 @@ c     2)MPI data, high res from 160-260 (not there is some temperature dependenc
       OPEN(UNIT=kin,
      &  file='PHOTOCHEM/DATA/XSECTIONS/H2S/H2S_zahnle.abs',
      &  STATUS='old')
-     
+
       HJtest=0 !HOT JUPITER TEST
       do i=1,nsp
 C         print*,i,ISPEC(i)
          if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
-      enddo 
+      enddo
 
 C         print*,"HJtest",HJtest
 
@@ -1606,15 +1606,15 @@ C         print*,"HJtest",HJtest
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
       IF (HJtest.eq.1) THEN
-      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)
       ELSE
-      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
-      ENDIF 
+      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)
+      ENDIF
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_H2S***'
@@ -1652,7 +1652,7 @@ c      ENDDO
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
@@ -1703,8 +1703,8 @@ c Quantum yield (no reference nor research)
 
 
 c      IMPLICIT NONE
-c      INTEGER kin,kj,kw 
-c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  
+c      INTEGER kin,kj,kw
+c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#
        !kj=number of reactions defined - will need to abstract or figure out
       INCLUDE 'PHOTOCHEM/INPUTFILES/parameters.inc'
       implicit real*8(A-H,O-Z)
@@ -1713,7 +1713,7 @@ c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#
       CHARACTER*11 photolabel
       CHARACTER*8 ISPEC
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
-      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/DBLOK.inc' 
+      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/DBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
@@ -1903,14 +1903,14 @@ c        write(*,*) ierr, jlabel(j)
       end do
 
       endif   !end option 1)
-      
+
       HJtest=0 !HOT JUPITER TEST
       do i=1,nsp
 C         print*,i,ISPEC(i)
          if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
-      enddo 
+      enddo
 C         print*,"HJtest",HJtest
-      
+
       if (option.eq.2) then
 
       OPEN(UNIT=kin,
@@ -1926,14 +1926,14 @@ C         print*,"HJtest",HJtest
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
       IF (HJTEST.EQ.1) THEN
       	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)
       ELSE
-       	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)     
+       	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)
       ENDIF
 
       IF (ierr .NE. 0) THEN
@@ -1961,7 +1961,7 @@ c Quantum yield (no reference nor research)
       jn=jn+1
 
       RETURN
-      END 
+      END
 c      end subroutine XS_H2O
 
        SUBROUTINE XS_SO(nw,wl,jn,sq)
@@ -1976,7 +1976,7 @@ c      end subroutine XS_H2O
 *-----------------------------------------------------------------------------*
 
 c      IMPLICIT NONE
-c      INTEGER kin,kj,kw 
+c      INTEGER kin,kj,kw
 c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reactions defined - will need to abstract or figure out
       INCLUDE 'PHOTOCHEM/INPUTFILES/parameters.inc'
       implicit real*8(A-H,O-Z)
@@ -2008,7 +2008,7 @@ c      REAL*8 airlev(nz) ! - EWS - not used
       REAL*8 qy
       INTEGER i, iw
       INTEGER ierr,option
-      ierr = 0      
+      ierr = 0
 
 **************** SO photodissociation
 c options
@@ -2021,12 +2021,12 @@ c     1)Kevin's photo.dat data
       OPEN(UNIT=kin,
      &  file='PHOTOCHEM/DATA/XSECTIONS/SO/SO_zahnle.abs',
      &  STATUS='old')
-     
+
       HJtest=0 !HOT JUPITER TEST
       do i=1,nsp
 C         print*,i,ISPEC(i)
          if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
-      enddo 
+      enddo
 
 C         print*,"HJtest",HJtest
 
@@ -2039,15 +2039,15 @@ C         print*,"HJtest",HJtest
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
       IF (HJtest.eq.1) THEN
-      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)
       ELSE
-      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
-      ENDIF 
+      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)
+      ENDIF
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_SO***'
@@ -2137,7 +2137,7 @@ c     2)MC temp-dependent merge to zahnle grid (should re-evaluate)
       do i=1,nsp
 C         print*,i,ISPEC(i)
          if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
-      enddo 
+      enddo
 C         print*,"HJtest",HJtest
 
       option=1
@@ -2157,16 +2157,16 @@ C         print*,"HJtest",HJtest
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
       IF (HJtest.eq.1) THEN
       	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)
       ELSE
-      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)         
+      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)
       ENDIF
-      
+
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_CO2***'
          STOP
@@ -2185,14 +2185,14 @@ C         print*,"HJtest",HJtest
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x2,y2,kdata,n1,x2(1)*(1.-deltax),zero)  
+      CALL addpnt(x2,y2,kdata,n1,x2(1)*(1.-deltax),zero)
       CALL addpnt(x2,y2,kdata,n1,               zero,zero)
       CALL addpnt(x2,y2,kdata,n1,x2(n1)*(1.+deltax),zero)
       CALL addpnt(x2,y2,kdata,n1,            biggest,zero)
       IF (HJtest.eq.1) THEN
       	CALL inter3(nw+1,wl,yg2,n1,x2,y2,ierr)
       ELSE
-      	CALL inter2(nw+1,wl,yg2,n1,x2,y2,ierr)   
+      	CALL inter2(nw+1,wl,yg2,n1,x2,y2,ierr)
       ENDIF
 
       IF (ierr .NE. 0) THEN
@@ -2215,7 +2215,7 @@ c-mc
 c-mc yosh2kz_disw vector from ~/dev/CO2/co2_xsection.pro - 195K cross section
 c-mc data from parkinson/yoshino as binned to this wl grid.
 c      DATA SCO2ASW/1.4E-19, 7.1E-19, 5.4E-19, 5.2E-19, 5.1E-19, 3.7E-19,
-c     2  2.1E-19, 7.4E-20, 3.1E-20, 9.7E-21/ 
+c     2  2.1E-19, 7.4E-20, 3.1E-20, 9.7E-21/
 
 
 
@@ -2233,7 +2233,7 @@ c     2  2.1E-19, 7.4E-20, 3.1E-20, 9.7E-21/
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
@@ -2281,7 +2281,7 @@ c      SUBROUTINE XS_H2CO(nw,wl,wc,tlev,airlev,jn,sq)
 *=  PARAMETERS:  see above subroutines                                       =*
 *-----------------------------------------------------------------------------*
 
-c      IMPLICIT NONE 
+c      IMPLICIT NONE
 c      INTEGER kin,kj,kw
 c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reactions defined - will need to abstract or figure out
       INCLUDE 'PHOTOCHEM/INPUTFILES/parameters.inc'
@@ -2314,7 +2314,7 @@ c      REAL*8 airlev(nz) ! - EWS - not used
 c      REAL*8 qy !EWS - not used
       INTEGER i, iw
       INTEGER ierr,option
-      ierr = 0      
+      ierr = 0
 
 **************** H2CO photodissociation
 c options
@@ -2324,7 +2324,7 @@ c     1)Kevin's photo.dat data
       do i=1,nsp
 C         print*,i,ISPEC(i)
          if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
-      enddo 
+      enddo
 C         print*,"HJtest",HJtest
 
       option=1
@@ -2350,7 +2350,7 @@ c pointer
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
@@ -2370,7 +2370,7 @@ c pointer
 
 c Quantum yields:  from Kevin's photo.dat file
 
-      CALL addpnt(x2,y2,kdata,n2,x2(1)*(1.-deltax),zero)  
+      CALL addpnt(x2,y2,kdata,n2,x2(1)*(1.-deltax),zero)
       CALL addpnt(x2,y2,kdata,n2,               zero,zero)
       CALL addpnt(x2,y2,kdata,n2,x2(n2)*(1.+deltax),zero)
       CALL addpnt(x2,y2,kdata,n2,            biggest,zero)
@@ -2388,14 +2388,14 @@ c Quantum yields:  from Kevin's photo.dat file
          STOP
       ENDIF
 
-      CALL addpnt(x3,y3,kdata,n3,x3(1)*(1.-deltax),zero)  
+      CALL addpnt(x3,y3,kdata,n3,x3(1)*(1.-deltax),zero)
       CALL addpnt(x3,y3,kdata,n3,               zero,zero)
       CALL addpnt(x3,y3,kdata,n3,x3(n3)*(1.+deltax),zero)
       CALL addpnt(x3,y3,kdata,n3,            biggest,zero)
       IF (HJtest.eq.1) THEN
        CALL inter3(nw+1,wl,yg3,n3,x3,y3,ierr)
       ELSE
-       CALL inter2(nw+1,wl,yg3,n3,x3,y3,ierr)      
+       CALL inter2(nw+1,wl,yg3,n3,x3,y3,ierr)
       ENDIF
 
 !yg3 is quantum yield for H2
@@ -2409,8 +2409,8 @@ c Quantum yields:  from Kevin's photo.dat file
 
       DO iw = 1, nw
          DO i = 1, nz
-              sq(jn,i,iw) = yg1(iw)*yg3(iw)   !H2CO -> H2 
-              sq(jn+1,i,iw) = yg1(iw)*yg2(iw)     !H2CO -> HCO 
+              sq(jn,i,iw) = yg1(iw)*yg3(iw)   !H2CO -> H2
+              sq(jn+1,i,iw) = yg1(iw)*yg2(iw)     !H2CO -> HCO
 
          ENDDO
       ENDDO
@@ -2433,13 +2433,13 @@ c Quantum yields:  from Kevin's photo.dat file
 *=         SO2 + HV -> SO + O                                                =*
 *=         SO2 + HV -> SO21                                                  =*
 *=         SO2 + HV -> SO23                                                  =*
-*=  Cross section:  From Kevin's photo.dat or highres if LGRID=1             =*  
+*=  Cross section:  From Kevin's photo.dat or highres if LGRID=1             =*
 *=  Quantum yield:  included in Kevin's cross sections                       =*
 *-----------------------------------------------------------------------------*
 *=  PARAMETERS:  see above subroutines                                       =*
 *-----------------------------------------------------------------------------*
 
-c      IMPLICIT NONE 
+c      IMPLICIT NONE
 c      INTEGER kin,kj,kw
 c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reactions defined - will need to abstract or figure out
       INCLUDE 'PHOTOCHEM/INPUTFILES/parameters.inc'
@@ -2481,7 +2481,7 @@ c      REAL*8 qy !EWS - not used
       real*8 mass  !from PHOTABLOK
       INTEGER i, iw
       INTEGER ierr,option
-      ierr = 0      
+      ierr = 0
 
 **************** SO2 photodissociation
 C  112)  SO2 + HV -> SO + O
@@ -2498,13 +2498,13 @@ c JPL -02 has some better comments - need quantum yields to do this carefully.
 
 
 
-      option=1 
-      
+      option=1
+
       HJtest=0 !HOT JUPITER TEST
       do i=1,nsp
 C         print*,i,ISPEC(i)
          if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
-      enddo 
+      enddo
 C         print*,"HJtest",HJtest
 
       if (option.eq.1) then  !Kevin's data
@@ -2529,15 +2529,15 @@ C         print*,"HJtest",HJtest
 C  Interpolate the cross sections to the wavelength grid:
 c- note these are overwritten by higher resolution data below if LGRID=1
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
       IF (HJtest.eq.1) THEN
-      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)
       ELSE
-      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
-      ENDIF 
+      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)
+      ENDIF
 !yg1 is SO + O cross section * quantum yield
 
       IF (ierr .NE. 0) THEN
@@ -2546,7 +2546,7 @@ c- note these are overwritten by higher resolution data below if LGRID=1
       ENDIF
 
 
-      CALL addpnt(x2,y2,kdata,n2,x2(1)*(1.-deltax),zero)  
+      CALL addpnt(x2,y2,kdata,n2,x2(1)*(1.-deltax),zero)
       CALL addpnt(x2,y2,kdata,n2,               zero,zero)
       CALL addpnt(x2,y2,kdata,n2,x2(n2)*(1.+deltax),zero)
       CALL addpnt(x2,y2,kdata,n2,            biggest,zero)
@@ -2560,7 +2560,7 @@ c- note these are overwritten by higher resolution data below if LGRID=1
 
 
 
-      CALL addpnt(x3,y3,kdata,n3,x3(1)*(1.-deltax),zero)  
+      CALL addpnt(x3,y3,kdata,n3,x3(1)*(1.-deltax),zero)
       CALL addpnt(x3,y3,kdata,n3,               zero,zero)
       CALL addpnt(x3,y3,kdata,n3,x3(n3)*(1.+deltax),zero)
       CALL addpnt(x3,y3,kdata,n3,            biggest,zero)
@@ -2580,7 +2580,7 @@ c- note these are overwritten by higher resolution data below if LGRID=1
       if (newspec.eq.0) then
       OPEN(UNIT=kin,
      &  file='PHOTOCHEM/DATA/XSECTIONS/SO2/2007jd009695-ds01.txt',
-     &  STATUS='old') 
+     &  STATUS='old')
       n4 = 3360
 !the default used for the sulfur mif calculations in the 2013 paper - from Danielace 2012 JGR paper
       else
@@ -2612,9 +2612,9 @@ c      n4 = 4159
       DO i = 1, 1
          READ(kin,*)  !skip a line...
       ENDDO
-      
-      
-      
+
+
+
       n5 = n4
       n6 = n4
       DO i = 1, n4
@@ -2624,7 +2624,7 @@ c      n4 = 4159
        else
          READ(kin,*) x32(i),y32(i),y33(i), y34(i),ydum1(i),
      $               ydum2(i),ydum3(i)
-       endif   
+       endif
 
          x32(i)=x32(i)*10.   !convert from nm to A
          x33(i)=x32(i)
@@ -2634,11 +2634,11 @@ c      n4 = 4159
 
       print *, 'using high resolution SO2 cross section'
 
-      CALL addpnt(x32,y32,kdataHR,n4,x32(1)*(1.-deltax),zero)  
+      CALL addpnt(x32,y32,kdataHR,n4,x32(1)*(1.-deltax),zero)
       CALL addpnt(x32,y32,kdataHR,n4,               zero,zero)
       CALL addpnt(x32,y32,kdataHR,n4,x32(n1)*(1.+deltax),zero)
       CALL addpnt(x32,y32,kdataHR,n4,            biggest,zero)
-      CALL inter2(nw+1,wl,ygnew,n4,x32,y32,0)   
+      CALL inter2(nw+1,wl,ygnew,n4,x32,y32,0)
 
 
       IF (ierr .NE. 0) THEN
@@ -2652,9 +2652,9 @@ c      n4 = 4159
 
       DO iw = 1, nw
          DO i = 1, nz
-              sq(jn,i,iw) = yg1(iw)    !SO2 + HV -> SO + O 
-              sq(jn+1,i,iw) = yg2(iw)     !SO2 + HV -> SO21 
-              sq(jn+2,i,iw) = yg3(iw)     !SO2 + HV -> SO23 
+              sq(jn,i,iw) = yg1(iw)    !SO2 + HV -> SO + O
+              sq(jn+1,i,iw) = yg2(iw)     !SO2 + HV -> SO21
+              sq(jn+2,i,iw) = yg3(iw)     !SO2 + HV -> SO23
          ENDDO
       ENDDO
       endif   ! end option 1
@@ -2745,7 +2745,7 @@ c$$$         READ(kin,*) x1(i),y1(i)
 c$$$         x1(i)=x1(i)*10.  !convert nm to A
 c$$$      ENDDO
 c$$$      CLOSE (kin)
-c$$$      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+c$$$      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
 c$$$      CALL addpnt(x1,y1,kdata,n1,               zero,zero)
 c$$$      CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
 c$$$      CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
@@ -2760,7 +2760,7 @@ c$$$      stop
       do i=1,nsp
 C         print*,i,ISPEC(i)
          if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
-      enddo 
+      enddo
 C         print*,"HJtest",HJtest
 
       OPEN(UNIT=kin,
@@ -2779,15 +2779,15 @@ C         print*,"HJtest",HJtest
       CLOSE (kin)
 
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
       IF (HJtest.eq.1) THEN
-      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)
       ELSE
-      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
-      ENDIF 
+      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)
+      ENDIF
 
 !yg1 is "ozone 1" from photo.dat, i.e. SO31 in Kevin's code
 
@@ -2797,7 +2797,7 @@ C         print*,"HJtest",HJtest
       ENDIF
 
 
-      CALL addpnt(x2,y2,kdata,n2,x2(1)*(1.-deltax),zero)  
+      CALL addpnt(x2,y2,kdata,n2,x2(1)*(1.-deltax),zero)
       CALL addpnt(x2,y2,kdata,n2,               zero,zero)
       CALL addpnt(x2,y2,kdata,n2,x2(n2)*(1.+deltax),zero)
       CALL addpnt(x2,y2,kdata,n2,            biggest,zero)
@@ -2818,13 +2818,13 @@ c ok, the first thing kevin does is combine the two cross sections in the interm
 
       T273 = 273.0  ! needed for double precision
       T203 = 203.0  ! needed for double precision
-     
-
-      
-      do L=1,nw        
 
 
-      if (wl(L) .GE. 2632. .AND. wl(L) .LE. 3550.) then     !temperature dependent x-section from Kevin's code 
+
+      do L=1,nw
+
+
+      if (wl(L) .GE. 2632. .AND. wl(L) .LE. 3550.) then     !temperature dependent x-section from Kevin's code
         do I=1,NZ
          TI = max(tlev(I),T203)
          TI = min(TI,T273)
@@ -2869,13 +2869,13 @@ C   THE O(1D) QUANTUM YIELD IN O3 PHOTOLYSIS.  (SEE JPL, 1983.)
       enddo
 
       ELSE     !shortwave loop
-       do i=1,nz   
+       do i=1,nz
         qy(I,L)=RO3                          !quantum yield for O(1D)
-       enddo 
-      ENDIF    
+       enddo
+      ENDIF
       enddo  !loop over wavelength
 
-      
+
 
       DO iw = 1, nw
          DO i = 1, nz
@@ -2902,7 +2902,7 @@ c      SUBROUTINE XS_HCL(nw,wl,wc,tlev,airlev,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for HCL photolysis  =*
-*=               HCL  +  HV  ->  H  +  CL     
+*=               HCL  +  HV  ->  H  +  CL
 *=  Cross section:  From Kevin's photo.dat                                   =*  !UPDATE ME
 *=  Quantum yield:  Assuming 1 with no research                              =*
 *-----------------------------------------------------------------------------*
@@ -2910,7 +2910,7 @@ c      SUBROUTINE XS_HCL(nw,wl,wc,tlev,airlev,jn,sq)
 *-----------------------------------------------------------------------------*
 
 c      IMPLICIT NONE
-c      INTEGER kin,kj,kw 
+c      INTEGER kin,kj,kw
 c      PARAMETER(kin=33,kj=33,kw=250)    !kin - file unit#  !kj=number of reactions defined - will need to abstract or figure out
       INCLUDE 'PHOTOCHEM/INPUTFILES/parameters.inc'
       implicit real*8(A-H,O-Z)
@@ -2942,7 +2942,7 @@ c      REAL*8 airlev(nz) ! - EWS - not used
       REAL*8 qy
       INTEGER i
       INTEGER ierr,option
-      ierr = 0      
+      ierr = 0
 
 **************** HCL photodissociation
 c options
@@ -2956,12 +2956,12 @@ c     2)JPL-06 recomendation (more or less the same as above, but over wider gri
       OPEN(UNIT=kin,
      &  file='PHOTOCHEM/DATA/XSECTIONS/HCL/HCL_zahnle.abs',
      &  STATUS='old')
-     
+
       HJtest=0 !HOT JUPITER TEST
       do i=1,nsp
 C         print*,i,ISPEC(i)
          if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
-      enddo 
+      enddo
 C         print*,"HJtest",HJtest
 
       DO i = 1, 2
@@ -2973,15 +2973,15 @@ C         print*,"HJtest",HJtest
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
       IF (HJtest.eq.1) THEN
-      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)
       ELSE
-      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
-      ENDIF 
+      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)
+      ENDIF
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_HCL***'
@@ -3008,7 +3008,7 @@ c Quantum yield (no reference nor research)
 
 
       if (option.eq.2) then  !JPL-06
-      OPEN(UNIT=kin, 
+      OPEN(UNIT=kin,
      & file='PHOTOCHEM/DATA/XSECTIONS/HCL/HCL_JPL06.abs',STATUS='old')
 
 c      DO i = 1, 2
@@ -3021,7 +3021,7 @@ c      ENDDO
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
@@ -3035,7 +3035,7 @@ c      ENDDO
 c      print *, wl
 c      print *, y1
 c      print *, ''
-c      print *, yg     
+c      print *, yg
 c       stop
 
 c Quantum yield ( - there are some channel data for excited states of CL but whatever...)
@@ -3080,7 +3080,7 @@ c      SUBROUTINE XS_O2(nw,wl,wc,tlev,airlev,jn,sq,columndepth,zy,IO2)
       CHARACTER*11 photolabel
       CHARACTER*8 ISPEC
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
-      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/DBLOK.inc'      
+      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/DBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER jn,nw
@@ -3092,7 +3092,7 @@ c      SUBROUTINE XS_O2(nw,wl,wc,tlev,airlev,jn,sq,columndepth,zy,IO2)
 * weighting functions
       REAL*8 sq(kj,nz,kw)
 
-      
+
 * data arrays
       INTEGER kdata
       PARAMETER(kdata=100)
@@ -3111,7 +3111,7 @@ c      REAL*8 qy, scale !EWS - not used
       INTEGER ierr,option
       real*8 PLOG(NZ),SIGL(NZ),BIGX(NZ),KA(17),SIG0(NZ,17),CL(NZ),KB(17)
       real*8 A(17,9), B(17,5),SRO2(NZ,17),TO2L(NZ)
-      real*8 columndepth(KJ,NZ) 
+      real*8 columndepth(KJ,NZ)
       real*8 BK,C,SD,AM,e_19,zy,PI,ZYR,U0
       integer KMAX,L,K
       BK = 1.38E-16 !Boltzmann constant - in erg/K
@@ -3119,9 +3119,9 @@ c      REAL*8 qy, scale !EWS - not used
       ZYR = ZY*PI/180. ! note ZY is passed in subroutine call ! - solar angle in radians
       U0 = COS(ZYR)
       AM = 1./U0
-      !1 don't know why kevin had this in here. something about double precision     
+      !1 don't know why kevin had this in here. something about double precision
       e_19=2e-19
-      ierr =0 
+      ierr =0
 
 **************** O2 photodissociation
 c options
@@ -3129,7 +3129,7 @@ c     1)Kevin's photo.dat data
 c     2) High resolution O2 cross section
 
       if(IO2.le.1) option=1
-      if(IO2.eq.2) option=2 
+      if(IO2.eq.2) option=2
 
       if (option.eq.1) then  !Kevin's data
 
@@ -3140,7 +3140,7 @@ c  This cross section changes based on pressure,temperature
 c and zenith angle, and so needs to be recomputed each time if these change
 c BUT - if I'm never going to use it, I shouldn't bother recomputing each time
 c when I go to a time-dependent code - rather I should focus on what needs to change with
-c the exponential sums...         
+c the exponential sums...
 
 c for starters, I'm not going to make the S-R corrections work for a variable grid, although SO2HZ will...
 
@@ -3159,27 +3159,27 @@ c - eventually, i should enforce this somewhere in the main code.
          READ(kin,*) x2(i), y2(i)
       ENDDO
       CLOSE (kin)
-      
+
 C      DO i = 1, n1
 C         print*,'x2(i),wl(i),y2(i),yg2(i)',x2(i),wl(i),y2(i),yg2(i)
 C      ENDDO
-      
+
       HJtest=0 !HOT JUPITER TEST
       do i=1,nsp
 C         print*,i,ISPEC(i)
          if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
-      enddo 
+      enddo
 
 C         print*,"HJtest",HJtest
 
-      CALL addpnt(x2,y2,kdata,n1,x2(1)*(1.-deltax),zero)  
+      CALL addpnt(x2,y2,kdata,n1,x2(1)*(1.-deltax),zero)
       CALL addpnt(x2,y2,kdata,n1,               zero,zero)
       CALL addpnt(x2,y2,kdata,n1,x2(n1)*(1.+deltax),zero)
       CALL addpnt(x2,y2,kdata,n1,            biggest,zero)
       IF (HJtest.eq.1) THEN
-      	CALL inter3(nw+1,wl,yg2,n1,x2,y2,ierr)   
+      	CALL inter3(nw+1,wl,yg2,n1,x2,y2,ierr)
       ELSE
-      	CALL inter2(nw+1,wl,yg2,n1,x2,y2,ierr)   
+      	CALL inter2(nw+1,wl,yg2,n1,x2,y2,ierr)
       ENDIF
 C      DO i = 1, n1
 C         print*,'x2(i),wl(i),y2(i),yg2(i)',x2(i),wl(i),y2(i),yg2(i)
@@ -3205,21 +3205,21 @@ C      ENDDO
 
 C      DO i = 1, n1
 C         print*,'x1(i),wl(i),y1(i),yg1(i)',x1(i),wl(i),y1(i),yg1(i)
-C      ENDDO  
-      
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+C      ENDDO
+
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
       IF (HJtest.eq.1) THEN
-      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)
       ELSE
-      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)
       ENDIF
-            
+
 C      DO i = 1, n1
 C         print*,'x1(i),wl(i),y1(i),yg1(i)',x1(i),wl(i),y1(i),yg1(i)
-C      ENDDO    
+C      ENDDO
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_O2***'
@@ -3242,11 +3242,11 @@ c      stop
       ENDDO
       CLOSE (kin)
 
-C   REPEAT THIS SECTION ONLY IF PRESSURE AND TEMPERATURE VARY WITH TIME 
+C   REPEAT THIS SECTION ONLY IF PRESSURE AND TEMPERATURE VARY WITH TIME
 c (i.e. call this subroutine when it needs to be called...)
 
       do I=1,NZ
-       PLOG(I) = LOG10(airlev(I)*BK*TLEV(I)/1.E3)   
+       PLOG(I) = LOG10(airlev(I)*BK*TLEV(I)/1.E3)
       enddo
 
       do L=1,17  !ack hardcoded wavelength grid
@@ -3256,9 +3256,9 @@ c (i.e. call this subroutine when it needs to be called...)
         enddo
 
         do I=1,NZ
-         IF (L .LT. 15) BIGX(I) = PLOG(I) 
+         IF (L .LT. 15) BIGX(I) = PLOG(I)
          IF (L .GE. 15) BIGX(I) = TLEV(I)
-        enddo 
+        enddo
 
         KMAX = INT(KA(L)) !number of coefficients
 
@@ -3266,12 +3266,12 @@ c (i.e. call this subroutine when it needs to be called...)
          do I=1,NZ
           SIGL(I) = SIGL(I) + A(L,K)*BIGX(I)**(K-1)
          enddo
-        enddo 
+        enddo
 
         do I=1,NZ
           SIG0(I,L) = 10.**SIGL(I)
         enddo
-     
+
       enddo  !end loop over L for O2
 
 
@@ -3292,7 +3292,7 @@ c (i.e. call this subroutine when it needs to be called...)
       CLOSE (kin)
 
 
- 
+
         do I=1,NZ
          TO2L(I) = LOG10(columndepth(j+1,I))
         enddo
@@ -3300,7 +3300,7 @@ c (i.e. call this subroutine when it needs to be called...)
         do L=1,17     !note this will only work for Kevin's original grid given 17 elements of B and KB
                          !unless we abstract B and KB using inter3.  don't know how this would work...
                       !it's OK to leave as is as long as the corrections are applied to the proper wavelength
-           do I=1,NZ     
+           do I=1,NZ
             CL(I) = 0.
            enddo
 
@@ -3310,7 +3310,7 @@ c (i.e. call this subroutine when it needs to be called...)
             do I=1,NZ
              CL(I) = CL(I) + B(L,K)*TO2L(I)**(K-1)
             enddo
-           enddo 
+           enddo
 
 c           if (L.eq.1) print *, (CL(I),I=1,NZ)
 c           print *, CL(80),AM**(-1.0*(10.**CL(80)))
@@ -3318,15 +3318,15 @@ c           print *, CL(80),AM**(-1.0*(10.**CL(80)))
 
 ! there is some weirdness here at the upper boundary that causes a 0 where (I presume)
 ! a 1 should be for L=14.  should look at allen and frederick for confirmation...
-!jim's original code had identical behavoir          
+!jim's original code had identical behavoir
 
 C     compute Shumman-Runge correction for O2 cross section at each height over each wavelength
           do I=1,NZ
             C = 10.**CL(I)
             SD = SIG0(I,L) * AM**(-C)
             SRO2(I,L) = min(SD,e_19)  ! e_19 = 2e-19
-c            if (L.eq.1) print *, SD,min(SD,e_19)            
-c            if (L.eq.1) print *, C,AM**(-C),AM            
+c            if (L.eq.1) print *, SD,min(SD,e_19)
+c            if (L.eq.1) print *, C,AM**(-C),AM
          enddo
 
        enddo  !end loop over wavelength
@@ -3354,20 +3354,20 @@ C      ENDDO
        do i=1,nz
         sq(jn,i,L) = yg2(L)      !for O1D ...
 C           if(i.eq.1)print*,"L,jn,sq(jn,1,L)",L,jn,sq(jn,i,L)
-        
+
         if (HJtest.EQ.1.) then
-         sq(jn+1,I,L)=0.0 
+         sq(jn+1,I,L)=0.0
         else
          sq(jn+1,I,L)=yg1(L)        !for O2
 
-         if (wl(L) .GE. 1754. .AND. wl(L) .LE. 2041.) then   
-            sq(jn+1,I,L)=sq(jn+1,I,L) + SRO2(I,L-10) !add in Schuman-Runge correction  
-c            sq(j+1,I,L)=sq(j+1,I,L) + SRO2(I,L) !add in Schuman-Runge correction  
+         if (wl(L) .GE. 1754. .AND. wl(L) .LE. 2041.) then
+            sq(jn+1,I,L)=sq(jn+1,I,L) + SRO2(I,L-10) !add in Schuman-Runge correction
+c            sq(j+1,I,L)=sq(j+1,I,L) + SRO2(I,L) !add in Schuman-Runge correction
          endif
         endif
 C           if(i.eq.1)print*,"L,jn+1,sq(jn+1,1,L)",L,jn+1,sq(jn+1,i,L)
        enddo
-      enddo 
+      enddo
 
       endif  !end option 1
 
@@ -3390,7 +3390,7 @@ C           if(i.eq.1)print*,"L,jn+1,sq(jn+1,1,L)",L,jn+1,sq(jn+1,i,L)
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x2,y2,kdata,n1,x2(1)*(1.-deltax),zero)  
+      CALL addpnt(x2,y2,kdata,n1,x2(1)*(1.-deltax),zero)
       CALL addpnt(x2,y2,kdata,n1,               zero,zero)
       CALL addpnt(x2,y2,kdata,n1,x2(n1)*(1.+deltax),zero)
       CALL addpnt(x2,y2,kdata,n1,            biggest,zero)
@@ -3405,7 +3405,7 @@ C           if(i.eq.1)print*,"L,jn+1,sq(jn+1,1,L)",L,jn+1,sq(jn+1,i,L)
 
 !but use high resolution for the S-R bands...
       OPEN(UNIT=kin,
-     &  file='PHOTOCHEM/DATA/XSECTIONS/O2/Yoshino92.abs', 
+     &  file='PHOTOCHEM/DATA/XSECTIONS/O2/Yoshino92.abs',
      &  STATUS='old')
 
 c      DO i = 1, 2
@@ -3418,11 +3418,11 @@ c      ENDDO
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x5,y5,kdata2,n1,x5(1)*(1.-deltax),zero)  
+      CALL addpnt(x5,y5,kdata2,n1,x5(1)*(1.-deltax),zero)
       CALL addpnt(x5,y5,kdata2,n1,               zero,zero)
       CALL addpnt(x5,y5,kdata2,n1,x5(n1)*(1.+deltax),zero)
       CALL addpnt(x5,y5,kdata2,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg5,n1,x5,y5,0)   
+      CALL inter2(nw+1,wl,yg5,n1,x5,y5,0)
 
 
 
@@ -3441,11 +3441,11 @@ claire grid is same as old to 1770-1786 and after 2248-2273
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)  
+      CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_O2***'
@@ -3453,12 +3453,12 @@ claire grid is same as old to 1770-1786 and after 2248-2273
       ENDIF
 
       do i=1,nw
-      if(wl(i).le.1770. .OR. wl(i).ge.2026.) yg5(i)=yg1(i)   
+      if(wl(i).le.1770. .OR. wl(i).ge.2026.) yg5(i)=yg1(i)
 c      print *, wl(i),yg5(i),yg1(i)
       enddo
 c      stop
 
- 
+
 
       DO L = 1, nw
          DO i = 1, nz
@@ -3488,8 +3488,8 @@ c      SUBROUTINE XS_CH4(nw,wl,wc,tlev,airlev,jn,sq)
 *=                    CH4 + HV  ->  ^1CH2 + H2                               =*
 *=                    CH4 + HV  ->  CH3 +  H                                 =*
 *=                    CH4 + HV  ->  ^3CH2 + H + H                            =*
-*=  Cross section:  from photo.dat                                           =* 
-*=  Quantum yield:  1 for 1st reac, except at Ly a                           =* 
+*=  Cross section:  from photo.dat                                           =*
+*=  Quantum yield:  1 for 1st reac, except at Ly a                           =*
 *-----------------------------------------------------------------------------*
 *=  PARAMETERS:  see above subroutines                                       =*
 *-----------------------------------------------------------------------------*
@@ -3501,7 +3501,7 @@ c      SUBROUTINE XS_CH4(nw,wl,wc,tlev,airlev,jn,sq)
       CHARACTER*11 photolabel
       CHARACTER*8 ISPEC
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
-      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/DBLOK.inc'      
+      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/DBLOK.inc'
       SAVE/PBLOK/
 * input
       INTEGER nw,jn
@@ -3525,19 +3525,19 @@ c      REAL*8 airlev(nz) ! - EWS - not used
       REAL*8 qy
       INTEGER i, iw
       INTEGER ierr,option
-      ierr = 0      
+      ierr = 0
 
 **************** CH4 photodissociation
 c options
 c     1)Kevin's photo.dat data
 
       option=1
-      
+
       HJtest=0 !HOT JUPITER TEST
       do i=1,nsp
 C         print*,i,ISPEC(i)
          if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
-      enddo 
+      enddo
 
 C         print*,"HJtest",HJtest
       if (option.eq.1) then  !Kevin's data
@@ -3554,15 +3554,15 @@ C         print*,"HJtest",HJtest
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
       IF (HJtest.eq.1) THEN
-      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)
       ELSE
-      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
-      ENDIF 
+      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)
+      ENDIF
 
 
       IF (ierr .NE. 0) THEN
@@ -3575,7 +3575,7 @@ c Quantum yields and reactions depend on wavelength and presence of hydrocarbons
       DO iw = 1, nw
          if (wl(iw).eq.1216) then  !ack hardcoded wavelength
 c-mab: November 2016: Switched qy2 and qy3 values from original due to comparison with a previous person.
-c-mab: A discussion within the GSFC group (following discrepancy with Kopparapu et al 2012 code) suggested they must've gotten switched somewhere accidentally? 
+c-mab: A discussion within the GSFC group (following discrepancy with Kopparapu et al 2012 code) suggested they must've gotten switched somewhere accidentally?
             qy=0.24
             qy2=0.51
             qy3=0.25
@@ -3583,7 +3583,7 @@ c-mab: A discussion within the GSFC group (following discrepancy with Kopparapu 
           qy=1.0
           qy2=0.0
           qy3=0.0
-         endif   
+         endif
 
          DO i = 1, nz
               sq(jn,i,iw) = yg1(iw)*qy
@@ -3624,7 +3624,7 @@ c      SUBROUTINE XS_C2H6(nw,wl,wc,tlev,airlev,jn,sq)
 *=           C2H6 + HV  ->  C2H4 + H2                                        =*
 *=           C2H6 + HV  ->  CH3 + CH3                                        =*
 *=                                                                           =*
-*=  Cross section:  From Kevin's photo.dat, verified - featureless sw        =* 
+*=  Cross section:  From Kevin's photo.dat, verified - featureless sw        =*
 *=  Quantum yield:  Assuming Kevin's vals(0.8/0.2) with no research          =*
 *=                  using's shawn's values for the other four                =*
 *=                  -shawn's values vary at Ly a                             =*
@@ -3662,7 +3662,7 @@ c      REAL*8 airlev(nz) ! - EWS - not used
       REAL*8 qy,qy2
       INTEGER i, iw
       INTEGER ierr,option
-      ierr = 0      
+      ierr = 0
 
 **************** C2H6 photodissociation
 c options
@@ -3675,12 +3675,12 @@ c     1)Kevin's photo.dat data
       OPEN(UNIT=kin,
      &  file='PHOTOCHEM/DATA/XSECTIONS/C2H6/C2H6_zahnle.abs',
      &  STATUS='old')
-     
+
       HJtest=0 !HOT JUPITER TEST
       do i=1,nsp
 C         print*,i,ISPEC(i)
          if (ISPEC(i).eq.'HE') HJtest=1  !temp solution to get 3 reactions for hot jupiters at Ly alpha
-      enddo 
+      enddo
 
 C         print*,"HJtest",HJtest
 
@@ -3693,15 +3693,15 @@ C         print*,"HJtest",HJtest
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
       IF (HJtest.eq.1) THEN
-        CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)   
+        CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)
       ELSE
-      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
-      ENDIF  
+      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)
+      ENDIF
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_C2H6***'
@@ -3712,7 +3712,7 @@ c Quantum yield's depend on if there are higher order hydrocarbon and wavelength
       HCtest=0
       do i=1,nsp
          if (ISPEC(i).eq.'C2H4') HCtest=1
-      enddo   
+      enddo
 
       DO iw = 1, nw
             if (wl(iw).eq.1216) then !wl dependent quantum yield just at ly a
@@ -3729,7 +3729,7 @@ c Quantum yield's depend on if there are higher order hydrocarbon and wavelength
               qy4 = 0.14
               qy5  = 0.56
               qy6  = 0.01
-            endif   
+            endif
 
 !override the above if we aren't including hydrocarbon aerosols
 
@@ -3739,7 +3739,7 @@ c Quantum yield's depend on if there are higher order hydrocarbon and wavelength
 c       print *, 'note to future self - XS_C2H6 not formally tested in'
 c       print *, 'non hc case. should be fine, but check to be sure'
 c       print *, 'upon seeing this note for the first time...'
-      endif 
+      endif
 
 
          DO i = 1, nz
@@ -3750,7 +3750,7 @@ c       print *, 'upon seeing this note for the first time...'
               sq(jn+3,i,iw) = yg1(iw)*qy4
               sq(jn+4,i,iw) = yg1(iw)*qy5
               sq(jn+5,i,iw) = yg1(iw)*qy6
-              endif   
+              endif
 
          ENDDO
       ENDDO
@@ -3818,7 +3818,7 @@ c      REAL*8 yg1(nw),yg2(nw) ! EWS - not used
 c      REAL*8 qy ! EWS - not used
       INTEGER i
       INTEGER ierr,option
-      real*8 columndepth(KJ,NZ),PLOG(NZ),signol(NZ) 
+      real*8 columndepth(KJ,NZ),PLOG(NZ),signol(NZ)
       real*8 BK,SD,AM,zy,PI,ZYR,U0
       integer L,K
       real*8 ANO(9,2),BNO(5,2),LLNO(35),CNO(NZ)
@@ -3828,7 +3828,7 @@ c      REAL*8 qy ! EWS - not used
       ZYR = ZY*PI/180.            ! note ZY is passed in subroutine call - solar angle in radians
       U0 = COS(ZYR)
       AM = 1./U0
-      e_15=1.e-15                 !1 don't know why kevin had this in here. something about double precision      
+      e_15=1.e-15                 !1 don't know why kevin had this in here. something about double precision
 
 
 C   NO PREDISSOCIATION COEFFICIENTS (ALLEN AND FREDERICK, 1982)
@@ -3852,17 +3852,17 @@ C
 **************** NO photodissociation
 c options
 c     1)Kevin's photo.dat data
-        
+
       option=1
 
 
       if (option.eq.1) then  !Kevin's data
 
-C   REPEAT THIS SECTION ONLY IF PRESSURE AND TEMPERATURE VARY WITH TIME 
+C   REPEAT THIS SECTION ONLY IF PRESSURE AND TEMPERATURE VARY WITH TIME
 c (i.e. call this subroutine when it needs to be called...)
 
       do I=1,NZ
-       PLOG(I) = LOG10(airlev(I)*BK*TLEV(I)/1.E3)   
+       PLOG(I) = LOG10(airlev(I)*BK*TLEV(I)/1.E3)
       enddo
 
 C
@@ -3872,13 +3872,13 @@ C          COEFFICIENTS FOR NITROUS OXIDE (NO)
           do I=1,NZ
            SIGNOL(I) = 0.
           enddo
- 
+
           do K=1,9
            do I=1,NZ
             SIGNOL(I) = SIGNOL(I) + ANO(K,L)*PLOG(I)**(K-1)
            enddo
           enddo
- 
+
           do I=1,NZ
            SIGNO0(I,L) = 10.**SIGNOL(I)
           enddo
@@ -3900,7 +3900,7 @@ C            COEFFICIENTS FOR NO
           do I=1,NZ
            CNO(I) = 0.
           enddo
- 
+
           do K=1,5
            do I=1,NZ
             CNO(I) = CNO(I) + BNO(K,L)*TO2L(I)**(K-1)
@@ -3970,7 +3970,7 @@ c      REAL*8 airlev(nz) ! - EWS - not used
       REAL*8 T1,T2,T3
       INTEGER i, iw
       INTEGER ierr,option
-      ierr = 0      
+      ierr = 0
 
 **************** NO3 photodissociation
 
@@ -3994,7 +3994,7 @@ c      ENDDO
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
@@ -4027,51 +4027,51 @@ c Quantum yield (is temperature dependent)
 !test to see if I interpolate each group if the numbers sum to 1000.
       n1=n1o
       x2=x2o
-      CALL addpnt(x2,y2,kdata2,n1,x2(1)*(1.-deltax),zero)  
+      CALL addpnt(x2,y2,kdata2,n1,x2(1)*(1.-deltax),zero)
       CALL addpnt(x2,y2,kdata2,n1,               zero,zero)
       CALL addpnt(x2,y2,kdata2,n1,x2(n1)*(1.+deltax),zero)
       CALL addpnt(x2,y2,kdata2,n1,            biggest,zero)
       CALL inter2(nw+1,wl,yg2,n1,x2,y2,ierr)   ! inter2 is grid - bins
       x2=x2o
       n1=n1o
-      CALL addpnt(x2,y3,kdata2,n1,x2(1)*(1.-deltax),zero)  
+      CALL addpnt(x2,y3,kdata2,n1,x2(1)*(1.-deltax),zero)
       CALL addpnt(x2,y3,kdata2,n1,               zero,zero)
       CALL addpnt(x2,y3,kdata2,n1,x2(n1)*(1.+deltax),zero)
       CALL addpnt(x2,y3,kdata2,n1,            biggest,zero)
       CALL inter2(nw+1,wl,yg3,n1,x2,y3,ierr)   ! inter2 is grid - bins
       x2=x2o
       n1=n1o
-      CALL addpnt(x2,y4,kdata2,n1,x2(1)*(1.-deltax),zero)  
+      CALL addpnt(x2,y4,kdata2,n1,x2(1)*(1.-deltax),zero)
       CALL addpnt(x2,y4,kdata2,n1,               zero,zero)
       CALL addpnt(x2,y4,kdata2,n1,x2(n1)*(1.+deltax),zero)
       CALL addpnt(x2,y4,kdata2,n1,            biggest,zero)
       CALL inter2(nw+1,wl,yg4,n1,x2,y4,ierr)   ! inter2 is grid - bins
       x2=x2o
       n1=n1o
-      CALL addpnt(x2,y5,kdata2,n1,x2(1)*(1.-deltax),zero)  
+      CALL addpnt(x2,y5,kdata2,n1,x2(1)*(1.-deltax),zero)
       CALL addpnt(x2,y5,kdata2,n1,               zero,zero)
       CALL addpnt(x2,y5,kdata2,n1,x2(n1)*(1.+deltax),zero)
       CALL addpnt(x2,y5,kdata2,n1,            biggest,zero)
       CALL inter2(nw+1,wl,yg5,n1,x2,y5,ierr)   ! inter2 is grid - bins
       x2=x2o
       n1=n1o
-      CALL addpnt(x2,y6,kdata2,n1,x2(1)*(1.-deltax),zero)  
+      CALL addpnt(x2,y6,kdata2,n1,x2(1)*(1.-deltax),zero)
       CALL addpnt(x2,y6,kdata2,n1,               zero,zero)
       CALL addpnt(x2,y6,kdata2,n1,x2(n1)*(1.+deltax),zero)
       CALL addpnt(x2,y6,kdata2,n1,            biggest,zero)
       CALL inter2(nw+1,wl,yg6,n1,x2,y6,ierr)   ! inter2 is grid - bins
       x2=x2o
       n1=n1o
-      CALL addpnt(x2,y7,kdata2,n1,x2(1)*(1.-deltax),zero)  
+      CALL addpnt(x2,y7,kdata2,n1,x2(1)*(1.-deltax),zero)
       CALL addpnt(x2,y7,kdata2,n1,               zero,zero)
       CALL addpnt(x2,y7,kdata2,n1,x2(n1)*(1.+deltax),zero)
       CALL addpnt(x2,y7,kdata2,n1,            biggest,zero)
       CALL inter2(nw+1,wl,yg7,n1,x2,y7,ierr)   ! inter2 is grid - bins
- 
+
       do l=1,nw
 c         print *, wl(l),yg2(l),yg3(l),yg4(l)
 c         print *, wl(l),yg5(l),yg6(l),yg7(l)
-      enddo   
+      enddo
 
       T1=298.
       T2=230.
@@ -4079,7 +4079,7 @@ c         print *, wl(l),yg5(l),yg6(l),yg7(l)
 
       do l=1,nw
        do i=1,nz
-          
+
           if (tlev(i) .ge. T1) then
              qy1(l,i)=yg2(l)
              qy2(l,i)=yg5(l)
@@ -4096,17 +4096,17 @@ c         print *, wl(l),yg5(l),yg6(l),yg7(l)
           else if (tlev(i) .lt. T3) then
              qy1(l,i)=yg4(l)
              qy2(l,i)=yg7(l)
-          endif   
-       enddo   
+          endif
+       enddo
       enddo
 
-      
+
       DO iw = 1, nw
 c         print *, iw, wl(iw)
          DO i = 1, nz
               sq(jn,i,iw) = yg1(iw)*qy1(iw,i)/1000.             !for NO + O2
               sq(jn+1,i,iw) = yg1(iw)*qy2(iw,i)/1000.           !for NO2 + O
-              
+
 c              if (iw .eq. 94) print *, qy1(iw,i),qy2(iw,i)
          ENDDO
       ENDDO
@@ -4114,7 +4114,7 @@ c              if (iw .eq. 94) print *, qy1(iw,i),qy2(iw,i)
 
 c      print *, jn, photolabel
 
-c      write(14,*) jn, photolabel      
+c      write(14,*) jn, photolabel
 
       photolabel(jn)='PNO3_NO'
       jn=jn+1
@@ -4169,7 +4169,7 @@ c      REAL*8 airlev(nz) ! - EWS - not used
 c      REAL*8 T1,T2,T3 !EWS - not used
       INTEGER i, iw
       INTEGER ierr,option
-      ierr = 0      
+      ierr = 0
 
 **************** N2O photodissociation
 
@@ -4196,7 +4196,7 @@ c     1)JPL-06 data
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
@@ -4208,7 +4208,7 @@ c     1)JPL-06 data
       ENDIF
 
 
-c cross section is temperature dependent - see JPL-06
+c cross section is temperature dependent - see JPL-15
 
       A0 = 68.21023
       A1 = -4.071805
@@ -4231,7 +4231,7 @@ c cross section is temperature dependent - see JPL-06
 
          IF (lambda .GE. 173. .AND. lambda .LE. 240.) THEN
            DO iz = 1, nz
-             t = MAX(194.,MIN(tlev(iz),320.))    !320 or 302K ??? - 320 from graces...
+             t = MAX(194.,MIN(tlev(iz),302.))    !320 or 302K ??? - 320 from graces... !STB I will do what JPL says, so 302 K it is.
              A = (((A4*lambda+A3)*lambda+A2)*lambda+A1)*lambda+A0
              B = (((B3*lambda+B2)*lambda+B1)*lambda+B0)
              B = (t-300.)*EXP(B)
@@ -4241,7 +4241,7 @@ c             print *, B
            ENDDO
          ELSE
            DO iz = 1, nz
-             sq(jn,iz,iw) = 0.
+             sq(jn,iz,iw) = qy*yg1(iw) !STB this was set to zero, it should not be.
            ENDDO
          ENDIF
       ENDDO
@@ -4263,7 +4263,7 @@ c      SUBROUTINE XS_CLO(nw,wl,wc,tlev,airlev,jn,sq)
 *=  Provide product of (cross section) x (quantum yield) for CLO photolysis  =*
 *=                CLO + HV  ->  CL + O1D                                     =*
 *=                CLO + HV  ->  CL + O                                       =*
-*=  Cross section:  From JPL-06                                              =* 
+*=  Cross section:  From JPL-06                                              =*
 *=  Quantum yield:  1 for O1D < 265 nm  1 for O above                        =*
 *-----------------------------------------------------------------------------*
 *=  PARAMETERS:  see above subroutines                                       =*
@@ -4297,7 +4297,7 @@ c      REAL*8 airlev(nz) ! - EWS - not used
       REAL*8 qy
       INTEGER i, iw
       INTEGER ierr,option
-      ierr = 0      
+      ierr = 0
 
 **************** CLO photodissociation
 c options
@@ -4321,11 +4321,11 @@ c      ENDDO
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)   
+      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_CLO***'
@@ -4345,7 +4345,7 @@ c Quantum yield (1 for O1D < 265 nm then 1 for O longward
                sq(jn,i,iw) = yg1(iw)*0.0
                sq(jn+1,i,iw) = yg1(iw)*qy
             endif
-  
+
          ENDDO
       ENDDO
       endif  !end option 1
@@ -4367,7 +4367,7 @@ c      SUBROUTINE XS_HOCL(nw,wl,wc,tlev,airlev,jn,sq)
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for HOCL photolysis =*
 *=                HOCL + HV  ->  OH + CL                                     =*
-*=  Cross section:  From JPL-06                                              =* 
+*=  Cross section:  From JPL-06                                              =*
 *=  Quantum yield:  using 1 given that second branch (HCL + 0) is <2%        =*
 *-----------------------------------------------------------------------------*
 *=  PARAMETERS:  see above subroutines                                       =*
@@ -4401,7 +4401,7 @@ c      REAL*8 airlev(nz) ! - EWS - not used
       REAL*8 qy
       INTEGER i, iw
       INTEGER ierr,option
-      ierr = 0      
+      ierr = 0
 
 **************** HOCL photodissociation
 c options
@@ -4425,18 +4425,18 @@ c      ENDDO
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)   
+      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_HOCL***'
          STOP
       ENDIF
 
-c Quantum yield (JPL-06 (i.e <2% O and >95% OH) are cited so just using 1 branch 
+c Quantum yield (JPL-06 (i.e <2% O and >95% OH) are cited so just using 1 branch
 c      (i.e. ignoring HOCL + HV -> HCL + O)
 
       qy=1.0
@@ -4461,7 +4461,7 @@ c      SUBROUTINE XS_CL2(nw,wl,wc,tlev,airlev,jn,sq)
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for HOCL photolysis =*
 *=                CL2 + HV  ->  CL + CL                                      =*
-*=  Cross section:  From JPL-06                                              =* 
+*=  Cross section:  From JPL-06                                              =*
 *=  Quantum yield:  1 (JPL-06)                                               =*
 *-----------------------------------------------------------------------------*
 *=  PARAMETERS:  see above subroutines                                       =*
@@ -4495,7 +4495,7 @@ c      REAL*8 yg1(nw) !EWS - not used
       REAL*8 qy, a
       INTEGER i, iw
       INTEGER ierr,option
-      ierr = 0      
+      ierr = 0
 
 **************** HOCL photodissociation
 c options
@@ -4518,12 +4518,12 @@ c Quantum yield is 1 (jpl-06)
           if ((wl(iw) .ge. 2500.) .AND. (wl(iw) .le. 5500.)) then
             a=TANH(402.7/tlev(I))
                sq(jn,i,iw) = qy*1.0E-20*(a**0.5)*
-     $           (27.3*exp(-99.0*a*(log(329.5/wl(iw)*10.))**2 ) + 
+     $           (27.3*exp(-99.0*a*(log(329.5/wl(iw)*10.))**2 ) +
      $           0.932*exp(-91.5*a*(log(406.5/wl(iw)*10.))**2))
-          else 
+          else
              sq(jn,i,iw)=0.0
-          endif   
-         ENDDO 
+          endif
+         ENDDO
       ENDDO
       endif  !end option 1
 
@@ -4540,7 +4540,7 @@ c      SUBROUTINE XS_CLOO(nw,wl,wc,tlev,airlev,jn,sq)
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for CLOO photolysis =*
 *=                CLOO + HV  ->  O + CLO                                     =*
-*=  Cross section:  From JPL-06                                              =* 
+*=  Cross section:  From JPL-06                                              =*
 *=  Quantum yield:  1                                                        =*
 *-----------------------------------------------------------------------------*
 *=  PARAMETERS:  see above subroutines                                       =*
@@ -4574,7 +4574,7 @@ c      REAL*8 airlev(nz) ! - EWS - not used
       REAL*8 qy
       INTEGER i, iw
       INTEGER ierr,option
-      ierr = 0      
+      ierr = 0
 
 **************** CLOO photodissociation
 c options
@@ -4598,11 +4598,11 @@ c      ENDDO
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)   
+      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_CLOO***'
@@ -4634,7 +4634,7 @@ c      SUBROUTINE XS_OCLO(nw,wl,wc,tlev,airlev,jn,sq)
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for OCLO photolysis =*
 *=                OCLO + HV  ->  O + CLO                                     =*
-*=  Cross section:  From JPL-06                                              =* 
+*=  Cross section:  From JPL-06                                              =*
 *=  Quantum yield:  1                                                        =*
 *-----------------------------------------------------------------------------*
 *=  PARAMETERS:  see above subroutines                                       =*
@@ -4668,7 +4668,7 @@ c      REAL*8 airlev(nz) ! - EWS - not used
       REAL*8 qy
       INTEGER i, iw
       INTEGER ierr,option
-      ierr = 0      
+      ierr = 0
 
 **************** OCLO photodissociation
 c options
@@ -4693,11 +4693,11 @@ c      ENDDO
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)   
+      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_OCLO***'
@@ -4730,7 +4730,7 @@ c      SUBROUTINE XS_CLONO(nw,wl,wc,tlev,airlev,jn,sq)
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for CLONO photolysis=*
 *=                CLONO + HV  ->  CL + NO2                                   =*
-*=  Cross section:  From JPL-06                                              =* 
+*=  Cross section:  From JPL-06                                              =*
 *=  Quantum yield:  1                                                        =*
 *-----------------------------------------------------------------------------*
 *=  PARAMETERS:  see above subroutines                                       =*
@@ -4764,7 +4764,7 @@ c      REAL*8 airlev(nz) ! - EWS - not used
       REAL*8 qy
       INTEGER i, iw
       INTEGER ierr,option
-      ierr = 0      
+      ierr = 0
 
 **************** CLONO photodissociation
 c options
@@ -4788,11 +4788,11 @@ c      ENDDO
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)   
+      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_CLONO***'
@@ -4823,7 +4823,7 @@ c      SUBROUTINE XS_CLONO2(nw,wl,wc,tlev,airlev,jn,sq)
 *=  Provide product of (cross section) x (quantum yield) for CLONO2 photolysis =*
 *=                CLONO2 + HV  ->  CL + NO3                                    =*
 *=                CLONO2 + HV  ->  CLO + NO2                                   =*
-*=  Cross section:  From JPL-06                                                =* 
+*=  Cross section:  From JPL-06                                                =*
 *=  Quantum yield:  temperature dependent from jpl-06                          =*
 *-------------------------------------------------------------------------------*
 *=  PARAMETERS:  see above subroutines                                         =*
@@ -4857,7 +4857,7 @@ c      REAL*8 airlev(nz) ! - EWS - not used
       REAL*8 qy1,qy2
       INTEGER i, iw,iz
       INTEGER ierr,option
-      ierr = 0      
+      ierr = 0
 
 **************** CLONO2 photodissociation
 c options
@@ -4885,11 +4885,11 @@ c      ENDDO
       CLOSE (kin)
 
       n1=n
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)   
+      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_CLONO2***'
@@ -4971,7 +4971,7 @@ c      SUBROUTINE XS_CLNO(nw,wl,wc,tlev,airlev,jn,sq)
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for CLNO photolysis =*
 *=                CLNO + HV  ->  CL + NO                                     =*
-*=  Cross section:  From JPL-06                                              =* 
+*=  Cross section:  From JPL-06                                              =*
 *=  Quantum yield:  1                                                        =*
 *-----------------------------------------------------------------------------*
 *=  PARAMETERS:  see above subroutines                                       =*
@@ -5005,7 +5005,7 @@ c      REAL*8 airlev(nz) ! - EWS - not used
       REAL*8 qy
       INTEGER i, iw
       INTEGER ierr,option
-      ierr = 0      
+      ierr = 0
 
 **************** CLNO photodissociation
 c options
@@ -5029,11 +5029,11 @@ c     1)JPL-06 data
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)   
+      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_CLNO***'
@@ -5064,7 +5064,7 @@ c      SUBROUTINE XS_CLNO2(nw,wl,wc,tlev,airlev,jn,sq)
 *=  Provide product of (cross section) x (quantum yield) for CLNO2 photolysis =*
 *=                CLNO2 + HV  ->  CL + NO2                                   =*
 *=     (second branch to CLONO + O is <2% so ignored)                        =*
-*=  Cross section:  From JPL-06                                              =* 
+*=  Cross section:  From JPL-06                                              =*
 *=  Quantum yield:  1                                                        =*
 *-----------------------------------------------------------------------------*
 *=  PARAMETERS:  see above subroutines                                       =*
@@ -5098,7 +5098,7 @@ c      REAL*8 airlev(nz) ! - EWS - not used
       REAL*8 qy
       INTEGER i, iw
       INTEGER ierr,option
-      ierr = 0      
+      ierr = 0
 
 **************** CLNO2 photodissociation
 c options
@@ -5122,11 +5122,11 @@ c      ENDDO
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)   
+      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_CLNO2***'
@@ -5158,7 +5158,7 @@ c      SUBROUTINE XS_CHCLO(nw,wl,wc,tlev,airlev,jn,sq)
 *=                CHCLO + HV  ->  HCO + CL                                   =*
 *=     (JPL06 calls this species COHCL - formyl chloride)                    =*
 *=      (products assumed from Yuk's earth model                             =*
-*=  Cross section:  From JPL-06                                              =* 
+*=  Cross section:  From JPL-06                                              =*
 *=  Quantum yield:  1                                                        =*
 *-----------------------------------------------------------------------------*
 *=  PARAMETERS:  see above subroutines                                       =*
@@ -5192,7 +5192,7 @@ c      REAL*8 airlev(nz) ! - EWS - not used
       REAL*8 qy
       INTEGER i, iw
       INTEGER ierr,option
-      ierr = 0      
+      ierr = 0
 
 **************** CHCLO photodissociation
 c options
@@ -5216,11 +5216,11 @@ c      ENDDO
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)   
+      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_CHCLO***'
@@ -5249,7 +5249,7 @@ c      SUBROUTINE XS_CH3CL(nw,wl,wc,tlev,airlev,jn,sq)
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
 *=  Provide product of (cross section) x (quantum yield) for CH3CL photolysis=*
-*=         CH3CL + hv -> CL + CH3  
+*=         CH3CL + hv -> CL + CH3
 *=           another branch to H + CH2CL exists in far UV, but no recomended =*
 *=           cross section exists - ignoring for now...                      +*
 *=  Cross section:  298K data from JPL-06 (via max plank)                    =*
@@ -5289,7 +5289,7 @@ c      REAL*8 airlev(nz) ! - EWS - not used
 c      REAL*8 T1,T2,T3 !EWS - not used
       INTEGER i, iw
       INTEGER ierr,option
-      ierr = 0      
+      ierr = 0
 
 **************** CH3CL photodissociation
 
@@ -5314,7 +5314,7 @@ c      ENDDO
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
@@ -5419,7 +5419,7 @@ c      REAL*8 airlev(nz) ! - EWS - not used
 c      REAL*8 T1,T2,T3 !EWS - not used
       INTEGER i, iw
       INTEGER ierr,option
-      ierr = 0      
+      ierr = 0
 
 **************** CCL4 photodissociation
 
@@ -5444,7 +5444,7 @@ c      ENDDO
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
@@ -5501,7 +5501,7 @@ c      stop
 
       photolabel(jn)='PCCL4'
       jn=jn+1
-   
+
       RETURN
       END
 
@@ -5513,7 +5513,7 @@ c      SUBROUTINE XS_COCL2(nw,wl,wc,tlev,airlev,jn,sq)
 *=  Provide product of (cross section) x (quantum yield) for COCL2 photolysis=*
 *=                COCL2 + HV  ->  CL + CL + CO                               =*
 *=   (products assumed from Yuk's earth model/JPL rec yeild between 200-280  =*
-*=  Cross section:  From JPL-06 (temp-dependent at wings but not included    =* 
+*=  Cross section:  From JPL-06 (temp-dependent at wings but not included    =*
 *=  Quantum yield:  1                                                        =*
 *-----------------------------------------------------------------------------*
 *=  PARAMETERS:  see above subroutines                                       =*
@@ -5547,7 +5547,7 @@ c      REAL*8 airlev(nz) ! - EWS - not used
       REAL*8 qy
       INTEGER i, iw
       INTEGER ierr,option
-      ierr = 0      
+      ierr = 0
 
 **************** COCL2 photodissociation
 c options
@@ -5571,11 +5571,11 @@ c      ENDDO
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)   
+      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_COCL2***'
@@ -5606,7 +5606,7 @@ c      SUBROUTINE XS_CL2O2(nw,wl,wc,tlev,airlev,jn,sq)
 *=  Provide product of (cross section) x (quantum yield) for CL2O2 photolysis  =*
 *=                CL2O2 + HV  ->  CL + CLOO                                    =*
 *=                CL2O2 + HV  ->  CLO + CLO                                    =*
-*=  Cross section:  From JPL-06       (CLOOCL                                  =* 
+*=  Cross section:  From JPL-06       (CLOOCL                                  =*
 *=  Quantum yield:  1 for CL < 300 nm  0.9 for CL above                        =*
 *-------------------------------------------------------------------------------*
 *=  PARAMETERS:  see above subroutines                                         =*
@@ -5640,7 +5640,7 @@ c      REAL*8 airlev(nz) ! - EWS - not used
       REAL*8 qy,qy2
       INTEGER i, iw
       INTEGER ierr,option
-      ierr = 0      
+      ierr = 0
 
 **************** CL2O2 photodissociation
 c options
@@ -5664,11 +5664,11 @@ c      ENDDO
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)   
+      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_CL2O2***'
@@ -5676,7 +5676,7 @@ c      ENDDO
       ENDIF
 
 c Quantum yield (1 for CL < 390 nm then 0.9 longward
-cNOTE - the second branch is uncertain - I should try to vary this when tuning 
+cNOTE - the second branch is uncertain - I should try to vary this when tuning
 
 
       qy=1.0
@@ -5691,7 +5691,7 @@ cNOTE - the second branch is uncertain - I should try to vary this when tuning
                sq(jn,i,iw) = yg1(iw)*qy2
                sq(jn+1,i,iw) = yg1(iw)*(1-qy2)
             endif
-  
+
          ENDDO
       ENDDO
       endif  !end option 1
@@ -5712,7 +5712,7 @@ c      SUBROUTINE XS_CH3O2NO2(nw,wl,wc,tlev,airlev,jn,sq)
 *=  PURPOSE:                                                                     =*
 *=  Provide product of (cross section) x (quantum yield) for CH3O2NO2 photolysis =*
 *=                CH3O2NO2 + HV -> CH3O2 + NO2                                   =*
-*=  Cross section:  From IUPAC 2006 recomendation                                =* 
+*=  Cross section:  From IUPAC 2006 recomendation                                =*
 *=  Quantum yield:  assuming 1 without research                                  =*
 *---------------------------------------------------------------------------------*
 *=  PARAMETERS:  see above subroutines                                           =*
@@ -5746,7 +5746,7 @@ c      REAL*8 airlev(nz) ! - EWS - not used
       REAL*8 qy
       INTEGER i, iw
       INTEGER ierr,option
-      ierr = 0      
+      ierr = 0
 
 **************** CH3O2NO2 photodissociation
 c options
@@ -5770,11 +5770,11 @@ c      ENDDO
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)   
+      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_CH3O2NO2***'
@@ -5804,7 +5804,7 @@ c      SUBROUTINE XS_CH3OCL(nw,wl,wc,tlev,airlev,jn,sq)
 *=  PURPOSE:                                                                     =*
 *=  Provide product of (cross section) x (quantum yield) for CH3OCL photolysis   =*
 *=                CH3OCL + HV -> CH3O + CL                                       =*
-*=  Cross section:  From IUPAC 2008 recomendation                                =* 
+*=  Cross section:  From IUPAC 2008 recomendation                                =*
 *=  Quantum yield:  alt. channel to CH2O + HCL < 1% so using 1 for above (JPL-06)=*
 *---------------------------------------------------------------------------------*
 *=  PARAMETERS:  see above subroutines                                           =*
@@ -5838,7 +5838,7 @@ c      REAL*8 airlev(nz) ! - EWS - not used
       REAL*8 qy
       INTEGER i, iw
       INTEGER ierr,option
-      ierr = 0      
+      ierr = 0
 
 **************** CH3OCL photodissociation
 c options
@@ -5862,11 +5862,11 @@ c      ENDDO
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)   
+      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_CH3OCL***'
@@ -5896,7 +5896,7 @@ c      SUBROUTINE XS_CH3OOH(nw,wl,wc,tlev,airlev,jn,sq)
 *=  PURPOSE:                                                                     =*
 *=  Provide product of (cross section) x (quantum yield) for CH3OCL photolysis   =*
 *=                CH3OOH + HV -> CH3O + OH                                       =*
-*=  Cross section:  JPL-06                                                       =* 
+*=  Cross section:  JPL-06                                                       =*
 *=  Quantum yield:  1 (JPL-06)                                                   =*
 *---------------------------------------------------------------------------------*
 *=  PARAMETERS:  see above subroutines                                           =*
@@ -5930,11 +5930,11 @@ c      REAL*8 airlev(nz) ! - EWS - not used
       REAL*8 qy
       INTEGER i, iw
       INTEGER ierr,option
-      ierr = 0      
+      ierr = 0
 
 **************** CH3OOH photodissociation
 c options
-c     1)JPL-06 rec 
+c     1)JPL-06 rec
 
       option=1
 
@@ -5954,18 +5954,18 @@ c      ENDDO
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)   
+      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_CH3OOH***'
          STOP
       ENDIF
 
-c Quantum yield is 1 
+c Quantum yield is 1
       qy=1.0
 
       DO iw = 1, nw
@@ -5988,7 +5988,7 @@ c      SUBROUTINE XS_HO2NO2(nw,wl,wc,tlev,airlev,jn,sq)
 *=  Provide product of (cross section) x (quantum yield) for HO2NO2 photolysis   =*
 *=                HO2NO2 + HV -> HO2 + NO2                                       =*
 *=                HO2NO2 + HV -> OH  + NO3                                       =*
-*=  Cross section:  JPL-06                                                       =* 
+*=  Cross section:  JPL-06                                                       =*
 *=  Quantum yield:  wl dependent (JPL-06)                                        =*
 *---------------------------------------------------------------------------------*
 *=  PARAMETERS:  see above subroutines                                           =*
@@ -6022,11 +6022,11 @@ c      REAL*8 airlev(nz) ! - EWS - not used
       REAL*8 qy
       INTEGER i, iw
       INTEGER ierr,option
-      ierr = 0      
+      ierr = 0
 
 **************** HO2NO2 photodissociation
 c options
-c     1)JPL-06 rec 
+c     1)JPL-06 rec
 
       option=1
 
@@ -6046,11 +6046,11 @@ c      ENDDO
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)   
+      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_HO2NO2***'
@@ -6085,7 +6085,7 @@ c      SUBROUTINE XS_CL2O(nw,wl,wc,tlev,airlev,jn,sq)
 *=  PURPOSE:                                                                     =*
 *=  Provide product of (cross section) x (quantum yield) for CL2O photolysis     =*
 *=                CL2O + HV -> CL + CLO                                          =*
-*=  Cross section:  JPL-06                                                       =* 
+*=  Cross section:  JPL-06                                                       =*
 *=  Quantum yield:  1 (JPL-06) There may be more branches at shorter wavelengths =*
 *=    but no rec. yuk uses just this branch, which is good enough for me.        =*
 *---------------------------------------------------------------------------------*
@@ -6120,11 +6120,11 @@ c      REAL*8 airlev(nz) ! - EWS - not used
       REAL*8 qy
       INTEGER i, iw
       INTEGER ierr,option
-      ierr = 0      
+      ierr = 0
 
 **************** CL2O photodissociation
 c options
-c     1)JPL-06 rec 
+c     1)JPL-06 rec
 
       option=1
 
@@ -6144,18 +6144,18 @@ c      ENDDO
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)   
+      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_Cl20***'
          STOP
       ENDIF
 
-c Quantum yield is 1, ignoring potential other branches at short wavelengths... 
+c Quantum yield is 1, ignoring potential other branches at short wavelengths...
       qy=1.0
 
       DO iw = 1, nw
@@ -6179,7 +6179,7 @@ c      SUBROUTINE XS_N2O5(nw,wl,wc,tlev,airlev,jn,sq)
 *=  Provide product of (cross section) x (quantum yield) for N2O5 photolysis     =*
 *=                N2O5 + HV -> NO3 + NO2                                         =*
 *=                N2O5 + HV -> NO3 + NO + O   (O3P)                              =*
-*=  Cross section:  combination of data and t-dependent parameterization JPL-06  =* 
+*=  Cross section:  combination of data and t-dependent parameterization JPL-06  =*
 *=  Quantum yield:  1 (JPL-06) There may be more branches at shorter wavelengths =*
 *=    but no rec. previous recs had lots of O yeild at short wl, but 06 rec      =*
 *=    calls this into question.  keeping here but zeroing out, as yuk did.       =*
@@ -6216,11 +6216,11 @@ c      REAL*8 airlev(nz) ! - EWS - not used
       REAL*8 lambda
       INTEGER i, iw
       INTEGER ierr,option
-      ierr = 0      
+      ierr = 0
 
 **************** N2O5 photodissociation
 c options
-c     1)JPL-06 rec 
+c     1)JPL-06 rec
 
       option=1
 
@@ -6234,7 +6234,7 @@ c      DO i = 1, 4
 c         READ(kin,*)
 c      ENDDO
       n1 =  34    !after 258 nm, the xs becomes temperature dependent, so am not reading the whole file...
-      DO i = 1, n1 
+      DO i = 1, n1
          READ(kin,*) x1(i), y1(i)
          x1(i)=x1(i)*10.  !convert nm to A
       ENDDO
@@ -6256,25 +6256,25 @@ c open/read in temperature-dependent parameters
          READ(kin,*) x2(i), y2(i),y3(i)
          x2(i)=x2(i)*10.  !convert nm to A
          x3(i)=x2(i)
-      enddo   
+      enddo
 
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)   
+      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_N2O5***'
          STOP
       ENDIF
 
-      CALL addpnt(x2,y2,kdata,n2,x2(1)*(1.-deltax),zero)  
+      CALL addpnt(x2,y2,kdata,n2,x2(1)*(1.-deltax),zero)
       CALL addpnt(x2,y2,kdata,n2,               zero,zero)
       CALL addpnt(x2,y2,kdata,n2,x2(n2)*(1.+deltax),zero)
       CALL addpnt(x2,y2,kdata,n2,            biggest,zero)
-      CALL inter2(nw+1,wl,A,n2,x2,y2,1)   
+      CALL inter2(nw+1,wl,A,n2,x2,y2,1)
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_N2O5***'
@@ -6283,11 +6283,11 @@ c open/read in temperature-dependent parameters
 
 
 
-      CALL addpnt(x3,y3,kdata,n3,x3(1)*(1.-deltax),zero)  
+      CALL addpnt(x3,y3,kdata,n3,x3(1)*(1.-deltax),zero)
       CALL addpnt(x3,y3,kdata,n3,               zero,zero)
       CALL addpnt(x3,y3,kdata,n3,x3(n3)*(1.+deltax),zero)
       CALL addpnt(x3,y3,kdata,n3,            biggest,zero)
-      CALL inter2(nw+1,wl,B,n3,x3,y3,1)   
+      CALL inter2(nw+1,wl,B,n3,x3,y3,1)
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_N2O5***'
@@ -6349,7 +6349,7 @@ c      SUBROUTINE XS_CLO3(nw,wl,wc,tlev,airlev,jn,sq)
 *=  PURPOSE:                                                                     =*
 *=  Provide product of (cross section) x (quantum yield) for CLO3 photolysis     =*
 *=                CLO3 + HV -> CLO + O2                                          =*
-*=  Cross section:  taken by eye from Kopitzky et al 2002                        =* 
+*=  Cross section:  taken by eye from Kopitzky et al 2002                        =*
 *=  Quantum yield:  assuming 1                                                   =*
 *---------------------------------------------------------------------------------*
 *=  PARAMETERS:  see above subroutines                                           =*
@@ -6383,11 +6383,11 @@ c      REAL*8 airlev(nz) ! - EWS - not used
       REAL*8 qy
       INTEGER i, iw
       INTEGER ierr,option
-      ierr = 0      
+      ierr = 0
 
 **************** CLO3 photodissociation
 c options
-c     1)extraction of Kopitzky et al 2002 by Mark Claire 
+c     1)extraction of Kopitzky et al 2002 by Mark Claire
 
       option=1
 
@@ -6408,18 +6408,18 @@ c     1)extraction of Kopitzky et al 2002 by Mark Claire
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)   
+      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_Cl03***'
          STOP
       ENDIF
 
-c assuming Quantum yield is 1, 
+c assuming Quantum yield is 1,
       qy=1.0
 c      print *, yg1
 c      stop
@@ -6442,7 +6442,7 @@ c      stop
 *=  PURPOSE:                                                                     =*
 *=  Provide product of (cross section) x (quantum yield) for CL2O3 photolysis    =*
 *=                CL2O3 + HV -> CLO + CLOO                                       =*
-*=  Cross section:  JPL-06                                                       =* 
+*=  Cross section:  JPL-06                                                       =*
 *=  Quantum yield:  assuming 1                                                   =*
 *---------------------------------------------------------------------------------*
 *=  PARAMETERS:  see above subroutines                                           =*
@@ -6476,7 +6476,7 @@ c      REAL*8 airlev(nz) ! - EWS - not used
       REAL*8 qy
       INTEGER i, iw
       INTEGER ierr,option
-      ierr = 0      
+      ierr = 0
 
 **************** CL2O3 photodissociation
 c options
@@ -6500,18 +6500,18 @@ c      ENDDO
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)   
+      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_Cl203***'
          STOP
       ENDIF
 
-c assuming Quantum yield is 1, 
+c assuming Quantum yield is 1,
       qy=1.0
 
       DO iw = 1, nw
@@ -6532,7 +6532,7 @@ c assuming Quantum yield is 1,
 *=  PURPOSE:                                                                     =*
 *=  Provide product of (cross section) x (quantum yield) for CL2O4 photolysis    =*
 *=                CL2O4 + HV -> CLOO + OCLO                                      =*
-*=  Cross section:  JPL-06                                                       =* 
+*=  Cross section:  JPL-06                                                       =*
 *=  Quantum yield:  assuming 1                                                   =*
 *---------------------------------------------------------------------------------*
 *=  PARAMETERS:  see above subroutines                                           =*
@@ -6566,7 +6566,7 @@ c      REAL*8 airlev(nz) ! - EWS - not used
       REAL*8 qy
       INTEGER i, iw
       INTEGER ierr,option
-      ierr = 0      
+      ierr = 0
 
 **************** CL2O4 photodissociation
 c options
@@ -6590,18 +6590,18 @@ c      ENDDO
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)   
+      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_Cl204***'
          STOP
       ENDIF
 
-c assuming Quantum yield is 1, 
+c assuming Quantum yield is 1,
       qy=1.0
 
       DO iw = 1, nw
@@ -6657,7 +6657,7 @@ c      REAL*8 airlev(nz) ! - EWS - not used
 c      REAL*8 qy  !EWS - not used
       INTEGER i, iw
       INTEGER ierr,option
-      ierr = 0      
+      ierr = 0
 
 **************** CS2 photodissociation
 c options
@@ -6697,7 +6697,7 @@ c     1)from MPI database
 
 
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
@@ -6711,7 +6711,7 @@ c     1)from MPI database
          STOP
       ENDIF
 
-      CALL addpnt(x2,y2,kdata,n2,x2(1)*(1.-deltax),zero)  
+      CALL addpnt(x2,y2,kdata,n2,x2(1)*(1.-deltax),zero)
       CALL addpnt(x2,y2,kdata,n2,               zero,zero)
       CALL addpnt(x2,y2,kdata,n2,x2(n2)*(1.+deltax),zero)
       CALL addpnt(x2,y2,kdata,n2,            biggest,zero)
@@ -6726,7 +6726,7 @@ c     1)from MPI database
       DO iw = 1, nw
          DO i = 1, nz
               sq(jn,i,iw) = yg1(iw)   !CS2 -> CS + S
-              sq(jn+1,i,iw) = yg2(iw)     !CS2 -> CS2X 
+              sq(jn+1,i,iw) = yg2(iw)     !CS2 -> CS2X
          ENDDO
       ENDDO
 
@@ -6815,7 +6815,7 @@ c     1)MPI data
          STOP
       ENDIF
 
-c Quantum yield (fix this) - sddg 
+c Quantum yield (fix this) - sddg
 
       qy  = 0.93
       qy2 = 0.07
@@ -6895,7 +6895,7 @@ c options
 c     1)MPI data file
 
       option=1
-      write(XsecFile,'(a,a,a,a,a)') 
+      write(XsecFile,'(a,a,a,a,a)')
      &  'PHOTOCHEM/DATA/XSECTIONS/',
      &  trim(species),'/',trim(species),'_mpi.abs'
 
@@ -6914,7 +6914,7 @@ c Count lines in input file, allocate size of x1 and y1 accordingly
       ALLOCATE (x1(kdata)) ! set length of x1
       ALLOCATE (y1(kdata)) ! set length of y1
       CLOSE(kin)
-   
+
 
       OPEN(UNIT=kin,file=XsecFile,Status='old')
       DO i = 1,3
@@ -6927,9 +6927,9 @@ c Count lines in input file, allocate size of x1 and y1 accordingly
       ENDDO
  11   CLOSE(kin)
 
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)   
-      CALL addpnt(x1,y1,kdata,n1,               zero,zero) 
-      CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
+      CALL addpnt(x1,y1,kdata,n1,               zero,zero)
+      CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
 
       CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   !inter2 is used for discrete points -> bins
@@ -6939,13 +6939,13 @@ c Count lines in input file, allocate size of x1 and y1 accordingly
          WRITE(*,*) ierr, ' ***Something wrong in XS_simple*** '
          STOP
       ENDIF
-      
+
 c      if (species.eq.'CH2CO') then
 c         do i=1,nw
 c         print *, wl(i),yg1(i)
 c         enddo
 c         stop
-c      endif   
+c      endif
 
 c Quantum yield (this could be read in from the reactions.rx file, eventually)
 c but for now, xs_simple is restricted to molecules with one channel.
@@ -6976,7 +6976,7 @@ c but for now, xs_simple is restricted to molecules with one channel.
 *=                CHOCHO + HV -> HCO + HCO                                       =*
 *=                CHOCHO + HV -> H2  + CO  + CO                                  =*
 *=                CHOCHO + HV -> H2CO + CO                                       =*
-*=  Cross section:  JPL-06+ IUPAC-05 hybrid                                      =* 
+*=  Cross section:  JPL-06+ IUPAC-05 hybrid                                      =*
 *=    NOT GUARANTEED TO WORK. NOT THE BEST TEMPLATE FOR A NEW XS                 =*
 *=  Quantum yield:  wl dependent table (JPL-06)                                  =*
 *---------------------------------------------------------------------------------*
@@ -7011,11 +7011,11 @@ c      REAL*8 airlev(nz) ! - EWS - not used
       REAL*8 qy
       INTEGER i, iw
       INTEGER ierr,option
-      ierr = 0      
+      ierr = 0
 
 **************** CHOCHO photodissociation
 c options
-c     1)JPL-06 rec 
+c     1)JPL-06 rec
 
       option=1
 
@@ -7033,11 +7033,11 @@ c      ENDDO
          x1(i)=x1(i)*10.  !convert nm to A
       ENDDO
       CLOSE (kin)
-      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)  
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)   
+      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0)
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_CHOCHO***'
@@ -7045,7 +7045,7 @@ c      ENDDO
       ENDIF
 
 
-       
+
 c Quantum yield depends on wavelength and is read in from a table in JPL-06
       OPEN(UNIT=kin,
      &  file='PHOTOCHEM/DATA/XSECTIONS/CHOCHO/CHOCHO.qy',
@@ -7067,22 +7067,22 @@ c Quantum yield depends on wavelength and is read in from a table in JPL-06
       ENDDO
       CLOSE (kin)
 
-      CALL addpnt(x2,y2,kdata2,n2,x2(1)*(1.-deltax),zero)  
+      CALL addpnt(x2,y2,kdata2,n2,x2(1)*(1.-deltax),zero)
       CALL addpnt(x2,y2,kdata2,n2,               zero,zero)
       CALL addpnt(x2,y2,kdata2,n2,x2(n2)*(1.+deltax),zero)
       CALL addpnt(x2,y2,kdata2,n2,            biggest,zero)
-      CALL inter2(nw+1,wl,yg2,n2,x2,y2,0)   
+      CALL inter2(nw+1,wl,yg2,n2,x2,y2,0)
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_CHOCHO***'
          STOP
       ENDIF
 
-      CALL addpnt(x3,y3,kdata2,n3,x3(1)*(1.-deltax),zero)  
+      CALL addpnt(x3,y3,kdata2,n3,x3(1)*(1.-deltax),zero)
       CALL addpnt(x3,y3,kdata2,n3,               zero,zero)
       CALL addpnt(x3,y3,kdata2,n3,x3(n3)*(1.+deltax),zero)
       CALL addpnt(x3,y3,kdata2,n3,            biggest,zero)
-      CALL inter2(nw+1,wl,yg3,n3,x3,y3,0)   
+      CALL inter2(nw+1,wl,yg3,n3,x3,y3,0)
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_CHOCHO***'
@@ -7090,22 +7090,22 @@ c Quantum yield depends on wavelength and is read in from a table in JPL-06
       ENDIF
 
 
-      CALL addpnt(x4,y4,kdata2,n4,x4(1)*(1.-deltax),zero)  
+      CALL addpnt(x4,y4,kdata2,n4,x4(1)*(1.-deltax),zero)
       CALL addpnt(x4,y4,kdata2,n4,               zero,zero)
       CALL addpnt(x4,y4,kdata2,n4,x4(n4)*(1.+deltax),zero)
       CALL addpnt(x4,y4,kdata2,n4,            biggest,zero)
-      CALL inter2(nw+1,wl,yg4,n4,x4,y4,0)   
+      CALL inter2(nw+1,wl,yg4,n4,x4,y4,0)
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_CHOCHO***'
          STOP
       ENDIF
 
-      CALL addpnt(x5,y5,kdata2,n5,x5(1)*(1.-deltax),zero)  
+      CALL addpnt(x5,y5,kdata2,n5,x5(1)*(1.-deltax),zero)
       CALL addpnt(x5,y5,kdata2,n5,               zero,zero)
       CALL addpnt(x5,y5,kdata2,n5,x5(n5)*(1.+deltax),zero)
       CALL addpnt(x5,y5,kdata2,n5,            biggest,zero)
-      CALL inter2(nw+1,wl,yg5,n5,x5,y5,0)   
+      CALL inter2(nw+1,wl,yg5,n5,x5,y5,0)
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_CHOCHO***'
@@ -7135,7 +7135,7 @@ c this is not finished, only used for interpolative purposes...
          ENDDO
       ENDDO
       endif  !end option 1
-      
+
       photolabel(jn)='PCHOCHO_1'
       jn=jn+1
 
@@ -7226,7 +7226,7 @@ c     1)MPI cross sections, Jim's branching ratios
 
 c      do i=1,nw
 c       print *, wl(i),yg1(i)
-c      enddo   
+c      enddo
 c      stop
 
 c Quantum yields
@@ -7234,10 +7234,10 @@ c Quantum yields
        if (wl(iw).ge.1216 .and. wl(iw).le.1754) then  !for C2H2 in Shawns "shortwave" loop,which has some absorbtion in lya where ours doesn't
           qy=0.3
           qy2=0.1
-       else  !for 1754-2532 
-        qy=0.06 
+       else  !for 1754-2532
+        qy=0.06
         qy2=0.10
-       endif 
+       endif
          DO i = 1, nz
               sq(jn,i,iw) = yg1(iw)*qy
               sq(jn+1,i,iw) = yg1(iw)*qy2
@@ -7255,12 +7255,12 @@ c Quantum yields
       if (Jdum.eq.0) then
          photolabel(jn)='PC2H2_H2'
          jn=jn+1
-      endif   
+      endif
 
 
       RETURN
       END
-     
+
 
        SUBROUTINE XS_CH3CHO(nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
@@ -7432,7 +7432,7 @@ c     1)MPI data
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_C3H6***'
@@ -7543,13 +7543,13 @@ c     1)MPI data
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_CH3C2H***'
          STOP
       ENDIF
-      
+
 
 c Quantum yield (fix this)
 
@@ -7649,7 +7649,7 @@ c     1)MPI data
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)
 
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_CH2CCH2***'
@@ -7684,7 +7684,7 @@ c Quantum yield (fix this)
 
       RETURN
       END
- 
+
 
        SUBROUTINE XS_C2H4(nw,wl,jn,sq,Jdum)
 *-----------------------------------------------------------------------------*
@@ -7752,7 +7752,7 @@ c     1)Kasting data
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)
 
 
       IF (ierr .NE. 0) THEN
@@ -7764,7 +7764,7 @@ c Quantum yield (fix this)
 
       qy  = 0.49
       qy2 = 0.51
-      
+
       if (Jdum.eq.3) qy=1.0
 
       DO iw = 1, nw
@@ -7859,7 +7859,7 @@ c     1)MPI data
       CALL addpnt(x1,y1,kdata,n1,               zero,zero)
       CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
       CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)   
+      CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)
 !ok since bin to bin
       IF (ierr .NE. 0) THEN
          WRITE(*,*) ierr, ' ***Something wrong in XS_C3H8***'
@@ -7871,16 +7871,16 @@ c Quantum yields done in wl loop. diff at ly a then everywhere else
       DO iw = 1, nw
 
        if (wl(iw).eq.1216) then  !for C3H8 at Ly a
-        qy1 = 0.33 
+        qy1 = 0.33
         qy2 = 0.08
         qy3 = 0.39
         qy4 = 0.20
        else  !c3h8 quantum yields everywhere but Ly a
-        qy1 = 0.94 
+        qy1 = 0.94
         qy2 = 0.0
         qy3 = 0.0
         qy4 = 0.06
-       endif   
+       endif
 
          DO i = 1, nz
               sq(jn,i,iw) = yg1(iw)*qy
