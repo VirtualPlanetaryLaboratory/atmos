@@ -22,7 +22,7 @@ c  I am wanting to adjust rainout downwards for another planet
 c  or for lower temperatures generally
 c  Giorgi and Chameides use WH2O for the current rainout rate.
 c   they quote 3.3e-6 g/cm2/s  as the global average when WH2O is
-c  integrated over altitude 
+c  integrated over altitude
 c
 C      THIS SUBROUTINE CALCULATES RAINOUT RATES USING GIORGI AND
 C   CHAMEIDES (1985) MODEL.  FIRST, IT CALCULATES THE NORMAL HENRY'S
@@ -72,7 +72,7 @@ C   FIRST DEFINE RELEVANT CONSTANTS\
       WL = 1.0
       R = 1.36E-22
       NH = JTROP  !height index of troposphere is called NH in this subroutine...
-    
+
       NH1 = NH + 1
 
 
@@ -82,17 +82,17 @@ C   MODIFY TEMPERATURE PROFILE TO DO AQUEOUS CHEMISTRY
       DO 7 I=1,NH
    7  TAQ(I) = max(T(I),T_triple)
 
- 
+
 C
 C   CALCULATE NORMAL HENRY'S LAW COEFFICIENTS (PHYSICAL DISSOLUTION ONLY)
-c   lets play guess the units.  looks like mol/liter/atm 
+c   lets play guess the units.  looks like mol/liter/atm
       IF (NRAIN.GT.0) GO TO 4
 
       do I=1,NH
        tfac=(1./TAQ(I) - 1./298.)
        HCO2(I) = 3.5E-2 * EXP(2400.*tfac) ! updated
-      
-       
+
+
       do J=1,NQ
        if(ISPEC(J).EQ.'O')   H(J,I) = 0.
        if(ISPEC(J).EQ.'H2O') H(J,I) = 0.
@@ -105,7 +105,7 @@ c   lets play guess the units.  looks like mol/liter/atm
        if(ISPEC(J).EQ.'S8')       H(J,I) = 0.
       !infinite (CHECK THIS against PAVLOV/KEVIN)
        if(ISPEC(J).EQ.'S8AER') H(J,I) = 7.E11
-       if(ISPEC(J).EQ.'HNO') H(J,I) = 7.E11
+       if(ISPEC(J).EQ.'HNO') H(J,I) = 0 !STB following APL
        ! I think jim made the below up
        if(ISPEC(J).EQ.'HS')        H(J,I) = 1.E5
        ! I think jim made the below up
@@ -115,59 +115,78 @@ c   lets play guess the units.  looks like mol/liter/atm
        if(ISPEC(J).EQ.'H2SO4')  H(J,I) = 7.E11
        ! I think jim made the below up
        if(ISPEC(J).EQ.'HSO')      H(J,I) = 9.E3
-       !infinite for particle species 
+       !infinite for particle species
        if(ISPEC(J).EQ.'SO4AER')H(J,I) = 7.E11
-       if(ISPEC(J).EQ.'HCAER') H(J,I) = 7.E11   !infinite for particle species 
-       if(ISPEC(J).EQ.'HCAER2') H(J,I) = 7.E11   !infinite for particle species 
+       if(ISPEC(J).EQ.'HCAER') H(J,I) = 7.E11   !infinite for particle species
+       if(ISPEC(J).EQ.'HCAER2') H(J,I) = 7.E11   !infinite for particle species
        if(ISPEC(J).EQ.'O2') H(J,I) = 1.3E-3* EXP(1500.*tfac) ! updated
        if(ISPEC(J).EQ.'OH') H(J,I) = 30. * EXP(4500.*tfac)  ! updated
        if(ISPEC(J).EQ.'HO2') H(J,I) = 4.E3 * EXP(5900.*tfac)  ! updated
        if(ISPEC(J).EQ.'H2O2') H(J,I) = 8.3E4 * EXP(7400.*tfac) ! updated
        if(ISPEC(J).EQ.'H2') H(J,I) = 7.8E-4 * EXP(500.*tfac)  ! updated
        if(ISPEC(J).EQ.'CO') H(J,I) = 1.0E-3 * EXP(1300.*tfac)  ! updated
-       if(ISPEC(J).EQ.'H2CO') H(J,I) = 3.2E3 * EXP(6800.*tfac)  ! updated 
+       if(ISPEC(J).EQ.'CO2') H(J,I) = 3.5E-02 * EXP(2400.*tfac) ! added ! APL
+       if(ISPEC(J).EQ.'H2CO') H(J,I) = 3.2E3 * EXP(6800.*tfac)  ! updated
        if(ISPEC(J).EQ.'CH4') H(J,I) = 1.4E-3 * EXP(1600.*tfac)  ! updated
        if(ISPEC(J).EQ.'C2H6') H(J,I) = 1.9E-3 * EXP(2300.*tfac)  ! updated
        if(ISPEC(J).EQ.'NO') H(J,I) = 1.9E-3 * EXP(1500.*tfac)  ! updated
        if(ISPEC(J).EQ.'NO2') H(J,I) = 1.2E-2 * EXP(2500.*tfac)  ! updated
+       if(ISPEC(J).EQ.'NO3') H(J,I) = 3.8e-2 ! added from JPL-15
+       if(ISPEC(J).EQ.'N2O') H(J,I) = 2.5E-2 * EXP(2600.*tfac) ! added APL
+       if(ISPEC(J).EQ.'N2O5') H(J,I) = 2.5e-2 * EXP(2600.*tfac)  ! added, updated ! APL
        if(ISPEC(J).EQ.'HNO2') H(J,I) = 50. * EXP(4900.*tfac)  ! added, updated
        if(ISPEC(J).EQ.'HNO3') H(J,I) = 2.1e5 * EXP(8700.*tfac)  ! added, updated
        if(ISPEC(J).EQ.'HO2NO2') H(J,I) = 1.2e4* EXP(6900.*tfac)  ! added, updated
-       if(ISPEC(J).EQ.'H2S') H(J,I) = 
+       if(ISPEC(J).EQ.'H2S') H(J,I) =
      $   0.1 * EXP(2000.*tfac) ! updated
-       if(ISPEC(J).EQ.'SO2') H(J,I) = 
+       if(ISPEC(J).EQ.'SO2') H(J,I) =
      $   1.4 * EXP(2900.*tfac)  ! updated
-       if(ISPEC(J).EQ.'OCS') H(J,I) = 
+       if(ISPEC(J).EQ.'OCS') H(J,I) =
      $   0.022 * EXP(2100.*tfac)  ! updated
        if(ISPEC(J).EQ.'CH3SH') H(J,I) =
-     $    0.2 * EXP(2800.*tfac)  
-       if(ISPEC(J).EQ.'C2H6S') H(J,I) = 
-     $    0.48 * EXP(3100.*tfac)  
-       if(ISPEC(J).EQ.'C2H6S2') H(J,I) = 
-     $    0.96 * EXP(4000.*tfac)  
-       if(ISPEC(J).EQ.'CS2') H(J,I) = 
-     $    0.055 * EXP(2800.*tfac)  
+     $    0.2 * EXP(2800.*tfac)
+       if(ISPEC(J).EQ.'C2H6S') H(J,I) =
+     $    0.48 * EXP(3100.*tfac)
+       if(ISPEC(J).EQ.'C2H6S2') H(J,I) =
+     $    0.96 * EXP(4000.*tfac)
+       if(ISPEC(J).EQ.'C2H6SO') H(J,I) = 1400.
+       if(ISPEC(J).EQ.'CS2') H(J,I) =
+     $    0.055 * EXP(2800.*tfac)
 c no info found for CS, CH3S, HCS. CO solubility is small, as is HCO, so 0's are probably OK. no info on CH3O either.
 
 !none of the carbon species have any rainout terms in Shawn's model - how valid is this?
-       if(ISPEC(J).EQ.'CH')   H(J,I) = 0.     
-       if(ISPEC(J).EQ.'C2H2')   H(J,I) = 0.   
+       if(ISPEC(J).EQ.'CH')   H(J,I) = 0.
+       if(ISPEC(J).EQ.'C2H2')   H(J,I) = 0.
 
-       if(ISPEC(J).EQ.'CH3O2')   H(J,I) = 0.  
-       if(ISPEC(J).EQ.'CH3O')   H(J,I) = 0.   
-       if(ISPEC(J).EQ.'CH2CO')   H(J,I) = 0.  
-       if(ISPEC(J).EQ.'CH3CO')   H(J,I) = 0.  
-       if(ISPEC(J).EQ.'CH3CHO')   H(J,I) = 0. 
-       if(ISPEC(J).EQ.'C2H3')   H(J,I) = 0.   
-       if(ISPEC(J).EQ.'C2H4')   H(J,I) = 0.   
-       if(ISPEC(J).EQ.'C2H2OH')   H(J,I) = 0. 
-       if(ISPEC(J).EQ.'C2H4OH')   H(J,I) = 0. 
-       if(ISPEC(J).EQ.'C3H8')   H(J,I) = 0.   
-       if(ISPEC(J).EQ.'C3H7')   H(J,I) = 0.   
-       if(ISPEC(J).EQ.'C3H6')   H(J,I) = 0.   
+       if(ISPEC(J).EQ.'CH3O2')   H(J,I) = 0.
+       if(ISPEC(J).EQ.'CH3O')   H(J,I) = 0.
+       if(ISPEC(J).EQ.'CH2CO')   H(J,I) = 0.
+       if(ISPEC(J).EQ.'CH3CO')   H(J,I) = 0.
+       if(ISPEC(J).EQ.'CH3CHO')   H(J,I) = 0.
+       if(ISPEC(J).EQ.'C2H3')   H(J,I) = 0.
+       if(ISPEC(J).EQ.'C2H4')   H(J,I) = 0.
+       if(ISPEC(J).EQ.'C2H2OH')   H(J,I) = 0.
+       if(ISPEC(J).EQ.'C2H4OH')   H(J,I) = 0.
+       if(ISPEC(J).EQ.'C3H8')   H(J,I) = 0.
+       if(ISPEC(J).EQ.'C3H7')   H(J,I) = 0.
+       if(ISPEC(J).EQ.'C3H6')   H(J,I) = 0.
        if(ISPEC(J).EQ.'C2H5HCO')   H(J,I) = 0.
-       if(ISPEC(J).EQ.'C3H5')   H(J,I) = 0.   
+       if(ISPEC(J).EQ.'C3H5')   H(J,I) = 0.
        if(ISPEC(J).EQ.'CH2CCH2')   H(J,I) = 0.
+
+       if(ISPEC(J).EQ.'CH3OOH')   H(J,I) = 300. * exp(5300.*tfac)
+
+       if(ISPEC(J).EQ.'CH4O') H(J,I) = 220. * exp(4900.*tfac) ! Seinfeld & Pandis 2006
+       if(ISPEC(J).EQ.'CH4O2') H(J,I) = 310. * exp(5600.*tfac) ! Seinfeld & Pandis 2006
+
+c     APL reduced nitrogen
+
+       if(ISPEC(J).EQ.'NH3') H(J,I) = 61. * EXP(4200.*tfac) ! added, updated
+
+c     APL others for posterity
+
+       if(ISPEC(J).EQ.'HCL') H(J,I) = 1.1 * exp(2000. * tfac) ! Seinfeld & Pandis 2006
+       if(ISPEC(J).EQ.'CH3NO3') H(J,I) = 2.0 ! Seinfeld & Pandis 2006
 
 
 c-mc should go through the henry table and look for chlorine as well as hazy species
@@ -193,7 +212,7 @@ C   8)  CH2(OH)2  +  HSO3-  =  H2O  +  CH2OHSO3-
 C   9)   H2O     =  H+  +  OH-
       R9(I) = 1.E-14 * EXP(-6716.*(1./TAQ(I) - 1./298.))
    3  CONTINUE
-      
+
 C
       DO 21 J=1,NQ
       DO 21 I=1,NZ
@@ -203,14 +222,14 @@ C
 C   NOW ESTIMATE INITIAL CONCENTRATIONS AT GRID STEP 1 ON THE
 C     FIRST CALL
 
-        ALPHARAIN = WL * 1.E-9 * 6.02E23/DEN(1)  
-        CO2aq = FCO2*DEN(1)*HCO2(1)*R*TAQ(1)      
+        ALPHARAIN = WL * 1.E-9 * 6.02E23/DEN(1)
+        CO2aq = FCO2*DEN(1)*HCO2(1)*R*TAQ(1)
         HPLUS = SQRT(R4(1)*CO2aq)
         X(LHCO3_) = R4(1)*CO2aq/HPLUS      !5
         X(LCO3_2) = R6(1)*X(LHCO3_)/HPLUS  !6
         X(LOH_) = R9(1)/HPLUS              !10
 C      print *, 'rain 4'
-        
+
         SO2g = USOL(LSO2,1)
         SO2aq = H(LSO2,1)*SO2g
 
@@ -240,22 +259,22 @@ C
 C ***** LOOP OVER ALTITUDE *****
       DO 10 I=1,NH            !this is a big loop (NH is the tropopause height index JTROP elsewhere)
 
-      IF (NRAIN .NE. 0) THEN 
+      IF (NRAIN .NE. 0) THEN
         DO 9 K=1,NAQ
  9      X(K) = XSAVE(K,I)
-      ENDIF 
+      ENDIF
 
       ALPHARAIN = WL * 1.E-9 * 6.02E23/DEN(I)
 
        if(USETD.EQ.1) then
-        SO4_2 = (USOL(LH2SO4,I) + PARTICLES(I,LSO4AER-NQ))/ALPHARAIN  
+        SO4_2 = (USOL(LH2SO4,I) + PARTICLES(I,LSO4AER-NQ))/ALPHARAIN
        else
-        SO4_2 = (USOL(LH2SO4,I) + USOL(LSO4AER,I))/ALPHARAIN  
-       endif   
+        SO4_2 = (USOL(LH2SO4,I) + USOL(LSO4AER,I))/ALPHARAIN
+       endif
 
       SO4SAV(I) = SO4_2
       CO2aq = FCO2*DEN(I)*HCO2(I)*R*TAQ(I)
-      
+
       SO2g0 = USOL(LSO2,I)
       H2COg0 = USOL(LH2CO,I)
       HSO2 = H(LSO2,I)
@@ -279,15 +298,15 @@ C
       DO 14 K=1,NAQ
   14  DJAC(K,J) = (FP(K) - F(K))/DX
   13  X(J) = XS
-C     
+C
 
       CALL SGEFA(DJAC,NAQ,NAQ,IPVT,INFO)
-      IF (INFO .NE. 0) THEN 
+      IF (INFO .NE. 0) THEN
         PRINT 100, INFO,I,NRAIN
  100  FORMAT(//1X,'NEWTON SOLVER FAILED IN AQUEOUS'/,5X,'INFO =',I3,
      2  '  GRID STEP =',I3,2X,'NRAIN =',I3)
         STOP
-      ELSE 
+      ELSE
         CALL SGESL(DJAC,NAQ,NAQ,IPVT,F,0)
       ENDIF
 C
@@ -298,7 +317,7 @@ C
       TEST = ABS(F(J)/X(J))
       IF (TEST.GT.1.E-2) LTEST = 1
   22  CONTINUE
-      IF (LTEST.EQ.0) GO TO 15    ! loop has converged; jump out of loop 
+      IF (LTEST.EQ.0) GO TO 15    ! loop has converged; jump out of loop
   12  CONTINUE
 C
       PRINT 200,I,NRAIN
@@ -342,7 +361,7 @@ C
 c what follows is incomprehensible to me
 c  they state that the vertical integral of WH2O is the rainout rate
 c   hence I should scale rainout by scaling WH2O
-c  
+c
 C   NOW BEGIN GIORGI AND CHAMEIDES FORMULATION FOR RAINOUT RATES
       ZKM = Z(I)/1.E5   !convert vertical grid into kilometers
 
@@ -367,16 +386,16 @@ C  Find WH2O
         Y = 11.5444 - 0.085333*ZKM - 9.1111E-03*ZKM*ZKM
       ENDIF
       WH2O = 10.**Y
- 
-      if (PLANET .EQ. 'EARTH') then 
+
+      if (PLANET .EQ. 'EARTH') then
        wh2o = 1.0 * wh2o  ! nominal earthly rain
 c       wh2o=1e-9*wh2o  !ATACAMA
       else if (PLANET .EQ. 'MARS') then
-       wh2o = 1e-9*wh2o   !turn off the rain  
+       wh2o = 1e-9*wh2o   !turn off the rain
       else if (PLANET .EQ. 'DRY') then
        wh2o = 1e-9*wh2o   !turn off rain for dry planet - EWS 9/14/2015
-      endif   
- 
+      endif
+
 C  Find F(Z)
       IF (ZKM.LE.1.51) THEN
         FZ = 0.1
@@ -402,13 +421,13 @@ c-mc set rainout rates to zero above the tropopause (nh=jtrop)
 C
 C ***** OLD (FISHMAN AND CRUTZEN) RAINOUT RATE *****
 C   (USED FOR SCALING THE VERTICAL DISTRIBUTION OF LIGHTNING)
-c   what is the 2.4e-6 constant? 
+c   what is the 2.4e-6 constant?
       DO 2 I=1,NH
         ZKM = Z(I)/1.E5
         RAIN(I) = 2.4E-6*EXP((6.-ZKM)/2.42)
         IF(ZKM.LT.6.) RAIN(I) = 2.4E-6
    2  CONTINUE
- 
+
       DO 6 I=NH1,NZ
    6  RAIN(I) = 0.
 
