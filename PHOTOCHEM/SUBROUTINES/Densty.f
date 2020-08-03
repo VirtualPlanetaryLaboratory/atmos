@@ -3,8 +3,12 @@
       implicit real*8(A-H,O-Z)
       real*8  mass
       character*8 PLANET
+      dimension sumUSOL(NZ),sumLL(NZ), ROVERM(NZ),HA(NZ)
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PHOTABLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/comPRESS1.inc'
+      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/BBLOK.inc'
+      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/DBLOK.inc'
+      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/NBLOK.inc'
 
 C
 C   THIS SUBROUTINE CALCULATES ATMOSPHERIC NUMBER DENSITIES, ASSUM-
@@ -29,10 +33,15 @@ c-mab: For error checking
          stop
         endif
 
-
-        WT = FO2*32. + FCO2*44. + (1.-FT)*28. + FAR*40.   !assuming O2,CO2,N2 and Ar are the main players and pN2=1-pO2+pCO2+pAr
-
-        print*, "Calculated WT for O2-N2 dominated atmosphere..."
+        Do I=1,NZ
+        DO J=1,(NQ-NP)
+        sumLL(I)= sumLL(I)+USOL(J,I)*mass(J)
+        sumUSOL(I)=sumUSOL(I)+USOL(J,I)
+        ENDDO
+        WTa(I) = sumLL(I) + (1.-sumUSOL(I)-FAR)*28.+ FAR*40.
+c        print*,WTa(I),I,sumUSOL(I)
+        Enddo
+        print*, "Calculated WTa for O2-N2 dominated atmosphere..."
 C this is bad because CO and O can be important up high.
 C (but maybe this doesn't really matter)
       ELSE
@@ -59,16 +68,22 @@ C-mab: Uncomment below for debugging
 C        print*,"FH2,FHE,FCO2,FCO,FH2O,FH,FOH,FCH4",
 C     .             FH2,FHE,FCO2,FCO,FH2O,FH,FOH,FCH4
 
-        WT = FH2*2.0 + FHE*4 +  FCO*28.0 + FH2O*18.0 + FH + FCH4*16.0
+       Do I=1,NZ
+
+        WTa(I) = FH2*2.0 + FHE*4 +  FCO*28.0 + FH2O*18.0 + FH + FCH4*16.0
      .             + FCO2*44.0
 c=mab: Review above expression prior to release
-
+      Enddo
         print*, "Calculated WT for He/H2 dominated atmosphere..."
+
+
+    	print*,"Molecular weight of atmosphere = ",WTa(1)
       ENDIF
+      WT=WTa(1) !insurance policy for when WT is used in a part of the code I'm unaware of
 
-      	print*,"Molecular weight of atmosphere = ",WT
-
-      ROVERM = RGAS/WT
+       Do I=1,NZ
+       ROVERM(I) = RGAS/WTa(I)
+       Enddo
 
 !      PG = 1.013E6    !primary specification of pressure in the model
 !      P0 = PG  (P0 now specified in PLANET.dat)
@@ -77,18 +92,19 @@ C     P0 = PG GIVES YOU A ONE BAR ATMOSPHERE
 c-mc      DZ = Z(2) - Z(1)   !ACK
 
       T0 = T(1) + (T(1)-T(2))/2.
-      HA = ROVERM*0.5*(T0 + T(1))/G0
-      P1 = P0 *1e6 * EXP(-0.5*DZ(1)/HA)
+      HA(1) = ROVERM(1)*0.5*(T0 + T(1))/G0
+      P1 = P0 *1e6 * EXP(-0.5*DZ(1)/HA(1))
       DEN(1) = P1/(BK*T(1))
+      GZ(1)=G0
 C
 C ***** FIND DENSITY FROM HYDROSTATIC EQUILIBRIUM *****
       DO 1 I=2,NZ
 c-mc      DZ = Z(I) - Z(I-1)
       R = R0 + Z(I)
-      GZ = G0 * (R0/R)*(R0/R)
+      GZ(I) = G0 * (R0/R)*(R0/R)
       TAV = 0.5*(T(I) + T(I-1))
-      HA = ROVERM*TAV/GZ
-   1  DEN(I) = DEN(I-1)*EXP(-DZ(I)/HA)*T(I-1)/T(I)
+      HA(I) = ROVERM(I)*TAV/GZ(I)
+   1  DEN(I) = DEN(I-1)*EXP(-DZ(I)/HA(I))*T(I-1)/T(I)
 C
 
 
