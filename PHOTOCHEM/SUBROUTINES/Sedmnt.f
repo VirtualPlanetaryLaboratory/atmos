@@ -290,7 +290,7 @@ cccccccccc
 C-EW  HYDROCARBONS: USE FRACTAL MICROPHYSICS
        R = RPAR(J,K)
        RF = RFRAC(J,K)
-       F1 = 2./9. * RHOP(J)*R*R*R*G/ETA(J)/RF !from stokes law F1 - settling velocity
+       F1 = 2./9. * RHOP(J)*R*R*R*GZ(J)/ETA(J)/RF !from stokes law F1 - settling velocity
        !giada -  it's computing terminal velocity  when frictional and buoyant forces
        !are equal to gravitational force
        ALPH = A + B*EXP(-C*RF/ALAM(J)) ! I think this is related to particle resistance to motion
@@ -304,7 +304,7 @@ C-EW  S8, SO4,HC if frak=0: USE SPHERICAL MICROPHYSICS
        R = RPAR(J,K)
 C-AP      ETA = 1.77E-4 * SQRT(T(J)/288.)
 C-AP  From Prupacher & Klett
-       F1 = 2./9. * RHOP(J)*R*R*G/ETA(J)
+       F1 = 2./9. * RHOP(J)*R*R*GZ(J)/ETA(J)
        ALPH = A + B*EXP(-C*R/ALAM(J))
        WFALL(J,K) = F1*(1. + ALAM(J)*ALPH/R)
        IF (K.eq.3) THEN
