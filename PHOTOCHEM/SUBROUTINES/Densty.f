@@ -3,7 +3,7 @@
       implicit real*8(A-H,O-Z)
       real*8  mass
       character*8 PLANET
-      dimension sumUSOL(NZ),sumLL(NZ), ROVERM(NZ),HA(NZ)
+      dimension sumLL(NZ), ROVERM(NZ),HA(NZ)
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PHOTABLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/comPRESS1.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/BBLOK.inc'
@@ -33,18 +33,20 @@ c-mab: For error checking
          stop
         endif
 
-        Do I=1,NZ
+        Do I=1,NZ  !STB
+        sumLL(I)=0 !sum over molecular weights of LL species weighted by their mixing ratio
+        sumUSOL(I)=0 !sum over mixing ratios for the LL species
         DO J=1,(NQ-NP)
         sumLL(I)= sumLL(I)+USOL(J,I)*mass(J)
         sumUSOL(I)=sumUSOL(I)+USOL(J,I)
         ENDDO
         If (LCO2.le.NQ) then !to ensure that CO2 is counted, e.g. for Mars
         WTa(I) = sumLL(I) + (1.-sumUSOL(I)-FAR)*28.+ FAR*40.
+        print*, WTa(I), 'This is WTa(i)'
         else
         WTa(I) = sumLL(I) + (1.-sumUSOL(I)-FAR-FCO2)*28.
      &         + FCO2*44 + FAR*40.
         ENDIF
-c        print*,WTa(I),I,sumUSOL(I)
         Enddo
         print*, "Calculated WTa for O2-N2 dominated atmosphere..."
         print*, "Surface WTa = ",WTa(1)
@@ -110,6 +112,7 @@ c-mc      DZ = Z(I) - Z(I-1)
       GZ(I) = G0 * (R0/R)*(R0/R)
       TAV = 0.5*(T(I) + T(I-1))
       HA(I) = ROVERM(I)*TAV/GZ(I)
+      print*,HA(I),I
    1  DEN(I) = DEN(I-1)*EXP(-DZ(I)/HA(I))*T(I-1)/T(I)
 C
 

@@ -595,6 +595,7 @@ C they are created and updated regardless of whether ICOUPLE=1 in input_photoche
        open(84, file='COUPLE/fromPhoto2Clima.dat', status='UNKNOWN')
        open(116, file='COUPLE/fromClima2Photo.dat', status='UNKNOWN')
        open(117, file='COUPLE/mixing_ratios.dat', status='UNKNOWN')
+c       open(118, file='COUPLE/aux_p_couple.dat', status='UNKNOWN')  ! stb - auxiliary coupling file for RH_surf calculation according to Ramirez et al. 2014
 
 C - READ IN SPECIES NAMES, ATOMIC NUMBERS, AND BOUNDARY CONDITIONS
 
@@ -1438,7 +1439,7 @@ c  lower boundary condition
 
 c      if(PLANET.EQ.'WASP12B'.or.PLANET.EQ.'EARTH') then
        do k=1,(NQ-NP)
-       if(mbound(k).eq.0) then
+c       if(mbound(k).eq.0) then
         DU(k,1) = DU(k,1) + bX1X2(k,1)/Den(1)/DZ(1)**2
         ADU(k,1) = bX1X2(k,1)/Den(1)/DZ(1)/2.*
      6      (1./scale_H(k,1)-1./H_atm(1))
@@ -1461,7 +1462,7 @@ c interior grid points   ?fixed 8-13-05
             DD(k,j) = DU(k,j) + DL(k,j)
             ADD(k,j) = -ADU(k,j) - ADL(k,j)
         enddo
-        endif
+c        endif
        enddo
 
 c      else

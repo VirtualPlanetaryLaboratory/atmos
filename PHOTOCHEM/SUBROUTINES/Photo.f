@@ -55,19 +55,6 @@ c- this used only if INO=0
 
 
 
-
-c-mab: Like DENSTY & DIFCO, WT expression based on H2 mixing ratio...
-      IF(FH2.GT.0.50) THEN
-       FH2  = (1.0-FHE-FH2O-FH-FOH-FCO-FCO2-FCH4)
-C        print*,"(PHOTO)FH2,FHE,FCO2,FCO,FH2O,FH,FOH,FCH4",
-C     .             FH2,FHE,FCO2,FCO,FH2O,FH,FOH,FCH4
-       WT   =  pCO2*44. + FH2*2. +  FCO*28. + FH2O*18. + FCH4*16. +
-     .        FH + (1.-FH2-FCO2-FCO-FH-FH2O-FCH4)*4.0 ! Last term For Helium
-      ELSE
-       WT = pO2*32. + pCO2*44. + (1.-pO2-pCO2)*28. + 0.4 !(g) mean molar mass
-      ENDIF
-      RMG = RGAS/(WT*G)           !gm cm^2/s^2/mol/K  / g *s^2/cm ->  cm/mol/K
-
 c-mc allows for high CO2 and O2, but forces N2 to decrease if CO2 increases.  Wrong as CO2 gets large
 c-mc also makes one realize that fixed mixing ratio isn't the best way to approach high CO2 levels.
 c-mc can never get more than 1 bar. - taking CO2 to 0.5 increase mean molar mass to 36.4 (from 28.56 at 0.01)
@@ -111,8 +98,9 @@ C ***** CALCULATE COLUMN DEPTHS ABOVE EACH COLLOCATION POINT FOR
 C ***** EACH SPECIES THAT ABSORBS PHOTONS
 
 c Kevin's likes nothing above the top
-      HA = 0.0 * RMG*T(NZ)       !cm/mol/K * K -> cm/mol
-      HAD = 0.0 * HA*DEN(NZ)
+c      HA = 0.0 * RMG*T(NZ)       !cm/mol/K * K -> cm/mol
+c      HAD = 0.0 * HA*DEN(NZ)
+      HAD = 0.0 * H_atm(NZ)*DEN(NZ) !I changed HA, the scale height expression which was used here earlier into the one from difco.f but HAD is set to zero anyway
       TTOT(NZ) = HAD
 
       do k=1,kj   !kj=number of photolysis reactions
@@ -123,13 +111,18 @@ c Kevin's likes nothing above the top
        DO  M=1,NZ1
         I = NZ - M      !run through heights from the top down.
 
-        HA = RMG*0.5*(T(I) + T(I+1))  !scale height RT/MG
+c        HA = RMG*0.5*(T(I) + T(I+1))  !scale height RT/MG
 
 c-mc        DZ = Z(I+1) - Z(I)  !ACK - this is good, but should already exist as a vector
 c-mc in our new scheme DZ(I)=Z(I)-Z(I-1) so DZ(I+1)=Z(I+1)-Z(I)
 C ACK - may have to return when I take this to a variable grid
 
-        EFAC = (1. - EXP(-DZ(I+1)/HA))*DEN(I)*HA     !column depth of each layer
+C        EFAC = (1. - EXP(-DZ(I+1)/HA))*DEN(I)*HA     !column depth of each layer
+C        TTOT(I) = TTOT(I+1) + EFAC     !total column depth above height level I
+C        columndepth(k,I)= columndepth(k,I+1)    !species column depth above level I
+C     $                 + EFAC*SQRT(absorbers(k,i)*absorbers(k,i+1))
+C
+        EFAC = (1. - EXP(-DZ(I+1)/H_atm(I)))*DEN(I)*H_atm(I)     !column depth of each layer  !STB using scale height values calculated in difco.f
         TTOT(I) = TTOT(I+1) + EFAC     !total column depth above height level I
         columndepth(k,I)= columndepth(k,I+1)    !species column depth above level I
      $                 + EFAC*SQRT(absorbers(k,i)*absorbers(k,i+1))
@@ -251,8 +244,7 @@ c       enddo
       DO J=1,NZ
       DO k=1,50  !ACK - hardcoded num particles (probably OK - this is how the HC grid was computed)
 
-         IF ((RPAR(J,L).GE.RSTAND(k)).and.(RPAR(J,L).LT.RSTAND(k+1)))
-     2 THEN
+      IF ((RPAR(J,L).GE.RSTAND(k)).and.(RPAR(J,L).LT.RSTAND(k+1)))THEN
 
       drs = RSTAND(k+1) - RSTAND(k)
       dr  = RPAR(J,L) - RSTAND(k)
@@ -309,8 +301,11 @@ c     so this is repeated once for L<1754 and L>2041A and NK(L) times for 1754<L
 
         if (k.eq.1) then !compute Rayleigh scattering cross section (as a function of height?)
          do i=1,nz
-
-          SIGR(i) = SIGRAY(WAV(L)) * (1. + 1.5*pCO2)  !Old rayleigh cross section
+          IF (LCO2.LE.NQ.and.LCO2.ne.0)THEN
+          SIGR(i) = SIGRAY(WAV(L)) * (1. + 1.5*USOL(LCO2,I))  !Old rayleigh cross section
+          ELSE
+          SIGR(i) = SIGRAY(WAV(L)) * (1. + 1.5*pCO2)
+          ENDIF
 
        !set up new Rayleigh scattering vectors
          do j=1,NSP
@@ -528,7 +523,7 @@ c   go through "crises" that seem to be unrelated to column depths
       ANC = 1.
       QCOL = 3.E-15
       DO I=1,NZ
-       VMEAN = SQRT(8.*BK*T(I)/(WT*PM*PI))
+       VMEAN = SQRT(8.*BK*T(I)/(WTa(I)*PM*PI)) !stb changed WT into WTa(I)
        SCOL = DEN(I)*QCOL*VMEAN
        prates(JS8,I) = prates(JS8R,I) * prates(JS8L,I)/
      $                (prates(JS8L,I) + SCOL/ANC)

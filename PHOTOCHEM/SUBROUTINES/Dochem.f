@@ -54,14 +54,9 @@ c         if(j.eq.1)print *, i, ISPEC(I),' particle densities'
         if(ISPEC(NSP-1).eq.'CO2') D(LCO2,J) = FCO2 * DEN(J) !if CO2 is inert, place above N2 in list (ACK - hardcoded position for CO2/N2 (NSP-1/NSP)
 c N2-defined as the "rest" of the density after subtracting Ar, CO2, O2, CH4 and H2O
        if(LCO2.GT.NQ) then
-       usolsum=USOL(LO2,J) + FCO2+ USOL(LCH4,J)+USOL(LCO,J)
-     &         + USOL(LH2O,J)
-       D(NSP,J) = (1. - usolsum- FAR )* DEN(J)
+       D(NSP,J) = (1. - sumUSOL(J)- FCO2-FAR )* DEN(J)
        else
-c N2-defined as the "rest" of the density after subtracting Ar, CO2. O2, CH4 and H2O
-       usolsum=USOL(LO2,J) + USOL(LCO2,J)+ USOL(LCH4,J)+USOL(LCO,J)
-     &         + USOL(LH2O,J)
-       D(NSP,J) = (1. - usolsum- FAR )* DEN(J)
+       D(NSP,J) = (1. - sumUSOL(J)- FAR )* DEN(J)
        endif
 
 
