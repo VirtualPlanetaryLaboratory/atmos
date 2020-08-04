@@ -319,9 +319,9 @@ c     enddo
 c these should be flagged for IH2=-1
 c         \phi = b*f*({1/over H_A}-{1/over H}) - b*df/dz
 c the following gives fluxes from 1 to 80 km.
-      if(PLANET.EQ.'WASP12B'.or.PLANET.eq.'EARTH') then
+
        do i=1,NZ-1
-        do j=1,NQ
+        do j=1,(NQ-NP)
          fluxo(j,i) = fluxo(j,i)
      5    - bX1X2(j,i)*(usol(j,i+1) - usol(j,i))/dz(i)
      6    + bX1X2(j,i)*0.5*(usol(j,i) + usol(j,i+1))
@@ -329,18 +329,18 @@ c the following gives fluxes from 1 to 80 km.
          enddo
        enddo
 
-      else
-       do i=1,NZ-1
-        fluxo(LH,i) = fluxo(LH,i)
-     5    - bHN2(i)*(usol(LH,i+1) - usol(LH,i))/dz(i)
-     6    + bHN2(i)*0.5*(usol(LH,i) + usol(LH,i+1))
-     7       *(1./H_atm(i) - 1./scale_H(LH,i))
-        fluxo(LH2,i) =fluxo(LH2,i)
-     5    - bH2N2(i)*(usol(LH2,i+1) - usol(LH2,i))/dz(i)
-     6    + bH2N2(i)*0.5*(usol(LH2,i) + usol(LH2,i+1))
-     7      *(1./H_atm(i) - 1./scale_H(LH2,i))
-       enddo
-      endif
+C      else
+C       do i=1,NZ-1
+C        fluxo(LH,i) = fluxo(LH,i)
+C     5    - bHN2(i)*(usol(LH,i+1) - usol(LH,i))/dz(i)
+C     6    + bHN2(i)*0.5*(usol(LH,i) + usol(LH,i+1))
+C     7       *(1./H_atm(i) - 1./scale_H(LH,i))
+C        fluxo(LH2,i) =fluxo(LH2,i)
+C     5    - bH2N2(i)*(usol(LH2,i+1) - usol(LH2,i))/dz(i)
+C     6    + bH2N2(i)*0.5*(usol(LH2,i) + usol(LH2,i+1))
+C     7      *(1./H_atm(i) - 1./scale_H(LH2,i))
+C       enddo
+C      endif
 
 
 C
