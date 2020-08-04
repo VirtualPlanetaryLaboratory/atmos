@@ -15,7 +15,7 @@ C   THIS SUBROUTINE CALCULATES ATMOSPHERIC NUMBER DENSITIES, ASSUM-
 C   ING HYDROSTATIC EQUILIBRIUM
       G0 = G
       RGAS = 8.3143E7
-      BK = 1.38054E-16
+      BK = 1.380649E-16
 
 c-mab: Using radius to distinguish terrestrial from giants here
       IF (R0.LT.(5E9)) THEN
@@ -38,10 +38,16 @@ c-mab: For error checking
         sumLL(I)= sumLL(I)+USOL(J,I)*mass(J)
         sumUSOL(I)=sumUSOL(I)+USOL(J,I)
         ENDDO
+        If (LCO2.le.NQ) then !to ensure that CO2 is counted, e.g. for Mars
         WTa(I) = sumLL(I) + (1.-sumUSOL(I)-FAR)*28.+ FAR*40.
+        else
+        WTa(I) = sumLL(I) + (1.-sumUSOL(I)-FAR-FCO2)*28.
+     &         + FCO2*44 + FAR*40.
+        ENDIF
 c        print*,WTa(I),I,sumUSOL(I)
         Enddo
         print*, "Calculated WTa for O2-N2 dominated atmosphere..."
+        print*, "Surface WTa = ",WTa(1)
 C this is bad because CO and O can be important up high.
 C (but maybe this doesn't really matter)
       ELSE

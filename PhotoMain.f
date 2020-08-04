@@ -1303,11 +1303,8 @@ C    !i.e if constant mr or constant flux UBC
       if (mbound(LH2) .gt. 0) then
         do i=1,nz
 C        !don't use molecular diffusion
-            bHN2(i) = 0.0
-            bH2N2(i) = 0.0
-            do j=1,NSP
-              bX1X2(j,i) = 0.0 !Generalized form for giant atmospheres
-            enddo
+            bX1X2(LH2,i) = 0.0
+            bX1X2(LH,i) = 0.0
 C           !don't use molecular diffusion
 c           bXN2(i) = 0.0
         enddo
