@@ -2400,9 +2400,9 @@ C end particle switching
       !test
       do i=1,nq
          do j=1,nz
-            if (USOL(i,j).lt.0.E0) then
-             print*, 'Nefarious things! ',ISPEC(I),'smaller than 0 at ',j
-            endif
+c            if (USOL(i,j).lt.0.E0) then
+c            print*, 'Nefarious things! ',ISPEC(I),'smaller than 0 at ',j
+c            endif
 c           USOL(i,j)=max(USOL(i,j),smallest)
            USOL(i,j)=abs(USOL(i,j))
          enddo
