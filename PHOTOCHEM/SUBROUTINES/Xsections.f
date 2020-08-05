@@ -5489,7 +5489,8 @@ c     Main wl loop
 
       qy = 1.0
       do L=1,nw
-         lambda = wc(iw)/10. !convet to nm
+         lambda = wc(L)/10. !convet to nm
+
 
          IF (lambda .GE. 173. .AND. lambda .LE. 240.) THEN
             DO iz = 1, nz
@@ -5497,7 +5498,7 @@ c     Main wl loop
                A = (((A4*lambda+A3)*lambda+A2)*lambda+A1)*lambda+A0
                B = (((B3*lambda+B2)*lambda+B1)*lambda+B0)
                B = (t-300.)*EXP(B)
-               sq(jn,iz,iw) = qy * EXP(A+B)
+               sq(jn,iz,l) = qy * EXP(A+B)
             ENDDO
          ELSE
             do i=1,nz

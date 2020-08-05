@@ -220,7 +220,7 @@ CS        O3        CO        SO2                 2BODY     3.E-12      0.      
 CS2       O         SO        CS                  2BODY     3.2E-11     -650.      0.                              ! Toon et al. [1987]
 CS2       O         OCS       S                   2BODY     3.E-12      -650.      0.                              ! Toon et al. [1987]
 CS2       OH        OCS       HS                  2BODY     2.E-15      0.         0.                              ! Upper limit, Atkinson et al. [2004]
-CS2       OH        CS2OH                         2BODY     8.00E-12    0.         0.          ! Atkinson et al. [2004]
+CS2       OH        CS2OH                         2BODY     8.00E-13    0.         0.          !STB changed the this from  the 8.00E-12 value cited in the Atkinson review, as it leads to insane amounts of CS2OH. Looking at the table from Atkinson, I think it's a misprint and should read 8.00E-13
 CS2OH     HV        CS2       OH                  2BODY     1.60E-06    -5160.                 ! Atkinson et al. [2004]
 CS2X      M         CS2       M                   2BODY     2.5E-11     0.         0.                              ! Wine et al. [1981]
 CS2X      O2        CS        SO2                 2BODY     1.E-12      0.         0.                              ! Wine, Toon et al. [1987]
