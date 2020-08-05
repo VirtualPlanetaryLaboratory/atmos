@@ -145,9 +145,7 @@ c GNA
         !CALL INITMIEFRAC(nw,wavl,frak)
       !endif
 
-
       endif
-
 
 
 
@@ -161,11 +159,13 @@ c-mc the following two sections require debugging before use...
 c-mab  print*,'JNO',JNO !debugging for templates w/o NO photolysis
 
       CALL XS('O2      ',nw,wavl,wav,T,DEN,JO2_O1D,sq,columndepth,zy,
-     $         IO2)
+     $         IO2,lgrid)
 
-      CALL XS('O3      ',nw,wavl,wav,T,DEN,JO3_O1D,sq,columndepth,zy)
+      CALL XS('O3      ',nw,wavl,wav,T,DEN,JO3_O1D,sq,columndepth,zy,
+     $         IO2,lgrid)
 
-      CALL XS('NO      ',nw,wavl,wav,T,DEN,JNO,sq,columndepth,zy)
+      CALL XS('NO      ',nw,wavl,wav,T,DEN,JNO,sq,columndepth,zy,
+     $         IO2,lgrid)
 
        !put in calls to other P/T dependent cross sections here...
        !also note that above/below calls to NO and O2 should only be called if IO2=0,INO=0
@@ -183,9 +183,10 @@ C    REPEAT THIS SECTION ONLY IF SOLAR ZENITH ANGLE OR O2 VARIES WITH TIME
        JNO=minloc(photoreac,1,ISPEC(INT(photoreac)).eq.'NO     ')
 c-mab  print*,'JNO',JNO !debugging for templates w/o NO photolysis
       CALL XS('O2      ',nw,wavl,wav,T,DEN,JO2_O1D,sq,columndepth,zy,
-     $        IO2)
+     $         IO2,lgrid)
 
-      CALL XS('NO      ',nw,wavl,wav,T,DEN,JNO,sq,columndepth,zy)
+      CALL XS('NO      ',nw,wavl,wav,T,DEN,JNO,sq,columndepth,zy
+     $         IO2,lgrid)
 
       endif
 
@@ -432,6 +433,9 @@ c compute photlysis rates for each reaction at each height (summed over waveleng
 !        print *, "sq(",j,",",wavl(nw),", surf) =",sq(j,1,nw)
 !        print *, "sq(",j,",",wavl(nw),", TOA) =",sq(j,nz,nw)
        do i=1,nz
+C          if (j.eq.1.and.i.eq.180) then
+C          print*,sq(j,i,L),j,i,L,'sq(j,i,L)',FLX,wav(L),NW
+C          endif
           prates(j,i) = prates(j,i) + FLX*sq(j,i,L)*S(i)
 !       IF(L.EQ.1) THEN
 !        IF(I.EQ.1)print*,"J,wav,Reaction No.",J,L,wav(L),photonums(j)
@@ -471,7 +475,7 @@ C            frederick and allen method (effective cross sections)
 
       endif !end NO wavlength loop
 
-      else  !end if loop which restricts this behavior to INO=0 or INO=1
+      else  if (ino .eq. 2) then !end if loop which restricts this behavior to INO=0 or INO=1
 !so ww get here if INO=2
 !for now just use the NO photo rate generated from the band model, even at high res (Jim's suggestion)
 !the below is dumb - it should be removed from the wavelength loop to make it more clear...
@@ -508,7 +512,6 @@ C            frederick and allen method (effective cross sections)
 
 C ***** ***** ***** END WAVELENGTH LOOP ***** ***** *****
   19  continue
-
 
 
       if (JS8L.GT.0) then  !if gaseous S8 is in the model, compute the photolysis rate by black magic
@@ -625,7 +628,6 @@ C ***** FILL UP RATE MATRIX *****
           A(INT(photonums(j)),i)=prates(j,i)
        enddo
       enddo
-
 
 
 

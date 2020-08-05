@@ -42,7 +42,7 @@ c-mab: For error checking
         ENDDO
         If (LCO2.le.NQ) then !to ensure that CO2 is counted, e.g. for Mars
         WTa(I) = sumLL(I) + (1.-sumUSOL(I)-FAR)*28.+ FAR*40.
-        print*, WTa(I), 'This is WTa(i)'
+c        print*, WTa(I), 'This is WTa(i)'
         else
         WTa(I) = sumLL(I) + (1.-sumUSOL(I)-FAR-FCO2)*28.
      &         + FCO2*44 + FAR*40.

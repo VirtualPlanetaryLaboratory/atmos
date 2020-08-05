@@ -40,7 +40,6 @@ C   COMPUTE DIFFUSION LIFETIME AT EACH HEIGHT (H*H/K)
       do i=1,NZ1
         TAV = SQRT(T(I)*T(I+1))  !average temperature at grid center
         H_atm(i) = BKMG(I) * TAV
-c        print*, H_atm(i), i
 c  compute scale heights of all the species in the atmosphere at all
 c   heights
         do j=1,NQ
@@ -125,7 +124,7 @@ c               bX1X2(j,NZ) = 0.8*1.4E19*(T(nz)/200.)**0.75  ! correct for CO2
                bX1X2(j,NZ)=31.4/BK*(T(NZ))**0.75*EXP(-11.7/T(NZ)) !from Zahnle 2008
 c        bX1X2(j,NZ) = 4.0D18*(T(NZ)/200.)**0.75
               else if (PLANET .EQ. 'DRY') then ! assume O2-dominated - this is the same as N2 for now
-               bX1X2(j,NZ) = 1.4E19*(T(NZ)/200.)**0.75  ! correct for N2
+C               bX1X2(j,NZ) = 1.4E19*(T(NZ)/200.)**0.75  ! correct for N2
 c        bX1X2(j,NZ) = 4.0D18*(T(NZ)/200.)**0.75
               endif
         endif

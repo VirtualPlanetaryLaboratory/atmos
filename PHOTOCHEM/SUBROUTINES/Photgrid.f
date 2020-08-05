@@ -105,12 +105,14 @@ C M. Claire  060802  Integrating into Kevin's code
 C-mab The present stellar flux files for Hot Jupiters also use this grid.
 *     mopt = 6    grid from Jim's climate code  (entirly a hack right now for interpolative purposes)
 *     mopt = 7    Jim's old grid, but high resolution from 175-220
+*     mopt = 8    alinc's new high-resolution grid for all molecules
 
 !note - before using, make sure that nw is the number of wavelengths to loop over and
 !that wl(nw+1)=wu(nw)
 ! this is needed for the interpolations to work correctly
       if (LGRID.eq.0) mopt = 5
       if (LGRID.eq.1) mopt = 7
+      if (LGRID.eq.2) mopt = 8
 
 
       IF (mopt .EQ. 1) GO TO 1
@@ -120,6 +122,7 @@ C-mab The present stellar flux files for Hot Jupiters also use this grid.
       IF (mopt .EQ. 5) GO TO 5
       IF (mopt .EQ. 6) GO TO 6
       IF (mopt .EQ. 7) GO TO 7
+      IF (mopt .eq. 8) GO TO 8
 
  1    CONTINUE
 c      nw = 140 + 1
@@ -405,7 +408,7 @@ c     wl(nw) = 743.6
 c-mc read in Kevin's grid here
 c-mab Presently, only grid option for hot Jup stellar fluxes.
       nw = 118
-       OPEN(kin, file='PHOTOCHEM/DATA/GRIDS/zahnle.grid',status='old')
+      OPEN(kin, file='PHOTOCHEM/DATA/GRIDS/zahnle.grid',status='old')
 
 c      nw = 108
 c      OPEN(kin, file='PHOTOCHEM/DATA/GRIDS/zahnle.grid.orig',status='old')
@@ -556,6 +559,25 @@ c      print *, 'using test grid 380-382nm'
       CLOSE (kin)
       GO TO 9
 
+ 8    CONTINUE
+
+      nw = 750
+      OPEN(kin, file='PHOTOCHEM/DATA/GRIDS/alinc.grid',status='old')
+
+      DO i = 1, 2
+         READ(kin,*)  !skip header
+      ENDDO
+
+      do L=1,nw
+       READ(kin,*) WL(L),WU(L)
+       wc(L) = ( wl(L) + wu(L) )/2.
+      enddo
+
+      wl(nw+1) = wu(nw)  !final point for interpolative array
+
+      CLOSE (kin)
+      GO TO 9
+
 
  9    CONTINUE
 
@@ -580,7 +602,7 @@ c-mc should probably print these out to output file rather than screen
       END
 
 
-      SUBROUTINE readflux(nw,wl,f,timega,pstar,uvscale)
+      SUBROUTINE readflux(nw,wl,timega,pstar,uvscale)
 
 *-----------------------------------------------------------------------------*
 *=  PURPOSE:                                                                 =*
@@ -761,20 +783,23 @@ c - the youngsun correction will be overwritten and should be done in energy spa
          indexLa=minloc(x1,1,x1.ge.1216)
 
          DO iw = 1, nw
-            if (wl(iw).eq.1216) then
-               f(iw)=5.6e11*y2(indexLa)
-               relflux(iw)=y2(indexLa)
-            else
+c            if (wl(iw).eq.1216) then
+c               f(iw)=5.6e11*y2(indexLa)
+c               relflux(iw)=y2(indexLa)
+c            else
                f(iw) = yg3(iw)*(wl(iw+1)-wl(iw))*5.039e8*wl(iw)/10. !convert to photons/cm2/s
                relflux(iw)=yg2(iw)
-            endif
+               flux(iw)=f(iw)
+c            endif
 c            print *, wl(iw), yg3(iw)
          ENDDO
 
 
-        ! do i=1,nw
-        ! print *, wl(i),yg3(i)
-        ! enddo
+         write(*,'(/,3a,/)') '   wavl [A] ','    mW/m2/A',
+     -        '   phot/cm2/s'
+         do i=1,nw
+            write(*,'(3(1pe12.4))'), wl(i),yg3(i),f(i)
+         enddo
 
 c         do i=1,nw
 c         print *, wl(i),f(i),relflux(i)
@@ -825,6 +850,7 @@ c         OPEN(UNIT=kin,file='PHOTOCHEM/DATA/FLUX/zahnle.flx.orig',STATUS='old')
 
          DO iw = 1, nw
                f(iw) = yg1(iw)
+               flux(iw)=f(iw)
          ENDDO
 c         do i=1,nw
 c         print *, wl(i),f(i)
@@ -898,6 +924,7 @@ c 1.33432e+14 in photons/cm2/s
             else
                f(iw) = yg1(iw)*(wl(iw+1)-wl(iw))*5.039e8*wl(iw)/10.
             endif
+               f(iw)=flux(iw)
          ENDDO
 
          close (kin)
@@ -952,6 +979,20 @@ c-mab: Recall pstar = 22 is using Kevin's grid. We don't need the conversions be
       ENDIF
 
 
+!added by andrew - gna
+      IF (pstar .EQ. '20') THEN
+         n = 7730
+         print *, "MSUN IS 20 (TRAPPIST-1 scaled PC)!"
+         call sleep(1)
+         nhead = 0
+         ierr = 0
+         OPEN(UNIT=kin,
+     &    file='PHOTOCHEM/DATA/FLUX/TRAPPIST-1.txt',
+     &                STATUS='old')
+          print *, 'YAY NEARBY PLANETS'
+      ENDIF
+
+
       IF (pstar .EQ. 't3200' .or. pstar .eq. '17') THEN
          n = 26141
          print *, "STAR IS 17 (T3200)!"
@@ -991,17 +1032,19 @@ c-mab: Recall pstar = 22 is using Kevin's grid. We don't need the conversions be
           print *, 'An F star a day keeps the doctor away'
       ENDIF
 
-      IF (pstar .EQ. 'm8v' .or. pstar .eq. '20') THEN
-         n = 26150
-         print *, "STAR IS 20 (M8V)!"
-         call sleep(1)
-         nhead = 0
-         ierr = 0
-         OPEN(UNIT=kin,
-     &    file='PHOTOCHEM/DATA/FLUX/M8_active_photogrid.txt',
-     &                STATUS='old')
-          print *, 'Here is an M8 dwarf (a la TRAPPIST-1)!'
-      ENDIF
+
+!      IF (pstar .EQ. 'm8v' .or. pstar .eq. '20') THEN
+!         n = 26150
+!         print *, "STAR IS 20 (M8V)!"
+!         call sleep(1)
+!         nhead = 0
+!         ierr = 0
+!         OPEN(UNIT=kin,
+!     &    file='PHOTOCHEM/DATA/FLUX/M8_active_photogrid.txt',
+!     &                STATUS='old')
+!          print *, 'Here is an M8 dwarf (a la TRAPPIST-1)!'
+!      ENDIF
+
 
 
       IF (pstar .EQ. 'proxima' .or. pstar .eq. '21' .or.
@@ -1105,7 +1148,8 @@ c-mab: Recall pstar = 22 is using Kevin's grid. We don't need the conversions be
 !      in the input spectrum. It would benefit you to ensure that this is really the case!
         DO iw = 1, nw
                f(iw) = yg3(iw)*(wl(iw+1)-wl(iw))*5.039e8*wl(iw)/10. !convert to photons/cm2/s
-               !print *, wl(iw), yg3(iw)
+               print *, wl(iw), yg3(iw)
+               flux(iw)=f(iw)
         ENDDO
 
 
@@ -1156,6 +1200,7 @@ c-mab: flux is already earth-equivalent in photons/s/cm^2/bin
 
          DO iw = 1, nw
                f(iw) = yg1(iw)
+               flux(iw)=f(iw)
          ENDDO
 c         do i=1,nw
 c         print *, wl(i),x1(i),y1(i),f(i)
@@ -1222,6 +1267,7 @@ C scaling to solar constant
         DO iw = 1, nw
                f(iw) = yg3(iw)*(wl(iw+1)-wl(iw))*5.039e8*wl(iw)/10. !convert to photons/cm2/s
                print *, wl(iw), yg3(iw)
+               flux(iw) = f(iw)
         ENDDO
 
       ENDIF
@@ -1323,107 +1369,6 @@ c-mab: Presently this star doesn't allow Modern Earth template to converge (even
 
          CLOSE (kin)
 
-! ---- Below here lie Teal's stars
-
-        IF (pstar .eq. '85') THEN  ! GJ176
-
-         nhead = 0
-         ierr = 0
-
-         n = 24995
-
-         WRITE(*,*) 'ATTEMPTING TO OPEN THE SPECTRUM FILE'
-         OPEN(UNIT=kin,
-     &      file='PHOTOCHEM/DATA/FLUX/muscles_gj176.txt',
-     &         STATUS='old')
-         print *,'using GJ176 MUSCLES adaptive constant res data'
-
-         ENDIF ! pstar = 85
-
-        IF (pstar .eq. '86') THEN  ! GJ436
-
-         nhead = 0
-         ierr = 0
-
-         n = 24995
-
-         OPEN(UNIT=kin,
-     &      file='PHOTOCHEM/DATA/FLUX/muscles_gj436.txt',
-     &         STATUS='old')
-         print *,'using GJ436 MUSCLES adaptive constant res data'
-
-         ENDIF ! pstar = 86
-
-        IF (pstar .eq. '87') THEN  ! GJ832
-
-         nhead = 0
-         ierr = 0
-
-         n = 24995
-
-         OPEN(UNIT=kin,
-     &      file='PHOTOCHEM/DATA/FLUX/muscles_gj832.txt',
-     &         STATUS='old')
-         print *,'using GJ832 MUSCLES adaptive constant res data'
-
-         ENDIF ! pstar = 87
-
-        IF (pstar .eq. '88') THEN  ! HD40307
-
-         nhead = 0
-         ierr = 0
-
-         n = 24995
-
-         OPEN(UNIT=kin,
-     &      file='PHOTOCHEM/DATA/FLUX/muscles_hd40307.txt',
-     &         STATUS='old')
-         print *,'using HD40307 MUSCLES adaptive constant res data'
-
-         ENDIF ! pstar = 88
-
-        IF (pstar .eq. '89') THEN  ! HD85512
-
-         nhead = 0
-         ierr = 0
-
-         n = 24995
-
-         OPEN(UNIT=kin,
-     &      file='PHOTOCHEM/DATA/FLUX/muscles_hd85512.txt',
-     &         STATUS='old')
-         print *,'using HD85512 MUSCLES adaptive constant res data'
-
-         ENDIF ! pstar = 89
-
-        IF (pstar .eq. '90') THEN  ! HD97658
-
-         nhead = 0
-         ierr = 0
-
-         n = 24995
-
-         OPEN(UNIT=kin,
-     &      file='PHOTOCHEM/DATA/FLUX/muscles_hd97658.txt',
-     &         STATUS='old')
-         print *,'using HD97658 MUSCLES adaptive constant res data'
-
-         ENDIF ! pstar = 90
-
-        IF (pstar .eq. '91') THEN  ! v epislion eridani
-
-         nhead = 0
-         ierr = 0
-
-         n = 24995
-
-         OPEN(UNIT=kin,
-     &      file='PHOTOCHEM/DATA/FLUX/muscles_v-eps-eri.txt',
-     &         STATUS='old')
-         print *,'using v eps eri MUSCLES adaptive constant res data'
-
-         ENDIF ! pstar = 91
-
 ! We are not bothering with Youngsun stuff because it is a different star
          n3=n
          ierr=0
@@ -1445,6 +1390,7 @@ c-mab: Presently this star doesn't allow Modern Earth template to converge (even
 !      in the input spectrum. It would benefit you to ensure that this is really the case!
         DO iw = 1, nw
            f(iw) = yg3(iw)*(wl(iw+1)-wl(iw))*5.039e8*wl(iw)/10. !convert to photons/cm2/s
+           flux(iw)=f(iw)
 
                print *, wl(iw), yg3(iw)
         ENDDO
@@ -1455,6 +1401,7 @@ c-mab: Presently this star doesn't allow Modern Earth template to converge (even
       print *, 'uvscale', uvscale
        DO ii = 1, nw
          IF(wl(ii) .lt. 4000) f(ii) = f(ii)*uvscale
+         IF(wl(ii) .lt. 4000) flux(ii) = f(ii)
        ENDDO
 
 *_______________________________________________________________________

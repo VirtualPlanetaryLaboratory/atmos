@@ -1,5 +1,5 @@
       SUBROUTINE newXS(species,nw,wavl,wav,T,DEN,j,sq,columndepth,zy,
-     &    IO2)
+     &    IO2,lgrid)
       INCLUDE 'PHOTOCHEM/INPUTFILES/parameters.inc'
       implicit real*8(A-H,O-Z)
 
@@ -84,7 +84,8 @@
       ! If this reaction has been marked as non-standard call old xsections
       if(label(5:5).ne.'O') then
 !        print *, "calling XS(", trim(species), ",", nw, ",", ")"
-        CALL XS(species,nw,wavl,wav,T,DEN,j,sq,columndepth,zy,IO2)
+        CALL XS(species,nw,wavl,wav,T,DEN,j,sq,columndepth,zy,IO2,
+     $        lgrid)
       else
 ! Now at line of reactions.rx where first occurence of sepcies is
         labnum = 0
@@ -231,7 +232,8 @@
 
           if(label(5:5).ne.'O') then
 !            print *, "called XS(", trim(species), ",", nw, ",", ")"
-            CALL XS(species,nw,wavl,wav,T,DEN,j,sq,columndepth,zy,IO2)
+        CALL XS(species,nw,wavl,wav,T,DEN,j,sq,columndepth,zy,IO2,
+     $        lgrid)
 
           else
 

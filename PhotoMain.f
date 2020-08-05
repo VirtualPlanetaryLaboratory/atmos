@@ -423,6 +423,7 @@ C     !can go away when MSCAT does WARNING DO WE NEED THIS COMMENT
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/SULBLK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/SATBLK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
+      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/QBLOK.inc'
       INCLUDE 'PHOTOCHEM/DATA/INCLUDE/comPRESS1.inc'
 
 
@@ -595,7 +596,7 @@ C they are created and updated regardless of whether ICOUPLE=1 in input_photoche
        open(84, file='COUPLE/fromPhoto2Clima.dat', status='UNKNOWN')
        open(116, file='COUPLE/fromClima2Photo.dat', status='UNKNOWN')
        open(117, file='COUPLE/mixing_ratios.dat', status='UNKNOWN')
-c       open(118, file='COUPLE/aux_p_couple.dat', status='UNKNOWN')  ! stb - auxiliary coupling file for RH_surf calculation according to Ramirez et al. 2014
+c       open(118, file='COUPLE/aux_p_couple.dat', status='UNKNOWN')  ! STB - auxiliary coupling file for RH_surf calculation according to Ramirez et al. 2014
 
 C - READ IN SPECIES NAMES, ATOMIC NUMBERS, AND BOUNDARY CONDITIONS
 
@@ -1003,7 +1004,7 @@ C     adding IRESET to create the atmospheric profile for modern earth
 C     gna - added pstar keyword to change the star from planet.dat
       print *, 'pstar is ', pstar
       print *, 'ihzscale is ', ihzscale
-c      print *, 'uvscale is ', uvscale
+      print *, 'uvscale is ', uvscale
 C gna-scale stellar flux based on spectral type:
 C uses Kopparapu et al 2012 scalings for earth-equivalent distance
       IF (ihzscale.eq.1) then
@@ -1208,7 +1209,6 @@ C  CALL below sets up vertical grid
 
 C   height index for the tropopause (-1 given the staggered grid)
 C      the 1 in the second postion tells minloc to return a scalar
-
 c-mab: JTROP is set to a constant value in planet.dat for the giant templates...
       IF (PLANET.NE.'WASP12B')JTROP=minloc(Z,1, Z .ge. ztrop)-1
 
@@ -1269,7 +1269,7 @@ c      enddo
 
 c-mab: Note: Loop below is temporary....
       IF (PLANET.EQ.'WASP12B') THEN
-	CALL RATESHJS
+	     CALL RATESHJS
         PRINT*, "CALLING RATESHJS..."
       ELSE
         CALL RATES
@@ -1369,7 +1369,7 @@ c      else
 c       NSTEPS = 10000 !the default, to allow converging runs
 c      endif
 C      Default number of steps is 50,000. The code shouldn't take nearly this long to run except hot planets.
-       NSTEPS = 10000
+       NSTEPS = 1000
 
 c-mab: nsteps = 1 recommended for initial model debugging
 c      NSTEPS = 1
@@ -1713,7 +1713,6 @@ C  Number of columns of photorates
       RL = FLOAT(KJ)/IROW + 1
       DIF = RL - LR
       IF (DIF.LT.0.001) LR = LR - 1
-
       write(14,885)
       DO L=1,LR
        K1 = 1 + (L-1)*IROW
@@ -2401,6 +2400,9 @@ C end particle switching
       !test
       do i=1,nq
          do j=1,nz
+            if (USOL(i,j).lt.0.E0) then
+             print*, 'Nefarious things! ',ISPEC(I),'smaller than 0 at ',j
+            endif
 c           USOL(i,j)=max(USOL(i,j),smallest)
            USOL(i,j)=abs(USOL(i,j))
          enddo
