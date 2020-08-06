@@ -1,6 +1,6 @@
 *** Set parameters for the high CO2/CH4 photochemical model ***
 * Write the number after the 11th space
-*2345678901Here      
+*2345678901Here
 
 AGL=       0.5
 ISEASON=   1
@@ -13,9 +13,10 @@ PRONO=     1.E9
 frak=      0
 HCDENS=    0.63
 ICOUPLE=   0
-NEWSPEC=   0
 monsize=   0
-ZY=	   50.
+ZY=	       60.
+USOLMIN=   1.E-20
+KIDA=      0
 
 C ***** SET MODEL PARAMETERS *****
 C     AGL = DIURNAL AVERAGING FACTOR FOR PHOTORATES
@@ -41,7 +42,6 @@ C     HCDENS = 0.63 g/cm^3 (Archean hydrocarbon density - Trainer et al 2006)
 C            = 0.8 g/cm^3 (titan tholins - Trainer et al 2006)
 C 	     = 1.0 g/cm^3 (old suspicious default value)
 C     ICOUPLE = 0 to turn off coupling / 1 to turn on coupling
-C     NEWSPEC = 1 to use species.dat that has E8.2 format for VDEP and FIXEDMR
 C             = 0 to use old formatting (E7.2 for VDEP and FIXEDMR)
 C     MONSIZE = 0 for 0.05 um monomers for fractal particles
 C      	      = 1 for 0.01 um monomers for fractal particles
@@ -49,3 +49,12 @@ C	      = 2 for 0.02 um monomers for fractal particles
 C	      = 3 for 0.07 um monomers for fractal particles
 C	      = 4 for 0.10 um monomers for fractal particles
 C     ZY      = solar zenith angle
+C     USOLMIN = Value under which the time stepper no longer considers
+C               a species when calculating "max relative change."
+C               This should be set to 1.e-20 or lower, unless you are
+C               moving the model to a new regime or creating a new
+C               template and require looser convergence criteria.
+C               Even in that case, you should lower/tighten this again
+C               before production runs.
+C     KIDA = 1 if using "kida-style" reactions.rx format
+C          = 0 if using the code's "old-style" reactions.rx format

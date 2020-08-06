@@ -5,17 +5,17 @@
 AGL=       0.5
 ISEASON=   1
 IZYO2=     0
-LGRID=     0
-IO2=       0
-INO=       1
+LGRID=     2
+IO2=       3
+INO=       3
 EPSJ=      1.E-9
 PRONO=     1.E9
 frak=      0
 HCDENS=    0.63
 ICOUPLE=   0
 monsize=   0
-ZY=	       50.
-USOLMIN=   1.E-20
+ZY=	       60.
+USOLMIN=   1.E-15
 KIDA=      0
 
 C ***** SET MODEL PARAMETERS *****
