@@ -60,7 +60,6 @@ CH23      O2        HCO       OH                  2BODY     4.1E-11     -750.   
 CH3       O2        H2CO      OH                  2BODY     5.65E-13    -4500.                 ! Zellner et al. [1988] THEORY for high temperature; otherwise upper limits for room temp
 CH3       O         H2CO      H                   2BODY     1.1E-10     0.                     ! JPL-15
 CH3       CH3       C2H6                          WEIRD                                        ! what a mess - NIST 2005
-CH3                 CH23      H                   2BODY     1.0E-5      0.0                    ! seems bad, but it has a history... APL WTF PHOTOLYSIS?
 CH3       H         CH4                           3BODY     1.0D-28     2.0D-10    1.80  0.40  ! Kevin's note: tricky ; Shawn's :Parkes et al. [1973] and Allen et al. [1980](check refs)
 CH3       HCO       CH4       CO                  2BODY     5.0E-11     0.                     ! NIST quotes Hampson/Garvin at 2e-10; actual measurements 4.4e-11
 CH3       HNO       CH4       NO                  2BODY     3.3E-12     -1000.                 ! NIST gives 1961 expt rate at 833<T<913.  Kevin picked the activation
@@ -142,15 +141,15 @@ S         S2        S3                            WEIRD     !yes it is. fix me a
 S2        S2        S4                            WEIRD     !yes it is. fix me at some point
 S         S3        S4                            WEIRD     !yes it is. fix me at some point
 S4        S4        S8                            WEIRD     !yes it is. fix me at some point
-SO21      M         SO23      M                   2BODY     1.0E-12     0.                     ! Turco et al. [1982]      (HV=M)
-SO21      M         SO2       M                   2BODY     1.0E-11     0.                     ! Turco et al. [1982]      (HV=M)
-SO21      M         SO23      M                   2BODY     1.5E+3      0.                     ! Turco et al. [1982]     (quenching)
-SO21      M         SO2       M                   2BODY     2.2E+4      0.                     ! Turco et al. [1982]     (quenching)
-SO21      O2        SO3       O                   2BODY     1.0E-16     0.                     ! Turco et al. [1982]           
-SO21      SO2       SO3       SO                  2BODY     4.0E-12     0.                     ! Turco et al. [1982]           
-SO23      M         SO2       M                   2BODY     1.5E-13     0.                     ! Turco et al. [1982]      (HV=M)
-SO23      M         SO2       M                   2BODY     1.13E+3     0.                     ! Turco et al. [1982]    (quenching)                                    
-SO23      SO2       SO3       SO                  2BODY     7.0E-14     0.                     ! Turco et al. [1982]                                              
+SO21      M         SO23      M                   2BODY     1.0E-12     0.                     ! Turco et al. [1982]
+SO21      M         SO2       M                   2BODY     1.0E-11     0.                     ! Turco et al. [1982]
+SO21      HV        SO23      HV                  2BODY     1.5E+3      0.                     ! Turco et al. [1982]   (quenching) !STB: APL uses M here instead of HV, will change abundance by a large factor (1E19 less), but overall abundance is about zero anyway
+SO21      HV        SO2       HV                  2BODY     2.2E+4      0.                     ! Turco et al. [1982]      (quenching) !STB: APL uses M here instead of HV, will change abundance by a large factor (1E19 less), but overall abundance is about zero anyway
+SO21      O2        SO3       O                   2BODY     1.0E-16     0.                     ! Turco et al. [1982]
+SO21      SO2       SO3       SO                  2BODY     4.0E-12     0.                     ! Turco et al. [1982]
+SO23      M         SO2       M                   2BODY     1.5E-13     0.                     ! Turco et al. [1982] (quenching) !STB: APL uses M here instead of HV, will change abundance by a large factor (1E19 less), but overall abundance is about zero anyway, also changed factor from 1.13E+3
+SO23      HV        SO2       HV                  2BODY     1.10E+3     0.                     ! Turco et al. [1982]     (quenching)
+SO23      SO2       SO3       SO                  2BODY     7.0E-14     0.                     ! Turco et al. [1982]                                          
 SO        NO2       SO2       NO                  2BODY     1.4E-11     0.                     ! JPL-15                                                  
 SO        O3        SO2       O2                  2BODY     3.4E-12     -1100.                 ! JPL-15                             
 SO2       HO2       SO3       OH                  2BODY     2.26E-13    -3420.                 ! Hwang et al. [2010] ; hi-temperature but gives a lower 298 K value (which mostly have upper limits only) APL  
@@ -274,6 +273,7 @@ HO2       HV        OH        O                   PHOTP
 CH4       HV        CH21      H2                  PHOTO 
 CH4       HV        CH3       H                   PHOTO     !must follow CH4 + HV -> CH21 + H2 (this reac only goes at Ly a)                                                                                              
 CH4       HV        CH23      H         H         PHOTO     !must follow CH4 + HV -> CH3 + H (this reac only goes at Ly a)
+CH3       HV        CH21      H                   PHOTO     1.00                               ! STB changed exit form CH23 to CH21 and made it a proper photolyis reaction
 C2H6      HV        CH23      CH23      H2        PHOTP                                        ! (IN PLACE OF C2H2 AND C2H4)
 C2H6      HV        CH4       CH21                PHOTP                                        ! this line must follow C2H6+hv->CH23+CH23+H2
 HNO2      HV        NO        OH                  PHOTO                                       ! APL requires LGRID=2

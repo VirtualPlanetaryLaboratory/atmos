@@ -1121,7 +1121,7 @@ c      print *, jn,photolabel
       REAL*8 sumA, sumB, chi
 
       ierr = 0
-      print*, 'well it should do something'
+
 
       OPEN(UNIT=kin,
      &     file='PHOTOCHEM/DATA/XSECTIONS/H2O2/H2O2_alinc.dat',
