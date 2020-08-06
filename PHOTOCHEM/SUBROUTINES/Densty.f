@@ -112,7 +112,6 @@ c-mc      DZ = Z(I) - Z(I-1)
       GZ(I) = G0 * (R0/R)*(R0/R)
       TAV = 0.5*(T(I) + T(I-1))
       HA(I) = ROVERM(I)*TAV/GZ(I)
-      print*,HA(I),I
    1  DEN(I) = DEN(I-1)*EXP(-DZ(I)/HA(I))*T(I-1)/T(I)
 C
 
