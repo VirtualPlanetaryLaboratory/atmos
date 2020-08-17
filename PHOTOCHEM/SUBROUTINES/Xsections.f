@@ -24,6 +24,7 @@
 !----------------------------Comments Correspond to line below---------------------------!
       !T dependent - also unexplained factor of 1000. (but not using T-dependent data right now)
       if(lgrid .eq. 2) then ! APL very high resolution grid with updated xsec, mostly into FUV (resolves SED bands better)
+         IF(species.eq.'CO2     ') CALL XS_CO2_alinc(nw,wavl,j,sq)
          IF(species.eq.'HNO3    ') CALL XS_HNO3_alinc(nw,wavl,T,j,sq)
          IF(species.eq.'NO2     ') CALL XS_NO2_alinc(nw,wavl,j,sq)
          IF(species.eq.'H2O2    ') CALL XS_H2O2_alinc(nw,wavl,T,j,sq)
@@ -43,6 +44,8 @@
 
 
       else ! band model
+        !returns CO+O to j and CO+O1D j+3 !ACK hardcoded needs fixing..
+         IF(species.eq.'CO2     ') CALL XS_CO2(nw,wavl,j,sq)
          IF(species.eq.'HNO3    ') CALL XS_HNO3(nw,wavl,T,j,sq)
          IF(species.eq.'NO2     ') CALL XS_NO2(nw,wavl,T,j,sq)
          IF(species.eq.'H2O2    ') CALL XS_H2O2(nw,wavl,wav,T,j,sq)
@@ -75,8 +78,6 @@
 
       !HAVEN"T INTEGRATED GRACES CODE
       IF(species.eq.'H2O     ') CALL XS_H2O(nw,wavl,wav,j,sq)
-      !returns CO+O to j and CO+O1D j+3 !ACK hardcoded needs fixing..
-      IF(species.eq.'CO2     ') CALL XS_CO2(nw,wavl,j,sq)
       !returns O2 + O(1D), then O2 + O(3P)
       IF(species.eq.'CH4     ') CALL XS_CH4(nw,wavl,j,sq)
       !returns  2 (3)CH2 +H2 then CH4 + (1)CH2
@@ -2701,6 +2702,107 @@ c Quantum yield (no reference nor research)
 
       RETURN
       END
+                  SUBROUTINE XS_CO2_alinc(nw,wl,jn,sq)
+*-----------------------------------------------------------------------------*
+*=  PURPOSE:                                                                 =*
+*=  Provide product of (cross section) x (quantum yield) for CO2 photolysis  =*
+*=  Cross section:  From alinc's updated data from MPI Mainz                 =*
+*     =  Quantum yield:  Inn 1993 and references therein      =
+*     NOTE! There is temperature dependence available for O3P (>167 nm)
+*-----------------------------------------------------------------------------*
+*=  PARAMETERS:  see above subroutines                                       =*
+*-----------------------------------------------------------------------------*
+
+      INCLUDE 'PHOTOCHEM/INPUTFILES/parameters.inc'
+      implicit real*8(A-H,O-Z)
+      REAL*8 deltax,biggest,zero
+      PARAMETER (deltax = 1.E-4,biggest=1.E+36, zero=0.0)
+      CHARACTER*11 photolabel
+      CHARACTER*8 ISPEC
+      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/PBLOK.inc'
+      INCLUDE 'PHOTOCHEM/DATA/INCLUDE/DBLOK.inc'
+      SAVE/PBLOK/
+* input
+      INTEGER nw,jn
+      REAL*8 wl(nw+1)
+
+* weighting functions
+      REAL*8 sq(kj,nz,kw)
+
+* data arrays
+      INTEGER kdata
+      PARAMETER(kdata=kw)
+      INTEGER n1, n2
+      REAL*8 x1(kdata), x2(kdata)
+      REAL*8 y1(kdata), y2(kdata)
+
+* local
+      REAL*8 yg1(nw), yg2(nw)
+      REAL*8 qy1(nw),qy2(nw)
+      INTEGER i, iw
+      INTEGER ierr
+      INTEGER L
+
+      ierr = 0
+
+      OPEN(UNIT=kin,
+     &     file='PHOTOCHEM/DATA/XSECTIONS/CO2/CO2_alinc.dat',
+     &     STATUS='old')
+
+      DO i = 1, 7
+         READ(kin,*)
+      ENDDO
+      n1 = nw
+      n2 = nw
+      DO i = 1, n1
+         READ(kin,*) x1(i),y1(i)
+         x2(i)=x1(i)
+      ENDDO
+      CLOSE (kin)
+
+c     interpolate gridpoints if needed
+      CALL addpnt(x1,y1,kdata,n1,x1(1)*(1.-deltax),zero)
+      CALL addpnt(x1,y1,kdata,n1,               zero,zero)
+      CALL addpnt(x1,y1,kdata,n1,x1(n1)*(1.+deltax),zero)
+      CALL addpnt(x1,y1,kdata,n1,            biggest,zero)
+      IF (HJtest.eq.1) THEN
+      	CALL inter3(nw+1,wl,yg1,n1,x1,y1,ierr)
+      ELSE
+      	CALL inter2(nw+1,wl,yg1,n1,x1,y1,ierr)
+      ENDIF
+
+      IF (ierr .NE. 0) THEN
+         WRITE(*,*) ierr, ' ***Something wrong in XS_CO2_alinc***'
+         STOP
+      ENDIF
+
+c     Main wl loop
+c     quantum yields Inn 1993
+
+      do L=1,nw
+         if(wl(l) .le. 1670.) then
+            print*, 'using it!'
+            qy1(l) = 0.2
+            qy2(l) = 0.
+            sq(jn,:,l) = yg1(l)*qy1(l)
+            sq(jn+1,:,l) = yg1(l)*qy2(l)
+         else
+            qy1(l) = 0.
+            qy2(l) = 1.
+            sq(jn,:,l) = yg1(l)*qy1(l)
+            sq(jn+1,:,l) = yg1(l)*qy2(l)
+         end if
+      end do
+
+      photolabel(jn)='PCO2_O1D'
+      jn=jn+1
+
+      photolabel(jn)='PCO2_O3P'
+      jn=jn+1
+
+      return
+      end
+
 
        SUBROUTINE XS_CO2(nw,wl,jn,sq)
 *-----------------------------------------------------------------------------*
@@ -4755,7 +4857,7 @@ C         print*,"HJtest",HJtest
 c Quantum yields and reactions depend on wavelength and presence of hydrocarbons
 
       DO iw = 1, nw
-        if (wl(iw).ge. 1200 .and. wl(iw) .lt. 1230) then  !ack hardcoded wavelength
+        if ( wl(iw) .lt. 1230) then  !ack hardcoded wavelength
 c-mab: November 2016: Switched qy2 and qy3 values from original due to comparison with a previous person.
 c-mab: A discussion within the GSFC group (following discrepancy with Kopparapu et al 2012 code) suggested they must've gotten switched somewhere accidentally?
             qy=0.24
@@ -8701,7 +8803,7 @@ c     1)MPI cross sections, Jim's branching ratios
       n1 =  61743
       DO i = 1, n1
          READ(kin,*) x1(i), y1(i)
-         x1(i)=x1(i) * 10. ! <- To convert from nm to Angstroms
+C         x1(i)=x1(i) * 10. ! <- To convert from nm to Angstroms !stb file already in Angstroms
       ENDDO
       CLOSE (kin)
 
@@ -8815,7 +8917,7 @@ c      ENDDO
       n1 =  105
       DO i = 1, n1
          READ(kin,*) x1(i), y1(i)
-         x1(i)=x1(i) * 10. ! <- To convert from nm to Angstroms
+c         x1(i)=x1(i) * 10. ! <- To convert from nm to Angstroms !stb already in Angtstrom
       ENDDO
       CLOSE (kin)
 
@@ -8916,7 +9018,7 @@ c     1)MPI data
       n1 =  18
       DO i = 1, n1
          READ(kin,*) x1(i), y1(i)
-         x1(i)=x1(i) * 10. ! <- To convert from nm to Angstroms
+c         x1(i)=x1(i) * 10. ! <- To convert from nm to Angstroms
       ENDDO
       CLOSE (kin)
 
@@ -9027,7 +9129,7 @@ c     1)MPI data
       n1 =  222
       DO i = 1, n1
          READ(kin,*) x1(i), y1(i)
-         x1(i)=x1(i) * 10. ! <- To convert from nm to Angstroms
+c         x1(i)=x1(i) * 10. ! <- To convert from nm to Angstroms !stb already in Angstroms
       ENDDO
       CLOSE (kin)
 
@@ -9133,7 +9235,7 @@ c     1)MPI data
       n1 =  10
       DO i = 1, n1
          READ(kin,*) x1(i), y1(i)
-         x1(i)=x1(i) * 10. ! <- To convert from nm to Angstroms
+c         x1(i)=x1(i) * 10. ! <- To convert from nm to Angstroms !stb already in A
       ENDDO
       CLOSE (kin)
 
@@ -9343,7 +9445,7 @@ c     1)MPI data
       n1 =  175
       DO i = 1, n1
          READ(kin,*) x1(i), y1(i)
-         x1(i)=x1(i) * 10. ! <- To convert from nm to Angstroms
+c         x1(i)=x1(i) * 10. ! <- To convert from nm to Angstroms !STB file already in Angstroms
       ENDDO
       CLOSE (kin)
 
