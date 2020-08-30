@@ -68,8 +68,8 @@ C   FIRST DEFINE RELEVANT CONSTANTS\
       INEWT = 20
       GAM15 = 8.64E+05/2.0
       GAM8 = 7.0E+06/2.0
-      AV = 6.02E+23
-      WL = 1.0
+      AV = 6.02E+23  !Avogadro
+      WL =1.      !liquid water content cloud g*m^-3 ????
       R = 1.36E-22
       NH = JTROP  !height index of troposphere is called NH in this subroutine...
 
@@ -156,24 +156,25 @@ c no info found for CS, CH3S, HCS. CO solubility is small, as is HCO, so 0's are
 
 !none of the carbon species have any rainout terms in Shawn's model - how valid is this?
        if(ISPEC(J).EQ.'CH')   H(J,I) = 0.
-       if(ISPEC(J).EQ.'C2H2')   H(J,I) = 0.
+       if(ISPEC(J).EQ.'C2H2')   H(J,I) = 0.041 * exp(1700.*tfac) ! JPL-15
 
-       if(ISPEC(J).EQ.'CH3O2')   H(J,I) = 0.
+       if(ISPEC(J).EQ.'CH3O2')   H(J,I) = 6.0 * exp(5600.*tfac) ! Seinfeld & Pandis 2006
        if(ISPEC(J).EQ.'CH3O')   H(J,I) = 0.
        if(ISPEC(J).EQ.'CH2CO')   H(J,I) = 0.
        if(ISPEC(J).EQ.'CH3CO')   H(J,I) = 0.
-       if(ISPEC(J).EQ.'CH3CHO')   H(J,I) = 0.
+       if(ISPEC(J).EQ.'CH3CHO')   H(J,I) = 13.13*exp(5890*tfac)! JPL-19
        if(ISPEC(J).EQ.'C2H3')   H(J,I) = 0.
-       if(ISPEC(J).EQ.'C2H4')   H(J,I) = 0.
+       if(ISPEC(J).EQ.'C2H4')   H(J,I) = 5.9E-3 * exp(2200.*tfac) ! JPL-15
        if(ISPEC(J).EQ.'C2H2OH')   H(J,I) = 0.
        if(ISPEC(J).EQ.'C2H4OH')   H(J,I) = 0.
        if(ISPEC(J).EQ.'C3H8')   H(J,I) = 0.
        if(ISPEC(J).EQ.'C3H7')   H(J,I) = 0.
        if(ISPEC(J).EQ.'C3H6')   H(J,I) = 0.
-       if(ISPEC(J).EQ.'C2H5HCO')   H(J,I) = 0.
+       if(ISPEC(J).EQ.'C2H5CHO')   H(J,I) = 9.9 * exp(4300.*tfac) ! JPL-15
        if(ISPEC(J).EQ.'C3H5')   H(J,I) = 0.
        if(ISPEC(J).EQ.'CH2CCH2')   H(J,I) = 0.
 
+       if(ISPEC(J).EQ.'CH3OH')   H(J,I) = 200. * exp(5600.*tfac) ! Sander 2015
        if(ISPEC(J).EQ.'CH3OOH')   H(J,I) = 300. * exp(5300.*tfac)
 
        if(ISPEC(J).EQ.'CH4O') H(J,I) = 220. * exp(4900.*tfac) ! Seinfeld & Pandis 2006

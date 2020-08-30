@@ -1045,6 +1045,17 @@ c-mab: Recall pstar = 22 is using Kevin's grid. We don't need the conversions be
 !          print *, 'Here is an M8 dwarf (a la TRAPPIST-1)!'
 !      ENDIF
 
+         IF (pstar .EQ. '33') THEN
+         n = 750
+         print *, "MSUN IS 33 (TRAPPIST-1 Peacock et al average)!"
+         call sleep(1)
+         nhead = 0
+         ierr = 0
+         OPEN(UNIT=kin,
+     &    file='PHOTOCHEM/DATA/FLUX/TRAPPIST-1.txt',
+     &                STATUS='old')
+      end if
+
 
 
       IF (pstar .EQ. 'proxima' .or. pstar .eq. '21' .or.
@@ -1059,6 +1070,7 @@ c-mab: Recall pstar = 22 is using Kevin's grid. We don't need the conversions be
      &                STATUS='old')
           print *, 'Proxima Centauri! Yay for nearby red stars!'
       ENDIF
+
 
       IF (pstar .EQ. 'HD40307' .or. pstar .eq. '24' .or.
      &   pstar .eq. 'K2.5V') THEN
@@ -1148,9 +1160,14 @@ c-mab: Recall pstar = 22 is using Kevin's grid. We don't need the conversions be
 !      in the input spectrum. It would benefit you to ensure that this is really the case!
         DO iw = 1, nw
                f(iw) = yg3(iw)*(wl(iw+1)-wl(iw))*5.039e8*wl(iw)/10. !convert to photons/cm2/s
-               print *, wl(iw), yg3(iw)
+c               print *, wl(iw), yg3(iw)
                flux(iw)=f(iw)
         ENDDO
+         write(*,'(/,3a,/)') '   wavl [A] ','    mW/m2/A',
+     -        '   phot/cm2/s'
+         do i=1,nw
+            write(*,'(3(1pe12.4))'), wl(i),yg3(i),f(i)
+         enddo
 
 
       ENDIF  !star != 13

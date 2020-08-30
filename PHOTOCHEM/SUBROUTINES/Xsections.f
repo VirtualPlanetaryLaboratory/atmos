@@ -2781,9 +2781,8 @@ c     quantum yields Inn 1993
 
       do L=1,nw
          if(wl(l) .le. 1670.) then
-            print*, 'using it!'
-            qy1(l) = 0.2
-            qy2(l) = 0.
+            qy1(l) = 0.0
+            qy2(l) = 0.5
             sq(jn,:,l) = yg1(l)*qy1(l)
             sq(jn+1,:,l) = yg1(l)*qy2(l)
          else
@@ -2794,10 +2793,10 @@ c     quantum yields Inn 1993
          end if
       end do
 
-      photolabel(jn)='PCO2_O1D'
+      photolabel(jn)='PCO2_O3P'
       jn=jn+1
 
-      photolabel(jn)='PCO2_O3P'
+      photolabel(jn)='PCO2_O1D'
       jn=jn+1
 
       return

@@ -151,13 +151,36 @@ c       A(J,I) = 9.46E-34*EXP(480./T(I))*DEN(I)  ! NIST 05 low Temp in N2.  Its 
 c     1992BAU/COB411-429
 c     1984WAR197C
 c     2007LI/ZHA109-136
-      if (CHEMJ(1,J).EQ.'CO'.AND.CHEMJ(2,J).EQ.'OH') THEN
-!     A(J,I) = 4.3E-14 * (T(i)/298.)**1.5 * exp(327./T(I)) ! reviews
-!     A(J,I) = 5.4E-14 * (T(i)/298.)**1.5 * exp(250./T(I))
-!     A(J,I) = 1.63E-13 * (T(i)/298.)**0.8 * exp(-36.41/T(I)) ! CO       OH       CO2      H                   1.0232E-07  1.3640E-13  1.1728E+06
-         A(J,i) = 2.81E-13 * exp(-176./T(I)) ! Frost et al 1993, 138-296 K
-!        A(J,I) = 5.15E-13* exp(327./T(I))  ! simpler for test
-      endif
+cc      if (CHEMJ(1,J).EQ.'CO'.AND.CHEMJ(2,J).EQ.'OH') THEN
+cC     A(J,I) = 4.3E-14 * (T(i)/298.)**1.5 * exp(327./T(I)) ! reviews
+cC     A(J,I) = 5.4E-14 * (T(i)/298.)**1.5 * exp(250./T(I))
+cC     A(J,I) = 1.63E-13 * (T(i)/298.)**0.8 * exp(-36.41/T(I)) ! CO       OH       CO2      H                   1.0232E-07  1.3640E-13  1.1728E+06
+cc         A(J,i) = 2.81E-13 * exp(-176./T(I)) ! Frost et al 1993, 138-296 K
+cC        A(J,I) = 5.15E-13* exp(327./T(I))  ! simpler for test
+c      endif
+
+      !   CO + OH + M -> H + CO2 + M ! JPL-15
+      if (CHEMJ(1,J) .eq. 'CO' .and. CHEMJ(2,J) .eq. 'OH') then
+        if (CHEMJ(3,J).eq. 'CO2'.or. CHEMJ(4,J).eq. 'CO2') THEN
+         K0 = 1.5E-13
+         Kinf = 2.1e9 * (T(I)/300.)**6.1
+         A(J,I) = K0/(1. + K0/(kinf/den(i))) *
+     -        0.6**((1. + log10(k0/(kinf/den(i)))**2)**(-1))
+        else
+         K0 = 6.9E-33*(298./T(I))**4.2
+         Kinf = 1.1e-12 * (298./T(I))**(-1.3)
+         A(J,I) = (K0*Kinf*den(i)/(kinf + K0*den(i))) *
+     -        0.6**(((1. + log10(k0*den(i)/Kinf))**2)**(-1))
+        endif
+      end if
+
+      !   CO + OH + M -> H + CO2 + M ! JPL-15
+c      if (CHEMJ(1,J) .eq. 'CO' .and. CHEMJ(2,J) .eq. 'OH') then
+c         K0 = 6.9E-33*(298./T(I))**4.2
+c         Kinf = 1.1e-12 * (298./T(I))**(-1.3)
+c         A(J,I) = K0*Kinf*den(i)/(1. + K0/(kinf/den(i))) *
+c     -        0.6**((1. + log10(k0/(kinf/den(i)))**2)**(-1))
+c      end if
 
 !     CS + HS -> CS2 + H  !SORG
       if (CHEMJ(1,J).EQ.'CS'.AND.CHEMJ(2,J).EQ.'HS') THEN
@@ -196,6 +219,14 @@ c      1984WAR197C
       if (CHEMJ(1,J).EQ.'H'.AND.CHEMJ(2,J).EQ.'H') THEN
        A(J,I) = 8.85E-33*(T(I)/287)**(-0.6) * DEN(I)  !gna Baluch 1994
       endif
+
+!     H + CH3 + M -> CH4 + M
+      if (CHEMJ(1,J) .eq. 'CH3' .and. CHEMJ(2,J) .eq. 'H') then
+         K0 = 1.7E-24 * T(I)**(1.8)
+         Kinf = 3.5e-10
+         Fc = 0.63 * exp(-T(I)/3315.) + 0.37 * exp(-T(I)/61.)
+         A(J,I) = k0*kinf*den(i) * fc / (k0*den(i) + kinf)
+      end if
 
 !   CH3O + NO -> H2CO + HNO
       if (CHEMJ(1,J).EQ.'CH3O'.AND.CHEMJ(2,J).EQ.'NO') THEN
