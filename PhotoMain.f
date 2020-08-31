@@ -1377,7 +1377,7 @@ C     for standalone mode this should probably be the default
 C      ICOUPLE = 1
 
 C ***** write OUT INITIAL DATA *****
-      CALL OUTPUT(0,NSTEPS,0.D0,jtrop, vdep,USOLORIG,USETD, frak)
+      CALL OUTPUT(0,NSTEPS,0.E0,jtrop, vdep,USOLORIG,USETD, frak)
 
 
 C
