@@ -185,7 +185,7 @@ c-mab  print*,'JNO',JNO !debugging for templates w/o NO photolysis
       CALL XS('O2      ',nw,wavl,wav,T,DEN,JO2_O1D,sq,columndepth,zy,
      $         IO2,lgrid)
 
-      CALL XS('NO      ',nw,wavl,wav,T,DEN,JNO,sq,columndepth,zy
+      CALL XS('NO      ',nw,wavl,wav,T,DEN,JNO,sq,columndepth,zy,
      $         IO2,lgrid)
 
       endif
