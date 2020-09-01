@@ -8,7 +8,7 @@ clear
 echo "This script imports PHOTOCHEM & CLIMA templates from a template file."
 echo "You will need to be in your top folder for atmos, not a subfolder."
 echo "Your current folder is $(pwd)."
-echo "Your PHOTOCHEM has these templates:"
+echo "Your PHOTOCHEM/INPUTFILES/TEMPLATE folder has these templates:"
 ls $temp_path --hide=*.*
 true_path=$(pwd)
 echo -n "Enter the folder title (NOT THE PATH) and press [ENTER]: "
@@ -17,21 +17,27 @@ read folder
 folder_path=$temp_path$folder
 folder_path2=$temp_path2$folder
 
-cd $folder_path
+photo_ins='PHOTOCHEM/INPUTFILES/'
+clima_ins='CLIMA/IO'
+
+#cd $folder_path
+
+# If the / is at the end, get rid of it
+if [ "${folder_path:$length:-1}" == '/' ]
+    then
+    folder_path="${folder_path:-1}"
+fi
+
 
 # Copies over the newer dist file if it's present, 
 # otherwise copies over the normal in.dist
-if [ -f PTZ_mixing_ratios_out.dist ]; then
-    cp 'PTZ_mixingratios_out.dist' '../../..' && echo "Copied PTZ_mixingratios_out.dist from $(pwd ../.../..)"
-else
-    cp 'in.dist' '../../..' && echo "Copied in.dist from $(pwd ../../..)"
-fi
+cp "$folder_path/in.dist" "$photo_ins/../in.dist" && echo "Copied in.dist from $folder_path"
 
-cp 'input_photchem.dat' '../..' && echo "Copied input_photchem.dat from $(pwd ../..)"
-cp 'reactions.rx' '../..' && echo "Copied reactions.rx from $(pwd ../..)"
-cp 'parameters.inc' '../..' && echo "Copied parameters.inc from $(pwd ../..)"
-cp 'species.dat' '../..' && echo "Copied species.dat from $(pwd ../..)"
-cp 'PLANET.dat' '../..' && echo "Copied PLANET.dat from $(pwd ../..)"
+cp "$folder_path/input_photchem.dat" $photo_ins && echo "Copied input_photchem.dat from $folder_path"
+cp "$folder_path/reactions.rx" $photo_ins && echo "Copied reactions.rx from $folder_path"
+cp "$folder_path/parameters.inc" $photo_ins && echo "Copied parameters.inc from $folder_path"
+cp "$folder_path/species.dat" $photo_ins && echo "Copied species.dat from $folder_path"
+cp "$folder_path/PLANET.dat" $photo_ins && echo "Copied PLANET.dat from $folder_path"
 echo 'Finished copying photochem templates over'
 cd $true_path
 pwd
@@ -66,19 +72,15 @@ if [ "$run_clima" == "y" -o "$run_clima" == 'Y' ]
 then
     cd $true_path
     echo "folder path is $folder_path2"
-    if [ -d "$folder_path2" ]; then
-	cd $folder_path2
-	echo "folder path is now $(pwd)"
-	cp 'input_clima.dat' '../..' && echo "Copied input_clima.dat from $(pwd)"
-	if [ "$run_photo" == "n" -o "$run_photo" == 'N' ]
+	cp "$folder_path2/input_clima.dat" $clima_ins && echo "Copied input_clima.dat from $folder_path2"
+	if [ "$run_photo" == "n" -o "$run_photo" == "N" ]
 	then
          echo "NOTE: You did not run photo but you want to run Clima. Copying stored Clima coupling files."
-         cp 'coupling_params.out' '../../../../COUPLE/' && echo "Copied coupling_params.out from $(pwd)"
-         cp 'fromPhoto2Clima.dat' '../../../../COUPLE/' && echo "Copied fromPhoto2Clima.dat from $(pwd)"
-         cp 'hcaer.photoout.out' '../../../../COUPLE/' && echo "Copied hcaer.photoout.out from $(pwd)"
-         cp 'mixing_ratios.dat' '../../../../COUPLE/' && echo "Copied mixing_ratios.dat from $(pwd)"
-         cp 'time_frak_photo.out' '../../../../COUPLE/' && echo "Copied time_frak_photo.out from $(pwd)"
-	fi
+         cp "$folder_path2/coupling_params.out" "COUPLE/" && echo "Copied coupling_params.out from $folder_path2"
+         cp "$folder_path2/fromPhoto2Clima.dat" "COUPLE/" && echo "Copied fromPhoto2Clima.dat from $folder_path2"
+         cp "$folder_path2/hcaer.photoout.out" "COUPLE/" && echo "Copied hcaer.photoout.out from $folder_path2"
+         cp "$folder_path2/mixing_ratios.dat" "COUPLE/" && echo "Copied mixing_ratios.dat from $folder_path2"
+         cp "$folder_path2/time_frak_photo.out" "COUPLE/" && echo "Copied time_frak_photo.out from $folder_path2"
     fi
  
      
