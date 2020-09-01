@@ -1122,7 +1122,7 @@ C sgflux, vdep, smflux, and distributed fluxes are already set
 C added by giada
       OPEN(unit=999, file='COUPLE/coupling_params.out')
  909  FORMAT(1X, F4.2, 5X, F8.3, 5X, F3.1, 5X, A8, 5X, I2,
-     &     9X, I4, 6X, F4.2, 6X, F7.3)
+     &     9X, I4, 6X, F5.3, 6X, F7.3)
  908  FORMAT(1X, 'timega', 6X, 'P0', 8X, 'frak', 3X, 'pstar', 8X,
      &   'ihztype', 6X, 'NZ', 6X, 'FSCALE', 6X, 'G')
       print *, 'FRAK = ', frak

@@ -447,10 +447,10 @@ c*******Changed for now*********
 ! 107  FORMAT(1X, F4.2, 5X, F8.3, 5X, F3.1, 5X, I2, 5X, I2,
 !     &     9X, I4, 6X, F4.2, 6X, F8.2)
 
- 107  FORMAT(1X, F4.2, 5X, F8.3, 5X, F3.1, 5X, A8, 5X, I2,
-     &     9X, I4, 6X, F4.2, 6X, F7.3)
+! 107  FORMAT(1X, F4.2, 5X, F8.3, 5X, F3.1, 5X, A8, 5X, I2,
+!     &     9X, I4, 6X, F5.3, 6X, F7.3)
       READ(999,*)
-      READ(999,107) timega, P0ground, frak, pstar, ihztype, nzp, fscale,
+      READ(999,*) timega, P0ground, frak, pstar, ihztype, nzp, fscale,
      & G
       print *, 'COUPLING PARAMETERS ARE:'
       print *, 'TIMEGA = ', timega
