@@ -596,7 +596,7 @@ C they are created and updated regardless of whether ICOUPLE=1 in input_photoche
        open(84, file='COUPLE/fromPhoto2Clima.dat', status='UNKNOWN')
        open(116, file='COUPLE/fromClima2Photo.dat', status='UNKNOWN')
        open(117, file='COUPLE/mixing_ratios.dat', status='UNKNOWN')
-c       open(118, file='COUPLE/aux_p_couple.dat', status='UNKNOWN')  ! STB - auxiliary coupling file for RH_surf calculation according to Ramirez et al. 2014
+       open(118, file='COUPLE/aux_p_couple.dat', status='UNKNOWN')  ! STB - auxiliary coupling file for RH_surf calculation according to Ramirez et al. 2014
 
 C - READ IN SPECIES NAMES, ATOMIC NUMBERS, AND BOUNDARY CONDITIONS
 
@@ -1369,7 +1369,7 @@ c      else
 c       NSTEPS = 10000 !the default, to allow converging runs
 c      endif
 C      Default number of steps is 50,000. The code shouldn't take nearly this long to run except hot planets.
-       NSTEPS = 10000
+       NSTEPS = 100
 
 c-mab: nsteps = 1 recommended for initial model debugging
 c      NSTEPS = 1

@@ -1,7 +1,7 @@
-     
+
       SUBROUTINE INPUT_INTERP(temp_alt,water,O3,CH4,CO2,ethane,Jcold,T,
      &           FI)
-C-KK This subroutine interpolates the (alt),water, ozone file that is READ in 
+C-KK This subroutine interpolates the (alt),water, ozone file that is READ in
 C-KK from atm_chem.
 !FI is matrix of mixing ratios
 !strip down to be simpler so that it takes in only one gas concentration
@@ -30,11 +30,11 @@ C-KK   both indices starting at ground level
         FI(3,j) = CH4(istart)
         FI(4,j) = O3(istart)        ! Not defined in mixing_ratios.dat
         FI(5,j) = ethane(istart)
-        
+
         istart = istart+1
         top = temp_alt(NZ)
-        
-        DO j = ND-1, 1, -1 !starting at ND-1, which is second to last layer, which in climate code is the surface 
+
+        DO j = ND-1, 1, -1 !starting at ND-1, which is second to last layer, which in climate code is the surface
            !clima and photochem alt codes are reversed from each other (counting by increments of -1)
          DO i = istart, NZ
            IS = i
@@ -47,14 +47,14 @@ C-KK   both indices starting at ground level
          DZI = temp_alt(IS)-temp_alt(IS1)
          DZJ = ALT(j) - temp_alt(IS1)
          FR = DZJ/DZI
-        
+
 
         IF (ALT(j) .LT. top) THEN !is this a bug that this layer logic is not built into the water? (top = top of photochem grid)
           F4log1 = ALOG(O3(IS1))
           F4log2 = ALOG(O3(IS))
-          F4log = (FR*F4log2) + ((1-FR)*F4log1)        
+          F4log = (FR*F4log2) + ((1-FR)*F4log1)
          ELSE F4log = FI(4,j+1)
-        END IF 
+        END IF
         FI(4,j) = EXP(F4log)
         F1log1 = ALOG(water(IS1))                     ! This is water layer F1
         F1log2 = ALOG(water(IS))
@@ -72,21 +72,21 @@ C-KK   both indices starting at ground level
         F5log2 = ALOG(ethane(IS))
         F5log = (FR*F5log2) + ((1-FR)*F5log1)
         FI(5,j) = EXP(F5log)
-        
+
         END DO
 
   471  CONTINUE
 
-        DO k =1, ND !k is index; looping over number of layers in climate code (ND = number of layers in clima)
-           !goes from top of atmosphere since clima counts from top down
-          if (ALT(k) .GE. temp_alt(JCOLD)) jcold_new = k !redefines cold trap until it matches the real cold trap
-         END DO
-        
-        JCOLD = jcold_new
+C        DO k =1, ND !k is index; looping over number of layers in climate code (ND = number of layers in clima)
+          !goes from top of atmosphere since clima counts from top down
+C          if (ALT(k) .GE. temp_alt(JCOLD)) jcold_new = k !redefines cold trap until it matches the real cold trap
+C         END DO
 
-        !take out water statements and generalize the o3 statement to be for any gas.  
-        !Will interpolate that specific gas to the climate code.  
-        !We could probably use the same function to interpolate the number density of the particles.  
+c         JCOLD = jcold_new
+
+        !take out water statements and generalize the o3 statement to be for any gas.
+        !Will interpolate that specific gas to the climate code.
+        !We could probably use the same function to interpolate the number density of the particles.
         !Then we can call this a bunch of times for each thing we're interested in.
 
         RETURN

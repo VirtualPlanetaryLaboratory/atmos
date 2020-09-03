@@ -724,14 +724,14 @@ c 889  format (A8,2X,1PE10.3)
 
 
 
-c 919  FORMAT(1X, F8.3, 5X, E10.5, 5X, F8.3, 6X, I4, 6X, E12.6,   !STB auxiliary coupling file for RH_surf calculation according to Ramirez et al. 2014
-c     &     6X, E12.6,6X, E12.6,6X, E12.6,6X, E12.6, 6X, E12.6)
-c 918  FORMAT(1X, 'WT_surf', 8X, 'Den0', 8X, 'T_surf',
-c     &    9X, 'NZ', 9X, 'FLOW(LCH4)', 9X, 'FLOW(LO2)',9x,'USOL(H2O)',
-c     &    9X, 'O3col_depth',9x 'CH4col_depth', 9X, 'O2col_depth')
-c      WRITE(118,918)
-c      WRITE(118,919) WTa(1), Den(1), T(1), NZ, FLOW(LCH4),
-c     $  FLOW(LO2), USOL(LH2O,1),O3COL ,CH4_column ,O2_column
+ 919  FORMAT(1X, F8.3, 5X, E10.5, 5X, F8.3, 6X, I4, 6X, E12.6,   !STB auxiliary coupling file for RH_surf calculation according to Ramirez et al. 2014
+     &     6X, E12.6,6X, E12.6,6X, E12.6,6X, E12.6, 6X, E12.6)
+ 918  FORMAT(1X, 'WT_surf', 8X, 'Den0', 8X, 'T_surf',
+     &    9X, 'NZ', 9X, 'FLOW(LCH4)', 9X, 'FLOW(LO2)',9x,'USOL(H2O)',
+     &    9X, 'O3col_depth',9x 'CH4col_depth', 9X, 'O2col_depth')
+      WRITE(118,918)
+      WRITE(118,919) WTa(1), Den(1), T(1), NZ, FLOW(LCH4),
+     $  FLOW(LO2), USOL(LH2O,1),O3COL ,CH4_column ,O2_column
 
 
 
