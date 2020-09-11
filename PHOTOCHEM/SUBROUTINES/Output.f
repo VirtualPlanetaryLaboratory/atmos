@@ -65,10 +65,12 @@ C
       IF (L.EQ.LR) K2 = NQ
       write(14, 110) (ISPEC(K),K=K1,K2)
  110  format(/5X,'Z',8X,18(A8,1X))
-      DO 20 I=1,3
-  20  write(14, 120) Z(I),(USOL(K,I),K=K1,K2)
-      DO 21 I=4,NZ,ISKIP
-  21  write(14, 120) Z(I),(USOL(K,I),K=K1,K2)
+      DO I=1,3
+      write(14, 120) Z(I),(USOL(K,I),K=K1,K2)
+      END DO
+      DO I=4,NZ,ISKIP
+      write(14, 120) Z(I),(USOL(K,I),K=K1,K2)
+      END DO
  120  format(1X,1P19E9.2)
       IF (N.EQ.0) GO TO 8 !on first call don't print TP, TL
       write(14, 140)
@@ -261,10 +263,12 @@ c ACK this might need a little tire kicking as I go to a variable grid
 C
 c  what follows gives the fluxes
       DO 3 K=1,NQ
-      DO 2 I=1,NZ
-   2  SL(K,I) = USOL(K,I)*DEN(I)
-      DO 4 I=1,NZ-1
-   4  FLUXO(K,I) = - DK(I)*(USOL(K,I+1) - USOL(K,I))/DZ(I)
+      DO I=1,NZ
+      SL(K,I) = USOL(K,I)*DEN(I)
+      END DO
+      DO I=1,NZ-1
+      FLUXO(K,I) = - DK(I)*(USOL(K,I+1) - USOL(K,I))/DZ(I)
+      END DO
    3  CONTINUE
 !diffusion added below
 
@@ -364,8 +368,9 @@ c-mab Most solar system gas giants have a mwt of <3.0 and terrestrials > 20.0
 c-mab Using wt of methane - 16.0 as a distinction here
 c-mab (May change later after input soliciation)
       IF (WT.GT.16.0) THEN
-      DO 6 I=1,jtrop-1   ! jim had 10 hard wired... its not zero
-   6  FLUXO(LH2O,I) = 0.
+      DO I=1,jtrop-1   ! jim had 10 hard wired... its not zero
+      FLUXO(LH2O,I) = 0.
+      END DO
       ENDIF
 c there are issues here -
 
@@ -419,8 +424,9 @@ C ***** write on LAST ITERATION ONLY *****
       K2 = K1 + IROW - 1
       IF (L.EQ.LR) K2 = NQ
       write(14, 110) (ISPEC(K),K=K1,K2)
-      DO 22 I=1,NZ,ISKIP
-  22  write(14, 120) Z(I),(SL(K,I),K=K1,K2)
+      DO I=1,NZ,ISKIP
+      write(14, 120) Z(I),(SL(K,I),K=K1,K2)
+      END DO
    9  CONTINUE
 C
 c-mc
@@ -464,8 +470,9 @@ c-mc
  510  format(/5X,'Z',8X,18(A8,2X))
  520  format(1X,1P1E9.2,1P18E10.2)
       write(14, 520) ZFL,(FLOW(K),K=K1,K2)
-      DO 23 I=1,NZ,ISKIP
-  23  write(14, 520) ZF(I),(FLUXO(K,I),K=K1,K2)
+      DO I=1,NZ,ISKIP
+      write(14, 520) ZF(I),(FLUXO(K,I),K=K1,K2)
+      END DO
       write(14, 520) ZFT,(FUP(K),K=K1,K2)
   10  CONTINUE
 C
@@ -521,8 +528,9 @@ c-mc
  206  format(5X,'Z',6X,'(SO2)g',3X,'(H2CO)g',2X,'(SO2)aq',1X,
      2  'CH2(OH)2',3X,'HCO3-',4X,'CO3=',5X,'HSO3-',4X,'SO3=',3X,
      3  'CH2OHSO3-',3X,'OH-',5X,'SO4=',6X,'PH')
-      DO 31 I=1,NH,ISKIP
-  31  write(14, 120) Z(I),(XSAVE(K,I),K=1,10),SO4SAV(I),PH(I)
+      DO I=1,NH,ISKIP
+      write(14, 120) Z(I),(XSAVE(K,I),K=1,10),SO4SAV(I),PH(I)
+      END DO
 C
       write(14, 210)
  210  format(/1X,'NORMAL HENRYS LAW COEFFICIENTS'/)
@@ -531,8 +539,9 @@ C
       K2 = K1 + IROW - 1
       IF (L.EQ.LR) K2 = NQ
       write(14, 110) (ISPEC(K),K=K1,K2)
-      DO 26 I=1,NH,ISKIP
-  26  write(14, 120) Z(I),(H(K,I),K=K1,K2)
+      DO I=1,NH,ISKIP
+      write(14, 120) Z(I),(H(K,I),K=K1,K2)
+      END DO
   25  CONTINUE
 C
       write(14, 215)
@@ -542,8 +551,9 @@ C
       K2 = K1 + IROW - 1
       IF (L.EQ.LR) K2 = NQ
       write(14, 110) (ISPEC(K),K=K1,K2)
-      DO 28 I=1,NH,ISKIP
-  28  write(14, 120) Z(I),(ENHAN(K,I),K=K1,K2)
+      DO I=1,NH,ISKIP
+      write(14, 120) Z(I),(ENHAN(K,I),K=K1,K2)
+      END DO
   27  CONTINUE
 C
       write(14, 220)
@@ -553,8 +563,9 @@ C
       K2 = K1 + IROW - 1
       IF (L.EQ.LR) K2 = NQ
       write(14, 110) (ISPEC(K),K=K1,K2)
-      DO 30 I=1,NH,ISKIP
-  30  write(14, 120) Z(I),(RAINGC(K,I),K=K1,K2)
+      DO I=1,NH,ISKIP
+      write(14, 120) Z(I),(RAINGC(K,I),K=K1,K2)
+      END DO
   29  CONTINUE
 C
       write(14, 175)
@@ -903,7 +914,7 @@ c-mc - three lines below should be cut - perhaps usable for JSO2
       write(14, 191)
   191 FORMAT(9X,"1",9X,"2",9X,"3",9X,"4",9X,"5",9X,"6",9X,"7",9X,
      2    "8",9X,"9",8X,"10")
-     
+
 C   - the following code is taken from the Kasting group's version to
 C   - print out P&L tables with integrated rxn rates, "int.rates.out.dat"
       DO 702 I=1,NSP
@@ -974,8 +985,9 @@ c      K1 = NQ1 + (L-1)*IROW  !orig
       K2 = K1 + IROW - 1
       IF (L.EQ.LR) K2 = NSP
       write(14, 110) (ISPEC(K),K=K1,K2)
-      DO 24 I=1,NZ,ISKIP
-  24  write(14, 120) Z(I),(SL(K,I),K=K1,K2)
+      DO I=1,NZ,ISKIP
+      write(14, 120) Z(I),(SL(K,I),K=K1,K2)
+      END DO
   12  CONTINUE
 C
       write(14, 190)

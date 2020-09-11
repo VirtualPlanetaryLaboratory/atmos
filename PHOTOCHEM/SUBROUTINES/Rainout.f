@@ -79,8 +79,9 @@ C   FIRST DEFINE RELEVANT CONSTANTS\
 
 C   MODIFY TEMPERATURE PROFILE TO DO AQUEOUS CHEMISTRY
       T_triple = 273.15
-      DO 7 I=1,NH
-   7  TAQ(I) = max(T(I),T_triple)
+      DO I=1,NH
+      TAQ(I) = max(T(I),T_triple)
+      END DO
 
 
 C
@@ -125,7 +126,7 @@ c   lets play guess the units.  looks like mol/liter/atm
        if(ISPEC(J).EQ.'H2O2') H(J,I) = 8.3E4 * EXP(7400.*tfac) ! updated
        if(ISPEC(J).EQ.'H2') H(J,I) = 7.8E-4 * EXP(500.*tfac)  ! updated
        if(ISPEC(J).EQ.'CO') H(J,I) = 1.0E-3 * EXP(1300.*tfac)  ! updated
-       if(ISPEC(J).EQ.'CO2') H(J,I) = 3.5E-02 * EXP(2400.*tfac) ! added ! APL
+c       if(ISPEC(J).EQ.'CO2') H(J,I) = 3.5E-02 * EXP(2400.*tfac) ! added ! APL !STB removing this for now because it caues problems for high CO2 atmospheres
        if(ISPEC(J).EQ.'H2CO') H(J,I) = 3.2E3 * EXP(6800.*tfac)  ! updated
        if(ISPEC(J).EQ.'CH4') H(J,I) = 1.4E-3 * EXP(1600.*tfac)  ! updated
        if(ISPEC(J).EQ.'C2H6') H(J,I) = 1.9E-3 * EXP(2300.*tfac)  ! updated
@@ -215,10 +216,11 @@ C   9)   H2O     =  H+  +  OH-
    3  CONTINUE
 
 C
-      DO 21 J=1,NQ
-      DO 21 I=1,NZ
-  21  ENHAN(J,I) = 1.
-
+      DO J=1,NQ
+      DO I=1,NZ
+      ENHAN(J,I) = 1.
+      END DO
+      END DO
 
 C   NOW ESTIMATE INITIAL CONCENTRATIONS AT GRID STEP 1 ON THE
 C     FIRST CALL
@@ -258,11 +260,12 @@ C
 
 C
 C ***** LOOP OVER ALTITUDE *****
-      DO 10 I=1,NH            !this is a big loop (NH is the tropopause height index JTROP elsewhere)
+      DO I=1,NH            !this is a big loop (NH is the tropopause height index JTROP elsewhere)
 
       IF (NRAIN .NE. 0) THEN
-        DO 9 K=1,NAQ
- 9      X(K) = XSAVE(K,I)
+        DO K=1,NAQ
+        X(K) = XSAVE(K,I)
+        END DO
       ENDIF
 
       ALPHARAIN = WL * 1.E-9 * 6.02E23/DEN(I)
@@ -290,15 +293,17 @@ C   START NEWTON ITERATION
       DO 12 IN=1,INEWT
       CALL AQUEOUS(X,F,I)
 C
-      DO 13 J=1,NAQ
+      DO J=1,NAQ
       XS = X(J)
       DX = EPS*X(J)
       X(J) = X(J) + DX
       CALL AQUEOUS(X,FP,I)
 C
-      DO 14 K=1,NAQ
-  14  DJAC(K,J) = (FP(K) - F(K))/DX
-  13  X(J) = XS
+      DO K=1,NAQ
+      DJAC(K,J) = (FP(K) - F(K))/DX
+      END DO
+      X(J) = XS
+      END DO ! for loop J=1,NAQ
 C
 
       CALL SGEFA(DJAC,NAQ,NAQ,IPVT,INFO)
@@ -330,8 +335,9 @@ C
 C
 C   CALCULATE EFFECTIVE HENRY'S LAW COEFFICIENTS (INCLUDING AQUEOUS
 C      PHASE REACTIONS)
-      DO 18 J=1,NQ
-  18  HEFF(J) = H(J,I) + 1.E-30
+      DO J=1,NQ
+      HEFF(J) = H(J,I) + 1.E-30
+      END DO
 C
       HEFF(LH2CO) =(X(LH2COaq) + X(LH2COSO3))/X(LH2COg)
 
@@ -347,8 +353,9 @@ C
 C   SAVE DENSITIES AND CALCULATE ENHANCEMENTS
 
 
-      DO 16 J=1,NAQ
-  16  XSAVE(J,I) = X(J)
+      DO J=1,NAQ
+      XSAVE(J,I) = X(J)
+      END DO
 
 
 
@@ -405,18 +412,22 @@ C  Find F(Z)
       ENDIF
 C
 C  Loop over species
-      DO 10 J=1,NQ
+      DO J=1,NQ
       RKJ = WH2O/55. /(AV*WL*1.E-9 + 1./(HEFF(J)*R*TEMP))
       QJ = 1. - FZ + FZ/(GAMMA*RKJ) * (1.0 - EXP(-RKJ*GAMMA))
-  10  RAINGC(J,I) = (1. - EXP(-RKJ*GAMMA))/(GAMMA*QJ)
+      RAINGC(J,I) = (1. - EXP(-RKJ*GAMMA))/(GAMMA*QJ)
+      END DO
+      END DO !loop that started with DO I=1,NH  way up
 C ***** END ALTITUDE LOOP *****
 
 C
 c-mc set rainout rates to zero above the tropopause (nh=jtrop)
 
-      DO 11 I=NH1,NZ
-      DO 11 J=1,NQ
-  11  RAINGC(J,I) = 0.
+      DO I=NH1,NZ
+      DO J=1,NQ
+      RAINGC(J,I) = 0.
+      END DO
+      END DO
 
 
 C
@@ -429,8 +440,9 @@ c   what is the 2.4e-6 constant?
         IF(ZKM.LT.6.) RAIN(I) = 2.4E-6
    2  CONTINUE
 
-      DO 6 I=NH1,NZ
-   6  RAIN(I) = 0.
+      DO I=NH1,NZ
+      RAIN(I) = 0.
+      END DO
 
       NRAIN = NRAIN + 1
 

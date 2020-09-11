@@ -798,7 +798,7 @@ c            print *, wl(iw), yg3(iw)
          write(*,'(/,3a,/)') '   wavl [A] ','    mW/m2/A',
      -        '   phot/cm2/s'
          do i=1,nw
-            write(*,'(3(1pe12.4))'), wl(i),yg3(i),f(i)
+            write(*,'(3(1pe12.4))') wl(i),yg3(i),f(i)
          enddo
 
 c         do i=1,nw
@@ -942,10 +942,10 @@ c 1.33432e+14 in photons/cm2/s
       IF (pstar .NE. 'wasp12' .and. pstar .ne. 'sun' .and. pstar .ne.
      &     'zahnle' .and. pstar .ne. 'gj581' .and. pstar .ne. '13' .and.
      &     pstar .ne. '14' .and. pstar .ne. '22' .and.
-     &     pstar .ne. '23' .and. pstar .ne. '12' .and. 
+     &     pstar .ne. '23' .and. pstar .ne. '12' .and.
      &     pstar  .ne. 'MUGJ876' .and. pstar .ne. '80' .and. pstar .NE.
      &    'MUGJ551' .and. pstar .ne. '81' .and. pstar .NE. 'MUGJ581'
-     &     .and. pstar .ne. '82' .and. pstar .NE. 'MUGJ667c' .and. 
+     &     .and. pstar .ne. '82' .and. pstar .NE. 'MUGJ667c' .and.
      &     pstar .ne. '83' .and. pstar .NE. 'MUGJ1214' .and. pstar .ne.
      &      '84' .and. pstar .ne. '85' .and. pstar .ne. '86' .and.
      &     pstar .ne. '87' .and. pstar .ne. '88' .and. pstar .ne. '89'
@@ -1168,7 +1168,7 @@ c               print *, wl(iw), yg3(iw)
          write(*,'(/,3a,/)') '   wavl [A] ','    mW/m2/A',
      -        '   phot/cm2/s'
          do i=1,nw
-            write(*,'(3(1pe12.4))'), wl(i),yg3(i),f(i)
+            write(*,'(3(1pe12.4))') wl(i),yg3(i),f(i)
          enddo
 
 
@@ -1385,7 +1385,7 @@ c-mab: Presently this star doesn't allow Modern Earth template to converge (even
          nhead = 0
          ierr = 0
 
-         n = 24995  
+         n = 24995
 
          WRITE(*,*) 'ATTEMPTING TO OPEN THE SPECTRUM FILE'
          OPEN(UNIT=kin,
@@ -1400,7 +1400,7 @@ c-mab: Presently this star doesn't allow Modern Earth template to converge (even
          nhead = 0
          ierr = 0
 
-         n = 24995  
+         n = 24995
 
          OPEN(UNIT=kin,
      &      file='PHOTOCHEM/DATA/FLUX/muscles_gj436.txt',
@@ -1414,7 +1414,7 @@ c-mab: Presently this star doesn't allow Modern Earth template to converge (even
          nhead = 0
          ierr = 0
 
-         n = 24995  
+         n = 24995
 
          OPEN(UNIT=kin,
      &      file='PHOTOCHEM/DATA/FLUX/muscles_gj832.txt',
@@ -1428,7 +1428,7 @@ c-mab: Presently this star doesn't allow Modern Earth template to converge (even
          nhead = 0
          ierr = 0
 
-         n = 24995  
+         n = 24995
 
          OPEN(UNIT=kin,
      &      file='PHOTOCHEM/DATA/FLUX/muscles_hd40307.txt',
@@ -1442,7 +1442,7 @@ c-mab: Presently this star doesn't allow Modern Earth template to converge (even
          nhead = 0
          ierr = 0
 
-         n = 24995  
+         n = 24995
 
          OPEN(UNIT=kin,
      &      file='PHOTOCHEM/DATA/FLUX/muscles_hd85512.txt',
@@ -1456,7 +1456,7 @@ c-mab: Presently this star doesn't allow Modern Earth template to converge (even
          nhead = 0
          ierr = 0
 
-         n = 24995  
+         n = 24995
 
          OPEN(UNIT=kin,
      &      file='PHOTOCHEM/DATA/FLUX/muscles_hd97658.txt',
@@ -1470,7 +1470,7 @@ c-mab: Presently this star doesn't allow Modern Earth template to converge (even
          nhead = 0
          ierr = 0
 
-         n = 24995  
+         n = 24995
 
          OPEN(UNIT=kin,
      &      file='PHOTOCHEM/DATA/FLUX/muscles_v-eps-eri.txt',
