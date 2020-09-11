@@ -449,6 +449,8 @@ C      ,form='UNFORMATTED')
 C      Model Parameters (AGL, IO2,INO, LGRID, etc)
       open(231, file='PHOTOCHEM/INPUTFILES/input_photchem.dat',
      &          status='OLD')
+           open(15, file='PHOTOCHEM/OUTPUT/int.rates.out',status='UNKNOWN')
+C ^ formatted rates.f
 C      REACTION FILE
       open(9, file='PHOTOCHEM/INPUTFILES/reactions.rx',status='OLD')
 C      CODE OUTPUT
@@ -1368,8 +1370,7 @@ c       NSTEPS = 1 !To run a single time step only without convergence
 c      else
 c       NSTEPS = 10000 !the default, to allow converging runs
 c      endif
-C      Default number of steps is 50,000. The code shouldn't take nearly this long to run except hot planets.
-       NSTEPS = 100
+       NSTEPS = 10000
 
 c-mab: nsteps = 1 recommended for initial model debugging
 c      NSTEPS = 1

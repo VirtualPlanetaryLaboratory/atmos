@@ -903,6 +903,31 @@ c-mc - three lines below should be cut - perhaps usable for JSO2
       write(14, 191)
   191 FORMAT(9X,"1",9X,"2",9X,"3",9X,"4",9X,"5",9X,"6",9X,"7",9X,
      2    "8",9X,"9",8X,"10")
+     
+C   - the following code is taken from the Kasting group's version to
+C   - print out P&L tables with integrated rxn rates, "int.rates.out.dat"
+      DO 702 I=1,NSP
+         WRITE(15,703) ISPEC(I),TP(I)
+ 703     FORMAT(/A8,12X,'PRODUCTION RXS',14X,'INT RX RATE',4X,
+     2      'TP = ',1PE9.2)
+       DO 704 NN=1,NR
+          IF(JCHEM(3,NN).EQ.I .OR. JCHEM(4,NN).EQ.I .OR.
+     2       JCHEM(5,NN).EQ.I)THEN
+        IF(RAT(NN).NE.0.) WRITE(15,705) NN,(CHEMJ(J,NN),J=1,5),RAT(NN)
+ 705       FORMAT(1X,I3,1H),1X,A7,3H + ,A7,3H = ,A7,3H + ,A6,2X,A4,
+     2      1PE10.3)
+          ENDIF
+ 704   CONTINUE
+C
+       WRITE(15,706) ISPEC(I),TL(I)
+ 706     FORMAT(/A8,15X,'LOSS RXS',16X,'INT RX RATE',4X,'TL = ',1PE9.2)
+      DO 707 NN=1,NR
+          IF(JCHEM(1,NN).EQ.I .OR. JCHEM(2,NN).EQ.I)THEN
+        IF(RAT(NN).NE.0.) WRITE(15,705) NN,(CHEMJ(J,NN),J=1,5),RAT(NN)
+          ENDIF
+ 707   CONTINUE
+ 702  CONTINUE
+
 
 c-mc
 c-mc write out loop of NR
@@ -1123,7 +1148,7 @@ c-mab:"Human readable" input and output mixing ratio profiles + P,T,Z:
 c-mab: Format below abstracted to work for all templates.
       fmtdatastr='(1X,1P000E10.3)'!3 0's reserved assuming NQ < 1000 always
       fmtheadstr='(4X,"PRESS",5X,"TEMP",6X,"ALT",7X,0  (A8,2X))'
-       if(NQ.lt.100) then
+       if(NQ.lt.97) then !97 + 3 = 100
         write(fmtdatastr(8:9),'(I2)')NQ+3 !3 for P, T & Z columns
         write(fmtheadstr(36:37),'(I2)')NQ
        else
