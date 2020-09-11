@@ -34,33 +34,39 @@ c eventually, this will die...
 
       READ(3,100)
  100  FORMAT(/)
-      DO 41 L=1,108
-  41  READ(3,*)
+      DO L=1,108
+      READ(3,*)
+      END Do
 
       READ(3,102)
  102  FORMAT(////)
-      DO 42 L=1,17
-  42  READ(3,*)
+      DO L=1,17
+      READ(3,*)
+      END DO
 
       READ(3,102)
-      DO 43 L=1,17
-  43  READ(3,*)
+      DO L=1,17
+      READ(3,*)
+      END DO
 
 c Below SO2HZ is still used. what is the best way to deal?
       READ(3,102)
-      DO 44 L=1,35
-  44  READ(3,105) SO2HZ(L),dum,dum,dum,dum,dum,
+      DO L=1,35
+      READ(3,105) SO2HZ(L),dum,dum,dum,dum,dum,
      2  dum,dum,dum,dum,dum
+      END DO
  105  FORMAT(5X,11(E8.1,1X))
 
       READ(3,106)
  106  FORMAT(//)
-      DO 45 L=1,68
-  45  READ(3,*)
+      DO L=1,68
+      READ(3,*)
+      END DO
 
       READ(3,106)
-      DO 46 L=1,68
- 46    READ(3,*)
+      DO L=1,68
+       READ(3,*)
+      END DO
 
 
 !these lines might need to be kept...
@@ -68,15 +74,17 @@ c Below SO2HZ is still used. what is the best way to deal?
 
       READ(3,109)
  109  FORMAT(//////)
-      DO 58 L=1,17
+      DO L=1,17
       READ(3,110) NK(L),(ALPHAP(L,K),K=1,4)
  110  FORMAT(6X,I1,1X,4F13.5)
-  58  READ(3,111) (BETA(L,K),K=1,4)
+      READ(3,111) (BETA(L,K),K=1,4)
+      END DO
  111  FORMAT(8X,4E13.4/)
 
       READ(3,106)
-      DO 67 L=1,68
-  67  READ(3,*)
+      DO L=1,68
+      READ(3,*)
+      END DO
 
 C *****  ***** ***** END READING PHOTOLYSIS DATAFILE ***** ***** *****
 c at some point do away with all of the above, just taking what's relevant into single datafiles

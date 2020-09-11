@@ -32,15 +32,16 @@ C
    1  CONTINUE
 C
 C   FIND SATURATION VAPOR PRESSURE
-      DO 2 J=1,NZ
+      DO  J=1,NZ
       P1 = Pzero * (T0/T(J))**(AMV*A(J)/R)
       P2 = EXP(AMV*HL(J)/R * (1./T0 - 1./T(J)))
       PV = P1 * P2
       P(J) = 1.E-6 * DEN(J)*BK*T(J)    ! bars
-   2  H2OSAT(J) = PV/P(J)
+      H2OSAT(J) = PV/P(J)
+      END DO
 C
 C   CALCULATE TROPOSPHERIC H2O CONCENTRATIONS
-      DO 3 J=1,JTROP
+      DO  J=1,JTROP
       if (PLANET .EQ. 'EARTH') then
        REL = 0.70 * (P(J)/PS - 0.02)/0.98   !manabe formula, altered to fit Modern Earth (replace 0.77 by 0.70)
 
@@ -58,7 +59,8 @@ c      REL = 0.12                         ! 7 microns
       endif
 
       RELH(J) = REL
-   3  H2O(J) = REL * H2OSAT(J)
+      H2O(J) = REL * H2OSAT(J)
+      END DO
 C
 
 

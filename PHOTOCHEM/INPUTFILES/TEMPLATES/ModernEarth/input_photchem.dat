@@ -15,7 +15,7 @@ HCDENS=    0.63
 ICOUPLE=   0
 monsize=   0
 ZY=	       60.
-USOLMIN=   1.E-15
+USOLMIN=   1.E-20
 KIDA=      0
 
 C ***** SET MODEL PARAMETERS *****
