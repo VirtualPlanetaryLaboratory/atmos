@@ -106,13 +106,14 @@ c-mc      DZ = Z(2) - Z(1)   !ACK
       GZ(1)=G0
 C
 C ***** FIND DENSITY FROM HYDROSTATIC EQUILIBRIUM *****
-      DO 1 I=2,NZ
+      DO I=2,NZ
 c-mc      DZ = Z(I) - Z(I-1)
       R = R0 + Z(I)
       GZ(I) = G0 * (R0/R)*(R0/R)
       TAV = 0.5*(T(I) + T(I-1))
       HA(I) = ROVERM(I)*TAV/GZ(I)
-   1  DEN(I) = DEN(I-1)*EXP(-DZ(I)/HA(I))*T(I-1)/T(I)
+      DEN(I) = DEN(I-1)*EXP(-DZ(I)/HA(I))*T(I-1)/T(I)
+      END DO
 C
 
 
