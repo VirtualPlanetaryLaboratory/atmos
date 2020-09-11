@@ -449,7 +449,7 @@ C      ,form='UNFORMATTED')
 C      Model Parameters (AGL, IO2,INO, LGRID, etc)
       open(231, file='PHOTOCHEM/INPUTFILES/input_photchem.dat',
      &          status='OLD')
-           open(15, file='PHOTOCHEM/OUTPUT/int.rates.out',status='UNKNOWN')
+      open(15, file='PHOTOCHEM/OUTPUT/int.rates.out',status='UNKNOWN')
 C ^ formatted rates.f
 C      REACTION FILE
       open(9, file='PHOTOCHEM/INPUTFILES/reactions.rx',status='OLD')
