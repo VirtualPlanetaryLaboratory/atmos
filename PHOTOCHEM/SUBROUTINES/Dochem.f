@@ -82,13 +82,15 @@ C
 
       SLS4=0  !checking if S4 is the the short-lived loop
 
-      DO 3 I=NQ1+1,NQ1+NSHORT  !loop through the equilibrium species...
+      DO I=NQ1+1,NQ1+NSHORT  !loop through the equilibrium species...
 c         print *, I,ISPEC(I),' short-lived'
          if (ISPEC(I).EQ.'S4') ISS4SL=I
 
       CALL CHEMPL(D,XP,XL,I)
-      DO 3 J=1,NZ
-   3  D(I,J) = XP(J)/XL(J)
+      DO   J=1,NZ
+      D(I,J) = XP(J)/XL(J)
+      END DO
+      END DO
 
 c-mab Uncomment below to help with short-lived species XP/XL/D debugging
 C      print*,'NQ1+1 = ',NQ1+1
@@ -374,9 +376,11 @@ C ***** SAVE THESE DENSITIES FOR PRINTOUT *****
 c-mc and for allowing short-lived species to photolyze...?
 c-mc modifying to contain all species.
 ! orig      DO 9 I=NQ1,NSP
-      DO 9 I=1,NSP
-      DO 9 J=1,NZ
-   9  SL(I,J) = D(I,J)
+      DO I=1,NSP
+      DO J=1,NZ
+      SL(I,J) = D(I,J)
+      END DO
+      END DO
 
 
 
@@ -391,10 +395,12 @@ C ***** CALCULATE COLUMN-INTEGRATED PRODUCTION AND LOSS *****
       S4COL = 0.
       S8COL = 0.
 C
-      DO 10 L=1,NR
-       DO 420 J=1,NZ
- 420    REACRAT(L,J)=0
-  10  RAT(L) = 0.
+      DO L=1,NR
+       DO J=1,NZ
+        REACRAT(L,J)=0
+       ENDDO
+      RAT(L) = 0.
+      END DO
 
 
 
@@ -420,10 +426,10 @@ c       S8COL = S8COL + D(LS8,J)*DZ(J)   !ACK need to deal if S8 in gas phase
       ENDDO
       ENDIF   !end hot jupiter skip loop
 C
-      DO 12 L=1,NR
+      DO L=1,NR
       M = JCHEM(1,L)         !identifies first reactant of equation L
       K = JCHEM(2,L)         !second reactant
-      DO 12 J=1,NZ
+      DO J=1,NZ
          REACRAT(L,J) =  A(L,J)*D(M,J)*D(K,J)  !reaction rate*densities
 c cm^3/mol/s * (mol/cm^3)^2 ->  mol/cm^3/s (i.e. rate units)
 
@@ -432,7 +438,9 @@ C-mab: Uncomment below to track intermediate rates for chosen L
 C      	IF(J.EQ.1)print*, 'L =',L
 C      	print*, 'J,A,D(M),D(K)',J,A(L,J),D(M,J),D(K,J)
 C      ENDIF
-  12  RAT(L) = RAT(L) + REACRAT(L,J)*DZ(J)
+         RAT(L) = RAT(L) + REACRAT(L,J)*DZ(J)
+      END DO
+      END DO
 c      mol/cm^3/s * cm ->  mol/cm^2/s (i.e. RAT is in height integrated flux units)
 
 c-mab: Below is bebugging help...
@@ -443,9 +451,10 @@ C      	print*, RAT(L),L
 C      ENDDO
       DO 8 I=1,NQ1
       XLG(I) = YL(I,1)
-      DO 8 J=1,NZ
+      DO J=1,NZ
       TP(I) = TP(I) + YP(I,J)*DZ(J)
       TL(I) = TL(I) + YL(I,J)*D(I,J)*DZ(J)
+      END DO
    8  CONTINUE
 C
       RETURN
