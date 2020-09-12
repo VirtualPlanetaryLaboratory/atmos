@@ -74,7 +74,7 @@ C-EW  THIS IS THE MONOMER RADIUS [cm]
        if (ihztype.eq.6.) RMON = 50.E-7
 
          RMON = 50.E-7
-      do K=3,3
+      do K=3,NPX
       DO J=1,NZ
       IF(RPAR(J,K).GE.rmmax)then   !limiting RPAR size to rmmax, which has to be smaller than greatest rstand
       RPAR(J,K)=rmmax
@@ -214,9 +214,10 @@ C   FIND MINIMUM OF DIFFUSION AND SEDIMENTATION LIFETIMES, THEN SCALE PRTICLE SI
       ENDDO
 C
 C   DON'T ALLOW PARTICLES TO DECREASE IN SIZE AT LOW ALTITUDES
-      DO 3 I=1,NZ1
+      DO I=1,NZ1
       J = NZ - I
-   3  RPAR(J,K) = max(RPAR(J,K),RPAR(J+1,K))
+      RPAR(J,K) = max(RPAR(J,K),RPAR(J+1,K))
+      ENDDO
 
       if(K.eq.3) then
       Do J= I, NZ
