@@ -274,7 +274,7 @@ C     .      j,i,ISPEC(j),SL(j,i)/DEN(i),SL(j,i),DEN(i)
 C        enddo
 C       enddo
 C ***** ***** ***** START WAVELENGTH LOOP   ***** ***** *****
-      do 19 L=1,nw
+      do L=1,nw
 
       Lold=L-10   !hardcoded to JPL wavelength grid - only access if IO2<1, options which require this grid
 
@@ -512,6 +512,7 @@ C            frederick and allen method (effective cross sections)
 
 C ***** ***** ***** END WAVELENGTH LOOP ***** ***** *****
   19  continue
+      END DO ! end wavelenght loop do L=1,nw
 
 
       if (JS8L.GT.0) then  !if gaseous S8 is in the model, compute the photolysis rate by black magic
@@ -543,12 +544,14 @@ c   go through "crises" that seem to be unrelated to column depths
 
 !ACK - hardcoded wavelength grid
 
-      DO 301 J=1,NZ
- 301     write(27,399) (PSO2MC(L,J),L=11,30)   !ACK  11-30 is 1762-2116.5A
+      DO J=1,NZ
+         write(27,399) (PSO2MC(L,J),L=11,30)   !ACK  11-30 is 1762-2116.5A
+      END DO
  399  format(20(1PE9.2,2X))
 
-      DO 302 J=1,NZ
- 302     write(27,499) (PSO2MC(L,J),L=31,45)   !ACK 31-45 is 2139.5-2516A
+      DO J=1,NZ
+         write(27,499) (PSO2MC(L,J),L=31,45)   !ACK 31-45 is 2139.5-2516A
+      END DO
  499  format(15(1PE9.2,2X))
 
 
