@@ -29,7 +29,7 @@ C
       DO I=1,NZ1
       EDDAV = SQRT(EDD(I)*EDD(I+1))  !average eddy diffusion in grid center
       DENAV = SQRT(DEN(I)*DEN(I+1))  !average density at grid center
-      DK(I) = EDDAV*DENA
+      DK(I) = EDDAV*DENAV
       END DO
 C
 C   COMPUTE DIFFUSION LIFETIME AT EACH HEIGHT (H*H/K)
