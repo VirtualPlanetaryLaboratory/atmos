@@ -14,7 +14,7 @@ frak=      1
 HCDENS=    0.63
 ICOUPLE=   0
 ihztype=   7
-ZY=	       50.
+ZY=	       60.
 USOLMIN=   1.E-20
 KIDA=      1
 

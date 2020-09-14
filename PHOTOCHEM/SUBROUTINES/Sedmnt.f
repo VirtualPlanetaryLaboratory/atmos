@@ -74,7 +74,8 @@ C-EW  THIS IS THE MONOMER RADIUS [cm]
        if (ihztype.eq.6.) RMON = 50.E-7
 
          RMON = 50.E-7
-      do K=3,NPX
+      if (NPX.GE.3) then
+      do K=NPX,NP
       DO J=1,NZ
       IF(RPAR(J,K).GE.rmmax)then   !limiting RPAR size to rmmax, which has to be smaller than greatest rstand
       RPAR(J,K)=rmmax
@@ -88,6 +89,7 @@ C-EW  THIS IS THE MONOMER RADIUS [cm]
       RFRAC(J,K) = RPAR(J,K)**(3./DF)*RMON**(1.-3./DF)
       ENDDO
       enddo
+      end if !end if for if (NPX.GE.3) then
 
 
 C-EW *******************************************
@@ -221,7 +223,7 @@ C   DON'T ALLOW PARTICLES TO DECREASE IN SIZE AT LOW ALTITUDES
 
       if(K.eq.3) then
       Do J= I, NZ
-       RPAR(J,4)=RPAR(J,3)
+       RPAR(J,NP)=RPAR(J,NPX)
       enddo
       endif
 
@@ -260,7 +262,7 @@ c         factor=7.06E7 !giada - this was computed using 1.4 g/cm3
        endif
           CONVER(I,K) = factor * (R/1.E-5)**3
           IF (K.eq.3) then
-          CONVER(I,4) = factorhcaer2 * (R/1.E-5)**3
+          CONVER(I,NP) = factorhcaer2 * (R/1.E-5)**3
           endif
 
 
@@ -297,7 +299,7 @@ C-EW  HYDROCARBONS: USE FRACTAL MICROPHYSICS
        ALPH = A + B*EXP(-C*RF/ALAM(J)) ! I think this is related to particle resistance to motion
        WFALL(J,K) = F1*(1. + ALAM(J)*ALPH/RF) !wfall = fall velocity
        IF (K.eq.3) THEN
-       WFALL(J,4) =WFALL(J,3)
+       WFALL(J,NP) =WFALL(J,NPX)
        ENDIF
                              !this term (alam*alph/rf) is particle diffusion?  maybe?
       ELSE
@@ -309,7 +311,7 @@ C-AP  From Prupacher & Klett
        ALPH = A + B*EXP(-C*R/ALAM(J))
        WFALL(J,K) = F1*(1. + ALAM(J)*ALPH/R)
        IF (K.eq.3) THEN
-       WFALL(J,4) =WFALL(J,3)
+       WFALL(J,NP) =WFALL(J,NPX)
        ENDIF
       ENDIF
       enddo

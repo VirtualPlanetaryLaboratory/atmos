@@ -1556,7 +1556,7 @@ c     &  TCOOL(J)
 c       close(89)
        OPEN (unit=333,file= 'COUPLE/aux_c_couple.dat') !stb
 
- 919  FORMAT(1X,  E10.5, 9x, E10.5,9x, E10.5,9x, E10.5,9x,I3)
+ 919  FORMAT(1X,  E12.5, 9x, E10.5,9x, E10.5,9x, E10.5,9x,I3)
  918  FORMAT(1X, 'FTOTAL(101)',9x,'T(101)',9x, 'P(JCOLD)',9x, 'P_surf',
      2  9x, 'jcold')
       WRITE(333,918)
