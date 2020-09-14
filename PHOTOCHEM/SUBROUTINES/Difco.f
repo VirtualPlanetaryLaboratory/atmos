@@ -26,16 +26,18 @@ c-mab: assuming the O2,CO2,N2,and AR are the major species (identical computatio
 C
 C ***** DK(I) = K*N AT GRID STEP I+1/2 *****
 C
-      DO 1 I=1,NZ1
+      DO I=1,NZ1
       EDDAV = SQRT(EDD(I)*EDD(I+1))  !average eddy diffusion in grid center
       DENAV = SQRT(DEN(I)*DEN(I+1))  !average density at grid center
-   1  DK(I) = EDDAV*DENAV
+      DK(I) = EDDAV*DENA
+      END DO
 C
 C   COMPUTE DIFFUSION LIFETIME AT EACH HEIGHT (H*H/K)
-      DO 2 I=1,NZ
+      DO I=1,NZ
       H = BKMG(I) * T(I)
       HSCALE(I) = H
-   2  TAUEDD(I) = H*H/EDD(I)
+      TAUEDD(I) = H*H/EDD(I)
+      END DO
 
       do i=1,NZ1
         TAV = SQRT(T(I)*T(I+1))  !average temperature at grid center
