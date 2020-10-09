@@ -799,8 +799,7 @@ c jfk 6/27/08
 
 
 
-c Initial non-condensible mixing ratio at surface (used for write statement in output file) 6/7/2011
-      FNCI = FNC(ND) ! c-rr 5/29/2012 added H2 mixing ratio
+
 
 
 C *** Initial time step
@@ -867,6 +866,9 @@ c     print *, 'IN CLIMA_FNC=', FNC(J), J
       enddo
 
        close(113)
+
+c Initial non-condensible mixing ratio at surface (used for write statement in output file) 6/7/2011
+      FNCI = FNC(ND) ! c-rr 5/29/2012 added H2 mixing ratio
 
 c Aerosol calculation (commented when not used)
       CALL AERABSDATA(FRAK, ihztype)
