@@ -752,6 +752,8 @@ c         stop
 
          IF (ierr .NE. 0) THEN
             WRITE(*,*) ierr,'  Something wrong in Grid.f/readflux'
+            WRITE(*,*) 'pstar=',pstar,' make sure that pstar is what',
+     &      ' you want it to be!'
             STOP
          ENDIF
 
@@ -844,7 +846,9 @@ c         OPEN(UNIT=kin,file='PHOTOCHEM/DATA/FLUX/zahnle.flx.orig',STATUS='old')
       !inter3 is bins to bins.
 
          IF (ierr .NE. 0) THEN
-            WRITE(*,*) ierr,'  Something wrong in readflux.f'
+            WRITE(*,*) ierr,'  Something wrong in Grid.f/readflux'
+            WRITE(*,*) 'pstar=',pstar,' make sure that pstar is what',
+     &      ' you want it to be!'
             STOP
          ENDIF
 
@@ -906,7 +910,9 @@ c ergs/cm2/s is equivalent to mw/m^2
       CALL inter2(nw+1,wl,yg1,n,x1,y1,0)   !inter2 is points to bins
 
          IF (ierr .NE. 0) THEN
-            WRITE(*,*) ierr,'  Something wrong in readflux.f'
+            WRITE(*,*) ierr,'  Something wrong in Grid.f/readflux'
+            WRITE(*,*) 'pstar=',pstar,' make sure that pstar is what',
+     &      ' you want it to be!'
             STOP
          ENDIF
 
@@ -1140,6 +1146,8 @@ c-mab: Recall pstar = 22 is using Kevin's grid. We don't need the conversions be
          !error check for call to inter2
          IF (ierr .NE. 0) THEN
             WRITE(*,*) ierr,'  Something wrong in Grid.f/readflux'
+            WRITE(*,*) 'pstar=',pstar,' make sure that pstar is what',
+     &      ' you want it to be!'
             STOP
          ENDIF
 
@@ -1198,7 +1206,9 @@ c-mab: flux is already earth-equivalent in photons/s/cm^2/bin
       !inter3 is bins to bins.
 
          IF (ierr .NE. 0) THEN
-            WRITE(*,*) ierr,'  Something wrong in readflux.f'
+            WRITE(*,*) ierr,'  Something wrong in Grid.f/readflux'
+            WRITE(*,*) 'pstar=',pstar,' make sure that pstar is what',
+     &      ' you want it to be!'
             STOP
          ENDIF
 
@@ -1263,6 +1273,8 @@ C scaling to solar constant
          !error check for call to inter2
          IF (ierr .NE. 0) THEN
             WRITE(*,*) ierr,'  Something wrong in Grid.f/readflux'
+            WRITE(*,*) 'pstar=',pstar,' make sure that pstar is what',
+     &      ' you want it to be!'
             STOP
          ENDIF
 
@@ -1295,7 +1307,6 @@ c-teal pstar to integer to fix the below if statement
       !all of them have same starting units ergs/cm^2/s/A flux and A wavelength.
 
         IF (pstar .EQ. 'MUGJ876' .or. pstar .eq. '80') THEN
-c-mab: Presently this star doesn't allow Modern Earth template to converge (even though we don't have negatives).
 
 
          nhead = 0
@@ -1500,6 +1511,8 @@ c-mab: Presently this star doesn't allow Modern Earth template to converge (even
          !error check for call to inter2
          IF (ierr .NE. 0) THEN
             WRITE(*,*) ierr,'  Something wrong in Grid.f/readflux'
+            WRITE(*,*) 'pstar=',pstar,' make sure that pstar is what',
+     &      ' you want it to be!'
             STOP
          ENDIF
 
