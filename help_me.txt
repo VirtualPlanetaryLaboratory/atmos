@@ -1,68 +1,74 @@
-~~~~~~~~~~FREQUENT ISSUES & PROBLEMS~~~~~~~~~~~
-Need help?  Ok, do any of these describe the problem you're having?
+~~~~~~~~~~Atmos Basics/How-tos/Frequent Problems~~~~~~~~~~~
 
-Let's keep this a living document! Help maintain it as you run into
-problems and find solutions for them!
+This file represents a high-level "getting started guide" for Atmos
++ FAQs for frequently asked problems/issues.
 
-Use your text editor's search function to look for keywords in this
-document, including specific errors...
+"Atmos" refers to the coupled climate-photochemical code.
+"CLIMA" is the climate code.
+"PHOTO" is the photochemical code. (sometimes called "PHOTOCHEM" or "PHOTCHEM")
+
+In general, PHOTO is more developed than CLIMA.
+PHOTO works for a wider range of planet types than CLIMA, which is
+only stable for "habitable" temperature planets. So, you can use
+CLIMA for "Earth-like" planets but exercise caution for anything else.
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-----------------BASICS!!-----------------------
-QUSTION: How do I compile these codes?
-ANSWER: Perhaps you, like me, are used to just typing "make" in the 
-command line and having things work.  However, there are two makefiles
-in the atmos top level directory: makefileClima and makefilePhotochem.
+----------------HOW TO RUN THE MODEL-----------------------
+
+***
+QUESTION: What's the quickest way to get started with the code?
+ANSWER: The quickest and easiest way to initialize Atmos is by typing:
+> ./RunModels.sh
+This will allow you to select a template, compile PHOTO, run photo,
+compile CLIMA, and run CLIMA.
+When initializing a new template you should recompile PHOTO.
+Only ModernEarth, Archean+haze, and ArcheanSORG+haze can properly
+couple to CLIMA.
+
+
+QUESTION: How do I compile these codes?
+ANSWER: There are two makefilesin the atmos top level directory:
+makefileClima and makefilePhotochem.
 To make these two codes in the top level directory you do:
-> make -f makefileClima
-> make -f makefilePhotochem
+> make -f ClimaMake
+> make -f PhotoMake
 
 ***
 
 QUESTION: Ok, now how do I run these codes?
 ANSWER: To run the climate model type:
-> ./runclima
+> ./Clima.run
 To run the photochemical model type:
-> ./TOTCdev
-
-You will need to make sure the inputfiles for these two codes are set up
-correctly or you'll probably get an error...
+> ./Photo.run
 
 ***
 
 QUESTION: Where are the inputfiles for these codes?
-ANSWER: The PHOTOCHEM inputfiles live in PHOTOCHEM/INPUTFILES
-The CLIMA input files live in CLIMA/IO.  I've written a description
-of the photochem inputfiles in PHOTOCHEM/INPUTFILES/README.TXT.
-I've also attempted a description of Clima in CLIMA/IO/README.
+ANSWER: The PHOTO inputfiles live in PHOTOCHEM/INPUTFILES
+The CLIMA input files live in CLIMA/IO.
 
 ***
 
-QUESTION: wtf is TOTCtester and TOTCdev?
-ANSWER: Blame Mark. :-P  TOTCtester.f is the photochemical
-code; TOTCdev is the executable. 
-TOTC stands for "the one true code."  Should we rename it?
-Maybe...probably...?
-
-***
-
-QUESTION: I want to edit the code.  There are too many files here.  What 
+QUESTION: I want to edit the code.  There are too many files here.  What
 ones do I care about?
 ANSWER: If you want to edit the photochemical code, you care about
-the file TOTCtester.f in the top-level directory.  Likewise, for the climate
-model, it's ClimaDecoupled.f.
+the file PhotoMain.f in the top-level directory.  Likewise, for the climate
+model, it's ClimaMain.f.
 Subroutines for Clima are in various CLIMA/ subfolders.  Subroutines for
-Photochem are easier to find because they are all in one place in
+PHOTO are easier to find because they are all in one place in
 PHOTOCHEM/SUBROUTINES.
 
 ***
 
 
 QUESTION: How do I know if the models have converged?
-ANSWER: The photochemical model should stop in < 10000 steps if it converges.
+ANSWER: The photochemical model should stop in < 10000 steps if it converges
+(ideally much fewer than that...the number of steps is set by the variable
+"NSTEPS" in PhotoMain.f).
 For the climate model, go to CLIMA/IO/clima_allout.tab
-DT, DIVF, DIVFrms should be small-valued.  How small?  Values on the order of 
+DT, DIVF, DIVFrms should be small-valued.  How small?  Values on the order of
 1E-5ish and smaller and you should be golden.  Values 1E-3...probably ok.
-Any bigger?  Use at your own risk. Or don't.  Because you're probably not converged. :-P
+Any bigger?  Use at your own risk. Or don't.  Because you're probably not converged.
 
 ***
 
@@ -71,58 +77,44 @@ ANSWER: See below under the Problems & Errors section...
 
 ***
 
-QUESTION: I want to make spectra. How?
-ANSWER: The photochem_smart folder you see is just a placeholder.  Get 
-the code from Eddie or from the bitbucket:
-https://bitbucket.org/bitbucket_vpl/photochem_smart/
-It will allow you to make spectra with photochemical code outputs pretty 
-easily if you follow the directions.
-
-***
-
 QUESTION: How does this whole coupling thing work?
 ANSWER:  The power of the coupled model is interactive chemistry:
-the climate responds to the photochemistry, and the photochemistry, in turn, 
+the climate responds to the photochemistry, and the photochemistry, in turn,
 responds to the atmosphere's temperature. Awesome, right?!
 
 You will initially need to run ONE of the models uncoupled (ICOUPLE=0) to generate an initial
-atmospheric state. I always run the photochemical model first, and this seems to work well.
-There may be some internal hardcoding, actually, that assumes PHOTO is being run first (sorry.). 
+atmospheric state. In general, we run the photochemical model first, and this seems to work well.
 
 Here are your steps for "manual" coupling:
-1. Run Photo uncoupled (set ICOUPLE = 0 in input_photochem). Photo will automatically generate coupling files
+1. Run PHOTO uncoupled (set ICOUPLE = 0 in input_photochem). PHOTO will automatically generate coupling files
    in the /COUPLE folder for clima to use (or not). These files are:
    * fromPhoto2Clima.dat: contains altitude, pressure, O3, water, Ch4, Co2, c2h6
    * hcaer.photoout.out: hydrocarbons in the atmosphere
-   * mixing_ratios.dat: mixing ratio file for clima 
-   * time_frak_photo.out: time ago (billions of years), pressure at bottom of atmosphere,
-		      	   fractal particles (=1 if yes), type of star (see PHOTOCHEM/INPUTFILES/README.txt),
-		       	   monsize (see PHOTOCHEM/INPUTFILES/README.txt), number of atmospheric layers
+   * mixing_ratios.dat: mixing ratio file for clima
+   * output_couple.dat: needed coupling parameters passed from PHOTO to CLIMA
 
-2. Turn on ICOUPLE (=1) in clima.  Turning on coupling means Clima will ignore certain
-   inputs in input_clima.dat because it now gets these from the photochemical model outputs, 
+2. Turn on ICOUPLE (=1) in CLIMA.  Turning on coupling means CLIMA will ignore certain
+   inputs in input_clima.dat because it now gets these from the photochemical model outputs,
    and it will ignore the mixing_ratios.dat in CLIMA/IO, instead
    reading this in from /COUPLE/mixing_ratios.dat. You do not need to change PG0 (surface pressure)
    in input_clima when coupling is on...it gets this from time_frak_photo.out.  You also do not
    need to change SOLCON in input_clima...it will scale get this based on TIMEGA in time_frak_photo.
-   
-3. Run Clima. When it finishes, it will generate certain files for Photo:
+
+3. Run CLIMA. When it finishes, it will generate certain files for PHOTO:
    * fromClima2Photo.dat: file with altitude, temperature, water mixing ratio
-   * hcaer.climaout.out: sanity check that clima is dealing with hydrocarbons properly. 
+   * hcaer.climaout.out: sanity check that clima is dealing with hydrocarbons properly.
                          you can ignore this.
 
-4. Set ICOUPLE = 1 in input_photochem and run photo...
+4. Set ICOUPLE = 1 in input_photochem and run PHOTO...
 
-5. Run clima...
+5. Run CLIMA...
 
-6. Run photo...
+6. Run PHOTO...
 
    When do you stop? Up to whatever convergence criteria you are happy with.
 
-Think manual coupling sounds like a bore?  I agree.  That's why I wrote a coupling wrapper script!
-It lives in IDL/run_coupled.pro.  You can use it, if you wish, but you probably want to talk
-to me (Giada) for an explanation and help if you do. It totally works, but it's kind of in a messy state 
-right now...(sorry. that's a cleanup project for another day.)
+Think manual coupling sounds like a bore?  We agree. There are numerous coupling scripts
+that can be provided on request.
 
 
 ***
@@ -137,26 +129,14 @@ PROBLEM: This happens at the end of a CLIMA run:
 "IEEE_INVALID_FLAG IEEE_DIVIDE_BY_ZERO IEEE_UNDERFLOW_FLAG IEEE_DENORMAL"
 
 SOLUTION: This happens when you compile the model using a newer version of the
-gfortran compiler.  It means, to quote Shawn: "somewhere in a ginormous matrix 
+gfortran compiler.  It means, to quote Shawn: "somewhere in a ginormous matrix
 there are some tiny numbers."
 
 It's probably not something you need to worry about...
 
 ***
 
-PROBLEM: You get this error in Photochem: 
-                   1 O       
- species.dat should have old formatting
- for VDEP and FIXEDMR (E7.2)
-                    2 O2      
-At line ___ of file TOTCtester.f (unit = 4, file = 'PHOTOCHEM/INPUTFILES/species.dat')
-
-SOLUTION: Your species.dat does not have the type of formatting Photochem
-expects from the parameter NEWSPEC in input_photochem.dat. Change it from 
-0 to 1. 
-
-***
-PROBLEM: You ran RunModels.sh to replace your input files with a different template, but 
+PROBLEM: You ran RunModels.sh to replace your input files with a different template, but
 cannot run without re-compiling code first... You get an error regarding reactions.rx:
 
 Would you like to compile PHOTOCHEM (y/n)?:n
@@ -182,14 +162,6 @@ statements that depend on the particular template's parameters.inc values,
 always re-compile (select y) when using a different template! (12/16 MAB)
 
 ***
-PROBLEM: You get this error in Photochem:
-Fortran runtime error: Array reference out of bounds for array 'z', lower bound of dimension 1 exceeded (0 < 1)
-
-SOLUTION: This is also probably due to a mismatch between NEWSPEC and species.dat (see above)
-causing the model to attribute what it reads in from species.dat to the wrong internal variables.
-Change NEWSPEC in input_photochem.dat from 1 to 0.
-
-***
 
 PROBLEM: The photochemical and/or climate model is taking FOREVER to run and/or
 not converging EVER!
@@ -198,24 +170,18 @@ SOLUTION: Well...there might not be a solution.  It might really need to take th
 However, here are some reasons why it might be taking forever:
 
 Photochemical Model:
-- When there is a thick haze, the model can take a long time to converge. 
-  Do you have hydrocarbon haze turned on? (check on NP in parameters.inc. If it's
-  set to 3 or 4, you have a h.c. haze).  Is the model generating a thick haze?
-  Check on the ratio of CH4 to CO2 in species.dat.  If it's above approximately 0.15,
-  you may be generating an UV-optically thick haze, and that slows things down considerably.
-  If you can, try setting the CH4/CO2 ratio to something less than 0.1. I do not recommend
-  changing NP to less than 4. Instead, change CH4/CO2.
 
 - Are you using an appropriate in.dist file?  in.dist lives in the PHOTOCHEM folder and
   contains the initial conditions for your photochemical run. If you perturb your input
-  files too much compared to in.dist, convergence may never happen.  You may need to 
+  files too much compared to in.dist, convergence may never happen.  You may need to
   slowly step from one part of parameter space to another...(which is annoying, but sometimes
-  necessary).  To do this, get an in.dist that works for a starting part of parameter space.
+  necessary).  To do this, get an in.dist that works for a starting part of parameter space (you can do
+  this by starting from one of the templates).
   How do you know you're converging? If the photochemical model converges in less than 10000 steps
   (hopefully a lot less!)
   Perturb a quantity in the input files a little bit -> run the model to convergence -> copy
   the out.dist into in.dist -> Perturb the quantity some more -> run the model -> out.dist
-  to in.dist -> again and again until you reach the target region of parameter space. 
+  to in.dist -> again and again until you reach the target region of parameter space.
 
 - You can now plot from PHOTOCHEM/PTZ_mixingratios_in.dat & PHOTOCHEM/OUTPUT/PTZ_mixingratios_out.dat,
   where the pressure, temperature, altitude and mixing ratios (see headers) of all long-lived species,
@@ -240,3 +206,6 @@ Climate Model:
   IUP to 0. Re-run clima, and it will use the previous run's ending state as its initial
   conditions. This will hopefully help it achieve convergence. You can also try turning off
   ICONSERV in input_clima.dat. That sometimes helps.
+
+- Are you running CLIMA for a planet that is in a "non-habitable" temperature regime?
+  The model typically cannot converge for very hot or very cold planets.
