@@ -760,13 +760,13 @@ c to convert to actual flux in the bin (mw/m2), need to multiply by bin width
 
 c-before we convert, some tests of energy conservation across the interpolation
 c-note - this are conserved across various wavelength grids.
-c         call cspint(n,x1,y1/10d0,2000d0,3550d0,y,e,work,planet)
-c         call cspint(n,x1,y1/10d0,3500d0,5000d0,y,e,work,planet)
-c         print *, planet  !ok this is the right answer for 200-350 (55.8 W/m2)  this is the thuillier flux
+c         call cspint(n,x1,y1/10d0,2000d0,3550d0,y,e,work,poop)
+c         call cspint(n,x1,y1/10d0,3500d0,5000d0,y,e,work,poop)
+c         print *, poop  !ok this is the right answer for 200-350 (55.8 W/m2)  this is the thuillier flux
 
-c         call cspint(nw,wl,yg3,2000d0,3550d0,y,e,work,planet)
-c         call cspint(nw,wl,yg3,3500d0,5000d0,y,e,work,planet)
-c         print *, planet !flux interpolated to new grid
+c         call cspint(nw,wl,yg3,2000d0,3550d0,y,e,work,poop)
+c         call cspint(nw,wl,yg3,3500d0,5000d0,y,e,work,poop)
+c         print *, poop !flux interpolated to new grid
 
 c         stop
 
@@ -1278,10 +1278,20 @@ C scaling to solar constant
 
 c     -mab: MUSCLES stars from the "adaptive constant panchromatic data products.
 
+c-teal pstar to integer to fix the below if statement
       IF (pstar  .EQ. 'MUGJ876' .or. pstar .eq. '80' .or. pstar .EQ.
      &  'MUGJ551' .or. pstar .eq. '81' .or. pstar .EQ. 'MUGJ581' .or.
      &   pstar .eq. '82' .or. pstar .EQ. 'MUGJ667c' .or. pstar .eq. '83'
-     &   .or. pstar .EQ. 'MUGJ1214' .or. pstar .eq. '84' ) THEN                    !used to be if pstar gt 80, but 80 is a string and we're allowing non-numerical inputs for star names so this will need to be done differently since it's also entering this if statement for things like 'sun'. I think the simplest solution is to convert the muscles stars to the standard input units so that this special case goes away...  -gna
+     &   .or. pstar .EQ. 'MUGJ1214' .or. pstar .eq. '84' .or.
+     &   pstar .eq. '85' .or. pstar .eq. '86' .or. pstar .eq. '87' .or.
+     &   pstar .eq. '88' .or. pstar .eq. '89' .or. pstar .eq. '90' .or.
+     &   pstar .eq. '91') THEN
+        !used to be if pstar gt 80, but 80 is a string and we're
+        !allowing non-numerical inputs for star names so this will need
+        !to be done differently since it's also entering this if
+        !statement for things like 'sun'. I think the simplest solution
+        !is to convert the muscles stars to the standard input units so
+        !that this special case goes away...  -gna
       !all of them have same starting units ergs/cm^2/s/A flux and A wavelength.
 
         IF (pstar .EQ. 'MUGJ876' .or. pstar .eq. '80') THEN
