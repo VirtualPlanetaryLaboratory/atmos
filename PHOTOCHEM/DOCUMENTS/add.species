@@ -50,7 +50,7 @@ Initmie.f is where optical properties files are read in. Change this if there ar
 Photo.f has some hardcoding in the 'calculate, Qext,W0,G' place.  It's abstracted but only works for hydrocarbon particles
 -if new particles introduced, rstand would need to be abstracted and loop over L expanded.
 
-Twostr.f complete's the interpolation into QEXT,W0P,GFC, but only for HC particles HCAER and HCAER2, accomplished by a hardcoding for NP.GE.3.  It's more or less abstracted and the particle combination seems to be done well.  However, the way sulfate and elemental sulfur are done is crap.
+Twostr.f complete's the interpolation into QEXT,W0P,GFC, but only for HC particles HCAER and HCAER2, accomplished by a hardcoding for NP.GE.3.  It's more or less abstracted and the particle combination seems to be done well.  However, the way sulfate and elemental sulfur are done is not ideal.
 
 Rainout.f is OK unless the species dissacociates in rainwater or has isotopes
 

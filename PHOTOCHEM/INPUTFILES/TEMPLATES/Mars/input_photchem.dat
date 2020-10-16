@@ -1,4 +1,4 @@
-*** Set parameters for the high CO2/CH4 photochemical model ***
+*** Set parameters for the Modern Mars with Cl photochemical model ***
 * Write the number after the 11th space
 *2345678901Here
 
@@ -10,13 +10,13 @@ IO2=       0
 INO=       0
 EPSJ=      1.E-9
 PRONO=     0.0
-frak=      1
+frak=      0
 HCDENS=    0.63
 ICOUPLE=   0
 monsize=   0
 ZY=	       50.
 USOLMIN=   1.E-20
-KIDA=      1
+KIDA=      0
 
 C ***** SET MODEL PARAMETERS *****
 C     AGL = DIURNAL AVERAGING FACTOR FOR PHOTORATES

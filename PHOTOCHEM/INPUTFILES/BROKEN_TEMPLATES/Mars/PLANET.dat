@@ -8,11 +8,14 @@
 MARS     = PLANET  string naming the planet for extra changes (MARS is the only other option for the moment)
 0.0      = TIMEGA - time in Ga, for modifying the solar flux
 0        = IRESET
-13       = msun
-0	       = IHZSCALE
+13       = pstar
+0        = IHZSCALE
 1.0      = uvscale
 
 -below here are not read in.  They are from Shawn's Planet.earth file but are handled differently here.
+
+IHZSCALE = set to 1 to automatically scale FSCALE to the earth-equivalent flux based on the spectral type (msun)
+(to use keep FSCALE as 1, set IHZSCALE to 1, then change your msun type; will use Kopparapu et al 2012 scalings)
 
 choices for msun (these numbers are from photgrid.f)
       pstar = 12    !Gj 581 from Lucianne
@@ -28,6 +31,9 @@ choices for msun (these numbers are from photgrid.f)
       pstar = 21    !M5V/Proxima Centauri
       pstar = 22    !G0V star for wasp12b (first Hot Jupiter model)
       pstar = 23    !Phoenix 3300K star (for GCM Earth Project)
+      pstar = 24    !HD40307/K2.5V
+      pstar = 25    !HD85512/K6V
+      pstar = 26    !HD97658/K1V
       pstar = 80    !GJ876 MUSCLES data adaptive constant res panchromatic
       pstar = 81    !GJ551 """""" (Proxima Centauri)
       pstar = 82    !GJ581 """"""
@@ -35,4 +41,4 @@ choices for msun (these numbers are from photgrid.f)
       pstar = 84    !GJ1214 """"""
 
 11    = JTROP, Grid layer marking the tropopause height, depends on ZTROP and DELZ
-1.0E5 = DELZ, Height of each atm layer - Earth=1.0E5, Mars=2.0E5 (cm)
+1.0E5 = DELZ, Height of each atm layer - Earth

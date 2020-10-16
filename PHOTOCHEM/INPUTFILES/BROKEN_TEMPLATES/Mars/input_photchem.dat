@@ -1,4 +1,4 @@
-*** Set parameters for the Neoarchean photochemical model ***
+*** Set parameters for the high CO2/CH4 photochemical model ***
 * Write the number after the 11th space
 *2345678901Here
 
@@ -6,17 +6,17 @@ AGL=       0.5
 ISEASON=   1
 IZYO2=     0
 LGRID=     0
-IO2=       1
-INO=       1
+IO2=       0
+INO=       0
 EPSJ=      1.E-9
-PRONO=     1.E9
+PRONO=     0.0
 frak=      1
 HCDENS=    0.63
 ICOUPLE=   0
-ihztype=   0
-ZY=	       60.
+monsize=   0
+ZY=	       50.
 USOLMIN=   1.E-20
-KIDA=      0
+KIDA=      1
 
 C ***** SET MODEL PARAMETERS *****
 C     AGL = DIURNAL AVERAGING FACTOR FOR PHOTORATES
