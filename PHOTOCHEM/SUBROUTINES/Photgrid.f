@@ -980,21 +980,6 @@ c-mab: Recall pstar = 22 is using Kevin's grid. We don't need the conversions be
           print *, 'Suzanne Hawley would be proud of you!'
       ENDIF
 
-
-!added by andrew - gna
-      IF (pstar .EQ. '20') THEN
-         n = 7730
-         print *, "MSUN IS 20 (TRAPPIST-1 scaled PC)!"
-         call sleep(1)
-         nhead = 0
-         ierr = 0
-         OPEN(UNIT=kin,
-     &    file='PHOTOCHEM/DATA/FLUX/TRAPPIST-1.txt',
-     &                STATUS='old')
-          print *, 'YAY NEARBY PLANETS'
-      ENDIF
-
-
       IF (pstar .EQ. 't3200' .or. pstar .eq. '17') THEN
          n = 26141
          print *, "STAR IS 17 (T3200)!"
@@ -1516,6 +1501,12 @@ c-mab: Presently this star doesn't allow Modern Earth template to converge (even
 
                print *, wl(iw), yg3(iw)
         ENDDO
+      
+      ELSE 
+          ! This means that an invalid star was selected...
+          print *, "You have input an invalid star in PLANET.DAT"
+          print *, "Please change your star to a valid input."
+          CALL EXIT(1)
 
       ENDIF !muscles stars
 
