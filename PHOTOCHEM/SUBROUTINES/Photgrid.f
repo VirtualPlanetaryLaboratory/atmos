@@ -569,7 +569,7 @@ c      print *, 'using test grid 380-382nm'
       ENDDO
 
       do L=1,nw
-       READ(kin,*) WL(L),WU(L)
+       READ(kin,*) WL(L), WU(L)
        wc(L) = ( wl(L) + wu(L) )/2.
       enddo
 
@@ -1525,12 +1525,6 @@ c-mab: Presently this star doesn't allow Modern Earth template to converge (even
                print *, wl(iw), yg3(iw)
         ENDDO
       
-      ELSE 
-          ! This means that an invalid star was selected...
-          print *, "You have input an invalid star in PLANET.DAT"
-          print *, "Please change your star to a valid input."
-          CALL EXIT(1)
-
       ENDIF !muscles stars
 
 !     Scale UV grid
