@@ -794,55 +794,62 @@ C    close this because Rates.f and Initphoto.f will re-open it later.
 
 C  ****  JCHEM has species numbers; CHEMJ is corresponding characters
 C ***** REPLACE HOLLERITH LABELS WITH SPECIES NUMBERS IN JCHEM *****
-      DO 5 J=1,NR
-      DO 5 M=1,5
-      IF(CHEMJ(M,J).EQ.' ') GO TO 5
-      DO 6 I=1,NSP2
-  !     print *, CHEMJ(M,J),ISPEC(I)
-      IF(CHEMJ(M,J).NE.ISPEC(I)) GO TO 6
-      JCHEM(M,J) = I
-      GO TO 5
-   6  CONTINUE
-      IERR = J
-      print *, ISPEC
-      print *, 'ispec(i)', ISPEC(i)
-      print *, (CHEMJ(L,J),L=1,5)
-      ! quit; error in reactions
-      GOTO 25
-   5  CONTINUE
+      DO J=1,NR
+        DO M=1,5
+          IF(CHEMJ(M,J).EQ.' ') GO TO 5
+          DO I=1,NSP2
+  !         print *, CHEMJ(M,J),ISPEC(I)
+            IF(CHEMJ(M,J).NE.ISPEC(I)) GO TO 6
+            JCHEM(M,J) = I
+            GO TO 5
+   6        CONTINUE
+          END DO
+          IERR = J
+          print *, ISPEC
+          print *, 'ispec(i)', ISPEC(i)
+          print *, (CHEMJ(L,J),L=1,5)
+        ! quit; error in reactions
+          GOTO 25
+   5    CONTINUE
+        END DO
+      END DO
 C
 
 C ***** FILL UP CHEMICAL PRODUCTION AND LOSS MATRICES *****
-      DO 7 M=1,2
-C   !so N=2, then 1
-      N = 3-M
-      DO 7 J=1,NR
-C   !so I = JCHEM(1,NR) then JCEHM(2,NR)
-      I = JCHEM(M,J)
-C   !skips 0 (i.e. nothing) and NSP1 (HV)
-      IF(I.LT.1.OR.I.GT.NSP) GO TO 7
-C   !counter for how many reactions species I is involved with
-      NUML(I) = NUML(I) + 1
-C   !quit; too many reactions  (seems unnecesary, but whatever)
-      IF(NUML(I).GT.NMAX) GOTO 20
-      K = NUML(I)
-C   !ILOSS(1,species in pos 1, species reac#)
-C     -then ILOSS(1,spec in pos 2, reac#)= global reaction #
-      ILOSS(1,I,K) = J
-C   !ILOSS(1,species in pos 1, species reac#)
-C     -then ILOSS(1,spec in pos 2, reac#)= other species
-      ILOSS(2,I,K) = JCHEM(N,J)
-   7  CONTINUE
+      DO M=1,2
+C      so N=2, then 1
+        N = 3-M
+        DO J=1,NR
+C           so I = JCHEM(1,NR) then JCEHM(2,NR)
+          I = JCHEM(M,J)
+C           skips 0 (i.e. nothing) and NSP1 (HV)
+          IF(I.LT.1.OR.I.GT.NSP) GO TO 7
+C           counter for how many reactions species I is involved with
+          NUML(I) = NUML(I) + 1
+C           quit; too many reactions  (seems unnecesary, but whatever)
+          IF(NUML(I).GT.NMAX) GOTO 20
+          K = NUML(I)
+C           ILOSS(1,species in pos 1, species reac#)
+C           -then ILOSS(1,spec in pos 2, reac#)= global reaction #
+            ILOSS(1,I,K) = J
+C           ILOSS(1,species in pos 1, species reac#)
+C           -then ILOSS(1,spec in pos 2, reac#)= other species
+            ILOSS(2,I,K) = JCHEM(N,J)
+   7      CONTINUE
+        END DO
+      END DO
 C
-      DO 8 M=3,5
-      DO 8 J=1,NR
-      I = JCHEM(M,J)
-      IF(I.LT.1.OR.I.GT.NSP) GO TO 8
-      NUMP(I) = NUMP(I) + 1
-      IF(NUMP(I).GT.NMAX) GO TO 20
-      K = NUMP(I)
-      IPROD(I,K) = J
-   8  CONTINUE
+      DO M=3,5
+        DO J=1,NR
+          I = JCHEM(M,J)
+          IF(I.LT.1.OR.I.GT.NSP) GO TO 8
+          NUMP(I) = NUMP(I) + 1
+          IF(NUMP(I).GT.NMAX) GO TO 20
+          K = NUMP(I)
+          IPROD(I,K) = J
+   8      CONTINUE
+        END DO
+      END DO
 
 c-mc check mass balance of chemical reactions
 
@@ -1790,12 +1797,14 @@ c   where he is taking a centered difference.
 c   i am not so sure this applies at the boundaries
 c   I need to find where he has done the boundaries
 c   it may be that I should instead change flux estimates to use the "2"
-      DO 38 J=1,NP
-      DPU(1,J) = WFALL(2,J)*DEN(2)/DEN(1)/(2.*DZ(1))
-      DPL(NZ,J) = WFALL(NZ1,J)*DEN(NZ1)/DEN(NZ)/(2.*DZ(NZ))
-      DO 38 I=2,NZ1
-      DPU(I,J) = WFALL(I+1,J)*DEN(I+1)/DEN(I)/(2.*DZ(I))
-  38  DPL(I,J) = WFALL(I-1,J)*DEN(I-1)/DEN(I)/(2.*DZ(I))
+      DO J=1,NP
+        DPU(1,J) = WFALL(2,J)*DEN(2)/DEN(1)/(2.*DZ(1))
+        DPL(NZ,J) = WFALL(NZ1,J)*DEN(NZ1)/DEN(NZ)/(2.*DZ(NZ))
+        DO I=2,NZ1
+          DPU(I,J) = WFALL(I+1,J)*DEN(I+1)/DEN(I)/(2.*DZ(I))
+          DPL(I,J) = WFALL(I-1,J)*DEN(I-1)/DEN(I)/(2.*DZ(I))
+        END DO
+      END DO
        elseif (USETD.GT.0) then
 C   particles in tri-diag
         do J=1,NZ
@@ -1829,133 +1838,128 @@ c-mc condition to that of just repeating the loop four times...
 
 c-MC - turning off iterated jacobians for chlorine testing
 c-MC turning back on.../off
-
-
-      DO 73 ITERATE=1,1
-
-      DO 17 J=1,LDA
-      DO 17 K=1,NEQ
-  17  DJAC(J,K) = 0.
-      DO 19 K=1,NEQ
-  19  RHS(K) = 0.
 C
-C     (DJAC IS EQUAL TO (1/DT)*I - J, WHERE J IS THE JACOBIAN MATRIX)
-c-mc  NOTE - DJAC is in band storage form.  see sgbfa header for details.
-c-mACK expand me... WARNING
-
+      DO ITERATE=1,1 ! long Jacobian loop
+        DO J=1,LDA
+          DO K=1,NEQ
+            DJAC(J,K) = 0.
+          END DO
+        END DO
+        DO K=1,NEQ
+          RHS(K) = 0.
+        END DO
 C
-
-
-
-C   COMPUTE CHEMISTRY TERMS AT ALL GRID POINTS
-      IDO = 0
-C   computes TP, TL
-      if ((NN/NPR)*NPR.eq.NN) IDO = 1
-      IF (NN.EQ.NSTEPS) IDO = 1
-
-C   IDO=1 happens on last step- computes total production and loss.
-      CALL DOCHEM(FVAL,IDO,JTROP,iSL,USETD)
-
-      DO 9 I=1,NQ
-      DO 9 J=1,NZ
-      K = I + (J-1)*NQ
-      RHS(K) = FVAL(I,J)
-      if (ITERATE.eq.1) USAVEOLD(I,J) = USOL(I,J)
-C-mc testing 4/29/06  used to revert if timestep is too big.
-C-mc and also for USOLPREV once the timestep succeedes
-C  original code  - used as part of the reverse euler solver
-   9  USAVE(I,J) = USOL(I,J)
-
+C       (DJAC IS EQUAL TO (1/DT)*I - J, WHERE J IS THE JACOBIAN MATRIX)
+c-mc    NOTE - DJAC is in band storage form.  see sgbfa header for details.
+c-mACK  expand me... WARNING
 C
-
-
-C     NEW CODE FROM EDDIE
-C   Loop through all chemical species
-      DO 3 I=1,NQ
-C   Loop through all vertical atmospheric layers
-      DO 11 J=1,NZ
-C   as it was - USOL should be positive here anyway,
-C       can probably remove this (Eddie)
-c     R(J) = EPSJ * ABS(USOL(I,J))
-C   R(J) is value to perturb USOL(I,J) by in Jacobian calculation,
-C       EPSJ much less than 1
-      R(J) = EPSJ * USOL(I,J)
-C   This is my debug in other version of code - Eddie !!!  WARNING
-C           ! PERTURB DEBUG !!!
-C   Below ensures no USOL(I,J) falls below double precision limit !!!
-      IF(R(J).LT.1.e-100) R(J) = 1.e-100
-c   Add perturbing quantity to mixing ratio
-  11  USOL(I,J) = USAVE(I,J) + R(J)
-C   Call the photochemistry routine
-C      FV has dimension (NQ,NZ) and holds gas densities
-      CALL DOCHEM(FV,0,JTROP,iSL,USETD)
+C       COMPUTE CHEMISTRY TERMS AT ALL GRID POINTS
+        IDO = 0
+C       computes TP, TL
+        if ((NN/NPR)*NPR.eq.NN) IDO = 1
+        IF (NN.EQ.NSTEPS) IDO = 1
+C       IDO=1 happens on last step- computes total production and loss.
+        CALL DOCHEM(FVAL,IDO,JTROP,iSL,USETD)
+        DO I=1,NQ
+          DO J=1,NZ
+            K = I + (J-1)*NQ
+            RHS(K) = FVAL(I,J)
+            if (ITERATE.eq.1) USAVEOLD(I,J) = USOL(I,J)
+C-mc        testing 4/29/06  used to revert if timestep is too big.
+C-mc        and also for USOLPREV once the timestep succeedes
+C           original code  - used as part of the reverse euler solver
+            USAVE(I,J) = USOL(I,J)
+          END DO
+        END DO
+C
+C       NEW CODE FROM EDDIE
+C       Loop through all chemical species
+        DO I=1,NQ
+C         Loop through all vertical atmospheric layers
+          DO J=1,NZ
+C           as it was - USOL should be positive here anyway,
+C           can probably remove this (Eddie)
+c           R(J) = EPSJ * ABS(USOL(I,J))
+C           R(J) is value to perturb USOL(I,J) by in Jacobian calculation,
+C           EPSJ much less than 1
+            R(J) = EPSJ * USOL(I,J)
+C           This is my debug in other version of code - Eddie !!!  WARNING
+C           !!! PERTURB DEBUG !!!
+C           Below ensures no USOL(I,J) falls below double precision limit !!!
+            IF(R(J).LT.1.e-100) R(J) = 1.e-100
+c           Add perturbing quantity to mixing ratio
+            USOL(I,J) = USAVE(I,J) + R(J)
+          END DO
+C         Call the photochemistry routine
+C         FV has dimension (NQ,NZ) and holds gas densities
+          CALL DOCHEM(FV,0,JTROP,iSL,USETD)
 c
-c end new code from eddie
-
-c old code
-c      DO 3 I=1,NQ
-c      DO 11 J=1,NZ
-c     R(J) = EPSJ * ABS(USOL(I,J))   !as it was
-c      R(J) = EPSJ * USOL(I,J)
-c  11  USOL(I,J) = USAVE(I,J) + R(J)
-c      CALL DOCHEM(FV,0,JTROP,iSL,USETD)
-
-
+c         end new code from eddie
+c         old code
+c       DO I=1,NQ
+c         DO J=1,NZ
+c           R(J) = EPSJ * ABS(USOL(I,J))   !as it was
+c           R(J) = EPSJ * USOL(I,J)
+c           USOL(I,J) = USAVE(I,J) + R(J)
+c         END DO
+c         CALL DOCHEM(FV,0,JTROP,iSL,USETD)
 C
-      DO 12 M=1,NQ
-      MM = M - I + KD
-      DO 12 J=1,NZ
-      K = I + (J-1)*NQ
-C  -J since its orig - perturbed
-  12  DJAC(MM,K) = (FVAL(M,J) - FV(M,J))/R(J)
+        DO M=1,NQ
+          MM = M - I + KD
+          DO J=1,NZ
+            K = I + (J-1)*NQ
+C           -J since its orig - perturbed
+           DJAC(MM,K) = (FVAL(M,J) - FV(M,J))/R(J)
+          END DO
+        END DO
 C
 
 
-      DO 10 J=1,NZ
-  10  USOL(I,J) = USAVE(I,J)
-   3  CONTINUE
-
-
-
+        DO J=1,NZ
+          USOL(I,J) = USAVE(I,J)
+        END DO
+      END DO
 C
 C   COMPUTE TRANSPORT TERMS AT INTERIOR GRID POINTS
-      DO 13 I = 1,NQ
-      DO 14 J=2,NZ1
-      K = I + (J-1)*NQ
-      RHS(K) = RHS(K) - DD(i,J)*USOL(I,J) - ADD(i,j)*USOL(I,J)
-     1  + DU(i,J)*USOL(I,J+1) + ADU(i,j)*USOL(i,j+1)
-     2  + DL(i,J)*USOL(I,J-1) + ADL(i,J)*USOL(I,J-1)
-      DJAC(KD,K) = DJAC(KD,K) + DTINV + DD(i,J) + ADD(i,j)
-      DJAC(KU,K+NQ) = - DU(i,J) - ADU(i,j)
-  14  DJAC(KL,K-NQ) = - DL(i,J) - ADL(i,j)
-  13  CONTINUE
+        DO I = 1,NQ
+          DO J=2,NZ1
+            K = I + (J-1)*NQ
+            RHS(K) = RHS(K) - DD(i,J)*USOL(I,J) - ADD(i,j)*USOL(I,J)
+     1        + DU(i,J)*USOL(I,J+1) + ADU(i,j)*USOL(i,j+1)
+     2        + DL(i,J)*USOL(I,J-1) + ADL(i,J)*USOL(I,J-1)
+            DJAC(KD,K) = DJAC(KD,K) + DTINV + DD(i,J) + ADD(i,j)
+            DJAC(KU,K+NQ) = - DU(i,J) - ADU(i,j)
+            DJAC(KL,K-NQ) = - DL(i,J) - ADL(i,j)
+          END DO
+        END DO
 C
 
-c-mc ok, I need to verify that this is adding in -J in all DJAC calls
-c-mc (check signs above?)     WARNING?
-c-mc ok - Jacobian for transport diagonals is:
-c-mc J~Chem-DD. We want -J and have already
-c-mc filled with -CHEM, so adding DD is appropriate.
-c-mc DTINV is the extra term in the main diagonal
-c-mc J_upper=DU and J_lower=DL, so DJAC (which is -J)
-c-mc uses -DU and -DL respectivly
-
-      if(USETD.EQ.0.and.NP.gt.0) then  !particles in main loop
-C ack - these need to be abstracted... WARNING
-C   ADD ADVECTION TERMS FOR PARTICLES
-
-      do L=1,NP
-      if(L.EQ.1) I = LSO4AER
-      if(L.EQ.2) I = LS8AER
-      if(L.EQ.3) I = LHCAER
-      if(L.EQ.4) I = LHCAER2
-       do J=2,NZ1
-        K = I + (J-1)*NQ
-        RHS(K) = RHS(K) + DPU(J,L)*USOL(I,J+1) - DPL(J,L)*USOL(I,J-1)
-        DJAC(KU,K+NQ) = DJAC(KU,K+NQ) - DPU(J,L)
-        DJAC(KL,K-NQ) = DJAC(KL,K-NQ) + DPL(J,L)
-       enddo
-      enddo
+c-mc    ok, I need to verify that this is adding in -J in all DJAC calls
+c-mc    (check signs above?)     WARNING?
+c-mc    ok - Jacobian for transport diagonals is:
+c-mc    J~Chem-DD. We want -J and have already
+c-mc    filled with -CHEM, so adding DD is appropriate.
+c-mc    DTINV is the extra term in the main diagonal
+c-mc    J_upper=DU and J_lower=DL, so DJAC (which is -J)
+c-mc    uses -DU and -DL respectivly
+C
+        if(USETD.EQ.0.and.NP.gt.0) then  !particles in main loop
+C       ack - these need to be abstracted... WARNING
+C       ADD ADVECTION TERMS FOR PARTICLES
+C
+        DO L=1,NP
+          if(L.EQ.1) I = LSO4AER
+          if(L.EQ.2) I = LS8AER
+          if(L.EQ.3) I = LHCAER
+          if(L.EQ.4) I = LHCAER2
+          DO J=2,NZ1
+            K = I + (J-1)*NQ
+            RHS(K) = RHS(K) + DPU(J,L)*USOL(I,J+1) -
+     &         DPL(J,L)*USOL(I,J-1)
+            DJAC(KU,K+NQ) = DJAC(KU,K+NQ) - DPU(J,L)
+            DJAC(KL,K-NQ) = DJAC(KL,K-NQ) + DPL(J,L)
+          END DO
+        END DO
 
 
       endif
@@ -2182,119 +2186,112 @@ C
 C   COMPUTE NEW CONCENTRATIONS (IGNORE ERRORS IN SEVERAL SPECIES
 C    THAT VIRTUALLY DISAPPEAR UP HIGH)
       EMAX = 0.
-      DO 26 I=1,NQ
-      DO 26 J=1,NZ
-        K = I + (J-1)*NQ
-c        IF (I.EQ.LH2S .AND. J.GT.J25) THEN  ! 30
-c          USOL(I,J) = USOL(I,J) + RHS(K)
-c        ELSEIF (I.EQ.LS2 .AND. USOL(I,J).LT.1.E-20) THEN
-c          USOL(I,J) = USOL(I,J) + RHS(K)
-c        ELSEIF (I.EQ.LS4 .AND. USOL(I,J).LT.1.E-20) THEN
-c          USOL(I,J) = USOL(I,J) + RHS(K)
-c        ELSEIF (I.EQ.LS8 .AND. USOL(I,J).LT.1.E-20) THEN
-c          USOL(I,J) = USOL(I,J) + RHS(K)
-c    50, this often causes problems causes the program to fail at 49.5 km!
-c-orig        ELSEIF(I.EQ.LSO4AER .AND. J.GT.J25) THEN
-c        IF (I.EQ.LSO4AER .AND. J.GT.J25) THEN
-
-!ACK - should return to this now that
-C      particles condensation is fixed up
-
-c      A less drastic measure
-        IF (I.EQ.LSO4AER.AND. J.GT.J25) THEN
-          USOL(I,J) = USOL(I,J) + RHS(K)
-        ELSEIF(I.EQ.LS8AER.AND. J.GT.J25) THEN
-          USOL(I,J) = USOL(I,J) + RHS(K)
-        ELSEIF(I.EQ.LHCAER.AND. J.GT.J25) THEN
-c        ELSEIF(I.EQ.LHCAER) THEN  ! !!!
-          USOL(I,J) = USOL(I,J) + RHS(K)
-        ELSEIF(I.EQ.LHCAER2.AND. J.GT.J25) THEN
-c        ELSEIF(I.EQ.LHCAER2) THEN  ! !!!
-          USOL(I,J) = USOL(I,J) + RHS(K)
-
-
-
-c  Jim set this at 50 km.  program fails at 49.5 km.
-c  if I turn it off the program fails at 63.5 km immediately
-c   so I may conclude that there is an issue with the UBC on SO4AER
-c  anyway, I'll set it to say 35 km
-c
-c   more generally I want to ignore errors in anything with
-c   mixing ratios less than say 1e-20
-c    50, this causes the program to fail at 49.5 km!
-c       ELSEIF(I.EQ.LNO .AND. J.GT.70) THEN
-c         USOL(I,J) = USOL(I,J) + RHS(K)
-c       ELSEIF(I.EQ.LNO2 .AND. J.GT.70) THEN
-c         USOL(I,J) = USOL(I,J) + RHS(K)
-c       ELSEIF(I.EQ.LHNO .AND. J.GT.70) THEN
-c         USOL(I,J) = USOL(I,J) + RHS(K)
-
-        ELSEIF(I.EQ.LS4) THEN
-                     USOL(I,J) = USOL(I,J) + RHS(K)
-
-        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LO2) THEN !!!!!! Ignoring O2 entirely right now for hot jupi to get it to converge quickly
-!!!! btw this was kept disabled in Ravi's CURRENT version of main
-                     USOL(I,J) = USOL(I,J) + RHS(K)
-C        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LO2) THEN
-C        	IF(J.GT.21.AND.J.LT.71) THEN !!! Using this to ignore only PARTS of O2, i.e. more carefully, than entiety of O2 (above this)
-C                     USOL(I,J) = USOL(I,J) + RHS(K)
-C            ENDIF
-!!!!!!!!!!!! The conditions below are necessary to make WASP12B converge !!!!
-c-mab: These from trial/error + Kopparapu et al. 2012 code.
-c-mab: For the solar system templates, all species have the same USOL = 1e-20 limit.
-c-mab: Similar species-specific conditions may be necessary to get future templates to converge.
-c-mab: This is temporary till we can find a "cleaner" solution.
-        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LH2CO .AND. J.GT. 61) THEN
-                     USOL(I,J) = USOL(I,J) + RHS(K)
-        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LH2COH .AND. J.GT. 35) THEN
-                     USOL(I,J) = USOL(I,J) + RHS(K)
-        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LCH .AND. J.GT. 31) THEN
-                     USOL(I,J) = USOL(I,J) + RHS(K)
-        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LCH23 .AND. J.GT. 31) THEN
-                     USOL(I,J) = USOL(I,J) + RHS(K)
-        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LCH3 .AND. J.GT. 50) THEN
-                     USOL(I,J) = USOL(I,J) + RHS(K)
-        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LCH4 .AND. J.GT. 56) THEN
-                     USOL(I,J) = USOL(I,J) + RHS(K)
-C        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LH2O .AND. J.GT. 75) THEN  !!!! btw this was kept disabled in Ravi's CURRENT version of main
-C                     USOL(I,J) = USOL(I,J) + RHS(K) !!! Incorporating this in this version actually slightly increased convergence time
-C        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LCO2) THEN  !!!! btw this was kept disabled in Ravi's CURRENT version of main
-C                     USOL(I,J) = USOL(I,J) + RHS(K)  !(PS - woah ignoring CO2 entirely? Really? - disabling this actually slightly increased convergence as well, more than H2O alone did)
-        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LCH3OH .AND. J.GT. 10) THEN
-                     USOL(I,J) = USOL(I,J) + RHS(K)
-C        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LO .AND. J.GT. 60) THEN !!!! btw this was kept disabled in Ravi's CURRENT version of main
-C                     USOL(I,J) = USOL(I,J) + RHS(K)
-        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LC .AND. J.GT. 60) THEN
-                     USOL(I,J) = USOL(I,J) + RHS(K)
-        ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LCH3O .AND. J.GT. 50) THEN
-                     USOL(I,J) = USOL(I,J) + RHS(K)
+      DO I=1,NQ
+        DO J=1,NZ
+          K = I + (J-1)*NQ
+c         IF (I.EQ.LH2S .AND. J.GT.J25) THEN  ! 30
+c           USOL(I,J) = USOL(I,J) + RHS(K)
+c         ELSEIF (I.EQ.LS2 .AND. USOL(I,J).LT.1.E-20) THEN
+c           USOL(I,J) = USOL(I,J) + RHS(K)
+c         ELSEIF (I.EQ.LS4 .AND. USOL(I,J).LT.1.E-20) THEN
+c           USOL(I,J) = USOL(I,J) + RHS(K)
+c         ELSEIF (I.EQ.LS8 .AND. USOL(I,J).LT.1.E-20) THEN
+c           USOL(I,J) = USOL(I,J) + RHS(K)
+c    50,  this often causes problems causes the program to fail at 49.5 km!
+c-orig         ELSEIF(I.EQ.LSO4AER .AND. J.GT.J25) THEN
+c         IF (I.EQ.LSO4AER .AND. J.GT.J25) THEN
+C
+!ACK -    should return to this now that
+C         particles condensation is fixed up
+C
+c         A less drastic measure
+          IF (I.EQ.LSO4AER.AND. J.GT.J25) THEN
+            USOL(I,J) = USOL(I,J) + RHS(K)
+          ELSEIF(I.EQ.LS8AER.AND. J.GT.J25) THEN
+            USOL(I,J) = USOL(I,J) + RHS(K)
+          ELSEIF(I.EQ.LHCAER.AND. J.GT.J25) THEN
+c          ELSEIF(I.EQ.LHCAER) THEN  ! !!!
+            USOL(I,J) = USOL(I,J) + RHS(K)
+          ELSEIF(I.EQ.LHCAER2.AND. J.GT.J25) THEN
+c          ELSEIF(I.EQ.LHCAER2) THEN  ! !!!
+            USOL(I,J) = USOL(I,J) + RHS(K)
+c         Jim set this at 50 km.  program fails at 49.5 km.
+c         if I turn it off the program fails at 63.5 km immediately
+c         so I may conclude that there is an issue with the UBC on SO4AER
+c         anyway, I'll set it to say 35 km
+c         More generally I want to ignore errors in anything with
+c         mixing ratios less than say 1e-20
+c         50, this causes the program to fail at 49.5 km!
+c         ELSEIF(I.EQ.LNO .AND. J.GT.70) THEN
+c           USOL(I,J) = USOL(I,J) + RHS(K)
+c         ELSEIF(I.EQ.LNO2 .AND. J.GT.70) THEN
+c           USOL(I,J) = USOL(I,J) + RHS(K)
+c         ELSEIF(I.EQ.LHNO .AND. J.GT.70) THEN
+c           USOL(I,J) = USOL(I,J) + RHS(K)
+C
+          ELSEIF(I.EQ.LS4) THEN
+            USOL(I,J) = USOL(I,J) + RHS(K)
+          ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LO2) THEN !!!!!! Ignoring O2 entirely right now for hot jupi to get it to converge quickly
+!!!!        btw this was kept disabled in Ravi's CURRENT version of main
+            USOL(I,J) = USOL(I,J) + RHS(K)
+C           ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LO2) THEN
+C           IF(J.GT.21.AND.J.LT.71) THEN !!! Using this to ignore only PARTS of O2, i.e. more carefully, than entiety of O2 (above this)
+C           USOL(I,J) = USOL(I,J) + RHS(K)
+C           ENDIF
+C           The conditions below are NECESSARY to make WASP12B converge !!!!
+c-mab:      These from trial/error + Kopparapu et al. 2012 code.
+c-mab:      For the solar system templates, all species have the same USOL = 1e-20 limit.
+c-mab:      Similar species-specific conditions may be necessary to get future templates to converge.
+c-mab:      This is temporary till we can find a "cleaner" solution.
+          ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LH2CO.AND.J.GT.61) THEN
+            USOL(I,J) = USOL(I,J) + RHS(K)
+          ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LH2COH.AND.J.GT.35) THEN
+            USOL(I,J) = USOL(I,J) + RHS(K)
+          ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LCH.AND.J.GT.31) THEN
+            USOL(I,J) = USOL(I,J) + RHS(K)
+          ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LCH23.AND.J.GT.31) THEN
+            USOL(I,J) = USOL(I,J) + RHS(K)
+          ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LCH3.AND.J.GT.50) THEN
+            USOL(I,J) = USOL(I,J) + RHS(K)
+          ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LCH4.AND.J.GT.56) THEN
+            USOL(I,J) = USOL(I,J) + RHS(K)
+C           ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LH2O .AND. J.GT. 75) THEN  !!!! btw this was kept disabled in Ravi's CURRENT version of main
+C             USOL(I,J) = USOL(I,J) + RHS(K) !!! Incorporating this in this version actually slightly increased convergence time
+C           ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LCO2) THEN  !!!! btw this was kept disabled in Ravi's CURRENT version of main
+C             USOL(I,J) = USOL(I,J) + RHS(K)  !(PS - woah ignoring CO2 entirely? Really? - disabling this actually slightly increased convergence as well, more than H2O alone did)
+          ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LCH3OH.AND.J.GT.10) THEN
+            USOL(I,J) = USOL(I,J) + RHS(K)
+C           ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LO .AND. J.GT. 60) THEN !!!! btw this was kept disabled in Ravi's CURRENT version of main
+C             USOL(I,J) = USOL(I,J) + RHS(K)
+          ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LC.AND.J.GT.60) THEN
+            USOL(I,J) = USOL(I,J) + RHS(K)
+          ELSEIF(PLANET.EQ.'WASP12B'.AND.I.EQ.LCH3O.AND.J.GT.50) THEN
+            USOL(I,J) = USOL(I,J) + RHS(K)
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-
-        ELSEIF(USOL(I,J).LT. USOLMIN) THEN !DEFAULT ATMOS CONDITION -- USING FOR NON HOT JUP PLANETS
-
-c-orig        IF (USOL(I,J).LT. 1.E-20) THEN
-c        IF (USOL(I,J).LT. 1.E-22) THEN
-c        ELSEIF (USOL(I,J).LT. 1.E-22) THEN
+          ELSEIF(USOL(I,J).LT. USOLMIN) THEN !DEFAULT ATMOS CONDITION -- USING FOR NON HOT JUP PLANETS
+c-orig      IF (USOL(I,J).LT. 1.E-20) THEN
+c           IF (USOL(I,J).LT. 1.E-22) THEN
+c           ELSEIF (USOL(I,J).LT. 1.E-22) THEN
           USOL(I,J) = USOL(I,J) + RHS(K)
 c
-        ELSE
-          REL(I,J) = RHS(K)/USOL(I,J)
-          EREL = ABS(REL(I,J))
-          EMAX = max(EMAX,EREL)
-          IF(EREL.LT.EMAX) THEN
-            USOL(I,J) = USOL(I,J) + RHS(K)
-C       store info on species with largest error
           ELSE
-            IS = I
-C       mc -this label is OK, because S will never have a photolysis reaction
-            JS = J
-            UMAX = USOL(I,J)
-            RMAX = RHS(K)
-            USOL(I,J) = USOL(I,J) + RHS(K)
+            REL(I,J) = RHS(K)/USOL(I,J)
+            EREL = ABS(REL(I,J))
+            EMAX = max(EMAX,EREL)
+            IF(EREL.LT.EMAX) THEN
+              USOL(I,J) = USOL(I,J) + RHS(K)
+C         store info on species with largest error
+            ELSE
+              IS = I
+C         mc -this label is OK, because S will never have a photolysis reaction
+              JS = J
+              UMAX = USOL(I,J)
+              RMAX = RHS(K)
+              USOL(I,J) = USOL(I,J) + RHS(K)
+            ENDIF
           ENDIF
-        ENDIF
-26    CONTINUE
+        END DO
+      END DO
 
 
 
@@ -2436,9 +2433,10 @@ c      IF(I.EQ.LSO4AER) MZ = minloc(Z,1, Z/1.e5 .ge. 79.5)-1
 C   COMPUTE ADVECTION TERMS FOR PARTICLES
       DPU(1,L) = WFALL(2,L)*DEN(2)/DEN(1)/(2.*DZ(1))
       DPL(NZ,L) = WFALL(NZ1,L)*DEN(NZ1)/DEN(NZ)/(2.*DZ(NZ))
-      DO 381 J=2,NZ1
-      DPU(J,L) = WFALL(J+1,L)*DEN(J+1)/DEN(J)/(2.*DZ(J))
- 381  DPL(J,L) = WFALL(J-1,L)*DEN(J-1)/DEN(J)/(2.*DZ(J))
+      DO J=2,NZ1
+        DPU(J,L) = WFALL(J+1,L)*DEN(J+1)/DEN(J)/(2.*DZ(J))
+        DPL(J,L) = WFALL(J-1,L)*DEN(J-1)/DEN(J)/(2.*DZ(J))
+      END DO
     ! jim is using centered differences.
 c   this makes sense for the inner points from the differential equation,
 c   where he is taking a centered difference.
@@ -2451,11 +2449,12 @@ c      print *, DPU
 C
 C   TA = LOWER DIAGONAL, TB = DIAGONAL, TC = UPPER DIAGONAL, TY =
 C   RIGHT-HAND SIDE
-      DO 70 J=1,NZ
-      TA(J) = 0.
-      TB(J) = 0.
-      TC(J) = 0.
-  70  TY(J) = 0.
+      DO J=1,NZ
+        TA(J) = 0.
+        TB(J) = 0.
+        TC(J) = 0.
+        TY(J) = 0.
+      END DO
 C
       DO  J=1,MZ
       TB(J) = YL(I,J)
@@ -2463,10 +2462,11 @@ C
 c      print *,ISPEC(I),J,YL(I,J),YP(I,J)/DEN(J)
       enddo
 C
-      DO 45 J=2,MZ1
-      TA(J) = - DL(I,J) + DPL(J,L)
-      TB(J) = TB(J) + DD(I,J)
-  45  TC(J) = - DU(I,J) - DPU(J,L)
+      DO J=2,MZ1
+        TA(J) = - DL(I,J) + DPL(J,L)
+        TB(J) = TB(J) + DD(I,J)
+        TC(J) = - DU(I,J) - DPU(J,L)
+      END DO
 C
 
 C why are there no dl*PARTICLES() in here?  WARNING
@@ -2522,7 +2522,8 @@ C
 C continue doing newton steps (4 seems to work best)
 C someday I should see if this is justified
 C (r37:36 in /td branch has first attempt at convergence checking) WARNING
- 73   continue
+      END DO
+C Long jacobian loop ends here
 
 
 
@@ -2585,12 +2586,14 @@ C     print this to terminal
 C
 C   COMPUTE ATMOSPHERIC OXIDATION STATE
 c   what follows needs work - WARNING
-      DO 42 I=1,NQ
-      SR(I) = 0.
-      DO 43 J=1,JTROP
-  43  SR(I) = SR(I) + RAINGC(I,J)*USOL(I,J)*DEN(J)*DZ(J)
-      PHIDEP(I) = VDEP(I)*USOL(I,1)*DEN(1)
-  42  TLOSS(I) = SR(I) + PHIDEP(I)
+      DO I=1,NQ
+        SR(I) = 0.
+        DO J=1,JTROP
+          SR(I) = SR(I) + RAINGC(I,J)*USOL(I,J)*DEN(J)*DZ(J)
+        END DO
+        PHIDEP(I) = VDEP(I)*USOL(I,1)*DEN(1)
+        TLOSS(I) = SR(I) + PHIDEP(I)
+      END DO
 
 
 c nb that vdep for particles is defined to include wfall
