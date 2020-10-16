@@ -760,13 +760,13 @@ c to convert to actual flux in the bin (mw/m2), need to multiply by bin width
 
 c-before we convert, some tests of energy conservation across the interpolation
 c-note - this are conserved across various wavelength grids.
-c         call cspint(n,x1,y1/10d0,2000d0,3550d0,y,e,work,poop)
-c         call cspint(n,x1,y1/10d0,3500d0,5000d0,y,e,work,poop)
-c         print *, poop  !ok this is the right answer for 200-350 (55.8 W/m2)  this is the thuillier flux
+c         call cspint(n,x1,y1/10d0,2000d0,3550d0,y,e,work,planet)
+c         call cspint(n,x1,y1/10d0,3500d0,5000d0,y,e,work,planet)
+c         print *, planet  !ok this is the right answer for 200-350 (55.8 W/m2)  this is the thuillier flux
 
-c         call cspint(nw,wl,yg3,2000d0,3550d0,y,e,work,poop)
-c         call cspint(nw,wl,yg3,3500d0,5000d0,y,e,work,poop)
-c         print *, poop !flux interpolated to new grid
+c         call cspint(nw,wl,yg3,2000d0,3550d0,y,e,work,planet)
+c         call cspint(nw,wl,yg3,3500d0,5000d0,y,e,work,planet)
+c         print *, planet !flux interpolated to new grid
 
 c         stop
 

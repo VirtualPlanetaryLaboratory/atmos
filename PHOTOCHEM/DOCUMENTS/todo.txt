@@ -111,7 +111,7 @@ update all cross sections
 
 
 
-update the JPL-02 rates to JPL-06. Mark has a list of necessary changes on the pile of crap that is his desk.
+update the JPL-02 rates to JPL-06. Mark has a list of necessary changes on his desk.
 Also, go through the notes in ~/photochem/dev/code/chlorine/RatePortThoughts on ozone to address some problems/differences in reaction rates between the two main trunks of the code.
 
 use new reaction rates file to update printout in .out file to include reaction rates (see yuk's code for nice ex)

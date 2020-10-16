@@ -515,7 +515,7 @@ C ***** ***** ***** END WAVELENGTH LOOP ***** ***** *****
       END DO ! end wavelenght loop do L=1,nw
 
 
-      if (JS8L.GT.0) then  !if gaseous S8 is in the model, compute the photolysis rate by black magic
+      if (JS8L.GT.0) then  !if gaseous S8 is in the model, compute the photolysis rate
 C
 C ***** CALCULATE S8 PHOTORATE USING ANDY YOUNG'S METHOD *****
 C     (ANC IS THE NUMBER OF COLLISIONS REQUIRED TO CLOSE THE RING,
