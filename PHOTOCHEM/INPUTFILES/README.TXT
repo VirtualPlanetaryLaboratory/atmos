@@ -1,4 +1,6 @@
 Converged templates can be found in the TEMPLATES folder.
+Some informmation on each template can be found in the README
+in the TEMPLATES folder. 
 
 Variable definitions of the input files are as follows: 
 ----------------------------------------------

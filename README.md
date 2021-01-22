@@ -5,9 +5,9 @@ Atmos is a package containing two atmospheric models, along with scripts to coup
 #### What is this repository for? ####
 
 This is a coupled photochemistry-climate code. This model leverages
-the work by the Kasting, Zahnle, and Catling groups and represents an
+the work by the Kasting, Meadows, Zahnle, and Catling groups and represents an
 an effort to merge the various versions and features of the codes
-that have been developed over the years by the groups using the code. Ashley Horan and Shawn Domagal-Goldman, using the past work of Antigona Segura as a guide, coupled the modern versions of photochem and clima together.
+that have been developed over the years by the groups using the code.
 
 The model development was supported by NASA Astrobiology Institute's  Virtual Planetary Laboratory lead team, supported by NASA under cooperative agreement NNH05ZDA001C.
 
@@ -83,7 +83,8 @@ PHOTOCHEM/SUBROUTINES.
 QUESTION: How do I know if the models have converged?
 ANSWER: The photochemical model should stop in < 10000 steps if it converges
 (ideally much fewer than that...the number of steps is set by the variable
-"NSTEPS" in PhotoMain.f).
+"NSTEPS" in PhotoMain.f). The convergence criterion for PHOTO is when the timestep
+length is > the age of the universe in seconds. 
 For the climate model, go to CLIMA/IO/clima_allout.tab
 DT, DIVF, DIVFrms should be small-valued.  How small?  Values on the order of
 1E-5ish and smaller and you should be golden.  Values 1E-3...probably ok.
