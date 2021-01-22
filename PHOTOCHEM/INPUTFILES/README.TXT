@@ -1,51 +1,52 @@
-Hi!  You are probably wondering what files to start with and what files are 
-necessary as inputs to the model.  Read on...
+Converged templates can be found in the TEMPLATES folder.
 
-
-~~~~~~~~~~~~TEMPLATES FOLDER~~~~~~~~~~~~~~~~~~
-I suggest starting with the files in:
- /templates/Archean+haze 
-These were designed to work with no edits necessary with this version of 
-the model. Copy everything except in.dist to:
- /PHOTOCHEM/INPUTFILES   
-Copy in.dist to:
- /PHOTOCHEM   
-If the model does not converge in less than ~ 100 steps, check to make sure
-you correctly copied in.dist to the PHOTOCHEM directory. If you still have 
-problems, talk to Giada. The other templates SHOULD work, too, but 
-your mileage may vary....
-
+Variable definitions of the input files are as follows: 
 ----------------------------------------------
-----------------planet.dat--------------------
+----------------PLANET.dat--------------------
 This has basic info on the planet-star configuration you're dealing with.
 
 * G: gravitational accelleration on your planet [cm/s]
 * FSCALE: solar constant scaling. 1 = modern Earth
     Note that this parameter should be used to scale
     your solar flux based on the planet's DISTANCE
-    but typically NOT for the sun's age. That is done
-    with the TIMEGA parameter described below.
+    (IMPORTANT CAVEAT: if you wish to adjust the solar constant
+    based on the sun's age -- and this applies ONLY to the sun, not other stars --
+    it is best to use the TIMEGA variable described below)   
 * ALB: Planet's surface albedo.
-* ZTROP: Height of tropopause.
+* ZTROP: Height of tropopause. [cm]
 * FAR: Argon partial pressure 
 * R0: planet's radius in cm
 * P0: surface pressure in atm
 * PLANET: string naming the planet. "EARTH" or "MARS" are possible
 * TIMEGA: Time in billions of years ago for scaling the solar constant
-     based on the time you're simulating. This includes Mark C.'s 
-     wavelength-dependent solar activity scaling
-* IRESET: Should reset all parameters to defaults regardless
-     of how they are set in the inputfiles (I think...)
-* msun: Choice of star you want to run (sorry for the terrible
-     numbering system below...partly due to legacy code)
-      msun = 13    !high resolution solar data from ATLAS1/3 
-      msun = 14    !kevin's data from photo.dat
-      msun = 15    !AD Leo from VPL climate DB (broken...)
-      msun = 16    !AD LEO from VPL website
-      msun = 17    !T3200.dat (M dwarf with no chromosphere)
-      msun = 18    !K2V
-      msun = 19    !F2V
-      msun = 76    !GJ876
+     based on the time you're simulating based on Claire et al. 2012
+     IMPORTANT CAVEAT: This applies ONLY to the sun. 
+* IRESET: Depreciated? 
+* msun: Choice of star you want to run (apologies for the convoluted legacy numbering system)
+choices for msun (these numbers are from photgrid.f)
+      pstar = 12    !Gj 581 from Lucianne Walkowicz  
+      pstar = 13    !high resolution solar data from ATLAS1/3 (Thullier et al 2004) - best choice for the sun 
+      pstar = 14    !Kevin Zahnle's data from photo.dat
+      pstar = 15    !AD Leo from VPL climate DB
+      pstar = 16    !AD LEO from VPL website
+      pstar = 17    !T3200.dat
+      pstar = 18    !K2V
+      pstar = 19    !F2V
+      pstar = 76    !GJ876
+      pstar = 20    !M8V
+      pstar = 21    !M5V/Proxima Centauri
+      pstar = 22    !G0V star for wasp12b (first Hot Jupiter model)
+      pstar = 23    !Phoenix 3300K star (for GCM Earth Project)
+      pstar = 24    !HD40307/K2.5V
+      pstar = 25    !HD85512/K6V
+      pstar = 26    !HD97658/K1V
+      pstar = 80    !GJ876 MUSCLES data adaptive constant res panchromatic
+      pstar = 81    !GJ551 """""" (Proxima Centauri)
+      pstar = 82    !GJ581 """"""
+      pstar = 83    !GJ667c """""" (note: GJ667 is a triple star system)
+      pstar = 84    !GJ1214 """"""
+* IHZSCALE: depreciated
+* uvscale: apply constant UV scaling factor
 
 ---------------------------------------------------
 ---------------input_photochem.dat-----------------    
@@ -75,36 +76,35 @@ C     HCDENS = 0.63 g/cm^3 (Archean hydrocarbon density - Trainer et al 2006)
 C            = 0.8 g/cm^3 (titan tholins - Trainer et al 2006)
 C 	     = 1.0 g/cm^3 (old suspicious default value)
 C     ICOUPLE = 0 to turn off coupling / 1 to turn on coupling
-C                NOTE: the model will output coupling files for clima regardless
-C		 of whether this is on or off!  This was done intentionally because
-C		 you need to use photochem to generate an initial atmospheric state
-C		 uncoupled from clima.
-C     NEWSPEC = 1 to use species.dat that has E8.2 format for VDEP and FIXEDMR
 C             = 0 to use old formatting (E7.2 for VDEP and FIXEDMR)
 C     MONSIZE = 0 for 0.05 um monomers for fractal particles
 C      	      = 1 for 0.01 um monomers for fractal particles
 C	      = 2 for 0.02 um monomers for fractal particles
 C	      = 3 for 0.07 um monomers for fractal particles
 C	      = 4 for 0.10 um monomers for fractal particles
+C     ZY      = solar zenith angle
+C     USOLMIN = Value under which the time stepper no longer considers
+C               a species when calculating "max relative change."
+C               This should be set to 1.e-20 or lower, unless you are
+C               moving the model to a new regime or creating a new
+C               template and require looser convergence criteria.
+C               Even in that case, you should lower/tighten this again
+C               before production runs.
+C     KIDA = 1 if using "kida-style" reactions.rx format
+C          = 0 if using the code's "old-style" reactions.rx format
+
 
 -------------------------------------------------
 -------------------species.dat-------------------
-This file tells the model what's in the atmosphere and what fluxes
-are entering/leaving the atmosphere at the top and bottom.
+This is the boudnary conditions file tht tells the model what's
+in the atmosphere and what fluxes are entering/leaving the atmosphere
+at the top and bottom.
 
-There are two possible ways to format this file depending on what value you set
-NEWSPEC to in input_photochem.dat. 
-
-NEWSPEC = 1 means you have an extra sig fig for some of the columns:
-format(30X,I1,5X,2(E8.2,1X),E9.3,1X,E7.1,1X,I1,6X,2(E7.1,1X))
-
-NEWSPEC = 0 means you don't have that extra sig fig:
-format(30X,I1,5X,2(E7.1,1X),E9.3,1X,E7.1,1X,I1,6X,2(E7.1,1X))
 
 LBOUND: type of lower boundary condition
-* 0 = constant deposition velocity (VDEP)
+* 0 = constant deposition velocity (VDEP) [cm/s]
 * 1 = constant mixing ratio (FIXEDMR)
-* 2 = constant upward flux (SGFLUX)
+* 2 = constant upward flux (SGFLUX) [molecules/cm**2/s]
 * 3 = constant vdep + vertically distributed upward flux  (uses both SGFLUX and DISTH)
 -- If you set 1 (constant mixing ratio) the model will calculate the flux necessary
    at the surface to sustain that mixing ratio.  That flux will be printed in out.out and
@@ -121,12 +121,7 @@ LBOUND: type of lower boundary condition
 Notes:
 The model treats long lived, short lived, etc species differently.
 You cannot move species between long lived and short lived, etc, without
-generating a new in.dist file (ugh...). (in.dist has model initial conditions).
-You also cannot just add species to this file without also editing 
-in.dist, reactions.rx, and parameters.inc.
-
-!!!NOTE!!!: There's an annoying bit of hardcoding in Sedmnt.f that assumes
-particles are the last entries in the long lived (LL) species.
+generating a new in.dist file (inidial conditions) 
 
 -------------------------------------------------
 -----------------parameters.inc------------------
@@ -164,42 +159,5 @@ KIN: File unit for cross sections.  Probably no need to change this?
 
 -------------------------------------------------
 -----------------reactions.rx--------------------
-All the reactions in your model!  Adding to this or removing from it 
-means you need to also edit parameters.inc 
-Format of reactions is:
-first column + second column ---> third column + fourth column + fifth column
-
-NOTES ON THE OTHER COLUMNS: 
-2BODY: TWO BODY REACTIONS: Arhenius and Temperature factor
- A(J,I) = ARH * EXP (TFAC/T(I))   !two body reaction rates
-
-3BODY: THREE BODY REACTIONS: K0, KINF, T0exp, Tinfexp
-
-WEIRD: reactions are hardcoded into rates.f
-
-PHOTO: photolysis reactions
-
--------------------------------------------------
------------------params.dat----------------------
-multipliers for o2 and ch4 concentrations.
-They are read into the model but not actually used anywhere in the code...
-Mark was doing some kind of test, I guess.
-
-
-
-~~~~~~~~~~~~~~Note on the DEFAULT* and INITIAL* files~~~~~~~~~~~~
-These were generated to work with my coupling wrapper script are not designed
-to work "out of the box" because they're meant to be externally tweaked by 
-the  wrapper script based on user inputs. Use them if you want, but know that
-they may require (minor) editing before they work.  In particular, if you use
-these, pay attention to the parameter "NEWSPEC" in input_photochem.  This is
-set to 0 by default (old formatting of species.dat), but we typically now
-use the new formatting (NEWSPEC = 1).  This is the biggest trip up people
-have had using these DEFAULT* and INITIAL* files.  Also, just keep in mind 
-these files were generated for hazy Archean atmospheres except the ones with
-the OXY_* prefix, so if you aren't interested in that, they will require
-editing.
-
-
-Have fun!
-- Giada
+All of the reactions in the model. "WEIRD" reactions are hardcoded
+in Rates.f
