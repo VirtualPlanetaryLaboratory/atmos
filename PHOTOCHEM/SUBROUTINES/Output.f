@@ -749,7 +749,7 @@ c 889  format (A8,2X,1PE10.3)
 
 
       print 932,  FLOW(LCH4), FLOW(LO2), FLOW(LCH4)/FLOW(LO2)
- 932  format('CH4 flux = ',1PE12.6,'  O2 flux = ',1PE12.6,
+ 932  format('CH4 flux = ',1PE13.6,'  O2 flux = ',1PE13.6,
      2  ' a ratio of ', 1PE12.4,/)
 
 
