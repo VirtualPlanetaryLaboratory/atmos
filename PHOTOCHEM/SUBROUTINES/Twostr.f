@@ -240,31 +240,31 @@ C On last call,
 C Print out TAUCTSTR(N), TAU(N), W0(N), GT(N), TAUSG(N), TAUSP(N).
 C Also print TAUC at the ground for all wavelengths.
 
-      IF(NN.EQ.1 .AND. IKN.EQ.1) THEN
-      !ACK - check LUN
-      WRITE(22,114) WAV,TAUCTSTR(NZP1)
- 114  FORMAT(1X,F6.1,2X,1PE10.3)
+C      IF(NN.EQ.1 .AND. IKN.EQ.1) THEN
+C      !ACK - check LUN
+C      WRITE(22,114) WAV,TAUCTSTR(NZP1)
+C 114  FORMAT(1X,F6.1,2X,1PE10.3)
       !ACK - what are these hardcoded wavelengths???
-      IF (WAV.EQ.1860.5 .OR. WAV.EQ.2010. .OR. WAV.EQ.2116.5 .OR.
-     2    WAV.EQ.2211. .OR. WAV.EQ.2312.5 .OR. WAV.EQ.2516. .OR.
-     3    WAV.EQ.3007.5 .OR. WAV.EQ.3900. .OR. WAV.EQ.4500.) THEN
+C      IF (WAV.EQ.1860.5 .OR. WAV.EQ.2010. .OR. WAV.EQ.2116.5 .OR.
+C     2    WAV.EQ.2211. .OR. WAV.EQ.2312.5 .OR. WAV.EQ.2516. .OR.
+C     3    WAV.EQ.3007.5 .OR. WAV.EQ.3900. .OR. WAV.EQ.4500.) THEN
       !ACK - check LUN
-      WRITE(20,106)WAV,U0,ALB
- 106  FORMAT('# WAV = ',F6.1,2X,'U0 = ',F6.4,2X,'Rsfc = ',F5.3,
-     2   /'# TWOSTR: TAUCTSTR(N) is the optical depth above layer N',
-     3   /'#  Z',4X,'TAUCTSTR(N)',4X,'TAU(N)',5X,'W0(N)',6X,'G(N)',6X,
-     4   'TAUSG(N)',3X,'TAUSP(N)',3X,'N')
-      DO 113 N=1,NZ
-      I = NZP1 - N
+c      WRITE(20,106)WAV,U0,ALB
+C 106  FORMAT('# WAV = ',F6.1,2X,'U0 = ',F6.4,2X,'Rsfc = ',F5.3,
+C     2   /'# TWOSTR: TAUCTSTR(N) is the optical depth above layer N',
+C     3   /'#  Z',4X,'TAUCTSTR(N)',4X,'TAU(N)',5X,'W0(N)',6X,'G(N)',6X,
+C     4   'TAUSG(N)',3X,'TAUSP(N)',3X,'N')
+C      DO 113 N=1,NZ
+C      I = NZP1 - N
       !ACK - check LUN
-      WRITE(20,107) I,TAUCTSTR(N),TAU(N),W0(N),GT(N),TAUSG(N),TAUSP(N),N
- 107  FORMAT(1X,I3,1P6E11.3,1X,I3)
- 113  CONTINUE
+C      WRITE(20,107) I,TAUCTSTR(N),TAU(N),W0(N),GT(N),TAUSG(N),TAUSP(N),N
+C 107  FORMAT(1X,I3,1P6E11.3,1X,I3)
+C 113  CONTINUE
       !ACK - check LUN
-      WRITE(20,105)TAUCTSTR(NZP1)
- 105  FORMAT('#  0',1PE11.3)
-      ENDIF
-      ENDIF
+c      WRITE(20,105)TAUCTSTR(NZP1)
+C 105  FORMAT('#  0',1PE11.3)
+C      ENDIF
+C      ENDIF
 
 C   DIRECT(N) is the direct solar flux at the top of layer N.  Values
 C   are normalized to unity.  DIRECT(NZP1) is the direct flux at the ground.
