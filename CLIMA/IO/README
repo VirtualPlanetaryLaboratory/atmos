@@ -78,7 +78,7 @@ the model wants to know is consolidated here in this file.
 *IMETETH: 1 = Turn methane+ethane on (slows things down a LOT)/ 0 = turn methane+ethane off
 	  Goes without saying, do not turn this on unless you have a lot of ethane and methane
 	  or the model will be REALLY slow
-*nga: number of gases in your model.
+*nga: number of points in gaussian quadrature for zenith angle.
 *IHAZE: Turn haze on or off
 *monsize: still a work in progess, but this will eventually let you
 	  choose different monomer sizes for fractal hazes.
