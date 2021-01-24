@@ -95,17 +95,7 @@
       if(species.eq.'HCLO4   ') LHCLO4=iSP
       if(species.eq.'CL2O4   ') LCL2O4=iSP
       if(species.eq.'CLOOO   ') LCLOOO=iSP
-      if(species.eq.'HNO2    ') LHNO2=isP
-      if(species.eq.'O1D     ') LO1D=isP
-      if(species.eq.'CH21    ') LCH21=isP
-      if(species.eq.'CH23    ') LCH23=isP
-      if(species.eq.'C2H5    ') LC2H5=isP
-      if(species.eq.'SO21    ') LSO21=isP
-      if(species.eq.'SO23    ') LSO23=isP
-      if(species.eq.'HSO3    ') LHSO3=isP
-      if(species.eq.'OCS2    ') LOCS2=isP
-      if(species.eq.'CO2     ') LCO2=isP
-      if(species.eq.'N2      ') LN2=isP
+      if(species.eq.'OCS2    ') LOCS2=iSP
       if(species.eq.'CS      ') LCS=iSP          !sorg's below
       if(species.eq.'CS2     ') LCS2=iSP
       if(species.eq.'CS2X    ') LCS2X=iSP        !excited CS2
@@ -129,7 +119,7 @@
       if(species.eq.'C3H8    ') LC3H8=iSP
       if(species.eq.'C3H7    ') LC3H7=iSP
       if(species.eq.'C3H6    ') LC3H6=iSP
-      if(species.eq.'C2H5CHO ') LC2H5CHO=iSP                
+      if(species.eq.'C2H5CHO ') LC2H5CHO=iSP
       if(species.eq.'C3H5    ') LC3H5=iSP
       if(species.eq.'CH2CCH2 ') LCH2CCH2=iSP
       if(species.eq.'C3H3    ') LC3H3=iSP
@@ -139,8 +129,8 @@
       if(species.eq.'HCAER2  ') LHCAER2=iSP
       if(species.eq.'HCAER3  ') LHCAER3=iSP
       if(species.eq.'HE      ') LHE=iSP
-      if(species.eq.'NH3     ') LNH3=isp
-      if(species.eq.'NH2     ') LNH2=isp
-      if(species.eq.'N2H4    ') LN2H4=isp
+      if(species.eq.'NH3     ') LNH3=iSP
+      if(species.eq.'NH2     ') LNH2=iSP
+      if(species.eq.'N2H4    ') LN2H4=iSP
       RETURN
       END
