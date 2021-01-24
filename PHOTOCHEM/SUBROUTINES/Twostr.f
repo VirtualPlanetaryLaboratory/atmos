@@ -324,8 +324,8 @@ C   to be sure this only happens near the ground where AMEAN ~ 0.
       DO 12 N=1,NZP1
       IF(AMEAN(N).LT.0.0)THEN
          !ACK - check LUN
-         WRITE(13,103) WAV,N,AMEAN(N)
- 103     FORMAT('WAVE =',F6.1,' AMEAN(',I3,')=',1PE11.3)
+c         WRITE(13,103) WAV,N,AMEAN(N)
+c 103     FORMAT('WAVE =',F6.1,' AMEAN(',I3,')=',1PE11.3)
          AMEAN(N) = ABS(AMEAN(N))
       ENDIF
   12  CONTINUE
