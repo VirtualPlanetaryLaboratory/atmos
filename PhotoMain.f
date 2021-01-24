@@ -1767,7 +1767,7 @@ C    particles in main loop
             AERSOL(J,2) = USOL(LS8AER,J)*DEN(J)/(CONVER(J,2))
             if (NP.GT.2) then
                 AERSOL(J,3) = USOL(LHCAER,J)*DEN(J)/(CONVER(J,3)) +
-     &          USOL(LHCAER,J)*DEN(J)/(CONVER(J,4))
+     &          USOL(LHCAER2,J)*DEN(J)/(CONVER(J,4))
                 AERSOL(J,4) = 0.0
             endif
 
@@ -2205,14 +2205,14 @@ C
 C         particles condensation is fixed up
 C
 c         A less drastic measure
-          IF (I.EQ.LSO4AER.AND. J.GT.J25) THEN
+          IF (I.EQ.LSO4AER.AND. J.GT.J50) THEN
             USOL(I,J) = USOL(I,J) + RHS(K)
-          ELSEIF(I.EQ.LS8AER.AND. J.GT.J25) THEN
+          ELSEIF(I.EQ.LS8AER.AND. J.GT.J50) THEN
             USOL(I,J) = USOL(I,J) + RHS(K)
-          ELSEIF(I.EQ.LHCAER.AND. J.GT.J25) THEN
+          ELSEIF(I.EQ.LHCAER.AND. J.GT.J50) THEN
 c          ELSEIF(I.EQ.LHCAER) THEN  ! !!!
             USOL(I,J) = USOL(I,J) + RHS(K)
-          ELSEIF(I.EQ.LHCAER2.AND. J.GT.J25) THEN
+          ELSEIF(I.EQ.LHCAER2.AND. J.GT.J50) THEN
 c          ELSEIF(I.EQ.LHCAER2) THEN  ! !!!
             USOL(I,J) = USOL(I,J) + RHS(K)
 c         Jim set this at 50 km.  program fails at 49.5 km.
@@ -2803,16 +2803,16 @@ C-PK Write to file used for spectrum (VPL-SMART)
        do J=1,NZ
         PRES_bar(J) = DEN(J)*BOLTZ*T(J)*1e-6
        enddo
-      WRITE(159,938)
-      WRITE(159,937) (Z(I),T(I),DEN(I),PRES_bar(I),USOL(LH2O,I),
-     2 SL(LCH4,I)/DEN(I),SL(LC2H6,I)/DEN(I),SL(LCO2,I)/DEN(I),
-     & SL(LO2,I)/DEN(I),O3(I),
-     3 USOL(LCO,I),USOL(LH2CO,I),SL(LHNO3,I)/DEN(I),
-     4 USOL(LNO2,I),USOL(LSO2,I),USOL(LN2O,I),I=1,NZ)
- 938  FORMAT(1x,'    Alt      Temp       Den      Press      H2O ',
-     2        '      CH4      C2H6       CO2      O2         O3  ',
-     3        '      CO       H2CO       HNO3     NO2        SO2',
-     4        '      N2O')
+C      WRITE(159,938)
+C      WRITE(159,937) (Z(I),T(I),DEN(I),PRES_bar(I),USOL(LH2O,I),
+C     2 SL(LCH4,I)/DEN(I),SL(LC2H6,I)/DEN(I),SL(LCO2,I)/DEN(I),
+C     & SL(LO2,I)/DEN(I),O3(I),
+C     3 USOL(LCO,I),USOL(LH2CO,I),SL(LHNO3,I)/DEN(I),
+C     4 USOL(LNO2,I),USOL(LSO2,I),USOL(LN2O,I),I=1,NZ)
+C 938  FORMAT(1x,'    Alt      Temp       Den      Press      H2O ',
+C     2        '      CH4      C2H6       CO2      O2         O3  ',
+C     3        '      CO       H2CO       HNO3     NO2        SO2',
+C     4        '      N2O')
 
       WRITE(67,738)
       WRITE(67,941) (Z(I),T(I),DEN(I),PRES_bar(I),USOL(LH2O,I),
@@ -2826,19 +2826,19 @@ C-PK Write to file used for spectrum (VPL-SMART)
      4        '      N2O')
 
 
- 937  FORMAT(1X,1P16E10.3)
+C 937  FORMAT(1X,1P16E10.3)
  941  FORMAT(1X,1P16E10.3)
-      WRITE(164,939)
-      WRITE(164,940) (Z(I),T(I),DEN(I),PRES_bar(I),
-     & SL(LCO2,I)/DEN(I),SL(LCO,I)/DEN(I),SL(LC2H6,I)/DEN(I),
-     & SL(LH2CO,I)/DEN(I),
-     & USOL(LCH4,I),USOL(LHNO3,I),USOL(LNO2,I),USOL(LO2,I),O3(I),
-     & USOL(LSO2,I),USOL(LH2O,I),USOL(LN2O,I),I=1,NZ)
- 939  FORMAT(1X,'    Alt      Temp       Den      Press      CO2 ',
-     2       '       CO       C2H6       H2CO     CH4        HNO3',
-     3       '       NO2      O2         O3       SO2        H2O ',
-     4        '      N2O')
- 940  FORMAT(1X,1P16E10.3)
+C      WRITE(164,939)
+C      WRITE(164,940) (Z(I),T(I),DEN(I),PRES_bar(I),
+C     & SL(LCO2,I)/DEN(I),SL(LCO,I)/DEN(I),SL(LC2H6,I)/DEN(I),
+C     & SL(LH2CO,I)/DEN(I),
+C     & USOL(LCH4,I),USOL(LHNO3,I),USOL(LNO2,I),USOL(LO2,I),O3(I),
+C     & USOL(LSO2,I),USOL(LH2O,I),USOL(LN2O,I),I=1,NZ)
+C 939  FORMAT(1X,'    Alt      Temp       Den      Press      CO2 ',
+C     2       '       CO       C2H6       H2CO     CH4        HNO3',
+C     3       '       NO2      O2         O3       SO2        H2O ',
+C     4        '      N2O')
+C 940  FORMAT(1X,1P16E10.3)
 
 
 
