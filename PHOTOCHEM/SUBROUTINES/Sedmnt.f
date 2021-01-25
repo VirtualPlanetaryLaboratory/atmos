@@ -18,7 +18,7 @@
 
       REAL NMON,RMON,DF,rmmax,rconmax !frachack
 C- aerosol properties
-      rmmax=1.90E-4 !Maximum HC radius, as to be smaller than greatest rstand for optical properties (current rstand max value 2mum)
+      rmmax=1.99E-4 !Maximum HC radius, as to be smaller than greatest rstand for optical properties (current rstand max value 2mum)
       rconmax=6.0E-5
       If(NP.eq.2) THEN
       NPX=NP
@@ -253,6 +253,7 @@ c         RHOP(I) = 1.0  !from feng's code
 c         factor=7.06E7 !giada - this was computed using 1.4 g/cm3
           IF (LL.eq.LHCAER) then
              gpermolec = 2*1.66e-24+12*4*1.66e-24 !grams per molecule for HCAER
+            factor=(4./3.)*PI*(1.E-5)**3*HCDENS/gpermolec
           endif
 
              gpermolechcaer2 = 4*1.66e-24+12*5*1.66e-24 !grams per molecule for HCAER2

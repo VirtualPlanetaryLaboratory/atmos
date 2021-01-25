@@ -9,7 +9,7 @@ c
 c  This subroutine calculates the infrared flux
 
 c  This subroutine contains CH4 and C2H6 (gna merging in changes from Fung's version that has ethane)
- 
+
       INCLUDE 'CLIMA/INCLUDE/header.inc'
       PARAMETER (NF=55,NGS=8, IK=8)
       PARAMETER(NS=3, NS1=NS+2, NS4=NS+5)
@@ -18,10 +18,10 @@ C new common block, von Paris, 21/04/2006
      & CIA(7,NF), CPRW(ND,NF)
 c-rr !3/23/11 put CIA matrix in IRDATA
 
-      COMMON/VARIR/kappa_irh2o(NF,8,8,IK), kappa_irco2(NF,8,8,IK)! Added kappa matrix in IR for kpsectrum Co2 and H2O coefficients 8/26/2012  
+      COMMON/VARIR/kappa_irh2o(NF,8,8,IK), kappa_irco2(NF,8,8,IK)! Added kappa matrix in IR for kpsectrum Co2 and H2O coefficients 8/26/2012
       COMMON/weightsIR/weightco2_h2oIR(IK)
       COMMON/HYDN2CIA/ H2N2CIA(5,55), H2N2FIN(ND,NF) ! c-rr 5/23/12 H2 CIA coefficients from Borysow et al., (2002).
-      COMMON/HYDCIA/ H2H2CIA(6,55), H2H2FIN(ND,55) ! c-rr 7/02/2012 H2-H2 CIA coefficients from Borysow et al. 
+      COMMON/HYDCIA/ H2H2CIA(6,55), H2H2FIN(ND,55) ! c-rr 7/02/2012 H2-H2 CIA coefficients from Borysow et al.
       COMMON/OXYCIA/O2O2CIA(15,55), O2O2FIN(ND,55) ! c-rr 6/17/2012 O2-O2 CIA coefficients from HITRAN CIA database
       COMMON/IRBLK/FUPIR(ND),FDNIR(ND),SRFALBIR,OMG0AIR(NF,ND-1),
      & ASYAIR(NF,ND-1),IO3,QEXTIR(NF,ND-1)
@@ -32,29 +32,29 @@ c     COMMON/CBLOK/FO2,FN2,FCO2,FAR,FCH4,
      2 ALT(ND)
       COMMON/CONSS/C,BK,G,GNEW(ND),PI,SM,DM, DM2
       COMMON/WAVE/AV(NF),LAM(NF),W(NF)
-          COMMON/BPS_IR/s_abir(NF), f_abir(NF), TDir(NF), Bsir(NF), 
+          COMMON/BPS_IR/s_abir(NF), f_abir(NF), TDir(NF), Bsir(NF),
      &    Bfir(NF)  ! Added COMMON BLOCK FOR BPS CONTINUUM FOR IR  8/30/2012
 
 !      REAL KAPPALAYERC2H6(NF,6) !gna
 !      COMMON/TFBLOK12/KAPPALAYERC2H6 !gna - what is TFBLOK12? in Fung's version but in our version I think it gets defined below
-      
-c  
+
+c
 c jfk 6/25/08 Temporary (PF should have been passed in the call
 c     statement. Actually, this statement does remain once the code is
 c     corrected.)
       DIMENSION PF(ND), MS1(ND),MS(ND), FX(ND), ! EWS - variables KMS(ND),KMS1(ND) not used
      &          kmatrix_irh2o(NF,IK),kmatrix_irco2(NF,IK),
-     &          MSH1(ND), 
-     &          MSH(ND), FXH(ND), FNC(ND),MSO(ND),FXO(ND), 
+     &          MSH1(ND),
+     &          MSH(ND), FXH(ND), FNC(ND),MSO(ND),FXO(ND),
      &          MSO1(ND), MSHH(ND), MSHH1(ND), FXHH(ND)
- 
+
 
 c     DIMENSION AV(NF)
-c      DIMENSION P(ND),BPLANCK(ND),CPR(NF),TPR(NF),TPRIND(ND), 
+c      DIMENSION P(ND),BPLANCK(ND),CPR(NF),TPR(NF),TPRIND(ND),
 c     2 TAUGCO2(ND),TAUGH2O(ND),TAUGCH4(ND),TAUGIR(ND),FUP(ND),FDN(ND),
 c     3 FUPA(ND),FDNA(ND),T(ND),CGAS(ND,NGS),TAUCONTIN(ND),WEIGHT(8,3),
 c     & xkappa(8,12,55,8,3)
-      DIMENSION P(ND),BPLANCK(ND),CPR(NF),TPR(NF),TPRIND(ND), 
+      DIMENSION P(ND),BPLANCK(ND),CPR(NF),TPR(NF),TPRIND(ND),
      2 TAUGCO2(ND),TAUGH2O(ND),TAUGCH4(ND),TAUGIR(ND),FUP(ND),FDN(ND),
      3 FUPA(ND),FDNA(ND),T(ND),CGAS(ND,NGS),TAUCONTIN(ND), TAUH2N2(ND)  ! Added TAUH2 5/29/2012 c-rr
      4 ,TAUO2O2(ND), TAUH2H2(ND),SELF_ABSIR(NF,ND),FORN_ABSIR(NF,ND)  ! Added self and foreign broadening continuum matrices 8/30/2012
@@ -72,7 +72,7 @@ c     & xkappa(8,12,55,8,3)
       REAL np
 c-rr Added CIAMS1L, CIAMSL, and CPRL and CIA Common block items 3/24/2011
       REAL CIAMS1L, CIAMSL, CPRL, CIA, CPRW ! EWS - variable TAUSUM(6) not used
-      
+
 
 C   PRESSURE-INDUCED CO2 ABSORPTION (FROM JIM POLLACK)
       DATA CPR/4.3E-5, 3.8E-5, 1.2E-5, 2.8E-6, 7.6E-7, 4.5E-7, 2.3E-7,
@@ -114,25 +114,25 @@ c-jdh Ethane k-coefficient weights
 
        INTEGER COUNTERIR
 
-       
+
        COUNTERIR = 0
        SRFALBIR = 0.
-       NLAYERS = ND - 1    
+       NLAYERS = ND - 1
 c      BCON = 2.*HP/C/C
        HK = HP/BK
 C       np = 1.E+1
 
-       
+
        C2 = 1.4388 ! constant for BPS continuum (in cmK) 8/31/2012 , c-rr
-        
+
 c-jdh Set C2H6 absorption coefficients
       DO NI=1,NF
         DO NK=1,6
-          KAPPALAYERC2H6(NI,NK) = 0.0       
+          KAPPALAYERC2H6(NI,NK) = 0.0
          END DO
       END DO
 !so these are like 10-20 orders of magnitude higher than the kappas I get for co2 and ch4...
-!what are these values and what are their units 
+!what are these values and what are their units
 !gna - the 2.68E+19 is something I'm testing out.  I don't know how kappalayerc2h6 was calculated,
 !but it's resulting in tau values that are obviously much too large (and larger than those of all the other species
 !even when the amount of c2h6 in the atmosphere is miniscule).  In gascon.f, cgas in the "new" version (from 2012?)
@@ -232,62 +232,62 @@ c jfk 6/27/08 P was changed to PF in the 2 lines below.
         ENDDO
 
 C Read the IR exponential sums
-c-jdh Moved to Clima.f 
+c-jdh Moved to Clima.f
 c      CALL IREXPSUMS(WEIGHT,xkappa)
 
       DO 7 IL = 1,NLAYERS  !
-       
+
         TIL = AMIN1(T(IL),600.)
         TIL = AMAX1(TIL,100.)
-        
+
 
        CALL INTERPIR(TIL,P(IL), IL,kappa,
      &  kmatrix_irco2, kmatrix_irh2o) ! Outputting kmatrix_irco2 and kmatrix_irh2o 8/27/2012
-!      print *, 'calling interpir'         
- 
+!      print *, 'calling interpir'
+
        CALL INTERPCO2CIA(T(IL),IL,MS(IL),MS1(IL),FX(IL))
 !         KMS(IL)  = MS(IL)
 !         KMS1(IL) = MS1(IL)
-       
-        
+
+
        CALL INTERPH2N2CIA(T(IL),IL,MSH(IL),MSH1(IL),FXH(IL))
 
        CALL INTERPO2CIA(T(IL),IL,MSO(IL),MSO1(IL),FXO(IL))
 
        CALL INTERPH2H2CIA(T(IL),IL,MSHH(IL),MSHH1(IL),FXHH(IL))
 
-          
+
  !      print *, 'MS=', MS(IL), IL
              DO I =1, 55
-                  
+
               DO J = 1, IK
          KAPPALAYER(I,J,1,IL) = kmatrix_irh2o(I,J) ! Gas 1 is H2O
          KAPPALAYER(I,J,2,IL) = kmatrix_irco2(I,J) ! Gas 2 is CO2
 
- 
+
 
 ! 3383 format(1pe14.5,3x,0p,a5,3x, i0, 3x, a6, i0, 4x, a6,4x,
-!     &  1pe12.5, 0p,4x,a5,4x,f8.2)  
+!     &  1pe12.5, 0p,4x,a5,4x,f8.2)
            ENDDO
 
            ENDDO
-            
+
 !            DO J = 1,16
 !                KAPPALAYER(33,J,1,IL) = KAPPALAYER(32,J,1,IL)   ! Address numerical instability in interval 33 with negative fluxes
 !            ENDDO
-           
-        
+
+
         DO 8 I=1, 55  ! Methane loop
         DO 9 J=1, 6   ! number of sums, coefficients
         KAPPALAYER(I,J,3,IL) = kappa(I,J) ! Gas 3 is CH4
-         
-        
+
+
  9      CONTINUE
  8      CONTINUE
  7      CONTINUE  ! We are precalculating the INTERPOLATION for both INTERPIR AND INTERPCO2CIA for all layers 3/21/2012
 
-       
-     
+
+
 
 
 !      DO IL = 1, NLAYERS
@@ -295,31 +295,31 @@ c     Added new KAPPALAYER loop for kmatrix_IR (which is CO2/H2O) 3/20/2012
 !      DO I =1, 55
 !        DO J = 1, 16
 !         KAPPALAYER(I,J,1,IL) = kmatrix_ir(I,IL,J) ! Gas 1 is CO2/H2O
-         
+
 
 !        ENDDO
-!      ENDDO       
+!      ENDDO
 !      pause
 !       DO 8 I=1, 55  !K species
 !         DO 9 J=1, 8   ! number of sums, coefficients
 !         KAPPALAYER(I,J,2,IL) = kappa(I,J) ! Gas 2 is CH4
- 
+
 !  9   CONTINUE
 !  8   CONTINUE
-      
-         
+
+
 !      ENDDO
 c 3333  format(1p1e14.5,2x,i3,2x,i3,2x,i3)!EWS - label not used
 c-------------------------------
-     
+
 
       DO IL = 1,NLAYERS
 
        CALL INTERPOZONE(P(IL),WEIGHTOZC,KAPPAOZC)
         DO J = 1, 8
         KAPPALAYEROZ(J,IL) = KAPPAOZC(J)
-        ENDDO 
-        
+        ENDDO
+
       ENDDO
 c       PRINT*, T,P
        DO 99 I=1, ND
@@ -335,11 +335,11 @@ c       PRINT*, T,P
 2333   format(3x, 'TAUGH2OCO101', 3x, 'PATH_L', 9x, 'Temp@top',
      &    8x, 'KAPPA', 9x, 'FH2O', 9x,'INT', 4x, 'NST')
 
-****** Loop over frequency      
+****** Loop over frequency
        DO 1 I=1, NF
-                   AL2   =  (1E4*(C/AV(I)))**2   ! wavenumber 
+                   AL2   =  (1E4*(C/AV(I)))**2   ! wavenumber
                    VAC = AV(I)
-       DO 20 J=1,ND 
+       DO 20 J=1,ND
 C-jdh  VAC = C*AV(I)
 
 
@@ -353,7 +353,7 @@ C-jdh  VAC = C*AV(I)
          FDNA(J) = 0.0
          FUP(J) = 0.0
          FDN(J) = 0.0
-         TRANSLAYER(J) = 0.0 
+         TRANSLAYER(J) = 0.0
   15   CONTINUE
 ****** AEROSOLS
 
@@ -362,7 +362,7 @@ C-jdh  VAC = C*AV(I)
         np = PARTICLES(IL)
         TAUAEXTIR(IL) = QEXTIR(I,IL)*PI*r*r*DALT(IL)*np*1.E+5
         TAUASIR(IL) = OMG0AIR(I,IL)*TAUAEXTIR(IL)
-         
+
        ENDDO
        IF (I.EQ.15) THEN
        TAUEXTIRTOTAL = 0.
@@ -377,20 +377,20 @@ c      PRINT *, TAUEXTIRTOTAL
 c       PRINT *, 'TAUSIRTOTAL'
 c       PRINT *, TAUASIRTOTAL
        TAUAABSIRTOTAL = TAUEXTIRTOTAL - TAUASIRTOTAL
-       
+
 !       PRINT *, 'TAUAABSIRTOTAL'
 !       PRINT *, TAUAABSIRTOTAL
 c       PRINT *, '*******************************'
-       ENDIF 
+       ENDIF
 
 !----------------BPS WATER CONTINUUM 8/30/2012 c-rr
         ! PF(IL) are pressures at the layer boundaries. P(IL) are pressures in the middle of the layers
 
 
  !          IF (I.eq.15)sumcont = 0.0d0
- 
-  !     IF(((I.ge.15).and.(I.le.20)).or.((I.ge.27).and.(I.le.33)))THEN                
-  !      IF((I.ge.15).and.(I.le.20))THEN                
+
+  !     IF(((I.ge.15).and.(I.le.20)).or.((I.ge.27).and.(I.le.33)))THEN
+  !      IF((I.ge.15).and.(I.le.20))THEN
 !        IF(I.eq.15)THEN
 
            DO IL = 1, NLAYERS
@@ -399,18 +399,18 @@ c       PRINT *, '*******************************'
                 PH2O = P(IL)*FI(1,IL)  ! water partial pressure (in bars)
                 PDRY = P(IL)*(1.-FI(1,IL)) !partial pressure dry air (in bars)
 
-                
-                RHOW = (PH2O/1.)*(296./T(IL))  ! RHO_water. Different from MT_CKD? Why does BPS use Ph2o instead of P? 
+
+                RHOW = (PH2O/1.)*(296./T(IL))  ! RHO_water. Different from MT_CKD? Why does BPS use Ph2o instead of P?
                 RHOF = (PDRY/1.)*(296./T(IL))  ! RHO_foreign. Different from MT_CKD? Why does BPS use Pdry instead of P?
 
-               
+
                 ANUM = (exp((C2*AAV)/296.)-1.)*(exp((C2*AAV)/T(IL))+1.)
                 DEN = (exp((C2*AAV)/296.)+1.)*(exp((C2*AAV)/T(IL))-1.)
-                RADFLD = ANUM/DEN ! radiation field hyperbolic expression written in terms of exponents 
+                RADFLD = ANUM/DEN ! radiation field hyperbolic expression written in terms of exponents
 
 !         Bsir(i) = 0.0d0
 !                 Bfir(i) = 0.0d0
- 
+
              if(AAV.ge.500)RADFLD = 1.  ! radiation field term is negligible above 500cm-1.
           self_absir(I,IL) = RHOW*(s_abir(i)*exp(TDir(i)*(296.-T(IL)))
      &        + RADFLD*Bsir(i)) ! Self broadening coefficient with radiation field and temperature dependence included (cm^2/molecule)
@@ -425,17 +425,17 @@ c       PRINT *, '*******************************'
 !     &                    FI(1,IL),IL,I
 !            endif
 c 4444        format(1p3e14.5,2(2x,i3)) !EWS - label not used
-!        print *, TAUCONTIN(IL), DP, FI(1,IL), DM, SM, G, 
+!        print *, TAUCONTIN(IL), DP, FI(1,IL), DM, SM, G,
 !     &   PF(IL), PF(IL+1),P(IL)   ! DIFFERENCE BETWEEN PF and P?
 !                 print *, ABSCONT, DP*FI(1,IL)/(DM*SM*G), CGAS(IL,6)
 !                pause
-         
+
     !    IF ((I.eq.15).and.(IL.ge.97))sumcont = sumcont + TAUCONTIN(IL)   ! only add approximately 1 km. tau ~ 0.1 or so for Earth
                   ENDDO  ! ENDS LAYER LOOP IN CONTINUUM
-    
+
 !            ENDIF
-   !      IF (I.eq.15)print *, sumcont  
-!---------------------------------------------------------           
+   !      IF (I.eq.15)print *, sumcont
+!---------------------------------------------------------
 
 
 
@@ -454,9 +454,9 @@ c 4444        format(1p3e14.5,2(2x,i3)) !EWS - label not used
        Do 3 K2 = 1,IK ! CO2 loop
        DO 4 K3 = 1,6 ! methane loop  ! Activated when methane is on (IMET = 1)
 
-  
+
 !        TWGHT = weightco2_h2oIR(K1)*weightco2_h2oIR(K2) ! no methane (CO2 and H2O weights are the same) 8/27/2012
- 
+
 !          print *, weightco2_h2oIR(K1)
 !          print *, weightco2_h2oIR(K2)
 !          print *, weightch4(k2)
@@ -464,25 +464,25 @@ c 4444        format(1p3e14.5,2(2x,i3)) !EWS - label not used
 !          pause
 !               weightc2h6(K0) = 1.
 !       TWGHT = weightco2_h2oIR(K1)*weightco2_h2oIR(K2)*weightch4(K3) ! with methane 8/27/2012
-        TWGHT = weightco2_h2oIR(K1)*weightco2_h2oIR(K2)*weightch4(K3) 
-     &           *weightc2h6(K0) 
+        TWGHT = weightco2_h2oIR(K1)*weightco2_h2oIR(K2)*weightch4(K3)
+     &           *weightc2h6(K0)
 !        TWGHT = TWGHT * weightc2h6(K4) !with ethane
 
 
         DO 11 IL = 1,NLAYERS
          PPE = (1. + 0.3*FI(2,IL))*P(IL)     !CO2
          TPE = (300./T(IL))**TPR(I)
-         
+
          TAUGH2O(IL) = KAPPALAYER(I,K1,1,IL)*CGAS(IL,6)
 !         print *, cgas(IL, 6)
 !         call sleep(1)
-!   1145011266883586.5     
-!   1842019049386489.0     
-!   0.0000000000000000     
-!   90771608043177040.     
-!   15.106465570752329     
-!   3951422779566604.5     
-!   0.0000000000000000  
+!   1145011266883586.5
+!   1842019049386489.0
+!   0.0000000000000000
+!   90771608043177040.
+!   15.106465570752329
+!   3951422779566604.5
+!   0.0000000000000000
 
          TAUGCO2(IL) = KAPPALAYER(I,K2,2,IL)*CGAS(IL,5)
         ! if(taugco2(il) .gt. 0) print *, taugco2(il)
@@ -490,12 +490,12 @@ c 4444        format(1p3e14.5,2(2x,i3)) !EWS - label not used
 
          TAUGCH4(IL) = KAPPALAYER(I,K3,3,IL)*CGAS(IL,2)!! Activated when methane is on (IMET = 1)
           !if(taugch4(il) .gt. 0) print *, taugch4(il)
-      !   if (kappalayer(i,k3,3,il) .gt. 0) then 
+      !   if (kappalayer(i,k3,3,il) .gt. 0) then
       !      print *, kappalayer(I,k3,3,il)  !kappalayer for ch4 much smaller than t
       !      endif
         ! print *, 'CGAS(IL, 2) CH4 ', CGAS(IL, 2)
 
-             
+
 !4242     format(1p3e14.5,2x,i3,2x,i3,2x,i3)
 c 4242     format(1p7e14.5, 4x, i3) !EWS - label not used
 
@@ -506,13 +506,13 @@ c 4242     format(1p7e14.5, 4x, i3) !EWS - label not used
 !          TAUGC2H6(IL) = 0.
          !  if(taugc2h6(il) .gt. 0) print *, taugc2h6(il)
          ! if(taugc2h6(il) .gt. 0)print *, 'taugc2h6', TAUGC2H6(IL)
-!          if(KAPPALAYERC2H6(I,K3) .gt. 0) print *, 
+!          if(KAPPALAYERC2H6(I,K3) .gt. 0) print *,
 !     &       'KAPPALAYERC2H6(I,K3)', KAPPALAYERC2H6(I,K3)
          ! print *, 'CGAS(IL, 8) C2H6', CGAS(IL, 8)
         !  call sleep(1)
-          
+
          ! if (kappalayerc2h6(i,k4) .gt. 0) print *, kappalayerc2h6(I,k4)
-          
+
 
    !       print *, cgas(IL, 8)
    !       print *, 'hi'
@@ -536,7 +536,7 @@ c-rr        This the H2-H2 CIA loop calculation 7/02/2012
         H2H2FIN(IL,I) = exp(H2H2TOT)
 
 
-          
+
 c-rr        This is the O2 CIA loop calculation 6/17/2012
         O2O2CIAMS1L = log(O2O2CIA(MSO1(IL),I))
         O2O2CIAMSL  = log(O2O2CIA(MSO(IL),I))
@@ -548,7 +548,7 @@ c-rr        This is the CO2 CIA loop that takes the saved values for FX, MS, and
 c-rr        the correct interpolated CIA values. These are from the model of Wordsworth et al. (2010) that uses the GBB
 c-rr        parametrization scheme. 3/24/11
 c        print *, 'is this working?'
-        
+
 !        print *,MS1(IL),MS(IL),IL,I
 !         pause
 !        print *,CIA(MS1(IL),I)
@@ -559,26 +559,26 @@ c        print *, 'is this working?'
 
 
        IF (CPRW(IL,I).lt.1.E-45)CPRW(IL,I)= 0. !c-rr Ensures bands where CIA is supposed to be zero, are zero. 5/28/2011
-       
-       
+
+
 
        IF(I .EQ. 38)THEN
           CPRW(IL,I) = 3.5E-8  !Rewriting CIA at intervals 37 and 40 with appropriate CIA at 2.3 and 1.73 microns, respectively(Tsang et al. 2008).
-         
+
        ELSEIF (I.EQ.41)THEN
           CPRW(IL,I) = .57*6.0E-9  !Because the 1.73 micron window is only 57% of this bin
        ELSEIF ((I.EQ.45).OR.(I.EQ.46).OR.(I.EQ.47))THEN  !Rewriting CIA at intervals 45-47 with 1.2 micron complex
               CPRW(IL,I) = 1.5E-9
-               
-       ENDIF
-       
-   
 
-****** Pressure induced absorption by CO2 
+       ENDIF
+
+
+
+****** Pressure induced absorption by CO2
          CGAS1 = CGAS(IL,5)/2.687E19  ! Gas 5 in CGAS is CO2  3/20/2012. Converts mol/cm^2 into atm-cm. 3/30/2012
 c-rr 3/25/11 commenting out Kasting et al. (1984) parametrization
 
-c-rr 3/24/11          PUT NEW TPRIND parametrization here! 
+c-rr 3/24/11          PUT NEW TPRIND parametrization here!
           PCGS = P(IL)* 1.e6
 !       TPRIND(IL) = CPRW(IL,I)*(PCGS/(BK*T(IL)*2.687E19))*CGAS1
 !    &   *((1/1.3)+(FI(2,IL)/1.3))
@@ -596,12 +596,12 @@ c-rr 3/24/11          PUT NEW TPRIND parametrization here!
 !         TPRIND(IL) = 0.  ! zeroes out CIA
 
         SUM_TPRIND = SUM_TPRIND + TPRIND(IL) !summing TPRIND experiment
-        
-         
+
+
 c          print *, TPRIND(IL),IL
 c        TPRIND(IL) = 0
 *******
-       
+
 !-------------------Pressure-induced absorption by N2-H2 and then add 1 +0.3FCO2 to simulate CO2-H2
 
          CGASH2 = CGAS(IL,7)/2.687E19 ! Converts molec./cm^2 into atm-cm.
@@ -615,26 +615,26 @@ c        TPRIND(IL) = 0
 !         endif
 
 
-!-------------- Pressure-induced absorption by O2-O2 
+!-------------- Pressure-induced absorption by O2-O2
         CGASO2 = CGAS(IL,3)/2.687E19 ! Converts molec./cm^2 to atm-cm
 
-       
+
         TAUO2O2(IL) = O2O2FIN(IL,I)*(PCGS/(BK*T(IL)*2.687E19))
      &  *CGASO2*FO2*FNC(IL)
 !               TAUO2O2(IL)=1.e-60
-      
 
-!-------------- Pressure-induced absorption by H2-H2 
- 
+
+!-------------- Pressure-induced absorption by H2-H2
+
         TAUH2H2(IL) = H2H2FIN(IL,I)*(PCGS/(BK*T(IL)*2.687E19))
      &  *CGASH2*FH22*FNC(IL)
 
-         
+
 !                  if (K1.eq.1)then
 !            print *, H2H2FIN(IL,I), TAUH2H2(IL), FH22, FNC(IL), CGASH2
 !     &      , CGAS1, TAUGIR(IL), T(IL), IL
 !            pause
-!                 endif       
+!                 endif
 
 !----------------------------------------------------------
 
@@ -645,20 +645,20 @@ c        TPRIND(IL) = 0
 
          TAUGIR(IL) = TAUGH2O(IL)+ TAUGCO2(IL) + TAUGCH4(IL)
      &                 + TPRIND(IL)+
-     &                TAUH2N2(IL)+TAUCONTIN(IL)+TAUGC2H6(IL)+ 
+     &                TAUH2N2(IL)+TAUCONTIN(IL)+TAUGC2H6(IL)+
      &                TAUO2O2(IL)+TAUH2H2(IL)
 
 !          print 2222,TAUGH2O(IL),TAUGCO2(IL),IL,K1,K2
 !           if ((K1.eq.1).and.(I.eq.1))then
 !            print *, FNC(IL)
-!     &      , CGAS1, TPRIND(IL), TAUGIR(IL), T(IL), 
+!     &      , CGAS1, TPRIND(IL), TAUGIR(IL), T(IL),
 !     &        TAUGH2O(IL),TAUGCO2(IL),IL
 !            pause
-!          endif         
+!          endif
 
- 
+
 !            if((K1.eq.16).and.(IL.eq.1))then
-!             print 444, TAUGCH4(IL), TAUGH2O_CO2(IL), TPRIND(IL), 
+!             print 444, TAUGCH4(IL), TAUGH2O_CO2(IL), TPRIND(IL),
 !     &              TAUCONTIN(IL), TAUGC2H6(IL), I
 !            pause
 !            endif
@@ -675,30 +675,30 @@ c        TPRIND(IL) = 0
 c 2222     format(1p2e14.5, 4(2x,i3)) !EWS - label not used
 !          ENDIF
 
-             
+
 
 
   11    CONTINUE
-c 444      format(1p5e14.5,2x,i3) !EWS -label not used       
-        
-       
-        
+c 444      format(1p5e14.5,2x,i3) !EWS -label not used
+
+
+
 !        GOTO 55555
 !        print *, AV(I), SUM_TPRIND,I
 !        read(*,*)
-                        
+
 ******* Ozone absorption
 C-TF  THIS SPECIAL TREATMENT FOR OZONE IS DONE TO SAVE COMPUTER
 C-TF  TIME BECAUSE ONLY ONE WAVELENGTH IS AFFECTED BY OZONE.
 C-TF  HERE A NEW WEIGHT FUNCTION TWGHTT(K30) IS CALCULATED
 C-TF  AND IS USED TO COMPUTE FUPA AND FDNA.
         IF (I.EQ.18) THEN
-!                 sumoz = 0.  
+!                 sumoz = 0.
       DO K4=1,8
         TWGHTT(K4) = TWGHT*WEIGHTOZC(K4)
       DO IL=1,NLAYERS
 !        CGAS(IL,4) = CGAS(IL,4)*.97d0
-         
+
 !                  sumoz = TWGHTT(K4) + sumoz
         TAUGOZ(IL) =KAPPALAYEROZ(K4,IL)*CGAS(IL,4) ! Rederived correct units for TAUGOZ rr and rv
 !                TAUGOZ(IL) = 0.0d0
@@ -710,7 +710,7 @@ c       TAUGOZ(IL) =KAPPALAYEROZ(K4,IL)*CGAS(IL,4)*(4.46E-5*DM)/(48.*SM)
 c -PJK There was a bug in the line of code below. The IR optical depth was
 c      being compounded improperly in the ozone band. Its done right below.
 c      TAUGIR(IL) =TAUGIR(IL) + TAUGOZ(IL)
-      TAUGIR(IL) = TAUGCH4(IL)+TAUGH2O(IL)+ TAUGCO2(IL) + TPRIND(IL)  
+      TAUGIR(IL) = TAUGCH4(IL)+TAUGH2O(IL)+ TAUGCO2(IL) + TPRIND(IL)
      & +TAUCONTIN(IL) + TAUGOZ(IL) + TAUGC2H6(IL)+ TAUH2N2(IL)
      & + TAUO2O2(IL)+TAUH2H2(IL)
 
@@ -721,7 +721,7 @@ c      TAUGIR(IL) =TAUGIR(IL) + TAUGOZ(IL)
         ! print *, TAUGOZ(IL)
         ! pause
                ENDDO
-      
+
 
       DO IL=1, NLAYERS
            Fwater = FI(1,IL) ! Needed for rayley
@@ -738,7 +738,7 @@ c      TAUGIR(IL) =TAUGIR(IL) + TAUGOZ(IL)
 
 
           TAULAMIR(IL) = TAUAEXTIR(IL) + TAUGIR(IL) + TAUSIR(IL)
-          ASYIR(IL) = ASYAIR(I,IL) 
+          ASYIR(IL) = ASYAIR(I,IL)
           OMG0IR(IL) = TAUSIR(IL)/TAULAMIR(IL)
           OMG0IR(IL) = AMIN1(OMG0IR(IL),0.99999)
           OMG0IR(IL) = AMAX1(OMG0IR(IL),1.E-5)  ! changed lower limit of single-scattering albedo to 1e-12 (from 1.e-5) c-rr 4/30/2012
@@ -756,7 +756,7 @@ c      This requires the use of PF, not P.
 !               print *, 'going into DELTATWOSTRIR', TAULAMIR(1)
 !               pause
 !                endif
-      
+
       CALL DELTA2STRIR(SRFALBIR,ASYIR,TAULAMIR,OMG0IR,
      & FUP,FDN,BPLANCK,TAUTOP, I ,K1, IL)
 C
@@ -772,7 +772,7 @@ C
         ENDIF
 ***************
 
-          
+
 !55555      CONTINUE
 
 
@@ -790,21 +790,21 @@ C
            TAUSIR(IL) = TAUASIR(IL) + TAUR(IL)
           TAULAMIR(IL) = TAUAEXTIR(IL) + TAUGIR(IL) + TAUSIR(IL)
 
-             
+
 !                       if ((I.eq.20).and.(IL.eq.1).and.(K1.eq.16))then
 !            print *, 'TAUOZ=',TAUGOZ(IL),'TAUGIR=',
 !     &              TAUGIR(IL), 'TAUL=', TAULAMIR(IL)
 !           endif
 
 
-          ASYIR(IL) = ASYAIR(I,IL) 
+          ASYIR(IL) = ASYAIR(I,IL)
           OMG0IR(IL) = TAUSIR(IL)/TAULAMIR(IL)
 !          if (I.eq.49) then
 !          print 23656, TAUSIR(IL), TAULAMIR(IL), OMG0IR(IL), T(IL), IL
 !            pause
 !          endif
-!         
-          
+!
+
           OMG0IR(IL) = AMIN1(OMG0IR(IL),0.99999)
           OMG0IR(IL) = AMAX1(OMG0IR(IL),1.E-5)! changed lower limit of single-scattering albedo to 1e-12 (default 1e-5) c-rr 4/30/2012
 !          if(NST==6)then
@@ -834,7 +834,7 @@ c 23656          format(1p8e14.5,0p,3(2x,i3)) !EWS - label not used
 
 
 !            if((K1.eq.16).and.(IL.eq.1))then
-!             print 444, TAUGCH4(IL), TAUGH2O_CO2(IL), TPRIND(IL), 
+!             print 444, TAUGCH4(IL), TAUGH2O_CO2(IL), TPRIND(IL),
 !     &              TAUCONTIN(IL), TAUGOZ(IL), TAUGC2H6(IL), I
 !            pause
 !            endif
@@ -848,13 +848,13 @@ c
 c jfk  6/25/08  Include TAUTOP in the call sequence to do the upper BC
       TAUTOP = TAULAMIR(1)*PF(1)/(PF(2)-PF(1))
       TAUTOP = AMIN1(TAUTOP,1.)
-      
+
       CALL DELTA2STRIR(SRFALBIR,ASYIR,TAULAMIR,OMG0IR,
      & FUP,FDN,BPLANCK,TAUTOP,I, K1,IL)
-     
+
 C
 C
- 
+
 !                if((I.eq.9).and.(K1.eq.16))then
 !         print *,'OUT OF DELTA2STR', FUP(1), FDN(1)
 !         pause
@@ -871,25 +871,25 @@ C
 !               pause
                sumtwght = sumtwght + TWGHT
 
-               
 
-  4     CONTINUE ! METHANE           
+
+  4     CONTINUE ! METHANE
   3     CONTINUE ! Co2
-  2     CONTINUE ! H2O    
-  5     CONTINUE  ! ETHANE                  
+  2     CONTINUE ! H2O
+  5     CONTINUE  ! ETHANE
           write(5552,*) ! puts an extra space between each set of 16 coefficients
 
 !         print *,'sum of TWGHT is.....',sumtwght, I
-         
+
 !         write(89,*) AV(I)/C, SUM_TPRIND   !summing tprind experiment
-          write(89,3111) AV(I)/C, SUM_TPRIND
-3111     FORMAT(1P5E14.5)
+!          write(89,3111) AV(I)/C, SUM_TPRIND
+!3111     FORMAT(1P5E14.5)
 
          DO 14 J=1,ND
              FDNIR(J)=FDNIR(J)+W(I)*FDNA(J)
              FUPIR(J)=FUPIR(J)+W(I)*FUPA(J)
 !             PRINT 3321,W(I),FDNA(J),FUPA(J),real(J),real(I)
-    
+
                  if (j.eq.1) then
               write(6969, *) FUPA(j), FDNA(j), I,NST
                   endif
@@ -901,9 +901,9 @@ c 3131          format(1p2e14.5,2(2x,i3)) !EWS - label not used
 !               endif
 
              IF (J.eq.1) THEN
-             write(90, *)AV(I)/C,ABS(FDNIR(J) - FUPIR(J)) ! Outgoing IR at top of atmosphere   
+             write(90, *)AV(I)/C,ABS(FDNIR(J) - FUPIR(J)) ! Outgoing IR at top of atmosphere
              ENDIF
-c-jdh uncomment to get band-by-band fluxes            
+c-jdh uncomment to get band-by-band fluxes
 c             IF (J.EQ.1) THEN
 c  17            FORMAT(1PE13.5,3x,1PE22.10)
 c               PRINT 17, AV(I), W(I)*FUPA(J)
@@ -911,7 +911,7 @@ c             END IF
 
 c-jdh        FDNIR(J)=FDNIR(J)+VAC1*FDNA(J)
 c-jdh        FUPIR(J)=FUPIR(J)+VAC1*FUPA(J)
-             BPLANCK(J) = 0.    
+             BPLANCK(J) = 0.
   14    CONTINUE
 
 !         pause
@@ -930,8 +930,7 @@ c 100    FORMAT(1X,1P10E12.5) !EWS - label not used
  !     PRINT 100, TAUTOTAL
  !     pause
  !     print *, FDNIR(1)
- !     print *, FUPIR(1)  
+ !     print *, FUPIR(1)
  !     print *, 'fupj', FUP(1)
       RETURN
       END
-
