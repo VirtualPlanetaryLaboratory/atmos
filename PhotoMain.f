@@ -1143,7 +1143,7 @@ C added by giada
       print *, 'G = ', G
       if(NP.eq.4) ihz = ihztype
       if(NP.lt.4) ihz = 99
-      print *, 'ihz = ', ihz
+C      print *, 'ihz = ', ihz
       print *, 'NP =', NP
       WRITE(999,908)
       WRITE(999,909) timega, P0, frak, pstar, ihz, NZ, FSCALE,G

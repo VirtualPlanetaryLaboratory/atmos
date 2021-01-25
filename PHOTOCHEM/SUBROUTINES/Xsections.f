@@ -2786,8 +2786,8 @@ c     quantum yields Inn 1993
             sq(jn,:,l) = yg1(l)*qy1(l)
             sq(jn+1,:,l) = yg1(l)*qy2(l)
          else
-            qy1(l) = 0.
-            qy2(l) = 1.
+            qy1(l) = 1.
+            qy2(l) = 0.
             sq(jn,:,l) = yg1(l)*qy1(l)
             sq(jn+1,:,l) = yg1(l)*qy2(l)
          end if
@@ -3796,7 +3796,7 @@ c     set quantum yield for pathway 1 and total xsec
             O3xs(i,l) = yg1(l)
          end do
       end do
-c              PRINT*, 'THIS IS HAPPENINGAAA'
+
 c     quantum yield for pathway 2 and 3
 c     O3 + hv -> O2 + O(3P)
 c     O3 + hv -> 3 O(3P)
@@ -3807,11 +3807,11 @@ c     O3 + hv -> 3 O(3P)
             if(wl(l) .lt. 2010.) then
                sq(jn+2,i,l) = (1.-qy(i,l))*yg1(l)
                sq(jn+1,i,l) = 0.
-c              PRINT*, 'THIS IS HAPPENINGD',L,wl(l),sq(jn+2,i,l)
+c              PRINT*, L,wl(l),sq(jn+2,i,l)
             else
                sq(jn+1,i,l) = (1.-qy(i,l))*yg1(l)
                sq(jn+2,i,l) = 0.
-c              PRINT*, 'THIS IS HAPPENINGE',L,wl(l),sq(jn+1,i,l)
+c              PRINT*,L,wl(l),sq(jn+1,i,l)
             end if
          end do
 
@@ -8254,7 +8254,7 @@ c      REAL*8 qy  !EWS - not used
 **************** CS2 photodissociation
 c options
 c     1)from MPI database
-      print*, 'it is considering CS2'
+
 
       option=1
 
