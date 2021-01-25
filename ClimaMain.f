@@ -561,14 +561,14 @@ c Reading the atmospheric composition from mixing_ratios.dat
          READ(114,*) FNO2                        !Nitrogen dioxide
          READ(114,*) Jcold                !Tropopause layer read in, Photochem gives out the Tropopause layer on it's own grid, so that is not compatible
 
-      INQUIRE(FILE="COUPLE/aux_c_couple.dat", EXIST=file_e)
-      IF (IUP.EQ.0.AND.file_e) THEN
-        OPEN (unit=333,file= 'COUPLE/aux_c_couple.dat')
-        READ(333,*)
-        READ(333,*) aaa, aaa, aaa, aaa, Jcold
-        print *, 'Jcold (for coupling) is =', Jcold
-        close(333)
-      END IF
+         INQUIRE(FILE="COUPLE/aux_c_couple.dat", EXIST=file_e)
+        IF (IUP.EQ.0.AND.file_e) THEN
+          OPEN (unit=333,file= 'COUPLE/aux_c_couple.dat')
+          READ(333,*)
+          READ(333,*) aaa, aaa, aaa, aaa, Jcold, aaa
+          print *, 'Jcold (for coupling) is =', Jcold
+          close(333)
+        END IF
 
 
 c***********Calculate new FCO2**************
@@ -1558,12 +1558,13 @@ c     &  TCOOL(J)
 c       close(89)
        OPEN (unit=333,file= 'COUPLE/aux_c_couple.dat') !stb
 
- 919  FORMAT(1X,  E12.5, 9x, E10.5,9x, E10.5,9x, E10.5,9x,I3)
+ 919  FORMAT(1X,  E12.5, 9x, E10.5,9x, E10.5,9x, E10.5,9x,I3,9x, E10.5)
  918  FORMAT(1X, 'FTOTAL(101)',9x,'T(101)',9x, 'P(JCOLD)',9x, 'P_surf',
-     2  9x, 'jcold')
-      WRITE(333,918)
-      WRITE(333,919) FTOTAL(101),T(101),P(JCOLD), P(101),JCOLD
-      close(333)
+     2 9x, 'jcold',9x, 'DIVFrms')
+        WRITE(333,918)
+        WRITE(333,919) FTOTAL(101),T(101),P(JCOLD), P(101),JCOLD,
+     & DIVFrms
+        close(333)
 
 
 c        Iterative Tstrat procedure   c-rr 4/22/2011
