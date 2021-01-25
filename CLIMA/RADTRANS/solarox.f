@@ -688,10 +688,10 @@ c        endif
          istart = (k-1)*9 + 1
          istop = istart + 8
          istop = min0(istop,nsol)
-            WRITE(96,456)(i,i=istart,istop)
-         do j=1,nlayers
-           WRITE(96,457)PF(j),(SolHeat(i,j),i=istart,istop)
-         enddo
+C            WRITE(96,456)(i,i=istart,istop)
+C         do j=1,nlayers
+C           WRITE(96,457)PF(j),(SolHeat(i,j),i=istart,istop)
+C         enddo
         enddo
         CLOSE(96)
         END IF

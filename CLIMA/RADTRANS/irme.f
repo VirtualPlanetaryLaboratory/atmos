@@ -331,9 +331,9 @@ c       PRINT*, T,P
        ENDDO
 
 
-        write(5552,2333)
-2333   format(3x, 'TAUGH2OCO101', 3x, 'PATH_L', 9x, 'Temp@top',
-     &    8x, 'KAPPA', 9x, 'FH2O', 9x,'INT', 4x, 'NST')
+C        write(5552,2333)
+C2333   format(3x, 'TAUGH2OCO101', 3x, 'PATH_L', 9x, 'Temp@top',
+C     &    8x, 'KAPPA', 9x, 'FH2O', 9x,'INT', 4x, 'NST')
 
 ****** Loop over frequency
        DO 1 I=1, NF
@@ -877,7 +877,7 @@ C
   3     CONTINUE ! Co2
   2     CONTINUE ! H2O
   5     CONTINUE  ! ETHANE
-          write(5552,*) ! puts an extra space between each set of 16 coefficients
+!          write(5552,*) ! puts an extra space between each set of 16 coefficients
 
 !         print *,'sum of TWGHT is.....',sumtwght, I
 
@@ -890,9 +890,9 @@ C
              FUPIR(J)=FUPIR(J)+W(I)*FUPA(J)
 !             PRINT 3321,W(I),FDNA(J),FUPA(J),real(J),real(I)
 
-                 if (j.eq.1) then
-              write(6969, *) FUPA(j), FDNA(j), I,NST
-                  endif
+C                 if (j.eq.1) then
+C              write(6969, *) FUPA(j), FDNA(j), I,NST
+C                  endif
 
 c 3131          format(1p2e14.5,2(2x,i3)) !EWS - label not used
 
@@ -923,7 +923,7 @@ C         TAUTOTAL(I) = TAUTOTAL(I) - log(TRANSLAYER(J))
 C        ENDDO
    1     CONTINUE                   !**END LOOP over frequency**
 
-          write(6969,*)
+C          write(6969,*)
 c 19     FORMAT(/1X,1PE10.4) !EWS - label not used
 c 100    FORMAT(1X,1P10E12.5) !EWS - label not used
  !     PRINT*,'TAUTOTAL'
