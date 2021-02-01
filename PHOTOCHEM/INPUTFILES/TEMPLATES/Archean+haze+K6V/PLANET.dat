@@ -8,7 +8,7 @@
 EARTH    = PLANET  string naming the planet for extra changes (MARS is the only other option for the moment)
 2.7      = TIMEGA - time in Ga, for modifying the solar flux
 0        = IRESET
-25       = msun
+25       = pstar
 0        = IHZSCALE
 1.0      = uvscale
 
@@ -39,6 +39,6 @@ choices for msun (these numbers are from photgrid.f)
       pstar = 82    !GJ581 """"""
       pstar = 83    !GJ667c """""" (note: GJ667 is a triple star system)
       pstar = 84    !GJ1214 """"""
-      
+
 11    = JTROP, Grid layer marking the tropopause height, depends on ZTROP and DELZ
 1.0E5 = DELZ, Height of each atm layer - Earth=1.0E5, Mars=2.0E5 (cm)
