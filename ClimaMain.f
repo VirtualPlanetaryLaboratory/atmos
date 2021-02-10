@@ -252,42 +252,39 @@ C  INPUT FILES
       OPEN (unit=8,file= DIRDATA//'/nearIR_expsums.pdat',status='old')
 
 !====================================================================
-! These are HITEMP 2010 coefficients
-!  HITEMP coefficients are derived only for H2O.
-!gna: we should update CH4?  There was a big CH4 update in HITRAN 2012
-      OPEN (unit=15, file=DIRDATA//'/Ramses_HITEMP_solar_38_H2O.dat',
-     &              status='old')  ! H2O solar coefficients
+C New k-coefficients for H2O and CO2 were calculated by Eric Wolf
+C using HELIOS-K (https://github.com/exoclime/HELIOS-K), an
+C ultrafast GPU-driven correlated-k sorting program
+C (Grimm et al. 2015, doi.org/10.1088/0004-637X/808/2/182).
+C For H2O we use the HITRAN2016 line-list, assuming 25 cm-1
+C line cut-offs using Lorentz profiles and with the plinth removed.
+C For CO2 we also use the HITRAN2016 database, but we assume
+C 500 cm-1 line cut-offs using the Perrin and Hartman
+C (1989, doi.org/10.1016/0022-4073(89)90077-0) sub-Lorentzian
+C line profiles.  These conventions represent the current standard
+C practices for the treatment of H2O and CO2 lines within coarse
+C spectral resolution climate model radiation schemes.
+C It is assumed that the H2O self and foreign broadening components,
+C and CO2-CO2 CIA, are included elsewhere in the code,
+C both of which are independent of the line treatment.
+C For further discussions contact eric.wolf@colorado.edu.
 
-      OPEN (unit=16, file=DIRDATA//'/Ramses_HITRAN_solar_38_CO2.dat',
+      OPEN (unit=15, file=DIRDATA//'/Wolf_HITRAN2016_solar_38_H2O.dat',
+     &              status='old')  ! H2O solar coefficients
+C
+      OPEN (unit=16, file=DIRDATA//'/Wolf_HITRAN2016_solar_38_CO2.dat',
      &              status='old')  ! CO2 solar coefficients
 
-
-      OPEN (unit=17, file=DIRDATA//'/NEWHITRAN_ir_55_H2O.dat',
-!      OPEN (unit=17, file=DIRDATA//'/Ramses_HITEMP_ir_55_H2O.dat',
+C
+      OPEN (unit=17, file=DIRDATA//'/Wolf_HITRAN2016_ir_55_H2O.dat',
      &              status='old')     ! H2O ir coefficients
 
-      OPEN (unit=18, file=DIRDATA//'/Ramses_HITRAN_ir_55_CO2.dat',
+      OPEN (unit=18, file=DIRDATA//'/Wolf_HITRAN2016_ir_55_CO2.dat',
      &              status='old')     ! CO2 ir coefficients
 
+
+
 !====================================================================
-! These are HITRAN2008 coefficients
-
-!      OPEN (unit=15, file=DIRDATA//'/HITRAN_solar_38_H2O.dat',
-!     &              status='old')  ! H2O solar coefficients
-!
-!      OPEN (unit=16, file=DIRDATA//'/HITRAN_solar_38_CO2.dat',
-!     &              status='old')  ! CO2 solar coefficients
-!
-!
-!      OPEN (unit=17, file=DIRDATA//'/HITRAN_ir_55_H2O.dat',
-!     &              status='old')     ! H2O ir coefficients
-!
-!      OPEN (unit=18, file=DIRDATA//'/HITRAN_ir_55_CO2.dat',
-!     &              status='old')     ! CO2 ir coefficients
-!
-!!====================================================================
-
-
 
 
       OPEN (unit=9,file= DIRDATA//'/CO2_tables.pdat',status='old')
