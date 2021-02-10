@@ -76,7 +76,7 @@ S4         LL  0 0 0 4 0 0    0     0.       0.       0.        0.      0      0
 HSO        LL  1 1 0 1 0 0    0     1.00E+00 0.       0.        0.      0      0.      0.
 H2SO4      LL  4 2 0 1 0 0    0     1.00E+00 0.       0.        0.      0      0.      0.
 SO2        LL  2 0 0 1 0 0    3     1.0E+00  2.6E-10  9.000E+09 14.     0      0.      0. 
-SO         LL  1 0 0 1 0 0    0     3.00E+04     0.       0.        0.      0      0.             0.
+SO         LL  1 0 0 1 0 0    0     3.00E-04     0.       0.        0.      0      0.             0.
 CO2        LL  2 0 1 0 0 0    1     5.0E-05  2.0E-2   6.875E+08 14.     0      0.      0.       ! Marty & Tolstikhin 1998 
 SO4AER     LL  4 2 0 1 0 0    0     1.00E-02 0.       0.        0.      0      0.      0.            !turbulent depostion velocity for particles (hardcoded for td)
 S8AER      LL  0 0 0 8 0 0    0     1.00E-02 0.       0.        0.      0      0.      0.            !turbulent depostion velocity for particles

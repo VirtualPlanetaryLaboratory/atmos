@@ -27,12 +27,16 @@ C             IT DOESN'T; 1 SAYS IT DOES)
 C     LGRID = 0  USE OLD JPL WAVELENGTH GRID
 C     LGRID = 1  USE MARK'S NEW HIGH RESOLUTION GRID (SEE ALSO GRID.F)
 C                IF LGRID=1, IO2 and INO should be set to 2
+C     LGRID = 2  USE ALINC'S HIGH RESOLUTION GRID AND UPDATED XSEC
+C                IF LGRID=2, IO2 and INO should be set to 3
 C     IO2 = 0 FOR ALLEN AND FREDERICK O2 SCHUMANN-RUNGE COEFFICIENTS
 C         = 1 FOR EXPONENTIAL SUM FITS (FOR LOW-O2 ATMOSPHERES)
 C         = 2 FOR USING HIGH RESOLUTION CROSS SECTION
+c         = 3 FOR LGRID=2 
 C     INO = 0 FOR ALLEN AND FREDERICK NO PREDISSOCIATION COEFFICIENTS
 C         = 1 FOR MODIFIED CIESLIK AND NICOLET FORMULATION
 C         = 2 USE OUT.NOPRATES FILE
+C         = 3 USE LGRID=2
 C     EPSJ = AMOUNT BY WHICH TO PERTURB THINGS FOR JACOBIAN CALCULATION
 C     PRONO  = COLUMN-INTEGRATED NO PRODUCTION RATE FROM LIGHTNING IN
 C              EARTH'S PRESENT ATMOSPHERE
@@ -43,7 +47,7 @@ C            = 0.8 g/cm^3 (titan tholins - Trainer et al 2006)
 C 	     = 1.0 g/cm^3 (old suspicious default value)
 C     ICOUPLE = 0 to turn off coupling / 1 to turn on coupling
 C             = 0 to use old formatting (E7.2 for VDEP and FIXEDMR)
-C     MONSIZE = 0 for 0.05 um monomers for fractal particles
+C     ihztype = 0 for 0.05 um monomers for fractal particles
 C      	      = 1 for 0.01 um monomers for fractal particles
 C	      = 2 for 0.02 um monomers for fractal particles
 C	      = 3 for 0.07 um monomers for fractal particles
