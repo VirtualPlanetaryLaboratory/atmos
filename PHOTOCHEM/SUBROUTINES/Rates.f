@@ -222,7 +222,7 @@ c      1984WAR197C
 
 !     H + CH3 + M -> CH4 + M
       if (CHEMJ(1,J) .eq. 'CH3' .and. CHEMJ(2,J) .eq. 'H') then
-         K0 = 1.7E-24 * T(I)**(1.8)
+         K0 = 1.7E-24 * T(I)**(-1.8)
          Kinf = 3.5e-10
          Fc = 0.63 * exp(-T(I)/3315.) + 0.37 * exp(-T(I)/61.)
          A(J,I) = k0*kinf*den(i) * fc / (k0*den(i) + kinf)
