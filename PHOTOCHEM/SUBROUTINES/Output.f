@@ -647,9 +647,7 @@ c          print *, 'Sprod:  ', ISPEC(I),FLOW(I)*atomsS(i)
      2  2X,'S prod =',E13.6,2X,'SO4LOS =',E13.6,2X,'8 S8LOSS =',
      3  E13.6,2X, 'sulrain =',E10.3,3x,'Difference =',E10.3)
 
-
 C compute net model redox
-
       oxid_in_new=0.0
       oxid_out_new=0.0
       red_in_new=0.0
@@ -660,7 +658,6 @@ C compute net model redox
       do i=1,NQ1
 c         print *, ISPEC(I),redoxstate(I)
          if (redoxstate(I) .GT. 0.) then
-
             !print *, ISPEC(I),FLOW(I)
             oxid_in_new=oxid_in_new + FLOW(I)*redoxstate(I)
             oxid_out_new=oxid_out_new + FUP(I)*redoxstate(I)
@@ -679,17 +676,16 @@ c         print *, ISPEC(I),redoxstate(I)
  888  format (A8,2X,F5.1)
 c 889  format (A8,2X,1PE10.3)
 
-
 !distributed fluxes
-!ACK - hardcoding - the below needs to be wrapped in an IF loop on the LBOUND...
-
-      oxid_in_new=oxid_in_new + 2.0*distflux(LO2)
-
-      red_in_new=red_in_new + distflux(LCO) + distflux(LH2) +
-     $   3.*distflux(LH2S)! +1.5*distflux(LHCL)    !ACK
-
-      oxid_rain_new = oxid_out_new
-      red_rain_new = red_rain_new
+      do i=1,NQ1
+        if (lbound(i).eq.3) then
+          if (redoxstate(I).GT.0) then
+            oxid_in_new=oxid_in_new + redoxstate(I)*distflux(I)
+          else if (redoxstate(I) .LT. 0) then
+            red_in_new=red_in_new + redoxstate(I)*distflux(I)*(-1.0) ! +1.5*distflux(LHCL)    !ACK
+          end if
+        end if
+      end do
 
 !SO2 has redoxstate of 0, so is not included in the redox computation...
 !seems like I could fold these into the redox computation given that redoxstate for SO2 should be 0 (check)
@@ -712,11 +708,6 @@ c 889  format (A8,2X,1PE10.3)
 !          print *, jj, 'jj, aero ', aero, redoxstate(nparti)
 !      enddo
 
-
-
-
-
-
 !ok this needs to be finished up.  I also need to make sure that the boundary conditions are actually working as intended.
 !check in particular the distributed fluxes.  In general, this should be ready to go.
 !I have updated the sulfur balance, so will probably be able to follow the same scheme.
@@ -728,12 +719,9 @@ c 889  format (A8,2X,1PE10.3)
       write(19, 679) oxid_in_new,oxid_out_new,red_in_new,red_out_new,
      $  red_RAIN_new,oxy_rain_new, redox_new
 
-
       print 667 ,redox_new, redox_new/oxid_in_new   !mc - for ease in debugging lightning print to screen
  667  format(/,'redox conservation = ',1PE10.3,
      2  ' mol/cm^2/s, a factor of ',1PE10.3, ' NEW METHOD' /)
-
-
 
  919  FORMAT(1X, F8.3, 5X, E10.5, 5X, F8.3, 6X, I4, 6X, E12.6,   !STB auxiliary coupling file for RH_surf calculation according to Ramirez et al. 2014
      &     6X, E12.6,6X, E12.6,6X, E12.6,6X, E12.6, 6X, E12.6)
@@ -744,14 +732,9 @@ c 889  format (A8,2X,1PE10.3)
       WRITE(118,919) WTa(1), Den(1), T(1), NZ, FLOW(LCH4),
      $  FLOW(LO2), USOL(LH2O,1),O3COL ,CH4_column ,O2_column
 
-
-
-
-
       print 932,  FLOW(LCH4), FLOW(LO2), FLOW(LCH4)/FLOW(LO2)
  932  format('CH4 flux = ',1PE13.6,'  O2 flux = ',1PE13.6,
      2  ' a ratio of ', 1PE12.4,/)
-
 
       PRINT *, 'TAUO2 = ', TAUO2
       PRINT *, 'TAUCH4 = ', TAUCH4
@@ -785,8 +768,6 @@ c last and most terse
 
   973 format(1x,1P23E10.2)
 
-
-
 ! including  Tropopause O2 mixing ratio, min Tropospheric O2 mixing ratio
 ! also want to include height of maximum flux of S8, then J_SO2_MIF at
 !that height
@@ -798,12 +779,6 @@ c-mc
       tempo2min=min(usol(LO2,I),tempo2min)
  273  continue
       O2minT=tempo2min                 !minimum O2 mr in troposphere
-
-
-
-
-
-
 
 !todo kill the S8 flux part and just use YP(LS8) as I've done in out.so2
 !compute the J_SO2_MIF as I did in so2.pro
