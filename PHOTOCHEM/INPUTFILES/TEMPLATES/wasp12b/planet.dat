@@ -27,18 +27,20 @@ choices for msun (these numbers are from photgrid.f)
       pstar = 18    !K2V
       pstar = 19    !F2V
       pstar = 76    !GJ876
-      pstar = 20    !M8V
       pstar = 21    !M5V/Proxima Centauri
       pstar = 22    !G0V star for wasp12b (first Hot Jupiter model)
       pstar = 23    !Phoenix 3300K star (for GCM Earth Project)
       pstar = 24    !HD40307/K2.5V
       pstar = 25    !HD85512/K6V
       pstar = 26    !HD97658/K1V
+      pstar = 27    !K2-3/M0V
+      pstar = 33    ! Peacock et al. 2019 spectrum for TRAPPIST-1
       pstar = 80    !GJ876 MUSCLES data adaptive constant res panchromatic
       pstar = 81    !GJ551 """""" (Proxima Centauri)
       pstar = 82    !GJ581 """"""
       pstar = 83    !GJ667c """""" (note: GJ667 is a triple star system)
       pstar = 84    !GJ1214 """"""
 
+Old variables, no longer used:
 11    = JTROP, Grid layer marking the tropopause height, depends on ZTROP and DELZ
 1.0E5 = DELZ, Height of each atm layer - Earth
