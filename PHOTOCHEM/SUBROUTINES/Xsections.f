@@ -8393,7 +8393,7 @@ c     1)MPI data
       n1 =  235
       DO i = 1, n1
          READ(kin,*) x1(i), y1(i)
-         x1(i)=x1(i) * 10. ! <- To convert from nm to Angstroms
+         x1(i)=x1(i)
       ENDDO
       CLOSE (kin)
 
@@ -9476,7 +9476,7 @@ c Quantum yields done in wl loop. diff at ly a then everywhere else
        endif
 
          DO i = 1, nz
-              sq(jn,i,iw) = yg1(iw)*qy
+              sq(jn,i,iw) = yg1(iw)*qy1
               sq(jn+1,i,iw) = yg1(iw)*qy2
               sq(jn+2,i,iw) = yg1(iw)*qy3
               sq(jn+3,i,iw) = yg1(iw)*qy4
