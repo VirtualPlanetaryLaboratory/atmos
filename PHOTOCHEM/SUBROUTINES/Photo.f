@@ -79,7 +79,7 @@ c-mc erg s * cm/s -> erg cm
 
 
       IF (N.EQ.1) write(14, 119)    !final step printout
- 119  FORMAT(/1X,'ENERGY FLUXES IN W/M/M (NOT DIURNALLY AVERAGED)',//
+ 119  FORMAT(/1X,'ENERGY FLUXES IN W/m2/nm (NOT DIURNALLY AVERAGED)',//
      2  2X,'L',3X,'WAV',6X,'TAUR',6X,'EFLUX',5X,'GFLUX',5X,'S(1)')
 
 
