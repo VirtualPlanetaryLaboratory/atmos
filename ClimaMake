@@ -21,7 +21,6 @@ FC = gfortran
 # de-bug things. We're going to try to test with ifort more going forward.
 #
 # gfortran: optimized
-FC = gfortran
 FCFLAG = -O3 -I. -fno-automatic -ftree-vectorize -fdefault-integer-8 -fdefault-real-8 -ffpe-trap=invalid -std=legacy
 # debugging options
 #FCFLAG = -g -fbounds-check -Wall -fbacktrace -finit-real=nan
