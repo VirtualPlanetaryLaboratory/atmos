@@ -6,22 +6,35 @@
 
 PLATFORM = osx
 
-# COMPILATION FLAGS:
+# Pick your compiler here by commenting out the "wrong" compiler and uncommenting the compiler you want to use.
+# The options are ifort or gfortran. You must also select the flags (FCFLAG) for the compiler you choose.
+# Please see next section for implications for FCFLAG variable.
 #FC = ifort
-#FCFLAG = -O3 -parallel -i8 -r8
-# For debugging, use this flag set instead:
-#FCFLAG = -i8 -r8 -debug -fp-stack-check -check-bounds -g -traceback -heap-arrays -gen-interfaces -warn interfaces -check arg_temp_created -align all -Bstatic
-# more debugging options
-#FCFLAG = -r8 -i8 -debug -g -diag-enable sv-include
+FC = gfortran
 
-#optimized
+# Pick your compiler flags here. The default is to use the "optimized" gfortran flags, which should lead to
+# faster run-times. If you are having issues and know how to debug fortran, flip the debug flags on by
+# uncommenting them and commenting the optimized flag. If you are using ifort, you have to choose the flags
+# for that compiler the same way (uncomment those, comment others).
+# NOTE: We use gfortran in the group leading this version of the code. If you're having
+# trouble with ifort, try gfortran to see if its the compiler. If it is, get in touch and we'll help
+# de-bug things. We're going to try to test with ifort more going forward.
+#
+# gfortran: optimized
 FC = gfortran
 FCFLAG = -O3 -I. -fno-automatic -ftree-vectorize -fdefault-integer-8 -fdefault-real-8 -ffpe-trap=invalid -std=legacy
-#debugging versions
+# debugging options
 #FCFLAG = -g -fbounds-check -Wall -fbacktrace -finit-real=nan
 #FCFLAG = -g -fno-automatic -ftrapv -fbounds-check -O
 #FCFLAG = -g -fno-automatic -Wuninitialized -fbounds-check -O -ftrapv
 #FCFLAG = -g -fno-automatic -Wuninitialized -fbounds-check -O -ftrapv -Wall -fdefault-integer-8 -ffpe-trap=invalid -fdefault-real-8 -I.
+# ifort: optimized
+#FCFLAG = -O3 -parallel -i8 -r8
+# ifort: debugging options
+#FCFLAG = -i8 -r8 -debug -fp-stack-check -check-bounds -g -traceback -heap-arrays -gen-interfaces -warn interfaces -check arg_temp_created -align all -Bstatic
+#FCFLAG = -r8 -i8 -debug -g -diag-enable sv-include
+
+
 
 
 
@@ -164,7 +177,7 @@ OBPATH = $(CDOTOC)/$(CSUR).o \
 # Load line
 ###############################
 
-$(OUTPUT) : $(OBPATH) 
+$(OUTPUT) : $(OBPATH)
 	$(FC) $(FCFLAG) -o $(OUTPUT) $(OBPATH)
 
 ###############################
@@ -334,7 +347,7 @@ $(CDOTOC)/$(CSCPY).o : $(CPATH6)/$(CSCPY).f
 $(CDOTOC)/$(CVINT).o : $(CPATH6)/$(CVINT).f
 	$(FC) $(FCFLAG) -c $(CPATH6)/$(CVINT).f
 	\mv $(CVINT).o $(CDOTOC)
- 
+
 $(CDOTOC)/$(CRSET).o : $(CPATH6)/$(CRSET).f
 	$(FC) $(FCFLAG) -c $(CPATH6)/$(CRSET).f
 	\mv $(CRSET).o $(CDOTOC)
@@ -404,7 +417,7 @@ conclude :
 	echo '================='
 
 clean:
-#	rm $(CDOTOR)/*.o	
+#	rm $(CDOTOR)/*.o
 	rm $(CDOTOC)/*.o
 	rm $(OUTPUT)
 

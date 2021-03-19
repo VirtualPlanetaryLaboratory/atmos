@@ -13,20 +13,34 @@
 ###############################
 
 PLATFORM = mac
+
+# Pick your compiler here by commenting out the "wrong" compiler and uncommenting the compiler you want to use.
+# The options are ifort or gfortran. You must also select the flags (FCFLAG) for the compiler you choose.
+# Please see next section for implications for FCFLAG variable.
+# NOTE: We use gfortran in the group leading this version of the code. If you're having
+# trouble with ifort, try gfortran to see if its the compiler. If it is, get in touch and we'll help
+# de-bug things. We're going to try to test with ifort more going forward.
 #FC = ifort
-#FCFLAG = -i8 -r8 -align all -Bstatic -check all
 FC = gfortran
 
-#debugging version
-#FCFLAG = -g -fno-automatic -Wuninitialized -ffpe-trap=invalid -O -ftrapv -Wall -I. -fdefault-integer-8 -fdefault-real-8
-
-#optimized (EWS - USE THIS FOR FAST CODE)
+# Pick your compiler flags here. The default is to use the "optimized" gfortran flags, which should lead to
+# faster run-times. If you are having issues and know how to debug fortran, flip the debug flags on by
+# uncommenting them and commenting the optimized flag. If you are using ifort, you have to choose the flags
+# for that compiler the same way (uncomment those, comment others).
+#
+# gfortratn: optimized use (default)
 FCFLAG = -O3 -fno-automatic -ftree-vectorize -fdefault-integer-8 -fdefault-real-8 -I.
-#FCFLAG = -O3 -fno-automatic -ftree-vectorize -fdefault-integer-8 -fdefault-real-8 -I. -ffpe-trap=invalid
-
-
-
-
+# gfortran: main debugging version
+#FCFLAG = -g -fno-automatic -Wuninitialized -ffpe-trap=invalid -O -ftrapv -Wall -I. -fdefault-integer-8 -fdefault-real-8
+# gfortran: other debugging options
+#FCFLAG = -g -fbounds-check -Wall -fbacktrace -finit-real=nan
+#FCFLAG = -g -fno-automatic -ftrapv -fbounds-check -O
+#FCFLAG = -g -fno-automatic -Wuninitialized -fbounds-check -O -ftrapv
+# ifort: optimized use (default)
+#FCFLAG = -i8 -r8 -align all -Bstatic -check all
+# ifort: main debugging options - NOTE: These were ported from clima and we don't currently have an ifort licene and have been unable to test these
+#FCFLAG = -i8 -r8 -debug -fp-stack-check -check-bounds -g -traceback -heap-arrays -gen-interfaces -warn interfaces -check arg_temp_created -align all -Bstatic
+#FCFLAG = -r8 -i8 -debug -g -diag-enable sv-include
 
 # Main files
 MAIN =PhotoMain
