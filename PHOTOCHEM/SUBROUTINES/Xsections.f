@@ -2777,12 +2777,11 @@ c     interpolate gridpoints if needed
       ENDIF
 
 c     Main wl loop
-c     quantum yields Inn 1993
 
       do L=1,nw
          if(wl(l) .le. 1670.) then
             qy1(l) = 0.0
-            qy2(l) = 0.5
+            qy2(l) = 1.0
             sq(jn,:,l) = yg1(l)*qy1(l)
             sq(jn+1,:,l) = yg1(l)*qy2(l)
          else
