@@ -648,28 +648,139 @@ c          print *, 'Sprod:  ', ISPEC(I),FLOW(I)*atomsS(i)
      3  E13.6,2X, 'sulrain =',E10.3,3x,'Difference =',E10.3)
 
 C compute net model redox
-      oxid_in_new=0.0
-      oxid_out_new=0.0
-      red_in_new=0.0
-      red_out_new=0.0
-      red_rain_new=0.0
-      oxy_rain_new=0.0
+
+      H2ESC = 0.
+      RedDist = 0.
+      OxidDist = 0.
+      do i=1,NQ1
+      if (redoxstate(I) > 0.) then
+        OxidIn=OxidIn + FLOW(I)*redoxstate(I)
+        if(FLOW(I)<0) OxidOcean=OxidOcean+FLOW(I)*redoxstate(I)
+        if(FLOW(I)>0) OxidAtm=OxidAtm+FLOW(I)*redoxstate(I)
+        if(LBOUND(I)>=3) then   !This is the sgflux+distflux BC
+          OxidIn = OxidIn + redoxstate(I)*distflux(I)
+          OxidDist = OxidDist + redoxstate(I)*distflux(I)
+        endif
+        OxidOut=OxidOut + FUP(I)*redoxstate(I)
+        if(FUP(I)<0) OxidDown=OxidDown+FUP(I)*redoxstate(I)
+        if(FUP(I)>0) OxidUp=OxidUp+FUP(I)*redoxstate(I)
+        OxidRain=OxidRain + SR(I)*redoxstate(I)
+        else if (redoxstate(I) < 0) then
+          RedIn=RedIn+ FLOW(I)*redoxstate(I)*(-1.0)
+          if(FLOW(I)<0) RedOcean=RedOcean-FLOW(I)*redoxstate(I)
+          if(FLOW(I)>0) RedAtm=RedAtm-FLOW(I)*redoxstate(I)
+          if(LBOUND(I)>=3) then   !This is the sgflux+distflux BC
+            RedIn = RedIn + redoxstate(I)*distflux(I)*(-1.0)
+            RedDist=RedDist-redoxstate(I)*distflux(I)
+          endif
+          RedOut = RedOut + FUP(I) * redoxstate(I) * (-1.0)
+          if(FUP(I)<0) RedDown=RedDown-FUP(I)*redoxstate(I)
+          if(FUP(I)>0) RedUp=RedUp-FUP(I)*redoxstate(I)
+          RedRain=RedRain + SR(I)*redoxstate(I)*(-1.0)
+        endif
+      enddo
+
+
+      OxidFlow = OxidAtm + OxidOcean
+      RedFlow = RedAtm + RedOcean
+
+      redox = RedIn - RedOut - OxidIn + OxidOut - RedRain + OxidRain
+
+      !CSH MeanFlux takes the log average of all the fluxes as a metric for how good redox balance is.
+      MeanFlux = 10.**((L10A(OxidIn)+L10A(OxidOut)+L10A(RedIn)+
+     &              L10A(RedOut)+L10A(RedRain)+L10A(OxidRain))/6.)
+
+c      print 679, OxidIn,OxidOut,RedIn,RedOut,RedRain,OxidRain,redox
+c      write(14, 679) OxidIn,OxidOut,RedIn,RedOut,RedRain,OxidRain,redox
+c      write(19, 679) OxidIn,OxidOut,RedIn,RedOut,RedRain,OxidRain,redox
+  679 format(/,'redox budget:',/5X,'OxidIn =',1PE13.6,
+     &  2X,'OxidOut =',E13.6,2X,'RedIn =',E13.6,2X,'RedOut =',
+     &  E13.6,2X,'RedRain =',E13.6,2X,'OxidRain =',E13.6,
+     &  3X, 'redox =',E13.6)
+
+c      print 667 ,redox, abs(redox/MeanFlux)
+  667 format(/5X,'redox conservation = ',1PE10.3,
+     &  ' mol/cm^2/s, a factor of ',1PE9.3,' vs. log-mean of fluxes' /)
+
+      red1=RedIn-RedRain-RedDist-OxidIn+OxidRain-OxidDist !Includes wet and dry dep
+      !Positive when more H2 going into atmosphere
+
+      if(H2BAL>0) then
+        H2ESC = RedOut - OxidOut !Need both to cancel influx of CO and O (dissociated CO2)
+        print 936,H2ESC,RedDist
+        mult = 3. !this multiplication factor greatly speeds up how fast global redox balance is achieved;
+        ! it still works as 1, but takes about twice as long to reach a satisfactory value.
+        red2 = -1.*redoxstate(LH2)*FLOW(LH2) - mult*red1 !Need to account for current flux of H2
+        !Calculate the pertinent H2 boundary condition, H2BC
+        if(red2>0) H2BC= red2 !return H2 to atmosphere, as more reducing power is going into the ocean
+        if(red2<0) H2BC= red2/SL(LH2,1) !draw H2 down into the ocean, as more oxidizing power is going into the ocean
+        if(H2BC>0.) then
+          print 933,H2BC
+          write(14,933) H2BC
+          write(19,933) H2BC
+          print 935, H2BC
+        elseif(H2BC<0.) then
+          print 934,abs(H2BC)
+          write(14,934) abs(H2BC)
+          write(19,934) abs(H2BC)
+          print 935, H2BC
+        endif
+        write(*,935) red1
+      endif
+  933 format(1X,'Global redox adjustment sets H2 flux = ',1PE16.10)
+  934 format(1X,'Global redox adjustment sets H2 vdep = ',1PE16.10)
+  935 format(1X,'Global redox imbalance = ',1PE17.10,/)
+  936 format(1X,'Hydrogen escape= ',1PE10.4,' Volcanism= ',1PE10.4,/)
+
+!CSH glOcean represents the net reductant flux going into the atmosphere (+) or going into
+!    the ocean (-); should be equivalent to the difference between volcanic outgassing
+!    (distfluxes) and escape to space.
+      glOcean = RedFlow - OxidFlow - RedRain + OxidRain
+      glEscape = RedOut - OxidOut - RedDist + OxidDist
+
+      write(14,937) OxidOut,RedOut,OxidUp,RedUp,OxidDown,
+     &  RedDown,OxidDist,RedDist,OxidRain,OxidAtm,RedRain,
+     &  RedAtm,OxidOcean,RedOcean,OxidFlow,RedFlow,glOcean,
+     &  glEscape
+
+  937 format(/20X,'OxidOut = ',1PE11.4,/20X,'RedOut  = ',1PE11.4,
+     &  /23X,'/ \',/22X,'/\',/2X,'OxidUp = ',1PE10.4,' |',/2X,
+     &  'RedUp  = ',1PE10.4,' | |',/,
+     &  '-----------------------|-|----------------',/23X,
+     &  '| | OxidDown = ',1PE11.4,/25X,'| RedDown  = ',1PE11.4,/25X,
+     &  '\/',/,'/\',/,' | OxidDist = ',1PE10.4,/,' | RedDist  = ',
+     &  1PE10.4,/,' |',29X,'/\',/,' | | OxidRain = ',1PE10.4,5X,
+     &  '| OxidAtm = ',1PE10.4,/,' | | RedRain  = ',1PE10.4,5X,
+     &  '| RedAtm  = ',1PE10.4,/,
+     &  '---|--------------------------|-|---------',/2X,
+     &  '\/  OxidOcean = ',1PE11.4,'| |',/6X,'RedOcean  = ',1PE11.4,
+     &  '|',/29X,'\/',/30X,'\ /',/25X,'OxidFlow = ',1PE11.4,/25X,
+     &  'RedFlow  = ',1PE11.4,//4X,'global imbalance (ocean)    = ',
+     &  1PE11.4,/4X,'global imbalance (dist-fup) = ',1PE11.4)
+
+c commenting out old code - will replace with Sonny's versions
+      oxid_in=0.0
+      oxid_out=0.0
+      red_in=0.0
+      red_out=0.0
+      red_rain=0.0
+      oxid_rain=0.0
 
       do i=1,NQ1
 c         print *, ISPEC(I),redoxstate(I)
          if (redoxstate(I) .GT. 0.) then
             !print *, ISPEC(I),FLOW(I)
-            oxid_in_new=oxid_in_new + FLOW(I)*redoxstate(I)
-            oxid_out_new=oxid_out_new + FUP(I)*redoxstate(I)
+            oxid_in=oxid_in + FLOW(I)*redoxstate(I)
+            oxid_out=oxid_out + FUP(I)*redoxstate(I)
             !print *, 'fup', fup(i)
-            oxy_rain_new=oxy_rain_new + SR(I)*redoxstate(I)
+            oxid_rain=oxid_rain + SR(I)*redoxstate(I)
            ! print *,'oxy i, ispec, sr',  i, ispec(i), sr(i)
             !print *, i , ispec(i), oxid_out_new
          else if (redoxstate(I) .LT. 0) then
             !print 888, ISPEC(I),redoxstate(I)
-            red_in_new=red_in_new+ FLOW(I)*redoxstate(I)*(-1.0)
-            red_out_new=red_out_new + FUP(I)*redoxstate(I)*(-1.0)
-            red_rain_new=red_rain_new + SR(I)*redoxstate(I)*(-1.0)
+            red_in=red_in+ FLOW(I)*redoxstate(I)*(-1.0)
+            red_out=red_out + FUP(I)*redoxstate(I)*(-1.0)
+            red_rain=red_rain + SR(I)*redoxstate(I)*(-1.0)
            !  print *,'red i, ispec, sr',  i, ispec(i), sr(i)
          endif
       enddo
@@ -680,48 +791,26 @@ c 889  format (A8,2X,1PE10.3)
       do i=1,NQ1
         if (lbound(i).eq.3) then
           if (redoxstate(I).GT.0) then
-            oxid_in_new=oxid_in_new + redoxstate(I)*distflux(I)
+            oxid_in=oxid_in + redoxstate(I)*distflux(I)
           else if (redoxstate(I) .LT. 0) then
-            red_in_new=red_in_new + redoxstate(I)*distflux(I)*(-1.0) ! +1.5*distflux(LHCL)    !ACK
+            red_in=red_in + redoxstate(I)*distflux(I)*(-1.0) ! +1.5*distflux(LHCL)    !ACK
           end if
         end if
       end do
-
-!SO2 has redoxstate of 0, so is not included in the redox computation...
-!seems like I could fold these into the redox computation given that redoxstate for SO2 should be 0 (check)
-
-      !particle test
-!      do JJ=1,NP
-!         aero = 0
-!            if (JJ.eq.1)  nparti = LSO4AER
-!            if (JJ.eq.2)  nparti = LS8AER
-!            if (JJ.eq.3)  nparti = LHCAER
-!            if (JJ.eq.4)  nparti = LHCAER2
-!          do J=1, NZ
-!           aero = aero + aersol(J,JJ)*conver(J,JJ)*
-!     $     redoxstate(nparti)
-!         enddo
-!          if(JJ.gt.1)  red_out_new = red_out_new + aero*(-1.0)
-!          if(JJ.gt.1)  print *, 'jj gt 1'
-!          if(JJ.eq.1)  oxid_out_new = oxid_out_new + aero
-!          if(JJ.eq.1)  print *, 'jj eq 1'
-!          print *, jj, 'jj, aero ', aero, redoxstate(nparti)
-!      enddo
-
 !ok this needs to be finished up.  I also need to make sure that the boundary conditions are actually working as intended.
 !check in particular the distributed fluxes.  In general, this should be ready to go.
 !I have updated the sulfur balance, so will probably be able to follow the same scheme.
-      redox_new = red_in_new - red_out_new -oxid_in_new + oxid_out_new
-     $  -red_Rain_new + oxy_rain_new
+      redox = 0.
+      redox = red_in-red_out-oxid_in+oxid_out-red_rain+oxid_rain
+      write(14,1679) oxid_in,oxid_out,red_in,red_out,red_RAIN,oxid_rain,
+     2              redox
+      write(19,1679) oxid_in,oxid_out,red_in,red_out,red_RAIN,oxid_rain,
+     2              redox
+      print 1667 ,redox, redox/oxid_in   !mc - for ease in debugging lightning print to screen
 
-      write(14, 679) oxid_in_new,oxid_out_new,red_in_new,red_out_new,
-     $  red_RAIN_new,oxy_rain_new, redox_new
-      write(19, 679) oxid_in_new,oxid_out_new,red_in_new,red_out_new,
-     $  red_RAIN_new,oxy_rain_new, redox_new
-
-      print 667 ,redox_new, redox_new/oxid_in_new   !mc - for ease in debugging lightning print to screen
- 667  format(/,'redox conservation = ',1PE10.3,
+1667  format(/,'redox conservation = ',1PE10.3,
      2  ' mol/cm^2/s, a factor of ',1PE10.3, ' NEW METHOD' /)
+
 
  919  FORMAT(1X, F8.3, 5X, E10.5, 5X, F8.3, 6X, I4, 6X, E12.6,   !STB auxiliary coupling file for RH_surf calculation according to Ramirez et al. 2014
      &     6X, E12.6,6X, E12.6,6X, E12.6,6X, E12.6, 6X, E12.6)
@@ -749,14 +838,18 @@ c 680  format(2(1PE10.2,1X) ,13(E10.3,1X))
  680  format(3(1PE12.6,1X),1e10.3,1X,4(1PE12.6,1X),1e10.3,1X,
      2  6(1PE12.6,1x))
 
- 679  format(/1X,'redox budget:',/5X,'oxid_in =',1PE13.6,
-     2  2X,'oxid_out =',E13.6,2X,'red_in =',E13.6,2X,'red_out =',
-     2  E13.6,2X,'red_RAIN =',E10.3,2X,'oxy_rain =',E10.3,
-     3  3X, 'redox =',E10.3)
-!      red_out = 0.5*F_esc_H + F_esc_H2 + FUP(LCO)                         ! red leaving through upper boundary (I'm assuming KZ recomputed this to check F_esc_H versus FUP(LH2)?)
-!      redox = red_in - red_out -oxid_in + oxid_out -red_Rain + oxy_rain
- !     write(14, 679) oxid_in,oxid_out,red_in,red_out, red_RAIN,
-  !   1  oxy_rain, redox
+ 1679 format(/,'old redox budget numbers:',/5X,'OxidIn =',1PE13.6,
+     &  2X,'OxidOut =',E13.6,2X,'RedIn =',E13.6,2X,'RedOut =',
+     &  E13.6,2X,'RedRain =',E13.6,2X,'OxidRain =',E13.6,
+     &  3X, 'redox =',E13.6)
+c 679  format(/1X,'redox budget:',/5X,'oxid_in =',1PE13.6,
+c     2  2X,'oxid_out =',E13.6,2X,'red_in =',E13.6,2X,'red_out =',
+c     2  E13.6,2X,'red_RAIN =',E10.3,2X,'oxy_rain =',E10.3,
+c     3  3X, 'redox =',E10.3)
+c      red_out = 0.5*F_esc_H + F_esc_H2 + FUP(LCO)                         ! red leaving through upper boundary (I'm assuming KZ recomputed this to check F_esc_H versus FUP(LH2)?)
+c      redox = red_in-red_out-oxid_in+oxid_out-red_Rain+oxid_rain
+c      write(14,679)oxid_in,oxid_out,red_in,red_out, red_RAIN,oxid_rain,
+c     2             redox
 
 c last and most terse
       write(19,973) usol(LO2,1), usol(LH2,1), usol(LCO,1),usol(LCH4,1),
@@ -1154,4 +1247,13 @@ c-mab: Another file with all the final output species fluxes. (to be added)
        write(255,*) "Placeholder for master....will be added later."
 
       RETURN
+
+      contains
+      function L10A(val)
+       implicit none
+       real (kind=8), intent(IN) :: val
+       real (kind=8) :: L10A
+       L10A = log10(abs(val))
+      END FUNCTION L10A
+
       END
