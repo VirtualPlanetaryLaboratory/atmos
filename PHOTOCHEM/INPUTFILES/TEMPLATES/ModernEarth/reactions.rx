@@ -23,7 +23,9 @@ O1D       N2        O         N2                  2BODY     2.15E-11    110.    
 O1D       O2        O         O2                  2BODY     3.3E-11     55.                    ! JPL-15 
 O2        HV        O         O1D                 PHOTP                                        !
 O2        HV        O         O                   PHOTP                                        ! this line must follow O2+hv->O+O1D
-H2O       HV        H         OH                  PHOTO
+H2O       HV        H         OH                  PHOTO     
+H2O       HV        H2        O1D                 PHOTO     
+H2O       HV        H         H         O         PHOTO  
 O3        HV        O2        O1D                 PHOTP
 O3        HV        O2        O                   PHOTP                                        ! this line must follow O3+hv->O2+O1D
 O3        HV        O         O         O         PHOTP                                        ! this line must follow O3+hv->O2+O ! APL REQUIRES LGRID=2, aslo required by lgrid=2
@@ -38,9 +40,8 @@ CO2       HV        CO        O                   PHOTO
 CO2       HV        CO        O1D                 PHOTO                                        ! this line must follow CO2+hv->CO+O
 CO        OH        CO2       H                   WEIRD                                        ! Baulch et al 1994 review; JPL-15: termolecular + biomolecular, but rquirs HOCO; use WEIRD for fit to reviews APL
 CO        O         CO2                           WEIRD                                        ! Gao et al [2015]
-H2CO      HV        H         H         CO        PHOTP                                        ! APL REQUIRES LGRID=2, aslo required by lgrid=2
-H2CO      HV        H2        CO                  PHOTP                                        ! this line must follow H2CO+hv->2H+CO                                                    
-H2CO      HV        HCO       H                   PHOTP                                        ! this line must follow H2CO+hv->H2+CO
+H2CO      HV        H2        CO                  PHOTO                                        
+H2CO      HV        HCO       H                   PHOTO  
 HCO       HV        H         CO                  2BODY     1.0E-2      0.                     ! Pinto et al. [1980]  (note this is PHOTPlysis treated as 2BODY)
 H2CO      H         H2        HCO                 WEIRD     ! I'll figure out a better comment when I figure out how to do weird's better
 H         H         H2                            WEIRD     1.5E-29     1/T(I)**1.3            ! Tsang and Hampson [1986]  (COMMENT IS WRONG...)

@@ -252,8 +252,9 @@ C-   spherical particles
             y2(i)=QEXTSTANDF(i,j) !extinction efficiency Qext
             y3(i)=GSTANDF(i,j)  !asymmetry parameter
          enddo
-
-         extend=1
+         if (nw.gt.120) then
+          extend=1
+         endif
          if (extend.eq.1) then
             CALL addpnt(x1,y1,kw,n1,wl(1),W0STANDF(1,j))
             CALL addpnt(x1,y1,kw,n1,wl(1)*(1.-deltax),zero)

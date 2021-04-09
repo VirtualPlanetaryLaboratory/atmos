@@ -259,16 +259,17 @@ C2H6SO    OH        CH4SO2    CH3                 2BODY     6.5E-11     0.      
 CH4SO2    OH        CH3SO2    H2O                 2BODY     5.0E-10     0.                     ! Gonzalez-Garcia et al. [2007]
 O2        HV        O         O1D                 PHOTP                                        !
 O2        HV        O         O                   PHOTP                                        ! this line must follow O2+hv->O+O1D
-H2O       HV        H         OH                  PHOTO                                                                                               
+H2O       HV        H         OH                  PHOTO     
+H2O       HV        H2        O1D                 PHOTO     
+H2O       HV        H         H         O         PHOTO                                                                                              
 O3        HV        O2        O1D                 PHOTP                                                                                               
 O3        HV        O2        O                   PHOTP                                        ! this line must follow O3+hv->O2+O1D
 O3        HV        O         O         O         PHOTP                                        ! this line must follow O3+hv->O2+O ! APL REQUIRES LGRID=2
 H2O2      HV        OH        OH                  PHOTP
 CO2       HV        CO        O                   PHOTO
 CO2       HV        CO        O1D                 PHOTO                                        ! this line must follow CO2+hv->CO+O
-H2CO      HV        H         H         CO        PHOTP                                        ! APL REQUIRES LGRID=2
-H2CO      HV        H2        CO                  PHOTP                                        ! this line must follow H2CO+hv->2H+CO                                                    
-H2CO      HV        HCO       H                   PHOTP                                        ! this line must follow H2CO+hv->H2+CO
+H2CO      HV        H2        CO                  PHOTO                                        
+H2CO      HV        HCO       H                   PHOTO  
 HO2       HV        OH        O                   PHOTP                                                                                               
 CH4       HV        CH21      H2                  PHOTO 
 CH4       HV        CH3       H                   PHOTO     !must follow CH4 + HV -> CH21 + H2 (this reac only goes at Ly a)                                                                                              
