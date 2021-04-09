@@ -23,7 +23,7 @@ c
       REAL*8 wl(nw+1)
 
 * data arrays
-      INTEGER n1, n2,n3 
+      INTEGER n1, n2,n3
       REAL*8 x1(kw), x2(kw), x3(kw)
       REAL*8 y1(kw), y2(kw), y3(kw)
 
@@ -31,25 +31,25 @@ c
       REAL*8 yg1(nw),yg2(kw),yg3(kw)
       INTEGER i
       INTEGER ierr
-      ierr = 0      
+      ierr = 0
 
 C-AP RADIUS of particles for which Mie calculations were run
-C-GA - increasing number of particle size bins in the model from 
-C     31 to 51...also making the bins more consistent between clima and 
+C-GA - increasing number of particle size bins in the model from
+C     31 to 51...also making the bins more consistent between clima and
 C     photo for the 0.1 micron scale particles.
 C-AP **********************************************************
       DATA RSTAND/0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007,
      2  0.008, 0.009, 0.01, 0.03, 0.05, 0.07, 0.1, 0.13, 0.15,
-     3  0.17, 0.2, 0.23, 0.25,0.27, 0.3, 0.33,0.35, 0.37, 
+     3  0.17, 0.2, 0.23, 0.25,0.27, 0.3, 0.33,0.35, 0.37,
      4  .4, 0.43,0.45, 0.47,0.5,0.53, 0.55,0.57,0.6,0.63,0.65,
      5  0.67,0.7,0.730,0.750,0.770,0.8,0.83,0.85,0.87,0.9,0.93,0.95,
-     6  0.97,1.,2./          
- 
+     6  0.97,1.,2./
+
 
 C-AP ***********************************************************
 
       print *, 'ihztype is: ', ihztype
-C************SPHERICAL***************************************** 
+C************SPHERICAL*****************************************
       if (frak.eq.0) then  !using spherical sized arrays (MIE)
          DO k=1,51
             RSTAND(k) = RSTAND(k)/10000.
@@ -79,9 +79,9 @@ C************SPHERICAL*****************************************
      2              GSTAND(I,j)
             enddo
           close (125)
-         enddo   
+         enddo
 
- 
+
       do j=1,51 !for each particle size
          n1=108 !number of wavelength points
          n2=n1
@@ -93,16 +93,16 @@ C************SPHERICAL*****************************************
             y1(i)=W0STAND(i,j)
             y2(i)=QEXTSTAND(i,j)
             y3(i)=GSTAND(i,j)
-         enddo   
+         enddo
 
 !next, we interpolate these values to our wavelength grid, with an option to extend the optical properties to the UV
          extend=1
 
-         if (extend.eq.1) then 
-            CALL addpnt(x1,y1,kw,n1,wl(1),W0STAND(1,j))  
-            CALL addpnt(x1,y1,kw,n1,wl(1)*(1.-deltax),zero)  
-         else 
-            CALL addpnt(x1,y1,kw,n1,x1(1)*(1.-deltax),zero)  
+         if (extend.eq.1) then
+            CALL addpnt(x1,y1,kw,n1,wl(1),W0STAND(1,j))
+            CALL addpnt(x1,y1,kw,n1,wl(1)*(1.-deltax),zero)
+         else
+            CALL addpnt(x1,y1,kw,n1,x1(1)*(1.-deltax),zero)
          endif
          CALL addpnt(x1,y1,kw,n1,                  zero,zero)
          CALL addpnt(x1,y1,kw,n1,x1(n1)*(1.+deltax),zero)
@@ -115,33 +115,33 @@ C************SPHERICAL*****************************************
             STOP
          ENDIF
 
-         if (extend.eq.1) then      
+         if (extend.eq.1) then
 !     extending hydrocarbon optical properties to the UV
-            CALL addpnt(x2,y2,kw,n2,wl(1),QEXTSTAND(1,j))  
-            CALL addpnt(x2,y2,kw,n2,wl(1)*(1.-deltax),zero)  
+            CALL addpnt(x2,y2,kw,n2,wl(1),QEXTSTAND(1,j))
+            CALL addpnt(x2,y2,kw,n2,wl(1)*(1.-deltax),zero)
          else
-            CALL addpnt(x2,y2,kw,n2,x2(1)*(1.-deltax),zero)  
+            CALL addpnt(x2,y2,kw,n2,x2(1)*(1.-deltax),zero)
          endif
-         
+
          CALL addpnt(x2,y2,kw,n2,                  zero,zero)
          CALL addpnt(x2,y2,kw,n2,x2(n2)*(1.+deltax),zero)
          CALL addpnt(x2,y2,kw,n2,                   biggest,zero)
          CALL inter2(nw+1,wl,yg2,n2,x2,y2,0) !inter2 is discrete grid points to bins
-         
+
          IF (ierr .NE. 0) THEN
             WRITE(*,*) ierr, ' ***Something wrong in Initmie***'
             STOP
          ENDIF
-         
-         if (extend.eq.1) then 
+
+         if (extend.eq.1) then
 !     extending hydrocarbon optical properties to the UV
-            CALL addpnt(x3,y3,kw,n3,wl(1),GSTAND(1,j))  
-            CALL addpnt(x3,y3,kw,n3,wl(1)*(1.-deltax),zero)  
+            CALL addpnt(x3,y3,kw,n3,wl(1),GSTAND(1,j))
+            CALL addpnt(x3,y3,kw,n3,wl(1)*(1.-deltax),zero)
          else
-            CALL addpnt(x3,y3,kw,n3,x3(1)*(1.-deltax),zero)  
+            CALL addpnt(x3,y3,kw,n3,x3(1)*(1.-deltax),zero)
          endif
-         
-         CALL addpnt(x3,y3,kw,n3,x3(1)*(1.-deltax),zero)  
+
+         CALL addpnt(x3,y3,kw,n3,x3(1)*(1.-deltax),zero)
          CALL addpnt(x3,y3,kw,n3,                  zero,zero)
          CALL addpnt(x3,y3,kw,n3,x3(n3)*(1.+deltax),zero)
          CALL addpnt(x3,y3,kw,n3,                   biggest,zero)
@@ -152,16 +152,16 @@ C************SPHERICAL*****************************************
          ENDIF
 
          do k=1,nw
-            W0HC(k,j)=yg1(k)    !single scattering albedo for hcaer 
+            W0HC(k,j)=yg1(k)    !single scattering albedo for hcaer
             QEXTHC(k,j)=yg2(k)  !Extinction coefficient for hcaer
             GHC(k,j)=yg3(k)     !asymmetry param for hcaer
-            
+
          enddo
-         
+
 
       enddo                     !end for each particle size
 
-      endif  
+      endif
 ***************END SPHERES*****************************
 **************FRACTALS BELOW HERE**********************
 
@@ -177,40 +177,40 @@ C************SPHERICAL*****************************************
 
 C-GA fractal files read in from different folders compared to
 C-   spherical particles
-         if (ihztype.eq.0.) then 
+         if (ihztype.eq.0.) then
             root = 'PHOTOCHEM/DATA/MIE/f0/fractopts'
             print *,'using ihztype 0: 0.05 um particles (Khare)'
-       
-         else if (ihztype.eq.1.) then 
+
+         else if (ihztype.eq.1.) then
             root = 'PHOTOCHEM/DATA/MIE/f1/fractopts'
             print *,'using ihztype 1: 0.01 um particles (Khare)'
-            
-         else if (ihztype.eq.2.) then 
+
+         else if (ihztype.eq.2.) then
             root = 'PHOTOCHEM/DATA/MIE/f2/fractopts'
             print *,'using ihztype 2: 0.02 um particles (Khare)'
-            
-         else if (ihztype.eq.3.) then 
+
+         else if (ihztype.eq.3.) then
             root = 'PHOTOCHEM/DATA/MIE/f3/fractopts'
             print *,'using ihztype 3: 0.07 um particles (Khare)'
-            
-         else if (ihztype.eq.4.) then 
+
+         else if (ihztype.eq.4.) then
             root = 'PHOTOCHEM/DATA/MIE/f4/fractopts'
             print *,'using ihztype 4: 0.10 um particles (Khare)'
-       
-        else if (ihztype.eq.5.) then 
+
+        else if (ihztype.eq.5.) then
             root = 'PHOTOCHEM/DATA/MIE/f5/fractopts'
             print *,'ihztype 5: 0.05 um particles (Khare+Mahjoub+Tran)'
-    
-        else if (ihztype.eq.6.) then 
+
+        else if (ihztype.eq.6.) then
             root = 'PHOTOCHEM/DATA/MIE/f6/fractopts'
             print *,'ihztype 6: 0.05 um (Khare shifted to Hasenkopf)'
 
-        else if (ihztype.eq.7.) then 
+        else if (ihztype.eq.7.) then
             root = 'PHOTOCHEM/DATA/MIE/f7/fractopts'
             print *,'ihztype 7: 0.05 um (Khare + Gavalin)'
-         
-        end if         
-        
+
+        end if
+
       filenames=['0.001um.txt','0.002um.txt','0.003um.txt','0.004um.txt'
      $          ,'0.005um.txt','0.006um.txt','0.007um.txt','0.008um.txt'
      $          ,'0.009um.txt','0.010um.txt','0.030um.txt','0.050um.txt'
@@ -224,89 +224,99 @@ C-   spherical particles
      $          ,'0.770um.txt','0.800um.txt','0.830um.txt','0.850um.txt'
      $          ,'0.870um.txt','0.900um.txt','0.930um.txt','0.950um.txt'
      $          ,'0.970um.txt','1.000um.txt','2.000um.txt']
-   
-     
+
+
 
       do j=1,51                 !there are 51 particle sizes for hydrocarbons
          open(unit=125,file=trim(root)//trim(filenames(j))) !open up MIE FILES
 
-       
+
          do i=1,npts            !there are 118 wavlength bins in the FRACTAL data files 108->118
           READ(125,*) WAVLSF(I),WAVUSF(I),W0STANDF(I,j),QEXTSTANDF(I,j),
      2        GSTANDF(I,j)
 
+         enddo
+
+         close (125)
       enddo
-      
-      close (125)
-      enddo   
 
       do j=1,51
          n1=npts                !108->118
          n2=n1
          n3=n1
-      do i=1,n1
-         x1(i)=wavlsf(i)
-         x2(i)=x1(i)
-         x3(i)=x1(i)
-         y1(i)=W0STANDF(i,j)    !single scattering albedo
-         y2(i)=QEXTSTANDF(i,j)  !extinction efficiency Qext
-         y3(i)=GSTANDF(i,j)     !asymmetry parameter
-      enddo   
+         do i=1,n1
+            x1(i)=wavlsf(i)
+            x2(i)=x1(i)
+            x3(i)=x1(i)
+            y1(i)=W0STANDF(i,j) !single scattering albedo
+            y2(i)=QEXTSTANDF(i,j) !extinction efficiency Qext
+            y3(i)=GSTANDF(i,j)  !asymmetry parameter
+         enddo
 
-C-GA we don't need to to the 'extend' thing for the fractals...
-         extend=0
-   
-     
-      CALL addpnt(x1,y1,kw,n1,x1(1)*(1.-deltax),zero)  
-      CALL addpnt(x1,y1,kw,n1,                  zero,zero)
-      CALL addpnt(x1,y1,kw,n1,x1(n1)*(1.+deltax),zero)
-      CALL addpnt(x1,y1,kw,n1,                   biggest,zero)
+         extend=1
+         if (extend.eq.1) then
+            CALL addpnt(x1,y1,kw,n1,wl(1),W0STANDF(1,j))
+            CALL addpnt(x1,y1,kw,n1,wl(1)*(1.-deltax),zero)
+         else
+            CALL addpnt(x1,y1,kw,n1,x1(1)*(1.-deltax),zero)
+         endif
 
-      CALL inter2(nw+1,wl,yg1,n1,x1,y1,0) !inter2 is discrete grid points to bins
-      
-      IF (ierr .NE. 0) THEN
-         WRITE(*,*) ierr, ' ***Something wrong in Initmie***'
-         STOP
-      ENDIF
+         CALL addpnt(x1,y1,kw,n1,                  zero,zero)
+         CALL addpnt(x1,y1,kw,n1,x1(n1)*(1.+deltax),zero)
+         CALL addpnt(x1,y1,kw,n1,                   biggest,zero)
 
-  
-      CALL addpnt(x2,y2,kw,n2,x2(1)*(1.-deltax),zero)    
-      CALL addpnt(x2,y2,kw,n2,                  zero,zero)
-      CALL addpnt(x2,y2,kw,n2,x2(n2)*(1.+deltax),zero)
-      CALL addpnt(x2,y2,kw,n2,                   biggest,zero)
-      CALL inter2(nw+1,wl,yg2,n2,x2,y2,0) !inter2 is discrete grid points to bins
+         CALL inter2(nw+1,wl,yg1,n1,x1,y1,0) !inter2 is discrete grid points to bins
 
-      IF (ierr .NE. 0) THEN
-         WRITE(*,*) ierr, ' ***Something wrong in Initmie***'
-         STOP
-      ENDIF
+         IF (ierr .NE. 0) THEN
+            WRITE(*,*) ierr, ' ***Something wrong in Initmie***'
+            STOP
+         ENDIF
 
-    
-      
-      CALL addpnt(x3,y3,kw,n3,x3(1)*(1.-deltax),zero)  
-      CALL addpnt(x3,y3,kw,n3,x3(1)*(1.-deltax),zero)  
-      CALL addpnt(x3,y3,kw,n3,                  zero,zero)
-      CALL addpnt(x3,y3,kw,n3,x3(n3)*(1.+deltax),zero)
-      CALL addpnt(x3,y3,kw,n3,                   biggest,zero)
-      CALL inter2(nw+1,wl,yg3,n3,x3,y3,0)   !inter2 is discrete grid points to bins
-      IF (ierr .NE. 0) THEN
-         WRITE(*,*) ierr, ' ***Something wrong in Initmie***'
-         STOP
-      ENDIF
+         if (extend.eq.1) then
+!     extending hydrocarbon optical properties to the UV
+            CALL addpnt(x2,y2,kw,n2,wl(1),QEXTSTANDF(1,j))
+            CALL addpnt(x2,y2,kw,n2,wl(1)*(1.-deltax),zero)
+         else
+            CALL addpnt(x2,y2,kw,n2,x2(1)*(1.-deltax),zero)
+         endif
 
-      do k=1,nw
-         W0HC(k,j)=yg1(k) 
-         QEXTHC(k,j)=yg2(k) 
-         GHC(k,j)=yg3(k)
+         CALL addpnt(x2,y2,kw,n2,                  zero,zero)
+         CALL addpnt(x2,y2,kw,n2,x2(n2)*(1.+deltax),zero)
+         CALL addpnt(x2,y2,kw,n2,                   biggest,zero)
+         CALL inter2(nw+1,wl,yg2,n2,x2,y2,0) !inter2 is discrete grid points to bins
+
+         IF (ierr .NE. 0) THEN
+            WRITE(*,*) ierr, ' ***Something wrong in Initmie***'
+            STOP
+         ENDIF
+
+
+         if (extend.eq.1) then
+!     extending hydrocarbon optical properties to the UV
+            CALL addpnt(x3,y3,kw,n3,wl(1),GSTANDF(1,j))
+            CALL addpnt(x3,y3,kw,n3,wl(1)*(1.-deltax),zero)
+         else
+            CALL addpnt(x3,y3,kw,n3,x3(1)*(1.-deltax),zero)
+         endif
+
+         CALL addpnt(x3,y3,kw,n3,                  zero,zero)
+         CALL addpnt(x3,y3,kw,n3,x3(n3)*(1.+deltax),zero)
+         CALL addpnt(x3,y3,kw,n3,                   biggest,zero)
+         CALL inter2(nw+1,wl,yg3,n3,x3,y3,0) !inter2 is discrete grid points to bins
+         IF (ierr .NE. 0) THEN
+            WRITE(*,*) ierr, ' ***Something wrong in Initmie***'
+            STOP
+         ENDIF
+
+         do k=1,nw
+c            print*,yg1(k),yg2(k),yg3(k),wl(k)
+            W0HC(k,j)=yg1(k)
+            QEXTHC(k,j)=yg2(k)
+            GHC(k,j)=yg3(k)
+         enddo
 
       enddo
 
-      enddo
-      
       endif
 
-
       END
-
-
-
