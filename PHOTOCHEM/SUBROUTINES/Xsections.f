@@ -3099,7 +3099,11 @@ c     Pathways 2, 3
             end do
          else
             do i=1,nz
-               qy2(i,l) = 1.-qy3(i,l)
+               if (wc(l).le. 3610.) then
+                qy2(i,l) = 1.-qy3(i,l)
+               else
+                qy2(i,l) =0
+               end if
                qy1(i,l) = 0.
             end do
          end if

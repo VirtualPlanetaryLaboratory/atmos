@@ -40,9 +40,8 @@ HCO       HCO       H2CO      CO                  2BODY     4.5E-11     0.      
 OH        HCO       H2O       CO                  2BODY     1.0E-10     0.         0.                              ! NIST 2005 - not too certain
 O         HCO       H         CO2                 2BODY     5.0E-11     0.         0.                              ! NIST 2005
 O         HCO       OH        CO                  2BODY     5.0E-11     0.         0.                              ! NIST 2005
-H2CO      HV        H         H         CO        PHOTX                                        ! APL REQUIRES LGRID=2
-H2CO      HV        H2        CO                  PHOTX                                        ! this line must follow H2CO+hv->2H+CO
-H2CO      HV        HCO       H                   PHOTX                                        ! this line must follow H2CO+hv->H2+CO
+H2CO      HV        H2        CO                  PHOTO                                        
+H2CO      HV        HCO       H                   PHOTO                                       
 H2CO      H         H2        HCO                 WEIRD     2.14-12     -1090.     1.62                            ! NIST 2005 Baulch et al [1994]
 H         H         H2                            WEIRD     8.85E-33    (T(I)/29  8.)**-0.6*DEN(I)                 ! NIST 1992 (Baluch et al.) originally Baluch et al., 1976. Also, different than Mark's constant.
 HCO       O2        HO2       CO                  2BODY     5.2E-12     0.                     ! JPL-15
@@ -155,7 +154,7 @@ S         HO2       SO        OH                  2BODY     1.5E-11     0.      
 S         S         S2                            WEIRD     1.98E-33    DEN(I)     -206.                           ! Theory, Du et al. [2008]
 S2        O         S         SO                  2BODY     1.1E-11     0.         0.                              ! Hills et al. [1987]
 HS        H2CO      H2S       HCO                 2BODY     1.7E-11     -800.      0.                              ! DeMore et al. [1992]. Different than Mark's constant.
-S2        HV        S         S                   PHOTX     1.00
+S2        HV        S         S                   PHOTO     1.00
 H2SO4     HV        SO3       H2O                 PHOTO     1.00
 SO3       HV        SO2       O                   PHOTX     1.00
 SO21      M         SO23      M                   2BODY     1.0E-12     0.         0.                              ! Turco et al. [1982]
