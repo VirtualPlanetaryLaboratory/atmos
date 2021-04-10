@@ -33,9 +33,9 @@ only stable for "habitable" temperature planets. So, you can use CLIMA for "Eart
 
 ### [How to run the model] ###
 
-For both models, you need to do this in three steps. First, put the input files into place. Second, compile the model. Third, run the model executables. There is a script that automates this process (RunModels.sh), which we recommend for people that are new to the model. Advanced users will also benefit greatly from a script, but might choose to write their own. 
+For both models, you need to do this in three steps. First, put the input files into place. Second, compile the model. Third, run the model executables. There is a script that automates this process (RunModels.sh), which we recommend for people that are new to the model. Advanced users will also benefit greatly from a script, but might choose to write their own.
 
-The input files are contained in template folders. For the photochemical model, these are located in: PHOTOCHEM/INPUTFILES/TEMPLATES/. Each sub-folder there contains the inputfiles you need to run the code for a particular set of default conditions. A few initial conditions input files for the climate model are in CLIMA/IO/TEMPLATES. **IMPORTANT NOTE**: Clima has fewer templates set up than Photo because it performs reliably across a narrower range of planetary conditions, and because Clima's convergence performance is less sensitive to initial conditions compared to Photo. 
+The input files are contained in template folders. For the photochemical model, these are located in: PHOTOCHEM/INPUTFILES/TEMPLATES/. Each sub-folder there contains the inputfiles you need to run the code for a particular set of default conditions. A few initial conditions input files for the climate model are in CLIMA/IO/TEMPLATES. **IMPORTANT NOTE**: Clima has fewer templates set up than Photo because it performs reliably across a narrower range of planetary conditions, and because Clima's convergence performance is less sensitive to initial conditions compared to Photo.
 
 We strongly recommend using our packaged script to make sure all the input files are in the proper place before running. You can execute this with:
 ./RunModels.sh
@@ -66,6 +66,8 @@ make -f PhotoMake clean; make -f PhotoMake
 
 This will erase all the model executables, and recompile everything.
 
+
+
 ### [Compiling and Running Clima Manually] ###
 
 If you want to run the 'Climate' portion of 'Atmos' in standalone mode (without using inputs from 'Photochem') do this:
@@ -93,18 +95,16 @@ If for any reason the code is not compiling or running properly, you can check t
 
 
 
-
-
 ### [Coupling Photo and Clima] ###
 
 If you want to manually run the coupled Clima-Photochem model, do this:
 Put the input files in place - ideally with the ./RunModels.sh script. Then run Photo uncoupled (set ICOUPLE = 0 in input_photochem), and then compile and execute Photochem. Photochem will automatically generate coupling files in the /COUPLE folder for Clima to use. These files are:
-fromPhoto2Clima.dat: contains altitude, pressure, O3, water, Ch4, CO2, c2h6
+fromPhoto2Clima.dat: contains altitude, pressure, O3, H2O, CH4, CO2, C2H6
 hcaer.photoout.out: hydrocarbons in the atmosphere
-mixing_ratios.dat: mixing ratio file for clima 
-coupling_params.out: time ago (billions of years), pressure at bottom of atmosphere, fractal particles (=1 if yes), type of star, haze type, number of atmospheric layers, solar constant scaling, surface gravity 
+mixing_ratios.dat: mixing ratio file for clima
+coupling_params.out: time ago (billions of years), pressure at bottom of atmosphere, fractal particles (=1 if yes), type of star, haze type, number of atmospheric layers, solar constant scaling, surface gravity
 
-Turn on ICOUPLE (=1) in CLIMA/IO/input_clima.dat. Turning on coupling means Clima will ignore certain variables in CLIMA/IO/input_clima.dat, because it now gets these from the photochemical model outputs. Clima will also ignore the mixing_ratios.dat file in CLIMA/IO, instead reading this information from /COUPLE/mixing_ratios.dat. You do not need to change PG0 (surface pressure) in input_clima when coupling is on. Clima gets this from coupling_params.out. You also do not need to change SOLCON in input_clima. It will scaled this based on TIMEGA in coupling_params. In general, any parameter it reads in from a coupling file will OVERWRITE any equivalent parameter set in one of the Clima input files. 
+Turn on ICOUPLE (=1) in CLIMA/IO/input_clima.dat. Turning on coupling means Clima will ignore certain variables in CLIMA/IO/input_clima.dat, because it now gets these from the photochemical model outputs. Clima will also ignore the mixing_ratios.dat file in CLIMA/IO, instead reading this information from /COUPLE/mixing_ratios.dat. You do not need to change PG0 (surface pressure) in input_clima when coupling is on. Clima gets this from coupling_params.out. You also do not need to change SOLCON in input_clima. It will scaled this based on TIMEGA in coupling_params. In general, any parameter it reads in from a coupling file will OVERWRITE any equivalent parameter set in one of the Clima input files.
 
 Run Clima (./Clima.run). When it finishes, it will generate certain files for Photo:
 fromClima2Photo.dat: file with altitude, temperature, water mixing ratio
@@ -112,27 +112,25 @@ hcaer.climaout.out: sanity check that clima is dealing with hydrocarbons properl
 
 Next, Set ICOUPLE = 1 in input_photochem and run photo...
 
-Run clima.
-Run photo.
-Run clima.
-Run photo... And so on.
-When do you stop? Up to whatever convergence criteria you are happy with. There are coupling wrapper scripts that may be provided upon request. 
+Run Clima.
+Run Photo.
+Run Clima.
+Run Photo... And so on.
+When do you stop? Up to whatever convergence criteria you are happy with. There are coupling wrapper scripts that may be provided upon request.
 
 
 
 ### [Other Help Sources] ###
-There are three other sources of help and information contained in this repository. First, PHOTOCHEM/DOCUMENTS/help_me.txt is a file containing tips and tricks and common errors, created originally by Giada Arney and added to by a few other folks over the years. Second, PHOTOCHEM/DOCUMENTS/add.species is a list of things one needs to do when changing the list of species in the photochemical model. (This list is in one of our input files - PHOTOCHEM/INPUTFILES/species.dat.) Third, there are some informational files in some of the data directories. For example, some of the templates have their own read.me file. And there are notes and references on most absorption cross sections inside the folder for each individual molecule inside PHOTOCHEM/DATA/XSECTIONS.
-
-For further help, save everything, go back to default input files, and the original code base. If none of that works, or if you still need help, contact us via the information below.
+There are other sources of help and information contained in this repository. First, PHOTOCHEM/INPUTFILES/README.TXT is a file containing tips, tricks and common errors, created originally by Giada Arney and added to by a few other folks over the years. Additionally there are some informational files in some of the data directories. For example, see PHOTOCHEM/INPUTFILES/TEMPLATES/README.txt for information on the templates. There are notes and references on most absorption cross sections inside the folder for each individual molecule inside PHOTOCHEM/DATA/XSECTIONS. For further help, save everything, go back to default input files, and the original code base. If none of that works, or if you still need help, contact us via the information below.
 
 
 
 ### [Contributors and Development History] ###
-This version of the code was started by Mark Claire in an effort to merge the best features from photochemical models that had been previously developed by Kevin Zahnle, James Kasting, and David Catling. In the process, Mark generalized the model to be less Earth-specific, and "modernized" the FORTRAN coding by removing most of the vestigaes of F66 code. This made it into a F77/F90 hybrid - ugly but MUCH more could be done. Much of the effort was in removing hardcoding, and in allowing flexibility in the choice of wavelength grid, stellar flux, atmospheric species, and reactions used. The generalization of the code allowed us to develop “templates” for different types of planets. These templates contain different input files to get the code to run for different planet types - without having to change the Fortran code itself. This prevents the need to maintain different “versions” of the code for these different cases. Instead, all one has to do is move these input files to the correct directory (the RunModels.sh script automates this for you), (re)compile the code, and then run it. Will Sluder continued this effort, working with Eric Hebrard and Ryan Felton to add more flexibile input file formats, streamline the cross sections subroutine, and allow for the use of reaction rate constants from the KInetic Database for Astrophysics (KIDA). And Eddie Schwieterman upgraded the numerical solver to owrk under higly oxidized conditions. D.J. Teal has led further modernization of the code, removing redundancies in many places, cleaning up the comments in others, and addressing many (hundreds?) of compilations errors when compiling with gfortran. Sandra Bastelberger has implemented major bug fixes and model upgrades throughout most of the subroutines. Multiple people have also contributed to specific "templates" over time - for example Amber Britt for modernEarth and Mars, Eddie Schwieterman for high-O2 cases, Giada Arney for Archean Earth. Sandra Bastelberger has further improved and standardized many of these templates, as part of her efforts to improve the overall quality and consistency of the model.
+This version of the code was started by Mark Claire in an effort to merge the best features from photochemical models that had been previously developed by Kevin Zahnle, James Kasting, and David Catling. In the process, Mark generalized the model to be less Earth-specific, and "modernized" the FORTRAN coding by removing most of the vestiges of F66 code. This made it into a F77/F90 hybrid - ugly but MUCH more could be done. Much of the effort was in removing hardcoding, and in allowing flexibility in the choice of wavelength grid, stellar flux, atmospheric species, and reactions used. The generalization of the code allowed us to develop “templates” for different types of planets. These templates contain different input files to get the code to run for different planet types - without having to change the Fortran code itself. This prevents the need to maintain different “versions” of the code for these different cases. Instead, all one has to do is move these input files to the correct directory (the RunModels.sh script automates this for you), (re)compile the code, and then run it. Will Sluder continued this effort, working with Eric Hebrard and Ryan Felton to add more flexible input file formats, streamline the cross sections subroutine, and allow for the use of reaction rate constants from the KInetic Database for Astrophysics (KIDA). And Eddie Schwieterman upgraded the numerical solver to work under highly oxidized conditions. D.J. Teal has led further modernization of the code, removing redundancies in many places, cleaning up the comments in others, and addressing many (hundreds?) of compilations errors when compiling with gfortran. Andrew Lincowski increased the resolution of the photolysis grid and updated many cross sections and reaction rates. He further developed the ModernEarthComplex template. Sandra Bastelberger has led major bug fixes and model upgrades throughout most of the subroutines, with critical input and assistance from Jaime Crouse. Multiple people have also contributed to specific "templates" over time - for example Amber Young for ModernEarth and Mars, Eddie Schwieterman for high-O2 cases, Giada Arney for Archean Earth. Sandra Bastelberger has further improved and standardized many of these templates, as part of her efforts to improve the overall quality and consistency of the model.
 
-The climate code was most recently advanced by Sandra Bastelberger and Ravi Kopparapu, who added k-coefficients derived by Eric Wolf, and implemented some suggested improvements from Ben Hayworth. They improved the model's k-coefficients, and upgraded many of the numerical approaches. Ashley Horan and Shawn Domagal-Goldman. The coupling of the two models used logic originally developed by Antigona Segura. She also introduced much of the multi-star functionality used here. Giada Arney added to the model's ability to self-consistently treat aerosol particles. And Giada Arney upgraded the treatment of aerosols in both models, as she also ensured they were treated more self-consistently between the two codes. Dillon Teal, Sandra Bastelberger, and Shawn Domagal-Goldman developed run scripts to automate input file generation, code compiling, and code convergence criteria.
+The climate code was most recently advanced by Sandra Bastelberger and Ravi Kopparapu, who added k-coefficients derived by Eric Wolf, and implemented some suggested improvements from Ben Hayworth. They improved the model's k-coefficients, and upgraded many of the numerical approaches. Ashley Horan and Shawn Domagal-Goldman. The coupling of the two models used logic originally developed by Antigona Segura. She also introduced much of the multi-star functionality used here. Giada Arney added to the model's ability to self-consistently treat aerosol particles. And Giada Arney upgraded the treatment of aerosols in both models, as she also ensured they were treated more self-consistently between the two codes. D.J. Teal, Sandra Bastelberger, and Shawn Domagal-Goldman developed run scripts to automate input file generation, code compiling, and code convergence criteria.
 
-The model development was supported by NASA Astrobiology Institute's  Virtual Planetary Laboratory lead team, supported by NASA under cooperative agreement NNH05ZDA001C. The model development is also supported under the Sellers Exoplanets Environments Collaboration, which is part of the NASA Internal Scientist Funding Model. 
+The model development was supported by NASA Astrobiology Institute's Virtual Planetary Laboratory lead team, supported by NASA under cooperative agreement NNH05ZDA001C. The model development is also supported under the Sellers Exoplanets Environments Collaboration, which is part of the NASA Internal Scientist Funding Model.
 
 Contact email - we suggest emailing all of us as our work ebbs and flows and at any given time its almost certain that at least one of us is over-committed. If you email us all, you'll have a better chance that at least one of us is not.
 Giada Arney (giada.a.arney@nasa.gov)
