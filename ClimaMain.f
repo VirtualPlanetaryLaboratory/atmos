@@ -509,10 +509,6 @@ c*******Changed for now*********
       !IF (msun.eq.19) SOLCON = SOLCON * 1.110
       !IF (msun.eq.76) SOLCON = SOLCON * 0.866
 
-         call sleep(2)
-c      print *, timega
-c      print *, P0ground
-c      print *, frak
       ENDIF !icouple = 1
 
 
