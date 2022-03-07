@@ -133,7 +133,7 @@ The climate code was most recently advanced by Sandra Bastelberger and Ravi Kopp
 The model development was supported by NASA Astrobiology Institute's Virtual Planetary Laboratory lead team, supported by NASA under cooperative agreement NNH05ZDA001C. The model development is also supported under the Sellers Exoplanets Environments Collaboration, which is part of the NASA Internal Scientist Funding Model.
 
 Contact email - we suggest emailing all of us as our work ebbs and flows and at any given time its almost certain that at least one of us is over-committed. If you email us all, you'll have a better chance that at least one of us is not.
-Giada Arney (giada.a.arney@nasa.gov)
+Giada Arney (giada.n.arney@nasa.gov)
 Mark Claire (mc229@st-andrews.ac.uk)
 Shawn Domagal-Goldman (shawn.goldman@nasa.gov)
 Ravi Kopparapu (ravikumar.kopparapu@nasa.gov)
